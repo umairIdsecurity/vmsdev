@@ -16,7 +16,7 @@ angular.module('kioskApp')
 		
 	/* Choose company */	
 	$scope.choose = function(company) {        
-        $scope.currentVisitor.companyName = company.name;
+        $scope.currentVisitor.compName = company.name;
 		$scope.compId = company.id;
     };
 
@@ -57,7 +57,7 @@ angular.module('kioskApp')
     };
 	
 	$scope.performCompanySearch = function() {
-		var comp = $scope.currentVisitor.companyName
+		var comp = $scope.currentVisitor.compName;
 		$scope.compOptions = [];
 		if (comp.length > 3) {
 			$scope.compId = null;

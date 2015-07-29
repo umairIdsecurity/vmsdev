@@ -47,6 +47,33 @@ angular.module('kiosk.DataService', [])
 			$http.post(url, params).success(onSuccess).error(onFailure);
 		},
 		
+		getVisitor: function(visitorEmail, onSuccess, onFailure) {
+			var url = this.baseURL + '/visitor/' + visitorEmail;
+			console.log('GET: ' + url);
+			$http.get(url).success(onSuccess).error(onFailure);
+		},
+		
+		searchComp: function(comp, onSuccess, onFailure) {
+			var url = this.baseURL + '/custom/search';
+			var params = { email: this.adminEmail, comp: escape(comp)}; 
+			console.log('GET: ' + url);
+			$http.post(url, params).success(onSuccess).error(onFailure);
+		},
+		
+		createVisitor: function(visitorInfo, onSuccess, onFailure) {
+			var url = this.baseURL + '/visitor';
+			var params = { firstName: visitorInfo.firstName,
+			lastName: visitorInfo.lastName,
+			email: visitorInfo.email,
+			/*company: '1', // TODO: this needs to change to 'visitorInfo.companyName' after the API has been fixed.*/
+			company: visitorInfo.companyName, /* Changed as 27-July by fixing API */
+			password: '123456',
+			visitorType: '2',
+			workstation:this.workstation};
+			
+			$http.post(url, params).success(onSuccess).error(onFailure);
+		},
+		
 		getCardType: function(onSuccess, onFailure) {
 			var url = this.baseURL + '/custom/cardtype';
 			var params = { email: this.adminEmail, workstation: this.workstation}; 
@@ -54,23 +81,16 @@ angular.module('kiosk.DataService', [])
 			$http.post(url, params).success(onSuccess).error(onFailure);
 		},
 
-
-		getVisitor: function(visitorEmail, onSuccess, onFailure) {
-			var url = this.baseURL + '/visitor/' + visitorEmail;
-			console.log('GET: ' + url);
-			$http.get(url).success(onSuccess).error(onFailure);
+		getCardDetail: function(VisitorService, onSuccess, onFailure) {			
+			var url = this.baseURL + '/custom/carddetail';			
+			var params = { ctype: VisitorService.cardType};			
+			$http.post(url, params).success(onSuccess).error(onFailure);
 		},
 		
 		searchHost: function(query, onSuccess, onFailure) {
 			var url = this.baseURL + '/host/search?query=' + escape(query);
 			console.log('GET: ' + url);
 			$http.get(url).success(onSuccess).error(onFailure);
-		},
-		searchComp: function(comp, onSuccess, onFailure) {
-			var url = this.baseURL + '/custom/search';
-			var params = { email: this.adminEmail, comp: escape(comp)}; 
-			console.log('GET: ' + url);
-			$http.post(url, params).success(onSuccess).error(onFailure);
 		},
 		
 		createVisit: function(visitInfo, onSuccess, onFailure) {
@@ -92,21 +112,7 @@ angular.module('kiosk.DataService', [])
 			fd.append('file', file, "filename.png");
 			$http.post(url, fd).success(onSuccess).error(onFailure);
 		},
-		
-		createVisitor: function(visitorInfo, onSuccess, onFailure) {
-			var url = this.baseURL + '/visitor';
-			var params = { firstName: visitorInfo.firstName,
-			lastName: visitorInfo.lastName,
-			email: visitorInfo.email,
-			/*company: '1', // TODO: this needs to change to 'visitorInfo.companyName' after the API has been fixed.*/
-			company: visitorInfo.companyName,
-			password: '123456',
-			visitorType: '2',
-			workstation:this.workstation};
-			
-			$http.post(url, params).success(onSuccess).error(onFailure);
-		},
-		
+				
 		searchVisits: function(vicNum, onSuccess, onFailure) {
 			var url = this.baseURL + '/visit?VICNumber=' + vicNum;
 			console.log('GET: ' + url);

@@ -12,8 +12,8 @@ angular.module('kioskApp')
   .controller('HostSearchCtrl', ['$scope', '$location', 'VisitorService', '$http', 'DataService', 'VisitService', 'ConfigService',
               function ($scope, $location, VisitorService, $http, DataService, VisitService, ConfigService) {
                 function updateStyles() {
-                  $scope.forwardButtonStyle = ConfigService.brandInfo.actionForwardButton;
-                  $scope.backButtonStyle = ConfigService.brandInfo.neutralButton;
+					$scope.forwardButtonStyle = ConfigService.brandInfo.actionForwardButton;
+					$scope.backButtonStyle = ConfigService.brandInfo.neutralButton;
                 }
 
                 $scope.error = false;
@@ -24,8 +24,8 @@ angular.module('kioskApp')
                 $scope.query = '';
 
                 $scope.choose = function(host) {
-                  $scope.host = host;
-                  $scope.query = null;
+					$scope.host = host;
+					$scope.query = null;
                 };
 
                 $scope.notifyHost = function() {
@@ -37,7 +37,7 @@ angular.module('kioskApp')
                                           startTime: new Date().toJSON(),
                                           expectedEndTime: new Date().toJSON(),
                                           visitReason: 1,
-                                          workstation: 8 },
+                                          workstation: DataService.workstation },
                                           function(data, responseCode) {
                                             var visitInfo = data[0];
                                             VisitService.visitID = visitInfo.visitID;
@@ -78,4 +78,4 @@ angular.module('kioskApp')
                 };
 
                 updateStyles();
-              }]);
+}]);

@@ -7,17 +7,20 @@
 			<div ng-show="error" class="alert alert-danger">{{error}}</div>
 	
 			<div class="form-group" ng-class="{ 'has-error': form.ctypes.$invalid }">
-				<select name="ctypes" ng-model="ctypes" required ng-change="getImage()" >
+				<select name="ctypes" ng-model="ctypes" required ng-change="getCDetail()" >
 					<option value="">Please Select Card Type</option>
 					<option ng:repeat="ctype in ctypeOptions" value="{{ctype.id}}">{{ctype.name}}</option>
 				</select>
 				<img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
 				<span ng-show="form.ctypes.$invalid" class="help-block" style="font-size: 15px;">Select Card Type</span>
 			</div>
+			<div ng-show="form.ctypes" align="center">
+				<img ng-src="{{cardImage}}"><br/>
+			</div>
 		</div>
 		<div>&nbsp;</div>
 		<div class="row">
-			<div ng-show="form.ctypes" class="sticky-pull-right">
+			<div ng-show="form.ctypes.$valid" class="sticky-pull-right">
 				<a class="btn  btn-success sticky-pull-right" ng-style="forwardButtonStyle" ng-click="goNext()">Next
 					<span class="glyphicon glyphicon-chevron-right"></span>
 				</a>

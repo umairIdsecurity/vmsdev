@@ -10,7 +10,8 @@
 angular.module('kioskApp')
 .controller('CardTypesCtrl', ['$scope', '$location', 'DataService', 'ConfigService', 'VisitorService', function ($scope, $location, DataService, ConfigService, VisitorService) {
 	
-	function getCardTypes() {
+	/* Get the list of card types for that selected workstation */
+	function getCardTypes() {		
 		var onSuccess = function(data, responseCode) {
 			$scope.ctypeOptions = data;
 		};
@@ -21,16 +22,27 @@ angular.module('kioskApp')
 	};
 	
 	$scope.goNext = function () {		
-		VisitorService.cardType = $scope.ctypes;
+		VisitorService.cardType = $scope.ctypes;		
 		$location.path('host_search');
 	};
 	
 	$scope.goBack = function () {		
 		$location.path('visitor_email');
 	};
-		
-	$scope.getImage = function () {		
-		alert('Card Type Image has to integrate');
+	
+	/* Get the selected card detail */
+	$scope.getCDetail = function () {		
+		VisitorService.cardType = $scope.ctypes;	
+		$scope.dataLoading = true;
+		var onSuccess = function(data, responseCode) {
+			$scope.cardImage = data.card_image;
+			$scope.dataLoading = false;
+		};
+		var onFailure = function(data, responseCode) {
+			$scope.error = data.errorDescription;
+			$scope.dataLoading = false;
+		};
+		DataService.getCardDetail(VisitorService, onSuccess, onFailure);
 	};
 	
 	function updateStyles() {

@@ -351,13 +351,15 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
             <!-- menu for companies -->
-            <?php  if($module == "CVMS" || $module == "Both") {
-                if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+            <?php 
+                if ($session['role'] == Roles::ROLE_SUPERADMIN || 
+                        $session['role'] == Roles::ROLE_ADMIN || 
+                            $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN ) {
             ?>
                 <li class='has-sub'>
                     <?php echo CHtml::link('Companies', array('company/index'), array('class' => 'managecompanies')) ?>
                     <ul <?php
-                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
+                    if ($this->id == 'company') {
                         echo "style='display:block ;'";
                     }
                     ?>>
@@ -366,34 +368,10 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li>
             <?php
-            } else {
-            if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                ?>
-                <!--WangFu Modified-->
-
-                <li class='has-sub'>
-                    <?php echo CHtml::link('Companies', array('company/index'), array('class' => 'managecompanies')) ?>
-                    <ul <?php
-                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
-
-                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>'
-                               class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
-                    </ul>
-                </li>
-
-                <!--WangFu Modified-->
-
-            <?php }  ?>
-        <?php }
-            } // CVMS users allowed
+            }                
         ?><!-- menu for companies -->
-
-
-            
-            <?php if($module == "Both" || $module == "CVMS") {  ?>
+ 
+     <?php if($module == "Both" || $module == "CVMS") {  ?>
             <!-- menu for Reports -->
             <li class='has-sub'>
                 <?php echo CHtml::link('CVMS Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>

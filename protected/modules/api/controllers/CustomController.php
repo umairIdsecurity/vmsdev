@@ -8,7 +8,8 @@ class CustomController extends RestfulController {
 	 * @param: NA   	 
 	 * @return: NA
      */
-    public function actionWorkstations() {
+    public function actionWorkstations() 
+	{
         try {
             $token_user = $this->checkAuth();
             if (Yii::app()->request->isPostRequest) {
@@ -60,7 +61,8 @@ class CustomController extends RestfulController {
 	 * @param: NA   	 
 	 * @return: NA
      */
-	public function actionSearch() {
+	public function actionSearch() 
+	{
 
         try {
             $token_user = $this->checkAuth();
@@ -102,7 +104,8 @@ class CustomController extends RestfulController {
 	 * @param: array  $companies
 	 * @return: array $result
      */
-	private function populateCompanies($companies) {
+	private function populateCompanies($companies) 
+	{
         $result = array();
         $i = 0;
         foreach ($companies as $comp) {
@@ -119,7 +122,8 @@ class CustomController extends RestfulController {
 	 * @param: NA   	 
 	 * @return: NA
      */
-	public function actionCardtype() {
+	public function actionCardtype() 
+	{
         try {
             $token_user = $this->checkAuth();
             if (Yii::app()->request->isPostRequest) {
@@ -133,9 +137,15 @@ class CustomController extends RestfulController {
 				
 				if ($row) {
 					foreach ($row as $key => $value) {
+						if($row[$key]['cardType']['module'] == 1){
+							$name = $row[$key]['cardType']['name']."- Corporate";
+						}else{
+							$name = $row[$key]['cardType']['name']."- VIC";
+						}
+						
 						$aArray[] = array(
 							'id' => $row[$key]['cardType']['id'],
-							'name' => $row[$key]['cardType']['name'],
+							'name' => $name,
 						);
 					}
 				} else {
@@ -160,13 +170,45 @@ class CustomController extends RestfulController {
         }
 	}
 	
+	public function actionCarddetail() 
+	{
+        try {
+            $token_user = $this->checkAuth();
+            if (Yii::app()->request->isPostRequest) {
+				
+				$data = file_get_contents("php://input");
+                $data = CJSON::decode($data);
+				
+				$Criteria = new CDbCriteria();
+				$Criteria->condition = "id = '" . $data['ctype'] ."'";	
+				$row = CardType::model()->find($Criteria);
+				
+				$image_path = $this->getAssetsBase()."/".$row->card_background_image_path;				
+				$card_detail = array('id'=>$row->id, 'name'=>$row->name, 'card_image'=>$image_path);
+												
+				if (!empty($card_detail)) {
+					$this->sendResponse(200, CJSON::encode($card_detail));
+				} else {
+					$this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'WORK_STATION_NOT_FOUND', 'errorDescription' => 'Workstation not found for this Admin')));
+				}
+				
+				
+			}else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'POST  parameter required for action')));
+            }
+		} catch (Exception $ex) {			
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'Something went wrong')));
+        }
+	}
+	
 	/**
      * @Function: for registering the kiosk workstation
 	 *
 	 * @param: NA   	 
 	 * @return: NA
      */
-	public function actionRegisterkiosk() {
+	public function actionRegisterkiosk() 
+	{
         try {
             $token_user = $this->checkAuth();
             if (Yii::app()->request->isPostRequest) {
@@ -214,6 +256,16 @@ class CustomController extends RestfulController {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'Something went wrong')));
         }
 	}
+	
+	public function getAssetsBase()
+	{		
+      return Yii::app()->assetManager->publish(
+                Yii::getPathOfAlias('application.assets'),
+                false,
+                -1,
+                defined('YII_DEBUG') && YII_DEBUG
+            );     
+    }
 	 
 }
 

@@ -25,7 +25,8 @@ angular.module('kioskApp')
 				VisitorService[key] = data[key];
 			});
 			
-			if(VisitorService.cardType  != null){ /* If card type loaded */
+			/* If card type loaded */
+			if(VisitorService.cardType  != null){ 
 				$scope.target = 'host_search';
 			}else{
 				$scope.target = 'card_types';

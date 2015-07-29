@@ -291,7 +291,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </td>
                         </tr>
                         <tr>
-                        <tr>
                             <td class="birthdayDropdown">
                                 <span>Date of Birth</span> <br/>
                                 <input type="hidden" id="dateofBirthBreakdownValueYear"

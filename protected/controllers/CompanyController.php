@@ -368,9 +368,6 @@ class CompanyController extends Controller
         //$model->attributes['company_type'] = 3;
         //$model->dbCriteria->addCondition("t.company_type = 3");
         $model->company_type = 3;
-
-        // Check whether a login user/tenant allowed to view
-        CHelper::check_module_authorization("CVMS");
         $this->render('_admin', array('model' => $model,));
     }
 

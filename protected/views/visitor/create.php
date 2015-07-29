@@ -127,7 +127,7 @@ function getCardType() {
              * else if not null populate company by tenant and tenant agent
              */
 
-            $('#Visitor_company option[value!=""]').remove();
+            //$('#Visitor_company option[value!=""]').remove();
             if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
                 if ($("#Visitor_tenant_agent").val() == '') {
                     //getCompanyWithSameTenant($("#Visitor_tenant").val());
@@ -602,7 +602,7 @@ function checkEmailIfUnique() {
                     $('#User_tenant_agent').val($("#Visitor_tenant_agent").val());
 
                     var options = $("#Visitor_company > option").clone();
-                    $('#User_company option').remove();
+                     $('#User_company option').remove();
                     $('#User_company').append(options);
                     $('#User_company').val($("#Visitor_company").val());
 
@@ -732,7 +732,7 @@ function populateTenantAgentAndCompanyField(isSearch) {
         }
 
         //populate tenant agent and company dropdown
-        $('#Visitor_company option[value!=""]').remove();
+       // $('#Visitor_company option[value!=""]').remove();
         $('#Visitor_tenant_agent option[value!=""]').remove();
         var visitor_type = $("#Visitor_visitor_type").val();
         var tenant = $("#Visitor_tenant").val();
@@ -804,7 +804,7 @@ function getCompanyWithSameTenant(tenant, newcompanyId) {
         dataType: 'json',
         data: tenant,
         success: function (r) {
-            $('#Visitor_company option[value!=""]').remove();
+            //$('#Visitor_company option[value!=""]').remove();
             $.each(r.data, function (index, value) {
                 $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
             });
@@ -820,7 +820,7 @@ function getCompanyWithSameTenant(tenant, newcompanyId) {
 }
 
 function getHostCompanyWithSameTenant(tenant) {
-    $('#User_company option').remove();
+  // $('#User_company option').remove();
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createUrl('company/GetCompanyWithSameTenant&id='); ?>' + tenant,
@@ -836,12 +836,12 @@ function getHostCompanyWithSameTenant(tenant) {
 }
 
 function populateCompanyWithSameTenantAndTenantAgent() {
-    $('#Visitor_company option[value!=""]').remove();
+   // $('#Visitor_company option[value!=""]').remove();
     getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
 }
 
 function populateHostCompanyWithSameTenantAndTenantAgent() {
-    $('#User_company option[value!=""]').remove();
+   $('#User_company option[value!=""]').remove();
     getHostCompanyWithSameTenantAndTenantAgent($("#User_tenant").val(), $("#User_tenant_agent").val());
 }
 
@@ -852,7 +852,7 @@ function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent, newcompany
         dataType: 'json',
         data: tenant,
         success: function (r) {
-            $('#Visitor_company option[value!=""]').remove();
+            //$('#Visitor_company option[value!=""]').remove();
             $.each(r.data, function (index, value) {
                 $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
             });

@@ -30,7 +30,7 @@
 
 
     <div class="row">
-        <div class="hidden-xs col-sm-4 text-center">
+        <div class="col-sm-4 text-center">
             <a href="#"><img src="<?=Yii::app()->theme->baseUrl?>/images/vic24h.png" alt="Vic24h"></a>
         </div>
         <div class="col-sm-8">
@@ -41,10 +41,10 @@
                     <span class="glyphicon glyphicon-calendar"></span>
                     <?php echo $form->textField($model,'date_in',
                         array(
-                            'placeholder' => 'YY-MM-DD',
+                            'placeholder' => 'DD-MM-YYYY',
                             'class'=>'form-control input-lg from_date',
                             //'data-date-picker-start'=>"",
-                            'data-date-format'=>'yyyy-mm-dd',
+                            'data-date-format'=>'dd-mm-yyyy',
                             'value'=>''
                         )); ?>
                 </div>
@@ -56,11 +56,12 @@
                     <?php
                     echo $form->textField($model,'date_out',
                         array(
-                            'placeholder' => 'YY-MM-DD',
+                            'placeholder' => 'DD-MM-YYYY',
                             'class'=>'form-control input-lg to_date',
                             //'data-date-picker-end'=>"",
-                            'data-date-format'=>'yyyy-mm-dd',
-                            'value'=>''
+                            'data-date-format'=>'dd-mm-yyyy',
+                            'value'=>'',
+                            'disabled'=>'disabled'
                         ));
                     ?>
                 </div>

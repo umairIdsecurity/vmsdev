@@ -20,7 +20,7 @@
 				<input type="text" name="lastName" class="form-control input-lg" placeholder="Last Name" ng-model="currentVisitor.lastName">
 			</div>
 			<div class="form-group">
-				<input type="text" name="company"  class="form-control input-lg" placeholder="Company" ng-model="currentVisitor.companyName" ng-change="performCompanySearch()">
+				<input type="text" name="company"  class="form-control input-lg" placeholder="Company" ng-model="currentVisitor.compName" ng-change="performCompanySearch()">
 			</div>
 			
 			<div ng-show="compId == null">
@@ -30,7 +30,7 @@
 			</div>
 		</div>
 		<div>&nbsp;</div>
-		<button ng-show="currentVisitor.firstName && currentVisitor.lastName && currentVisitor.companyName" class="btn btn-success  sticky-pull-right" ng-style="forwardButtonStyle" ng-click="createLogin()">Next<span class="glyphicon glyphicon-chevron-right"></span></button>
+		<button ng-show="currentVisitor.firstName && currentVisitor.lastName && currentVisitor.compName" class="btn btn-success  sticky-pull-right" ng-style="forwardButtonStyle" ng-click="createLogin()">Next<span class="glyphicon glyphicon-chevron-right"></span></button>
 		<button class="btn btn-success  sticky-pull-left" ng-style="backButtonStyle" ng-click="goBack()"><span class="glyphicon glyphicon-chevron-left"></span>Back</button>
 	</form>
 </div>

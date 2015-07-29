@@ -47,8 +47,9 @@ $userRole = $session['role'];
 
         if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+           // echo '<pre>'; print_r($companyLafPreferences);
             ?>
-            <!--<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />-->
+<!--           <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />-->
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . "/index.php?r=companyLafPreferences/css"; ?>" />
 
             <?php

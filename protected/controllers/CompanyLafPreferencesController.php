@@ -42,9 +42,11 @@ class CompanyLafPreferencesController extends Controller {
     public function actionCss(){
 
         $session = new CHttpSession;
-        if(!isset($session['tenant.css'])) {
-            $this->GenerateCss();
-        }
+//        if(!isset($session['tenant.css'])) {
+//            $this->GenerateCss();
+//        }
+        // Take Immediate Effect after change
+        $this->GenerateCss();
         $size = strlen($session['tenant.css']);
 
         header('Content-Length: '. $size);

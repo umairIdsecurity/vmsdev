@@ -327,7 +327,7 @@ $defaultKey = key($asicCardTypes);
                                 <td id="userCompanyRow">
                                     <div style="margin-bottom: 5px;">
                                         <?php
-                                        $this->widget('application.extensions.select2.Select2', array(
+                                            $this->widget('application.extensions.select2.Select2', array(
                                             'model' => $userModel,
                                             'attribute' => 'company',
                                             'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),

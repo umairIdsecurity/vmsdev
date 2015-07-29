@@ -272,6 +272,9 @@ $session = new CHttpSession;
                     } else if (currentController == "visitor"){
                         $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
                         $("#Visitor_company").select2("val", data.id);
+                        
+                        $("#User_company").prepend($("<option>", {value:data.id, text: data.name}));
+                        $("#User_company").select2("val", data.id);
                     }
                 }
                 return false;

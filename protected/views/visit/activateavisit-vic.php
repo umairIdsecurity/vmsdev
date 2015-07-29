@@ -111,12 +111,14 @@ $asicEscort = new AddAsicEscort();
 
             $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
 
+            /*
+            CAV -- 788
             if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_MANUAL])) {
                 $model->date_check_in = date('d-m-Y');
-            }
+            }*/
 
             // Extended Card Type (EVIC) or 24h
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+            /*if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 switch ($model->card_type) {
                     case CardType::VIC_CARD_24HOURS:
                         $model->date_check_in = date('d-m-Y', strtotime('+ 1 day'));
@@ -128,7 +130,7 @@ $asicEscort = new AddAsicEscort();
                         $model->date_check_in = date('d-m-Y');
                         break;
                 }
-            }
+            }*/
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
@@ -157,10 +159,35 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_out = date('d-m-Y');
             }
 
-            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
+            if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS])) {
+                switch ($model->card_type) {
+                    case CardType::VIC_CARD_24HOURS:
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                        $model->time_check_out = $model->time_check_in; //check out time should same as check in time
+                        break;
+                    case CardType::VIC_CARD_EXTENDED:
+                    case CardType::VIC_CARD_MULTIDAY:
+                        if($model->visit_status == VisitStatus::CLOSED){
+                            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                            $model->time_check_out = $model->time_check_in; //check out time should same as check in time
+                        }else{
+                            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 8 day'));
+                            $model->time_check_out = "23:59:59"; //check out time should be midnight
+                        }
+                        break;
+                    default: /*CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL*/
+                        $model->time_check_out = "23:59:59"; //check out time should be midnight
+                        $model->date_check_out = $model->date_check_in;
+                        break;
+                }
+            }
+
+
+
+            //$model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
 
             // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+            /*if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 switch ($model->card_type) {
                     case CardType::VIC_CARD_24HOURS:
                         $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
@@ -172,15 +199,14 @@ $asicEscort = new AddAsicEscort();
                         $model->date_check_out = date('d-m-Y');
                         break;
                 }
-
             }
-
             // Update date check out for Saved, Closed, AutoClosed Visit
             if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out. ' +1 day'));
 
                 $model->time_check_out = $model->time_check_in;
-            }
+            }*/
+
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,

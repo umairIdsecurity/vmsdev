@@ -17,9 +17,32 @@
     </tr>
     <tr>
         <td>
+            <?php
+            if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS])) {
+                switch ($model->card_type) {
+                    case CardType::VIC_CARD_24HOURS:
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                        $model->time_check_out = $model->time_check_in; //check out time should same as check in time
+                        break;
+                    case CardType::VIC_CARD_EXTENDED:
+                    case CardType::VIC_CARD_MULTIDAY:
+                       if($model->visit_status == VisitStatus::CLOSED){
+                            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                            $model->time_check_out = $model->time_check_in; //check out time should same as check in time
+                        }else{
+                            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 8 day'));
+                            $model->time_check_out = "23:59:59"; //check out time should be midnight
+                        }
+                        break;
+                    default: /*CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL*/
+                        $model->time_check_out = "23:59:59"; //check out time should be midnight
+                        $model->date_check_out = $model->date_check_in;
+                        break;
+                }
+            }?>
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
             <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
-            <input type="text" value="<?php echo isset($model->date_check_out) ? date('d-m-Y', strtotime($model->date_check_out)) : date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
+            <input type="text" value="<?php echo $model->date_check_out;//echo isset($model->date_check_out) ? date('d-m-Y', strtotime($model->date_check_out)) : date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
         </td>
     </tr>
     <tr>

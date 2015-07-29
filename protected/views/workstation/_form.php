@@ -69,10 +69,7 @@ $session = new CHttpSession;
                                             ?> value="<?php echo $value['tenant_agent']; ?>"><?php echo $value['name']; ?></option>
                                                 <?php
                                             }
-                                        } else {
-                                            ?>
-                                        <option disabled value='' selected>Please select a tenant agent</option>
-                                    <?php } ?>
+                                        }?>
                                 </select></td>
                             <td><?php echo $form->error($model, 'tenant_agent'); ?></td>
                         </tr>

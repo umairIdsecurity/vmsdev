@@ -92,7 +92,7 @@ $userRole = $session['role'];
                             if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
                                 ?><img id='photoPreview' style="height: 65px !important; width:130px !important;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
                             } else {
-                                 ?><img id='photoPreview' style="width: 100px !important;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                                 ?><img id='photoPreview' style="width: 85px !important;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
                             }?>
 
                     </div>

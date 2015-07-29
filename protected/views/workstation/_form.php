@@ -246,7 +246,7 @@ $session = new CHttpSession;
         <tr>
             <td colspan="2">
                 <?php
-                if (!empty($_GET['id']) && Yii::app()->urlManager->parseUrl(Yii::app()->request) == 'workstation/update'){
+                if (empty($_GET['id']) && !Yii::app()->urlManager->parseUrl(Yii::app()->request) == 'workstation/update'){
                     ?>
                     <table>
                         <tr>

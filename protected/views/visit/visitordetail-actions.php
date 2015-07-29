@@ -690,7 +690,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     }
 
     function checkIfActiveVisitConflictsWithAnotherVisit(visitType) {
-        alert();
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({

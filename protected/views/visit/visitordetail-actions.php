@@ -131,9 +131,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 </td>
                             </tr>
                         </table>
+
+
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
+                            
+                            <!--  issue: CAV-794 onclick="checkIfActiveVisitConflictsWithAnotherVisit()" -->
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
+                            
                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>

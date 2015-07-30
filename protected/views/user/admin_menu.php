@@ -198,26 +198,28 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>'><span>Import Visit History</span></a>
                     </li>
-                    <li>
-                        <a class="managevisitortype addSubMenu" href='<?php echo Yii::app()->createUrl('visitorType/index', array('vms' => 'cvms')); ?>'><span>Visitor Types</span></a>
-                        <ul <?php
-                        if ($this->id == 'visitorType') {
-                            echo "style='display:block ;'";
-                        }
-                        ?>>
-                            <li><a href='<?php echo Yii::app()->createUrl('visitorType/create', array('vms' => 'cvms')); ?>'><span>Add Visitor Type</span></a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="managevisitreasons addSubMenu" href='<?php echo Yii::app()->createUrl('visitReason/admin', array('vms' => 'cvms')); ?>'><span>Visit Reasons</span></a>
-                        <ul <?php
-                        if ($this->id == 'visitReason') {
-                            echo "style='display:block ;'";
-                        }
-                        ?>>
-                            <li><a href='<?php echo Yii::app()->createUrl('visitReason/create', array('vms' => 'cvms')); ?>' class="subMenu"><span>Add Visit Reason</span></a></li>
-                        </ul>
-                    </li>
+                        <?php if($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN){ ?>
+                        <li>
+                            <a class="managevisitortype addSubMenu" href='<?php echo Yii::app()->createUrl('visitorType/index', array('vms' => 'cvms')); ?>'><span>Visitor Types</span></a>
+                            <ul <?php
+                            if ($this->id == 'visitorType') {
+                                echo "style='display:block ;'";
+                            }
+                            ?>>
+                                <li><a href='<?php echo Yii::app()->createUrl('visitorType/create', array('vms' => 'cvms')); ?>'><span>Add Visitor Type</span></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="managevisitreasons addSubMenu" href='<?php echo Yii::app()->createUrl('visitReason/admin', array('vms' => 'cvms')); ?>'><span>Visit Reasons</span></a>
+                            <ul <?php
+                            if ($this->id == 'visitReason') {
+                                echo "style='display:block ;'";
+                            }
+                            ?>>
+                                <li><a href='<?php echo Yii::app()->createUrl('visitReason/create', array('vms' => 'cvms')); ?>' class="subMenu"><span>Add Visit Reason</span></a></li>
+                            </ul>
+                        </li>
+                    <?php } ?>
                 </ul>
             </li>  <!-- end menu for CVMS Visitors -->
             
@@ -322,6 +324,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>'><span>Import Visit History</span></a>
                     </li>
+                    <?php if($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN){ ?>
                     <li>
                         <a class="managevisitortype addSubMenu" href='<?php echo Yii::app()->createUrl('visitorType/index', array('vms' => 'avms')); ?>'><span>Visitor Types</span></a>
                         <ul <?php
@@ -342,6 +345,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             <li><a href='<?php echo Yii::app()->createUrl('visitReason/create', array('vms' => 'avms')); ?>' class="subMenu"><span>Add Visit Reason</span></a></li>
                         </ul>
                     </li>
+                    <?php } ?>
+
                 </ul>
             </li>   <!-- end menu for AVMS Visitors -->
         <?php } ?>
@@ -351,13 +356,15 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
             <!-- menu for companies -->
-            <?php  if($module == "CVMS" || $module == "Both") {
-                if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+            <?php 
+                if ($session['role'] == Roles::ROLE_SUPERADMIN || 
+                        $session['role'] == Roles::ROLE_ADMIN || 
+                            $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN ) {
             ?>
                 <li class='has-sub'>
                     <?php echo CHtml::link('Companies', array('company/index'), array('class' => 'managecompanies')) ?>
                     <ul <?php
-                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
+                    if ($this->id == 'company') {
                         echo "style='display:block ;'";
                     }
                     ?>>
@@ -366,34 +373,10 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li>
             <?php
-            } else {
-            if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                ?>
-                <!--WangFu Modified-->
-
-                <li class='has-sub'>
-                    <?php echo CHtml::link('Companies', array('company/index'), array('class' => 'managecompanies')) ?>
-                    <ul <?php
-                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
-
-                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>'
-                               class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
-                    </ul>
-                </li>
-
-                <!--WangFu Modified-->
-
-            <?php }  ?>
-        <?php }
-            } // CVMS users allowed
+            }                
         ?><!-- menu for companies -->
-
-
-            
-            <?php if($module == "Both" || $module == "CVMS") {  ?>
+ 
+     <?php if($module == "Both" || $module == "CVMS") {  ?>
             <!-- menu for Reports -->
             <li class='has-sub'>
                 <?php echo CHtml::link('CVMS Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>

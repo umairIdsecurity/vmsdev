@@ -47,8 +47,9 @@ $userRole = $session['role'];
 
         if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+           // echo '<pre>'; print_r($companyLafPreferences);
             ?>
-            <!--<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />-->
+<!--           <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />-->
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . "/index.php?r=companyLafPreferences/css"; ?>" />
 
             <?php
@@ -91,7 +92,7 @@ $userRole = $session['role'];
                             if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
                                 ?><img id='photoPreview' style="height: 65px !important; width:130px !important;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
                             } else {
-                                 ?><img id='photoPreview' style="height: 65px !important;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                                 ?><img id='photoPreview' style="width: 85px !important; height: auto !important" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
                             }?>
 
                     </div>

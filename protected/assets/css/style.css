@@ -2217,3 +2217,13 @@ label.myLabel input[type="file"] {
 
 .fix-modal-ie {width:auto; margin-left: 0!important; left: 0 !important; position: absolute!important}
 .fix-modal-ie-reset {width:auto; margin-left: 0!important; left: 100px !important; position: absolute!important}
+
+#list_file .table td {
+    padding: 13px 8px;
+}
+
+#list_file .table td .glyphicon-pencil:before {
+    font-size: 10px;
+    padding-left: 0;
+    margin-left: 5px;
+}

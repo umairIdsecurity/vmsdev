@@ -9,15 +9,15 @@
       <div class="alert alert-danger" role="alert" ng-show="hasError">
         <span class="error">Error: please try again, or contact Identity Security if the issue persists.</span>
       </div>
-      <div ng-class="(emailForm.visitor_email.$valid == true) ? 'form-group' : 'form-group has-error'">
-          <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
-            <input type="email" class="form-control input-lg" name="visitor_email" ng-model="visitor_email" placeholder="Please enter your Email Address">
-          </div>
-      </div>
-      <div role="alert">
-        <span class="error" ng-show="emailForm.visitor_email.$error.email">Please enter a valid email.</span>
-      </div>
+      <div ng-class="(emailForm.visitor_email.$valid == true && !form.email.$error.pattern) ? 'form-group' : 'form-group has-error'">
+			<div class="input-group">
+				<div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
+				<input type="email" name="visitor_email" class="form-control input-lg" ng-model="visitor_email"  ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Please enter your Email Address">
+			</div>
+			<span ng-show="emailForm.visitor_email.$dirty && emailForm.visitor_email.$error.required || emailForm.visitor_email.$error.pattern" class="help-block">
+				Please enter a valid email
+			</span>			
+		</div>
     </div>
   </div>
 

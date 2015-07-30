@@ -83,6 +83,11 @@ input.pass_option, input.password_option , input.password_requirement{
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
 
+.help-document-link, .help-document-link:hover{
+    color: #333333;
+    text-decoration: none;
+}
+
 .login-area input[type="submit"],
 .blueBtn{
     background: -webkit-gradient(linear, center top, center bottom, from(#69D2E7), to(#69D2E7));

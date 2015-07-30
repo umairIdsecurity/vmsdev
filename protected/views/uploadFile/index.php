@@ -209,7 +209,7 @@
             return true;
         }
 
-        $('#check_file_all').bind('click', function (event) {
+        $('#check_file_all').live('click', function (event) {
 
             var
                 ref = this,
@@ -226,17 +226,32 @@
 
         });
 
-        $("#list_file").find('input[type="checkbox"]').each(function (i, el) {
+        // $("#list_file").find('input[type="checkbox"]').each(function (i, el) {
+        //     if ($(this).attr('id') != 'check_file_all') {
+        //         $(this).live('change', function () {
+        //             $('#check_file_all').prop('checked', false);
+        //             var canDisable = true;
+        //             $(this.form).find('input[type="checkbox"]').each(function (i, el) {
+        //                 if (this.checked)
+        //                     canDisable = false;
+        //             });
+        //             $('#btn_delete_file').attr("disabled", canDisable);
+        //         });
+        //     }
+        //     if (!$(this).is(':checked')) {
+        //         $('#btn_delete_file').attr("disabled", true);
+        //     }
+        // });
+
+        $('#list_file input[type="checkbox"]').live('change', function (i, el) {
             if ($(this).attr('id') != 'check_file_all') {
-                $(this).change(function () {
-                    $('#check_file_all').prop('checked', false);
-                    var canDisable = true;
-                    $(this.form).find('input[type="checkbox"]').each(function (i, el) {
-                        if (this.checked)
-                            canDisable = false;
-                    });
-                    $('#btn_delete_file').attr("disabled", canDisable);
+                $('#check_file_all').prop('checked', false);
+                var canDisable = true;
+                $(this.form).find('input[type="checkbox"]').each(function (i, el) {
+                    if (this.checked)
+                        canDisable = false;
                 });
+                $('#btn_delete_file').attr("disabled", canDisable);
             }
             if (!$(this).is(':checked')) {
                 $('#btn_delete_file').attr("disabled", true);
@@ -387,6 +402,23 @@
                                 $('#file_grid_error').fadeOut();
                                 $.fn.yiiGridView.update("file-grid");
                             }
+
+                            $("#list_file").find('input[type="checkbox"]').each(function (i, el) {
+                                if ($(this).attr('id') != 'check_file_all') {
+                                    $(this).live('change', function () {
+                                        $('#check_file_all').prop('checked', false);
+                                        var canDisable = true;
+                                        $(this.form).find('input[type="checkbox"]').each(function (i, el) {
+                                            if (this.checked)
+                                                canDisable = false;
+                                        });
+                                        $('#btn_delete_file').attr("disabled", canDisable);
+                                    });
+                                }
+                                if (!$(this).is(':checked')) {
+                                    $('#btn_delete_file').attr("disabled", true);
+                                }
+                            });
                         }
                     });
                 }else {

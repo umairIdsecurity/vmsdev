@@ -46,13 +46,14 @@
                 <td style="vertical-align: top">
                     <table style="vertical-align: top" >
                     <?php
-                        if(Chelper::avms_module_has_focus()) {
+                        if(CHelper::avms_module_has_focus()) {
                             $card_list = CardType::$VIC_CARD_TYPES;
                         }else {
                             $card_list = CardType::$CORPORATE_CARD_TYPES;
                         }
                         //if($model->id >0)
                         $selected_type_list = VisitorType::model()->getActiveCardTypeIds($model->id);
+
 
                         if(!is_array($selected_type_list))
                             $selected_type_list= array();

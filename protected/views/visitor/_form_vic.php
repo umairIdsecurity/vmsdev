@@ -247,7 +247,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             <?php
                                             // Show Default selected to Admin only
                                             if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                                $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
+                                                
+                                                $list = VisitorType::model()->findAll('created_by = :c and t.tenant = :t and module = :m', [':c' => Yii::app()->user->id,':t' => Yii::app()->user->tenant, ':m' => "AVMS"]);
+
                                                 echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                 echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
                                                 foreach( $list as $val ) {

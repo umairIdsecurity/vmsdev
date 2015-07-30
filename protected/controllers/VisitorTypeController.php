@@ -277,8 +277,7 @@ class VisitorTypeController extends Controller {
             Yii::app()->end();
         }
     }
-
-
+    
 
     public function actionAdminAjax() {
         $model = new VisitorType('search');

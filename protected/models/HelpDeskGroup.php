@@ -84,6 +84,7 @@ class HelpDeskGroup extends CActiveRecord {
         $criteria->compare('name', $this->name, true);
 		$criteria->compare('order_by', $this->order_by, true);
         $criteria->compare('created_by', $this->created_by, true);
+        $criteria->addCondition ('created_by = '.Yii::app()->user->id);
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
@@ -112,7 +113,7 @@ class HelpDeskGroup extends CActiveRecord {
     }
 
     public function returnHelpDeskGroups($helpDeskGroupId = NULL) {
-        $helpDeskGroup = HelpDeskGroup::model()->findAll();
+        $helpDeskGroup = HelpDeskGroup::model()->findAll('created_by = '.Yii::app()->user->id);
         $helpdesk_group_LIST = array();
         foreach ($helpDeskGroup as $key => $value) {
             $helpdesk_group_LIST[$value['id']] = $value['name'];
@@ -142,7 +143,8 @@ class HelpDeskGroup extends CActiveRecord {
                 $criteria->addCondition ('id IN (4, 6)');
             if( $module == "AVMS" )
                $criteria->addCondition ('id IN (2, 5, 7)');
-                       
+            
+             $criteria->addCondition ('created_by = '.Yii::app()->user->id);
             $helpDeskGroup = $this->findAll($criteria);
             return $helpDeskGroup;
     }

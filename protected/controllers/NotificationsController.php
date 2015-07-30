@@ -97,17 +97,17 @@ class NotificationsController extends Controller
                             
                             //If Role ID is empty then send it to All CVMS and AVMS Users
                             if( empty($model->role_id) || is_null($model->role_id) )  {
-                                $criteria->condition = 'is_deleted = 0 AND id != '.Yii::app()->user->id;
+                                $criteria->condition = 'is_deleted = 0 AND id != '.Yii::app()->user->id.' AND tenant ='.Yii::app()->user->tenant;
                             } else {                                
                                  
                                   // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
                                   // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
                                 if($model->role_id == Roles::ROLE_SUPERADMIN) {  // Super Admin is renamed as Identity security under Dropdown                               
                                     $roles = Roles::ROLE_ISSUING_BODY_ADMIN.','.Roles::ROLE_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_ADMIN;
-                                    $criteria->condition = 'role IN ('.$roles.') AND is_deleted = 0 ';
+                                    $criteria->condition = 'role IN ('.$roles.') AND is_deleted = 0 AND tenant ='.Yii::app()->user->tenant;
                                 }
                                 else {
-                                    $criteria->condition = 'role ='.$model->role_id.' AND is_deleted = 0 ';
+                                    $criteria->condition = 'role ='.$model->role_id.' AND is_deleted = 0 AND tenant ='.Yii::app()->user->tenant;
                                 }
                                 
                             } 
@@ -150,17 +150,20 @@ class NotificationsController extends Controller
                 UserNotification::model()->deleteAll('notification_id = '.$id);
                 
                 $criteria = new CDbCriteria;
+                //send notifications to current logged in user tenants
+                 $criteria->condition = 'tenant ='.Yii::app()->user->tenant;
+                            
                 //If Role ID is empty then send it to All CVMS and AVMS Users
                 if ( empty( $model->role_id ) || is_null($model->role_id)) {
-                    $criteria->condition = 'is_deleted = 0 AND id != ' . Yii::app()->user->id;
+                    $criteria->condition = 'is_deleted = 0 AND id != ' . Yii::app()->user->id .' AND tenant ='.Yii::app()->user->tenant;
                 } else {
                     // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
                     // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
                     if ( $model->role_id == Roles::ROLE_SUPERADMIN ) {  // Super Admin is renamed as Identity security under Dropdown                               
                         $roles = Roles::ROLE_ISSUING_BODY_ADMIN . ',' . Roles::ROLE_AIRPORT_OPERATOR . ',' . Roles::ROLE_AGENT_AIRPORT_OPERATOR . ',' . Roles::ROLE_AGENT_AIRPORT_ADMIN;
-                        $criteria->condition = 'role IN (' . $roles . ') AND is_deleted = 0 ';
+                        $criteria->condition = 'role IN (' . $roles . ') AND is_deleted = 0 AND tenant ='.Yii::app()->user->tenant;
                     } else {
-                        $criteria->condition = 'role =' . $model->role_id . ' AND is_deleted = 0 ';
+                        $criteria->condition = 'role =' . $model->role_id . ' AND is_deleted = 0 AND tenant ='.Yii::app()->user->tenant;
                     }
                 }
                 $users = User::model()->findAll($criteria);

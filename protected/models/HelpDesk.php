@@ -104,6 +104,7 @@ class HelpDesk extends CActiveRecord {
         if( $module == "AVMS" )
            $criteria->addCondition ('helpdesk_group_id IN (2, 5, 7)');
             
+         $criteria->addCondition ('created_by = '.Yii::app()->user->id);
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

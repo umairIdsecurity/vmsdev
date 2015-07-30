@@ -42,21 +42,33 @@ class VisitorTypeController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+
         $session = new CHttpSession;
         $model = new VisitorType;
-        $visitorTypeService = new VisitorTypeServiceImpl();
+
+
+        //$visitorTypeService = new VisitorTypeServiceImpl();
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+       //$this->performAjaxValidation($model);
+
 
         if (isset($_POST['VisitorType'])) {
+            
             $model->attributes = $_POST['VisitorType'];
-
 
             $transaction = Yii::app()->db->beginTransaction();
 
             try {
 
-                if ($visitorTypeService->save($model, Yii::app()->user)) {
+                //if ($visitorTypeService->save($model, Yii::app()->user)) {
+
+                $model->created_by = Yii::app()->user->id;
+                $model->tenant = Yii::app()->user->tenant;
+                $model->tenant_agent = Yii::app()->user->tenant_agent;
+
+                $model->save();
+
+                
 
                     if(isset($_POST["card_types"])) {
 
@@ -68,14 +80,20 @@ class VisitorTypeController extends Controller {
                             $new_row = new VisitorTypeCardType;
                             $new_row->card_type = $value;
                             $new_row->visitor_type = $model->id;
-                            $new_row->tenant = $session['tenant'];
-                            $new_row->tenant_agent = $session['tenant_agent'];
-                            $new_row->save();
 
+                            //** very Bad, Mr. Dat: This doesn't required as u have already given 
+                            //** a tenant and tenant agent as foreign in visitor_type table. Then, why u have add those same
+                            //** fields here again in visitor_type_card_type. Are u not able to get the tenant based card types
+                            //** based on visitor types? :(
+
+                            //$new_row->tenant = $session['tenant'];
+                            //$new_row->tenant_agent = $session['tenant_agent'];
+                            $new_row->save();
                         }
                     }
-                }
+                //}
 
+                    
                 $transaction->commit();
 
                 $this->redirect(array('admin',array('vms' => $model->module)));
@@ -99,6 +117,7 @@ class VisitorTypeController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+
         $session = new CHttpSession;
         $model = $this->loadModel($id);
 
@@ -143,8 +162,8 @@ class VisitorTypeController extends Controller {
                                     $new_row = new VisitorTypeCardType;
                                     $new_row->card_type = $value;
                                     $new_row->visitor_type = $model->id;
-                                    $new_row->tenant = $session['tenant'];
-                                    $new_row->tenant_agent = $session['tenant_agent'];
+                                    //$new_row->tenant = $session['tenant'];
+                                    //$new_row->tenant_agent = $session['tenant_agent'];
                                     $new_row->save();
                                 }
                             }

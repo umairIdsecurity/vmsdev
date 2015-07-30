@@ -44,6 +44,7 @@ class VisitorTypeController extends Controller {
     public function actionCreate() {
 
         $session = new CHttpSession;
+
         $model = new VisitorType;
 
 
@@ -80,14 +81,8 @@ class VisitorTypeController extends Controller {
                             $new_row = new VisitorTypeCardType;
                             $new_row->card_type = $value;
                             $new_row->visitor_type = $model->id;
-
-                            //** very Bad, Mr. Dat: This doesn't required as u have already given 
-                            //** a tenant and tenant agent as foreign in visitor_type table. Then, why u have add those same
-                            //** fields here again in visitor_type_card_type. Are u not able to get the tenant based card types
-                            //** based on visitor types? :(
-
-                            //$new_row->tenant = $session['tenant'];
-                            //$new_row->tenant_agent = $session['tenant_agent'];
+                            $new_row->tenant = !empty($session['tenant'])?$session['tenant']:NULL;
+                            $new_row->tenant_agent = !empty($session['tenant_agent'])?$session['tenant_agent']:NULL;
                             $new_row->save();
                         }
                     }
@@ -96,6 +91,7 @@ class VisitorTypeController extends Controller {
                     
                 $transaction->commit();
 
+                Yii::app()->user->setFlash('success', "Visitor Type inserted Successfully");
                 $this->redirect(array('admin',array('vms' => $model->module)));
 
             } catch (CDbException $e)
@@ -157,13 +153,12 @@ class VisitorTypeController extends Controller {
                         // add any new ones
                         if (is_array($card_types)) {
                             foreach ($card_types as $value) {
-
                                 if (!in_array($value, $found)) {
                                     $new_row = new VisitorTypeCardType;
                                     $new_row->card_type = $value;
                                     $new_row->visitor_type = $model->id;
-                                    //$new_row->tenant = $session['tenant'];
-                                    //$new_row->tenant_agent = $session['tenant_agent'];
+                                    $new_row->tenant = !empty($session['tenant'])?$session['tenant']:NULL;
+                                    $new_row->tenant_agent = !empty($session['tenant_agent'])?$session['tenant_agent']:NULL;
                                     $new_row->save();
                                 }
                             }
@@ -277,7 +272,7 @@ class VisitorTypeController extends Controller {
             Yii::app()->end();
         }
     }
-    
+
 
     public function actionAdminAjax() {
         $model = new VisitorType('search');

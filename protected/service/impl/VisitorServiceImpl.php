@@ -76,8 +76,13 @@ class VisitorServiceImpl implements VisitorService {
                 $visitor->password = $password;
             }
         }
-        $visitor->asic_expiry = date("Y-m-d",strtotime($visitor->asic_expiry));
 
+        if(($visitor->asic_expiry == "0000-00-00") || ($visitor->asic_expiry == "1970-01-01") || empty($visitor->asic_expiry)){
+            $visitor->asic_expiry = NULL;
+        }else{
+            $visitor->asic_expiry = date("Y-m-d",strtotime($visitor->asic_expiry));
+        }    
+        
         switch ($visitor->profile_type) {
             case Visitor::PROFILE_TYPE_VIC:
                 if (date('Y') - date('Y', strtotime($visitor->date_of_birth)) < 18) {
@@ -104,14 +109,14 @@ class VisitorServiceImpl implements VisitorService {
                 }
 
                 #Todo: If ASIC no and ASIC expiry is empty then change visitor card status to expired
-                if (empty($visitor->asic_no) && empty($visitor->asic_expiry)) {
+                if (empty($visitor->asic_no) && (empty($visitor->asic_expiry)) || is_null(($visitor->asic_expiry))) {
                     $visitor->visitor_card_status == Visitor::ASIC_EXPIRED;
                 }
                 break;
             case Visitor::PROFILE_TYPE_CORPORATE:
                 break;
         }
-        
+        $visitor->tenant = Yii::app()->user->tenant; 
         if (!($result = $visitor->save())) {
             return false;
         }

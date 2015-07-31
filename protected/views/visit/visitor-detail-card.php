@@ -168,8 +168,9 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 //echo $detailForm->error($model, 'visitor_type');
                 echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
             //}
-
-            $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+                
+            $condition = "tenant=".Yii::app()->user->tenant;    
+            $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }

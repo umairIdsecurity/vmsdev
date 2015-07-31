@@ -1111,6 +1111,7 @@ $model->identification_country_issued = 13;
     }
 
     function addReasonInDropdown() {
+        
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitReason/GetAllReason'); ?>',
@@ -1207,6 +1208,7 @@ $model->identification_country_issued = 13;
     }
 
     function sendVisitorForm() {
+        
         var form = $("#register-form").serialize();
         $.ajax({
             type: "POST",

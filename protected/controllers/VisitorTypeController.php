@@ -42,21 +42,34 @@ class VisitorTypeController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+
         $session = new CHttpSession;
+
         $model = new VisitorType;
-        $visitorTypeService = new VisitorTypeServiceImpl();
+
+
+        //$visitorTypeService = new VisitorTypeServiceImpl();
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+       //$this->performAjaxValidation($model);
+
 
         if (isset($_POST['VisitorType'])) {
+            
             $model->attributes = $_POST['VisitorType'];
-
 
             $transaction = Yii::app()->db->beginTransaction();
 
             try {
 
-                if ($visitorTypeService->save($model, Yii::app()->user)) {
+                //if ($visitorTypeService->save($model, Yii::app()->user)) {
+
+                $model->created_by = Yii::app()->user->id;
+                $model->tenant = Yii::app()->user->tenant;
+                $model->tenant_agent = Yii::app()->user->tenant_agent;
+
+                $model->save();
+
+                
 
                     if(isset($_POST["card_types"])) {
 
@@ -68,16 +81,17 @@ class VisitorTypeController extends Controller {
                             $new_row = new VisitorTypeCardType;
                             $new_row->card_type = $value;
                             $new_row->visitor_type = $model->id;
-                            $new_row->tenant = $session['tenant'];
-                            $new_row->tenant_agent = $session['tenant_agent'];
+                            $new_row->tenant = !empty($session['tenant'])?$session['tenant']:NULL;
+                            $new_row->tenant_agent = !empty($session['tenant_agent'])?$session['tenant_agent']:NULL;
                             $new_row->save();
-
                         }
                     }
-                }
+                //}
 
+                    
                 $transaction->commit();
 
+                Yii::app()->user->setFlash('success', "Visitor Type inserted Successfully");
                 $this->redirect(array('admin',array('vms' => $model->module)));
 
             } catch (CDbException $e)
@@ -99,6 +113,7 @@ class VisitorTypeController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+
         $session = new CHttpSession;
         $model = $this->loadModel($id);
 
@@ -138,13 +153,12 @@ class VisitorTypeController extends Controller {
                         // add any new ones
                         if (is_array($card_types)) {
                             foreach ($card_types as $value) {
-
                                 if (!in_array($value, $found)) {
                                     $new_row = new VisitorTypeCardType;
                                     $new_row->card_type = $value;
                                     $new_row->visitor_type = $model->id;
-                                    $new_row->tenant = $session['tenant'];
-                                    $new_row->tenant_agent = $session['tenant_agent'];
+                                    $new_row->tenant = !empty($session['tenant'])?$session['tenant']:NULL;
+                                    $new_row->tenant_agent = !empty($session['tenant_agent'])?$session['tenant_agent']:NULL;
                                     $new_row->save();
                                 }
                             }
@@ -258,7 +272,6 @@ class VisitorTypeController extends Controller {
             Yii::app()->end();
         }
     }
-
 
 
     public function actionAdminAjax() {

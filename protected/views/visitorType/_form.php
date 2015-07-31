@@ -13,8 +13,12 @@
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
-)); ?>
+)); 
 
+    foreach (Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    }
+?>
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
@@ -46,13 +50,14 @@
                 <td style="vertical-align: top">
                     <table style="vertical-align: top" >
                     <?php
-                        if(Chelper::avms_module_has_focus()) {
+                        if(CHelper::avms_module_has_focus()) {
                             $card_list = CardType::$VIC_CARD_TYPES;
                         }else {
                             $card_list = CardType::$CORPORATE_CARD_TYPES;
                         }
                         //if($model->id >0)
                         $selected_type_list = VisitorType::model()->getActiveCardTypeIds($model->id);
+
 
                         if(!is_array($selected_type_list))
                             $selected_type_list= array();

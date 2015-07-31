@@ -21,6 +21,7 @@ class Tenant extends CActiveRecord
     public $code;
     public $contact;
     public $email_address;
+    public $is_deleted;
    
       
 	public function tableName()

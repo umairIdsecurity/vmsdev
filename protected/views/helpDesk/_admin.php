@@ -3,7 +3,7 @@
 /* @var $this HelpDeskGroupController */
 /* @var $model HelpDeskGroup */
 function assignedHelpDeskGroups(){
-    $data = CHtml::listData(HelpDeskGroup::model()->findAll(array('order' => 'order_by ASC')), 'id', 'name');
+    $data = CHtml::listData(HelpDeskGroup::model()->findAll(array('condition'=>'created_by='.Yii::app()->user->id, 'order' => 'order_by ASC')), 'id', 'name');
     $data=array(""=>'Help Desk Groups')+$data;
     return $data;
 }

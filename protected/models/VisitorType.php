@@ -38,14 +38,14 @@ class VisitorType extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'length', 'max' => 25),
             array('name', 'required'),
+            array('name', 'length', 'max' => 25),
             array('created_by', 'length', 'max' => 20),
             array('module', 'length', 'max' => 4),
             array('is_default_value', 'length', 'max'=>1),  
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, is_deleted,tenant,tenant_agent,name , is_default_value, created_by', 'safe', 'on' => 'search'),
+            array('id,is_deleted,tenant,tenant_agent,name,is_default_value,created_by', 'safe', 'on' => 'search'),
         );
     }
 
@@ -202,38 +202,52 @@ class VisitorType extends CActiveRecord {
     public function nullVisitorTypes(){
         return null;
     }
+
     public function getCardTypeVisitorTypes($card_type){
+        
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
 
         $criteria->addCondition("t.tenant=".$session['tenant']." AND t.is_deleted=0");
-        $criteria->addCondition("t.module='".Chelper::get_module_focus()."'");
+
+        //$criteria->addCondition("t.module='".CHelper::get_module_focus()."'");
+
+        if($card_type > 4){
+            $criteria->addCondition("t.module='AVMS'");
+        }else{
+            $criteria->addCondition("t.module='CVMS'");
+        }
+        
         if(isset($session['tenant_agent']))
             $criteria->addCondition("t.tenant_agent=".$session['tenant_agent']);
 
-        $criteria->join = 'JOIN visitor_type_card_type '
-                                        .'ON visitor_type_card_type.visitor_type = t.id '
-                                        .'AND visitor_type_card_type.is_deleted=0 '
-                                        .'AND visitor_type_card_type.card_type='.$card_type;
+         $criteria->addCondition("visitor_type_card_type.is_deleted=0 AND visitor_type_card_type.card_type='".$card_type."'");
+
+        $criteria->join = 'JOIN visitor_type_card_type'
+                                        .' ON visitor_type_card_type.visitor_type = t.id';
 
         return VisitorType::model()->findAll($criteria);
 
     }
+
     public function getActiveCardTypes($visitor_type){
 
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
         //$criteria->select = "card_type";
-        $criteria->addCondition("visitor_type=" . $visitor_type);
-        $criteria->addCondition("t.tenant=" . $session['tenant'] . " AND t.is_deleted=0");
+        $criteria->addCondition("t.visitor_type='" . $visitor_type."'");
+        
+        //$criteria->addCondition("t.tenant=" . $session['tenant'] . " AND t.is_deleted=0");
 
-        if (isset($session['tenant_agent']))
-            $criteria->addCondition("t.tenant_agent=" . $session['tenant_agent']);
+        $criteria->addCondition("visitor_type.tenant=" . $session['tenant'] . " AND t.is_deleted=0");
+
+        /*if (isset($session['tenant_agent']))
+            $criteria->addCondition("t.tenant_agent=" . $session['tenant_agent']);*/
 
         $criteria->join = 'JOIN visitor_type '
             . 'ON visitor_type.id = t.visitor_type '
             . 'AND visitor_type.is_deleted=0 '
-            . "AND visitor_type.module='" . Chelper::get_module_focus() . "'";
+            . "AND visitor_type.module='" . CHelper::get_module_focus() . "'";
 
         return VisitorTypeCardType::model()->findAll($criteria);
 
@@ -253,10 +267,13 @@ class VisitorType extends CActiveRecord {
     }
 
     public function returnVisitorTypes($visitorTypeId = NULL,$condition= "1>0") {
+        
+        if( is_null($visitorTypeId) )
+            $condition .=" And tenant = ".Yii::app ()->user->tenant;
         $visitorType = VisitorType::model()->findAll($condition);
         $VISITOR_TYPE_LIST = array();
         foreach ($visitorType as $key => $value) {
-            $VISITOR_TYPE_LIST[$value['id']] = 'Visitor Type: ' . $value['name'];
+            $VISITOR_TYPE_LIST[$value['id']] =  $value['name'];
         }
 
         if ($visitorTypeId == NULL) {

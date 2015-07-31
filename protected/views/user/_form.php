@@ -314,6 +314,12 @@ $form = $this->beginWidget('CActiveForm', array(
             } else {
                 $selectedItem[] = $companyId;
             }
+
+            if (isset($companyId)) {
+                if (!in_array($companyId, $companyList)) {
+                    $companyList[$companyId] = Company::model()->getCompanyName($companyId);
+                }
+            }
         }
 
         $this->widget('application.extensions.select2.Select2', array(
@@ -778,7 +784,7 @@ $(document).ready(function () {
 	
 	var elem3 = document.getElementById('User_company');
 	if(typeof elem3 !== 'undefined' && elem3 !== null) {
-            elem3.disabled = true;
+            // elem3.disabled = true;
 	}
         
        

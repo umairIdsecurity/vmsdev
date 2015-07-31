@@ -789,9 +789,13 @@ class VisitorController extends Controller {
      * Add asic sponsor for Log Visit process
      */
     public function actionAddAsicSponsor() {
+        
         // If asic sponsor existed
         if (isset($_POST['User']['email']) && !empty($_POST['User']['email'])) { 
-            $model = Visitor::model()->findByAttributes(['email' => $_POST['User']['email']]);
+
+            $userEmail = $_POST['User']['email'];
+
+            $model = Visitor::model()->findByAttributes(array('email' => $userEmail));
         }
 
         // If does not exist then create new

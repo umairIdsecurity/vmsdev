@@ -30,7 +30,7 @@ if ($card) {
     <!--Box 1-->
     <div  class="box-card-style">
         <div class="box-image-style"></div>
-        <div style=" text-align:center; line-height:20px; margin:10px 0 0 5px; color:#000;">
+        <div style=" text-align:center; line-height:20px; margin:10px 0 0 5px; color:#000;height: 128px; overflow: hidden;">
             <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode ?></p>
             <strong style="font-size: 40px; text-align: left; width: 100%; float: left; margin-bottom: 3px; margin-left: 5px; line-height: 32px; margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 10px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small>
             <?php
@@ -41,8 +41,8 @@ if ($card) {
                 }
             ?>
             </strong>
-            <p style="font-size:25px; font-weight:bold; line-height:20.9px; margin:0 0 3px 0;"><?php echo ($visitorModel->first_name != "")?$visitorModel->first_name:"N/A"; ?><br>
-                <?php echo ($visitorModel->last_name != "")?$visitorModel->last_name:"N/A"; ?><br>
+            <p style="font-size:25px; font-weight:bold; line-height:20.9px; margin:0 0 3px 0;"><?php echo ($visitorModel->first_name != "")?substr($visitorModel->first_name, 0, 20):"N/A"; ?><br>
+                <?php echo ($visitorModel->last_name != "")?substr($visitorModel->last_name, 0, 20):"N/A"; ?><br>
                 <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p>
         </div>
         <div class="box-card-logo">

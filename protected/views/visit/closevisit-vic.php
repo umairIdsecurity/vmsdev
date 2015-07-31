@@ -97,6 +97,7 @@
                     }
                 ?>
                 <br />
+                <br />
                 <?php echo $closeVisitForm->error($model, 'card_lost_declaration_file'); ?>
                 <div style="display: none" id="card_lost_declaration_required" class="errorMessage">Please add card lost declaration file.</div>
             </td>

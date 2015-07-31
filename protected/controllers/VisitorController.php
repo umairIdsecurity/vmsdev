@@ -71,8 +71,8 @@ class VisitorController extends Controller {
             if (isset($_REQUEST['view']) && $_REQUEST['view'] == 1) {
                 $model->scenario = 'vic_log_process';
             }
-
-            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
+            
+               if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
                 //email sending
                 if(!empty($model->password_requirement)){
                     $passwordRequire= intval($model->password_requirement);

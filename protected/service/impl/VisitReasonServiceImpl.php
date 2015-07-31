@@ -16,13 +16,15 @@ class VisitReasonServiceImpl implements VisitReasonService {
     public function save($visitReason, $sessionId) {
         $visitReason->created_by = $sessionId;
         //transform text
-        $visitReason->reason = ucwords($visitReason->reason);  
+        $visitReason->reason = ucwords($visitReason->reason); 
+        $visitReason->tenant = Yii::app()->user->tenant;
+        $visitReason->module = Yii::app()->request->getParam("vms", 'AVMS');
         if (!($visitReason->save())) {
             return false;
         }
         
        // Visitor::model()->saveReason($visitor->id, $visit_reason);
-        return true;
+        return $visitReason->id;
     }
 
 }

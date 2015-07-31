@@ -127,8 +127,10 @@ class VisitController extends Controller {
             //check $reasonId has exist until add new.
             if ($model->reason == 'Other' || !$model->reason){
                 $newReason = new VisitReason();
-                $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : '');
-                
+                $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : 'Other');
+                $newReason->created_by = Yii::app()->user->id;
+                $newReason->tenant = Yii::app()->user->tenant;
+                $newReason->module = "AVMS";
                 if($newReason->save()){
                     $model->reason = $newReason->id;
                 }
@@ -481,17 +483,6 @@ class VisitController extends Controller {
                 }
             }
 
-            // If operator select other reason then save new one
-            if (isset($_POST['VisitReason'])) {
-                $visitReasonModel             = new VisitReason;
-                $visitReasonService           = new VisitReasonServiceImpl;
-                $visitReasonParams            = Yii::app()->request->getPost('VisitReason');
-                $visitReasonModel->attributes = $visitReasonParams;
-                if (!$visitReasonService->save($visitReasonModel, $session['id'])) {
-                    // Do something if visit reason do not save
-                }
-            }
-
             $visitorModel->attributes           = Yii::app()->request->getPost('Visitor');
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
             $visitorModel->setScenario('updateVic');
@@ -509,6 +500,19 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $visitParams;
+            // If operator select other reason then save new one
+            if (isset($_POST['VisitReason'])) {
+                $visitReasonModel             = new VisitReason;
+                $visitReasonService           = new VisitReasonServiceImpl;
+                $visitReasonParams            = Yii::app()->request->getPost('VisitReason');
+                $visitReasonModel->attributes = $visitReasonParams;
+                $newReasonID = $visitReasonService->save($visitReasonModel, $session['id']);
+                if (!$newReasonID) {
+                    $model->reason = NULL;
+                }  else {
+                    $model->reason = $newReasonID;
+                }
+            }
             
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {

@@ -96,9 +96,9 @@ class VisitReason extends CActiveRecord {
         $criteria->compare('module', $this->module, true);
         if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
             $criteria->addCondition("tenant=".Yii::app()->user->tenant);
-
-
-        return new CActiveDataProvider($this, array(
+         $vtype = Yii::app()->request->getParam("vms", "avms");
+         $criteria->addCondition("module= '".$vtype."'");
+         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',

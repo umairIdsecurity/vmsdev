@@ -14,6 +14,12 @@
 class VisitServiceImpl implements VisitService {
 
     public function save($visit, $sessionId) {
+
+        //Integrity Constraint violation here if removed
+        if(empty($visit->visitor_type)){
+            $visit->visitor_type = NULL;
+        }
+
         $visit->created_by = $sessionId;
 
         if ($visit->time_in_hours != '') {

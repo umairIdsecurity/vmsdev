@@ -314,6 +314,12 @@ $form = $this->beginWidget('CActiveForm', array(
             } else {
                 $selectedItem[] = $companyId;
             }
+
+            if (isset($companyId)) {
+                if (!in_array($companyId, $companyList)) {
+                    $companyList[$companyId] = Company::model()->getCompanyName($companyId);
+                }
+            }
         }
 
         $this->widget('application.extensions.select2.Select2', array(

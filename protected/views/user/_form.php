@@ -778,7 +778,7 @@ $(document).ready(function () {
 	
 	var elem3 = document.getElementById('User_company');
 	if(typeof elem3 !== 'undefined' && elem3 !== null) {
-            elem3.disabled = true;
+            // elem3.disabled = true;
 	}
         
        

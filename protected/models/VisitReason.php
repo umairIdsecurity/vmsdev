@@ -119,6 +119,7 @@ class VisitReason extends CActiveRecord {
     public function findAllReason() {
 
         $criteria = new CDbCriteria;
+        $criteria->condition = 'tenant = '.Yii::app()->user->tenant;
         $criteria->select = 'id,reason';
 
         return VisitReason::model()->findAll($criteria);

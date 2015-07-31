@@ -195,10 +195,10 @@ class Visitor extends CActiveRecord {
         // will receive user inputs.
         $rules = array(
             array('first_name, last_name, email, contact_number', 'required'),
-            array('tenant','required','message' =>'Please select a {attribute}'),
+            //array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-            array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
+            array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),
             array(
                 'date_of_birth,
                 notes,
@@ -466,7 +466,7 @@ class Visitor extends CActiveRecord {
         if($user->role != Roles::ROLE_SUPERADMIN){
             //if(Yii::app()->controller->id === 'visit'){
                // if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
-                    $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                    $criteria->addCondition("t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant);
                 //}
             //}
         }

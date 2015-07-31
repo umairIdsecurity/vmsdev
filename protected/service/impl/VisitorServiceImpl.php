@@ -116,7 +116,7 @@ class VisitorServiceImpl implements VisitorService {
             case Visitor::PROFILE_TYPE_CORPORATE:
                 break;
         }
-        
+        $visitor->tenant = Yii::app()->user->tenant; 
         if (!($result = $visitor->save())) {
             return false;
         }

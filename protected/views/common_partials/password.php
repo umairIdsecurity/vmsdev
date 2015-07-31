@@ -74,7 +74,7 @@ if (isset($company) && !empty($company)) {
                                                 <div class="row buttons" style="text-align:center;">
                                                 	<?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                                                     <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-                                                    	style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                                    	style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:13px;margin-right:8px;"/>
                                                 </div>
                                             </td>
                                         </tr>

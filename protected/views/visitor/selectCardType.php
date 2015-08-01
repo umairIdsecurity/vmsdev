@@ -100,7 +100,23 @@ if (!$cardTypeWorkstationModel) {
                     }
                 }
             });
-
+            // For reason
+             $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitReason/getCardTypeReason&cardtype='); ?>' + card_type_value,
+                dataType: 'json',
+                data: card_type_value,
+                success: function (r) {
+                    if(r) {
+                        var opt = '<option value ="">Select Visit Reason</option>';
+                        $.each(r, function (index, value) {
+                            opt += '<option value="' + value.id + '">Visit Reason: ' + value.reason + '</option>';
+                        });
+                        $('#Visit_reason').html(opt);
+                    }
+                }
+            });
+            
             var dateoutDiv = $("#dateoutDiv");
             if (card_type_value == SAMEDAY_TYPE ) {
                 var curdateLogVisit = $("#curdateLogVisit");

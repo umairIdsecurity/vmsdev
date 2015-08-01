@@ -96,9 +96,9 @@ class VisitReason extends CActiveRecord {
         $criteria->compare('module', $this->module, true);
         if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
             $criteria->addCondition("tenant=".Yii::app()->user->tenant);
-
-
-        return new CActiveDataProvider($this, array(
+         $vtype = Yii::app()->request->getParam("vms", "avms");
+         $criteria->addCondition("module= '".$vtype."'");
+         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',
@@ -159,10 +159,8 @@ class VisitReason extends CActiveRecord {
     public function beforeFind() {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0 AND module='".CHelper::get_module_focus()."'";
-
-
-
+       // $criteria->condition = "t.is_deleted = 0 AND module='".CHelper::get_module_focus()."'";
+        $criteria->condition = "t.is_deleted = 0 AND t.tenant = ".Yii::app()->user->tenant;
         $this->dbCriteria->mergeWith($criteria);
     }
     

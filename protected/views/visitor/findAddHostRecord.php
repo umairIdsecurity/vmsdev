@@ -894,9 +894,9 @@ $defaultKey = key($asicCardTypes);
         var hostform = $("#register-host-form").serialize();
 
         if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
-            var url = "<?php echo $this->createUrl("visitor/addAsicSponsor");?>";
+            var url = "<?php echo $this->createUrl('visitor/addAsicSponsor');?>";
         } else {
-            var url = "<?php echo CHtml::normalizeUrl(array("user/create&view=1")); ?>";
+            var url = "<?php echo CHtml::normalizeUrl(array('user/create&view=1')); ?>";
         }
 
         $.ajax({

@@ -31,7 +31,7 @@ class VisitReasonController extends Controller {
            
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create','GetAllReason','CheckReasonIfUnique'),
+                'actions' => array('create','GetAllReason','CheckReasonIfUnique', 'getCardTypeReason'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -192,5 +192,29 @@ class VisitReasonController extends Controller {
         $resultMessage['data'] = $aArray;
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
+    }
+    
+    /**
+     * Get Selected CardType Reason
+     * @param int $cardType CardType from Log Visit
+     * 
+     * @return array of Reason
+     */
+    public function actionGetCardTypeReason() {
+        
+         $cardType = Yii::app()->request->getParam("cardtype", 0);
+        
+        if($cardType > 4)
+            $module = "AVMS";
+        else
+            $module = "CVMS";
+        
+        $criteria = new CDbCriteria;
+        $criteria->condition = 'module = "'.$module.'" AND tenant = '.Yii::app()->user->tenant;
+        $criteria->select = 'id,reason';
+
+       $list =  VisitReason::model()->findAll($criteria);
+                    
+       echo CJSON::encode($list);
     }
 }

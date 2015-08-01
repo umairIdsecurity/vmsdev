@@ -71,8 +71,8 @@ class VisitorController extends Controller {
             if (isset($_REQUEST['view']) && $_REQUEST['view'] == 1) {
                 $model->scenario = 'vic_log_process';
             }
-
-            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
+            
+               if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
                 //email sending
                 if(!empty($model->password_requirement)){
                     $passwordRequire= intval($model->password_requirement);
@@ -789,9 +789,13 @@ class VisitorController extends Controller {
      * Add asic sponsor for Log Visit process
      */
     public function actionAddAsicSponsor() {
+        
         // If asic sponsor existed
         if (isset($_POST['User']['email']) && !empty($_POST['User']['email'])) { 
-            $model = Visitor::model()->findByAttributes(['email' => $_POST['User']['email']]);
+
+            $userEmail = $_POST['User']['email'];
+
+            $model = Visitor::model()->findByAttributes(array('email' => $userEmail));
         }
 
         // If does not exist then create new

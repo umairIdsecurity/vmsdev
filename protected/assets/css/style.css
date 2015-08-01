@@ -2227,3 +2227,7 @@ label.myLabel input[type="file"] {
     padding-left: 0;
     margin-left: 5px;
 }
+
+.message-no-margin .errorMessage {
+    margin: 0;
+}

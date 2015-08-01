@@ -730,7 +730,7 @@ class VisitorController extends Controller {
                                 $visitInfo->visitor = $visitorInfo->id;
                                 //$visitInfo->visitor_type = '2'; // Corporate
                                 $visitInfo->visitor_status = 1;
-                                $visitInfo->card = $card ? $card->id:"";
+                                $visitInfo->card = isset($card) ? $card->id:"";
                                 $visitInfo->host = Yii::app()->user->id;
                                 $visitInfo->created_by = Yii::app()->user->id;
                                 $visitInfo->date_check_in  = date("Y-m-d", strtotime($line[3]) );

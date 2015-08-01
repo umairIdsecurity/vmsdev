@@ -57,7 +57,9 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                     if ($event->sender->$columnName != "0000-00-00") { //checking date field with no value
                         $col_data = date("d-m-Y", strtotime($event->sender->$columnName));
                         $datetime_object = DateTime::createFromFormat($this->php_user_short_date, $col_data, new DateTimeZone($this->user_timezone));
-                        $event->sender->$columnName = $datetime_object->format($this->php_db_date);
+                        if ($datetime_object != false) {
+                            $event->sender->$columnName = $datetime_object->format($this->php_db_date);
+                        }
                     }
                 } else if ($column->dbType == 'datetime' || $column->dbType == 'timestamp') {
                     if ($event->sender->$columnName != '0000-00-00 00:00:00') { //checking field with no value
@@ -73,8 +75,10 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                     }
                 } else if ($column->dbType == 'time') {
                     $datetime_object = DateTime::createFromFormat($this->php_user_time, $event->sender->$columnName, new DateTimeZone($this->user_timezone));
-                    $datetime_object->setTimezone(new DateTimeZone($this->edtTimeZone));
-                    $event->sender->$columnName = $datetime_object->format($this->php_db_time);
+                    if ($datetime_object != false) {
+                        $datetime_object->setTimezone(new DateTimeZone($this->edtTimeZone));
+                        $event->sender->$columnName = $datetime_object->format($this->php_db_time);
+                    }
                 }
             }
         }

@@ -334,7 +334,7 @@ class PreregistrationController extends Controller
 					)
 				);
 				if(!empty($model)){
-					foreach($model as $data){
+					/*foreach($model as $data){
 						echo '<tr>
 						<th scope="row">
 							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data->id.'">
@@ -343,7 +343,22 @@ class PreregistrationController extends Controller
 						<td>'.$data->last_name.'</td>
 						<td>'.$data->visitorStatus->name.'</td>
 					</tr>';
+					}*/
+					foreach($model as $data){
+						$companyModel = Company::model()->findByPk($data->company);
+						if(!empty($companyModel)){
+							$companyName = $companyModel->name;
+						}
+						else{
+							$companyName = '-';
+						}
+
+						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data->id.'">',$data->first_name,$data->last_name,$companyName);
+
 					}
+
+					echo json_encode($dataSet);
+
 				}
 				else{
 					echo "No Record";

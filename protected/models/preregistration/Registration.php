@@ -187,7 +187,6 @@ class Registration extends CActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-
             array('first_name, last_name, email, contact_number', 'required' , 'except'=>'asic'),
             array('email', 'unique', 'className' => 'Registration',
                 'attributeName' => 'email',

@@ -254,6 +254,11 @@ class PreregistrationController extends Controller
 
 		$model->scenario = 'asic';
 
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+		
 		if (isset($_POST['Registration'])) {
 
 			$model->attributes = $_POST['Registration'];

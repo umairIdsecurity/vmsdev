@@ -30,6 +30,10 @@ class UploadFileController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('site/login'));
+        }
+
         $folderName = Yii::app()->request->getParam('f');
 
         //Create default folders for user until exist.

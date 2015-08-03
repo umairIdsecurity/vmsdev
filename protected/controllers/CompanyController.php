@@ -516,8 +516,10 @@ class CompanyController extends Controller
             } else {
                 // else get visitor on visitor table
                 $visitor = Visitor::model()->findByPk($id);
-                $asicList = Visitor::model()->findAllByAttributes(['company' => $visitor->company, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED]);
-
+                $userAsic = User::model()->find( 'id='.$visitor->staff_id );
+                $asicList = Visitor::model()->findAllByAttributes(['company' => $visitor->company, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED,
+                                                                    'email' => $userAsic->email]);
+                
                 if (!empty($asicList)) {
                     $asic = $asicList[count($asicList) - 1];
                 }

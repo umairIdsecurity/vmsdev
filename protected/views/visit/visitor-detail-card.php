@@ -169,7 +169,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
             //}
                 
-            $condition = "tenant=".Yii::app()->user->tenant;    
+            $condition = $model->card_type > 4? "module='AVMS'": "module='CVMS'";
             $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;

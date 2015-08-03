@@ -141,21 +141,35 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_postcode'); ?>
                 </div>
+                
                 <div class="form-group form-group-custom">
-                    <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'class'=>'form-control input-lg')); ?>
-                    <?php echo $form->error($model, 'contact_state'); ?>
-
-                </div>
-                <div class="form-group form-group-custom">
-
                     <?php
                     echo $form->dropDownList($model, 'contact_country', $countryList,
                         array('prompt' => 'Country', 'class'=>'form-control input-lg',
                             'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                     ?>
                     <?php echo $form->error($model, 'contact_country'); ?>
-
                 </div>
+
+                <div class="form-group form-group-custom">
+
+                    <div id="stateDropdown">
+                        <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'class'=>'form-control input-lg')); ?>
+                    </div>
+                    
+                    <div style="display:none;" id="stateTextbox">
+                        <?php echo $form->textField($model, 'contact_state', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'State', 'class'=>'form-control input-lg','disabled'=>'disabled')); ?>
+                    </div> 
+
+                    <?php 
+                        if(isset($error_message) && !empty($error_message)){
+                            echo '<span style="color:red">'.$error_message.'</span>';
+                        }
+                    ?>
+                    <?php //echo $form->error($model, 'contact_state'); ?>
+                    
+                </div>
+
                 <div class="form-group">
                     <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_number'); ?>
@@ -269,6 +283,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             }else{
                 $("#Registration_date_of_birth_em_").hide();
             }
+        });
+
+
+
+        $('#Registration_contact_country').on('change', function () {
+            var countryId = parseInt($(this).val());
+            //Dropdown: id=13,value=Australia
+            if(countryId == 13){
+                $("#stateDropdown").show();
+                $("#stateTextbox").hide();
+                $("#stateTextbox input").prop("disabled",true);
+                $("#stateDropdown select").prop("disabled",false);
+            }else{
+                $("#stateTextbox").show();
+                $("#stateDropdown").hide();
+                $("#stateDropdown select").prop("disabled",true);
+                $("#stateTextbox input").prop("disabled",false);
+            }
+
         });
 
 

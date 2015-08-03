@@ -19,26 +19,21 @@
                 'validateOnSubmit'=>true,
             ),
             'htmlOptions'=>array(
-                'class'=>'form-select-gate'
+                //'class'=>'form-select-gate'
             )
         ));
         ?>
 
-        <h3 class="form-title text-center">Where will you be collecting your VIC?</h3>
 
-        <div class="text-center icon-info">
-            <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>(VIC) What is this?</a>
+<br><br><br>
+
+    <div class="">
+
+        <div class="" style="float: left">
+            <h3 class="" style="margin-top:11px">Where will you be collecting your VIC?</h3>
         </div>
-
-        <div class="hidden sms-info">
-            <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
-            <h3>What is a Visitor Identification Card (VIC)?</h3>
-            <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
-        </div>
-
-    <div class="form-fields-area">
-        <?php echo $form->errorSummary($model); ?>
-        <div class="form-group">
+       
+        <div class="form-group" style="float: left">
 
             <?php
 
@@ -49,7 +44,8 @@
             echo $form->dropDownList($model,'entrypoint',
                 $list,
                 array(
-                    'class'=>'form-control input-lg' ,
+                    'class'=>'form-control input-lg',
+                    'style'=>'width:500px;margin-left:70px',
                     'empty' => 'Select a workstation')
             );
 
@@ -57,8 +53,27 @@
 
         </div>
 
+        <br><br><br>
 
+        <div class="">
+            <?php echo $form->errorSummary($model); ?>
+        </div>
+         
     </div>
+
+    <br>
+    
+    <div class="text-center icon-info" style="margin-left:55px">
+        <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;(VIC) What is this?</a>
+    </div>
+     <br>
+    <div class="hidden sms-info" style="margin-left:202px">
+        <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
+        <h3>What is a Visitor Identification Card (VIC)?</h3>
+        <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
+    </div>
+
+
 
     <div class="row next-prev-btns">
         <div class="col-md-1">

@@ -148,30 +148,38 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionConfirmDetails(){
+
 		$session = new CHttpSession;
 
 		$model = new Registration();
 
 		$model->scenario = 'preregistration';
 
+		$error_message = '';
+
 		if (isset($_POST['Registration'])) {
-			$model->profile_type = $session['account_type'];
-			$model->email 		 = $session['username'];
-			$model->password 	 = $session['password'];
-			$model->password_repeat 	 = $session['password'];
-			$model->attributes = $_POST['Registration'];
 
-			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
+			if (!empty($_POST['Registration']['contact_state'])){
 
-			if ($model->save()) {
-				$session['visitor_id'] = $model->id;
-				$this->redirect(array('preregistration/visitReason'));
-			}
+				$model->profile_type = $session['account_type'];
+				$model->email 		 = $session['username'];
+				$model->password 	 = $session['password'];
+				$model->password_repeat 	 = $session['password'];
+				$model->attributes = $_POST['Registration'];
 
+				$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
 
+				if ($model->save()) {
+					$session['visitor_id'] = $model->id;
+					$this->redirect(array('preregistration/visitReason'));
+				}
+
+            } else {
+                $error_message = "State should not be empty";
+            }
 		}
 		
-		$this->render('confirm-details' , array('model' => $model));
+		$this->render('confirm-details' , array('model' => $model,'error_message' => $error_message));
 	}
 
 	public function actionVisitReason(){

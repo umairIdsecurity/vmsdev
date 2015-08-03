@@ -258,7 +258,7 @@ class PreregistrationController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-		
+
 		if (isset($_POST['Registration'])) {
 
 			$model->attributes = $_POST['Registration'];

@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
+				'actions' => array('forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -569,6 +569,33 @@ class PreregistrationController extends Controller
 
 	}
 
+	//**************************************************************************************
+	/**
+     * Forgot password
+    */
+    public function actionForgot() {
+
+        $model = new PreregPasswordForgot();
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'forgot-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['PreregPasswordForgot'])) {
+            $model->attributes = $_POST['PreregPasswordForgot'];
+            if ($model->validate() && $model->restore()) {
+                Yii::app()->user->setFlash('success', "Please check your email for reset password instructions");
+                $this->redirect(array('preregistration/login'));
+            }
+        }
+
+        $this->render('forgot', array('model' => $model));
+    }
+
+
+    //**************************************************************************************
+	
 	public function actionDashboard(){
 		$this->render('dashboard');
 	}

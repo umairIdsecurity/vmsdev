@@ -24,16 +24,15 @@
         ));
         ?>
 
+        <br><br>
 
-<br><br><br>
+        <h3 class="form-title">Where will you be collecting your VIC?</h3>
 
-    <div class="">
-
-        <div class="" style="float: left">
-            <h3 class="" style="margin-top:11px">Where will you be collecting your VIC?</h3>
-        </div>
-       
-        <div class="form-group" style="float: left">
+        <br><br>
+        
+        <!-- form-fields-area -->
+    <div class="" style="width:480px;">
+        <div class="form-group">
 
             <?php
 
@@ -44,35 +43,26 @@
             echo $form->dropDownList($model,'entrypoint',
                 $list,
                 array(
-                    'class'=>'form-control input-lg',
-                    'style'=>'width:500px;margin-left:70px',
+                    'class'=>'form-control input-lg' ,
                     'empty' => 'Select a workstation')
             );
 
             ?>
-
         </div>
-
-        <br><br><br>
-
-        <div class="">
-            <?php echo $form->errorSummary($model); ?>
-        </div>
-         
+        <?php echo $form->errorSummary($model); ?>
     </div>
 
-    <br>
-    
-    <div class="text-center icon-info" style="margin-left:55px">
-        <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;(VIC) What is this?</a>
+     <br><br> <br><br> <br><br>
+
+    <div class="text-center icon-info">
+        <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>(VIC) What is this?</a>
     </div>
-     <br>
-    <div class="hidden sms-info" style="margin-left:202px">
+
+    <div class="hidden sms-info">
         <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
         <h3>What is a Visitor Identification Card (VIC)?</h3>
         <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
     </div>
-
 
 
     <div class="row next-prev-btns">

@@ -163,6 +163,40 @@ class Visit extends CActiveRecord {
 //        if (!empty($this->card_returned_date)) $this->card_returned_date =  date('Y-m-d', strtotime($this->card_returned_date));
 //        return parent::beforeSave();
 //    }
+    
+   /* 
+    * Below is rule for check out time for all VIC visits:
+        1. Manual: Midnight of check out date
+        2. 24 hour: same time as check in time
+        3. EVIC: Midnight of the check out date
+        4. Multiday: Midnight of the check out date
+        5. Same day: Midnight of the check out date
+    * 
+    */
+     public function beforeSave() { 
+       
+         //if($this->visit_status == VisitStatus::ACTIVE)
+         switch( $this->card_type) {
+             case CardType::VIC_CARD_SAMEDATE:
+                 $this->time_check_out = '23:59:59';
+                 $this->finish_time = '23:59:59';
+                 $this->date_check_out = $this->date_check_in;
+                 break;
+             case CardType::VIC_CARD_MULTIDAY: 
+             case CardType::VIC_CARD_EXTENDED:  
+             case CardType::VIC_CARD_MANUAL:       
+                 $this->time_check_out = '23:59:59';
+                 $this->finish_time = '23:59:59';
+                 break;
+             case CardType::VIC_CARD_24HOURS:
+                 $this->time_check_out = $this->time_check_in;
+                 $this->finish_time = $this->time_check_in;
+                 break;
+             default :
+                 break;
+         }
+          return parent::beforeSave();
+     }
 
     public function setDatecheckin1($value) {
         // set private attribute for search

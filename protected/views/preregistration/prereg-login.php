@@ -9,6 +9,7 @@
 ?>
 <div class="page-content">
 
+    
 
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'prereg-login-form',
@@ -24,6 +25,13 @@
         <div class="form-group">
             <h1 class="text-primary title">LOGIN</h1>
         </div>
+
+        <?php
+            foreach(Yii::app()->user->getFlashes() as $key => $message) {
+                echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+            }
+        ?>
+
         <div class="form-group">
             <span class="glyphicon glyphicon-user"></span>
 
@@ -50,6 +58,6 @@
         </div>
 
     <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-primary btn-next')); ?>
-    <a class="btn btn-link" href="#">Forgot password?</a>
+    <a class="btn btn-link" href="<?php echo Yii::app()->createUrl('preregistration/forgot'); ?>">Forgot password?</a>
     <?php $this->endWidget(); ?>
 </div>

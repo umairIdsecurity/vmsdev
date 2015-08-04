@@ -18,6 +18,7 @@ class PreregistrationController extends Controller
 	 * @return array access control rules
 	 */
 	public function accessRules() {
+		 $session = new CHttpSession;
 		return array(
 			array('allow',
 				'actions' => array('forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
@@ -28,6 +29,12 @@ class PreregistrationController extends Controller
 				'users' => array('@'),
 				//'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
+			array(
+                'allow',
+                'actions' => array('profile'),
+                //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
+                'users' => array('@')
+            ),
 			array('deny',
 				'users'=>array('*'),
 			),
@@ -158,24 +165,25 @@ class PreregistrationController extends Controller
 		$error_message = '';
 
 		if (isset($_POST['Registration'])) {
+			$model->profile_type = $session['account_type'];
+			$model->email 		 = $session['username'];
+			$model->password 	 = $session['password'];
+			$model->password_repeat 	 = $session['password'];
+
+			$model->attributes = $_POST['Registration'];
+
+			$model->date_of_birth = date('Y-m-d', strtotime($_POST['Registration']['birthdayYear'] . '-' . $_POST['Registration']['birthdayMonth'] . '-' . $_POST['Registration']['birthdayDay']));
+
 
 			if (!empty($_POST['Registration']['contact_state'])){
-
-				$model->profile_type = $session['account_type'];
-				$model->email 		 = $session['username'];
-				$model->password 	 = $session['password'];
-				$model->password_repeat 	 = $session['password'];
-				$model->attributes = $_POST['Registration'];
-
-				$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
-
 				if ($model->save()) {
 					$session['visitor_id'] = $model->id;
 					$this->redirect(array('preregistration/visitReason'));
 				}
 
             } else {
-                $error_message = "State should not be empty";
+            	$model->contact_country = Visitor::AUSTRALIA_ID;
+                $error_message = "Please select state";
             }
 		}
 		
@@ -551,6 +559,8 @@ class PreregistrationController extends Controller
 
 	public function actionLogin(){
 
+		Yii::app()->session->destroy();
+
 		$model = new PreregLogin();
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'prereg-login-form') {
@@ -559,9 +569,14 @@ class PreregistrationController extends Controller
 		}
 
 		if (isset($_POST['PreregLogin'])) {
+
 			$model->attributes = $_POST['PreregLogin'];
 
 			if ($model->validate() && $model->login()) {
+
+				$session = new CHttpSession;
+
+
 				$this->redirect(array('preregistration/dashboard'));
 			}
 		}
@@ -594,8 +609,41 @@ class PreregistrationController extends Controller
     }
 
 
+    public function actionProfile($id)
+    {
+
+/*        $this->layout = "//layouts/column1";
+
+        $model = $this->loadModel($id);
+
+
+
+        if (isset($_POST['User'])) {
+
+            $model->attributes = $_POST['User'];
+            // $model->detachBehavior('DateTimeZoneAndFormatBehavior');
+            if ($model->save()) {
+                Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
+            }
+        }
+
+        $this->render('profile', array(
+            'model' => $model,
+        ));
+*/
+    }
+
+    public function loadModel($id)
+    {
+        $model = Visitor::model()->findByPk($id);
+        if ($model === null) {
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        return $model;
+    }
+
+
     //**************************************************************************************
-	
 	public function actionDashboard(){
 		$this->render('dashboard');
 	}
@@ -608,7 +656,7 @@ class PreregistrationController extends Controller
 
 	public function actionLogout() {
 		Yii::app()->user->logout();
-		//$this->redirect('index.php?r=site/login');
+		$this->redirect(array('preregistration/login'));
 	}
 
 }

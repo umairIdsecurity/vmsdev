@@ -57,13 +57,18 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                            value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
 
                     <div class="col-xs-4">
-                        <select id="fromDay" name="Registration[birthdayDay]" class='daySelect form-control input-lg'></select>
+                        <select id="fromDay" name="Registration[birthdayDay]" class='daySelect form-control input-lg'>
+                        </select>
                     </div>
                     <div class="col-xs-4">
-                        <select id="fromMonth" name="Registration[birthdayMonth]" class='monthSelect form-control input-lg'></select>
+                        <select id="fromMonth" name="Registration[birthdayMonth]" class='monthSelect form-control input-lg'>
+
+                        </select>
                     </div>
                     <div class="col-xs-4">
-                        <select id="fromYear" name="Registration[birthdayYear]" class='yearSelect form-control input-lg'></select>
+                        <select id="fromYear" name="Registration[birthdayYear]" class='yearSelect form-control input-lg'>
+
+                        </select>
                     </div>
 
 

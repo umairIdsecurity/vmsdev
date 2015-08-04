@@ -191,6 +191,9 @@ class Visit extends CActiveRecord {
              case CardType::VIC_CARD_24HOURS:
                  $this->time_check_out = $this->time_check_in;
                  $this->finish_time = $this->time_check_in;
+                 if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
+                    $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
+                  }
                  break;
              default :
                  break;

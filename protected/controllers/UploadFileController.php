@@ -96,7 +96,13 @@ class UploadFileController extends Controller
     {
         if (isset($_POST['Folder'])) {
             //Check Folder has exist
-            if (!Folder::model()->checkNameExist($_POST['Folder']['user_id'], $_POST['Folder']['name']) && Folder::model()->getNumberFolders($_POST['Folder']['user_id']) <= 30) {
+            if (Folder::model()->checkNameExist($_POST['Folder']['user_id'], $_POST['Folder']['name'])) {
+                echo CJSON::encode(array('success' => 2, 'error' => 'Folder name is already exists.'));
+                exit();
+            } elseif (Folder::model()->getNumberFolders($_POST['Folder']['user_id']) > 30) {
+                echo CJSON::encode(array('success' => 2, 'error' => 'Number folders larger than 30.'));
+                exit();
+            } else {
                 $folder = new Folder();
                 $folder->name = $_POST['Folder']['name'];
                 $folder->user_id = $_POST['Folder']['user_id'];
@@ -106,9 +112,6 @@ class UploadFileController extends Controller
                         echo CJSON::encode(array('success' => 1));
                         exit();
                     }
-            } else {
-                echo CJSON::encode(array('success' => 2, 'error' => 'Name folder has exist or number folders larger than 30.'));
-                exit();
             }
         }
         echo CJSON::encode(array('success' => 2, 'error' => 'Invalid request'));
@@ -227,6 +230,33 @@ class UploadFileController extends Controller
             echo CJSON::encode(array('success' => 2, 'error' => 'Invalid Request.'));
         }
 
+    }
+
+    /**
+     * delete Folder
+     */
+    public function actionDeleteFolder()
+    {
+        if (isset($_POST['Folder'])) {
+            $root = dirname(Yii::app()->request->scriptFile) . '/uploads/files';
+            $folder = Folder::model()->findByPk($_POST['Folder']);
+            if ($folder) {
+                $folderFile = $root . '/' . $folder->user_id . '/' . $folder->id;
+                $files = File::model()->getAllFilesFromFolder($folder,false);
+                if ($files != 0) {
+                    foreach ($files as $file) {
+                        unlink($folderFile . '/' . $file->file);
+                        $file->delete();
+                    }
+                }
+                if (is_dir($folderFile))
+                    rmdir($folderFile);
+                $folder->delete();
+            }
+            echo CJSON::encode(array('success' => 1));
+            exit();
+        }
+        echo CJSON::encode(array('success' => 2, 'error' => 'Invalid Request.'));
     }
 
     /**

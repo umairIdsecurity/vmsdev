@@ -384,7 +384,8 @@ function getCardType() {
                         $('#Host_photo').val(data.photo);
                         if (data.photoRelativePath != '' && typeof data.photoRelativePath[0] != 'undefined' && typeof data.photoRelativePath[0].relative_path != 'undefined') {
                             $('.ajax-upload-dragdrop2').css(
-                                'backgroundImage', 'url(/'+data.photoRelativePath[0].relative_path+')'
+                                //'backgroundImage', 'url(<?php echo Yii::app()->request->getBaseUrl(true);?>/'+data.photoRelativePath[0].relative_path+')'
+                            'backgroundImage', 'url(data:image;base64,'+data.photoRelativePath[0].db_image+')'
                             );
                         }
                     }

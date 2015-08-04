@@ -335,7 +335,14 @@ class User extends VmsActiveRecord {
         switch ($user->role) {
             case Roles::ROLE_ADMIN:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
-                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
+                    // $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
+                    $avms_roles = Roles::get_admin_allowed_roles(true);
+                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' .
+                                    Roles::ROLE_OPERATOR . ',' .
+                                    Roles::ROLE_VISITOR . ',' .
+                                    Roles::ROLE_STAFFMEMBER . ', '.
+                                    Roles::ROLE_AGENT_AIRPORT_OPERATOR . ', '.
+                                    implode(',',$avms_roles). ')';
                 } else {
                     $avms_roles = Roles::get_admin_allowed_roles(true);
                     $rolein = '(' . Roles::ROLE_ADMIN . ',' .

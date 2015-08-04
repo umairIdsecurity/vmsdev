@@ -31,13 +31,21 @@
         <?php } ?>
     </div>
     <div class="right">
-        <h2><?php if(isset($folder)) echo $folder->name; else echo 'Help Documents'; ?></h2>
+        <h2>
+            <?php if(isset($folder)) echo $folder->name; else echo 'Help Documents'; ?>
+            <?php if(isset($folder)) {
+                if ($folder->name != 'Help Documents') { ?>
+                    <button class="btn btn-default btn-delete" id="btn_delete_folder" data-id="<?php echo $folder->id; ?>">Delete</button>
+                <?php }
+            }?>
+
+        </h2>
         <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: auto ;display:none">Couldn't delete files.</div>
         <form id="form-submit-files" method="post" class="upload-function" enctype="multipart/form-data">
             <label class="btn btn-default btn-upload" id="upload_multi_label">Upload Files</label>
             <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
             <div class="preview-files" style="display: block">
-                <input type="file" name="file[]" id="upload_multi" style="width: 0px;height: 0px;overflow: hidden" />
+                <input multiple type="file" name="file[]" id="upload_multi" style="width: 0px;height: 0px;overflow: hidden" />
                 <!--<table class="table preview-files-list"></table>-->
 
             </div>
@@ -136,7 +144,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="addNewFolderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="addNewFolderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -273,6 +281,27 @@
                         $('#file_grid_error').fadeIn();
                     } else {
                         window.location.reload();
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+
+        $('#btn_delete_folder').click(function (e) {
+            Loading.show();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('uploadFile/deleteFolder'); ?>',
+                //dataType: 'text',
+                data: {'Folder': $(this).attr('data-id')},
+                success: function (r) {
+                    Loading.hide();
+                    r = JSON.parse(r);
+                    if (r.success != 1) {
+                        $('#file_grid_error').html(r.error);
+                        $('#file_grid_error').fadeIn();
+                    } else {
+                        window.location.href = '?r=uploadFile';
                     }
                 }
             });

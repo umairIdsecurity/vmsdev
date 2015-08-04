@@ -173,31 +173,83 @@ class File  extends CActiveRecord
         return $fileSize;
     }
 
+    private function _dateDiff($time1, $time2, $precision = 6) {
+        // If not numeric then convert texts to unix timestamps
+        if (!is_int($time1)) {
+            $time1 = strtotime($time1);
+        }
+        if (!is_int($time2)) {
+            $time2 = strtotime($time2);
+        }
+     
+        // If time1 is bigger than time2
+        // Then swap time1 and time2
+        if ($time1 > $time2) {
+            $ttime = $time1;
+            $time1 = $time2;
+            $time2 = $ttime;
+        }
+     
+        // Set up intervals and diffs arrays
+        $intervals = array('year','month','day','hour','minute','second');
+        $diffs = array();
+     
+        // Loop thru all intervals
+        foreach ($intervals as $interval) {
+            // Create temp time from time1 and interval
+            $ttime = strtotime('+1 ' . $interval, $time1);
+            // Set initial values
+            $add = 1;
+            $looped = 0;
+            // Loop until temp time is smaller than time2
+            while ($time2 >= $ttime) {
+                    // Create new temp time from time1 and interval
+                    $add++;
+                    $ttime = strtotime("+" . $add . " " . $interval, $time1);
+                    $looped++;
+                }
+     
+            $time1 = strtotime("+" . $looped . " " . $interval, $time1);
+            $diffs[$interval] = $looped;
+        }
+        
+        $count = 0;
+        $times = array();
+        // Loop thru all diffs
+        foreach ($diffs as $interval => $value) {
+            // Break if we have needed precission
+            if ($count >= $precision) {
+                break;
+            }
+            // Add value and interval 
+            // if value is bigger than 0
+            if ($value > 0) {
+                // Add s if value is not 1
+                if ($value != 1) {
+                    $interval .= "s";
+                }
+                // Add value and interval to times array
+                $times[] = $value . " " . $interval;
+                $count++;
+            }
+        }
+
+        // if 0 second
+        if (!$times) {
+            $times[] = "0 second";
+        }
+ 
+        // Return string with times
+        return implode(", ", $times) . ' ago';
+    }
+
     /**
      * @param $date
      * @return string
      */
     public function calculate_time_span($date){
-        $seconds  = strtotime(date('Y-m-d H:i:s')) - strtotime($date);
 
-        $months = floor($seconds / (3600*24*30));
-        $day = floor($seconds / (3600*24));
-        $hours = floor($seconds / 3600);
-        $mins = floor(($seconds - ($hours*3600)) / 60);
-        $secs = floor($seconds % 60);
-
-        if($seconds < 60)
-            $time = $secs." seconds ago";
-        else if($seconds < 60*60 )
-            $time = $mins." min ago";
-        else if($seconds < 24*60*60)
-            $time = $hours." hours ago";
-        else if($seconds < 24*60*60)
-            $time = $day." day ago";
-        else
-            $time = $months." month ago";
-
-        return $time;
+        return self::_dateDiff(strtotime(date('Y-m-d H:i:s')), strtotime($date), 1);
     }
 
     /**

@@ -160,6 +160,7 @@ class VisitReason extends CActiveRecord {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
         // $criteria->condition = "t.is_deleted = 0 AND module='".CHelper::get_module_focus()."'";
+        $criteria->order = 't.reason ASC';
         if(!isset(Yii::app()->user->tenant)){
             $criteria->condition = "t.is_deleted = 0";
         }else{

@@ -15,7 +15,7 @@ class VisitorServiceImpl implements VisitorService {
 
     public function save($visitor, $visitReason, $sessionId) {
         $visitor->created_by = $sessionId;
-        if(!empty($visitor->date_of_birth) && !empty($visitor->birthdayYear) )
+        if(!empty($visitor->birthdayYear) )
             $visitor->date_of_birth = date('Y-m-d', strtotime($visitor->birthdayYear . '-' . $visitor->birthdayMonth . '-' . $visitor->birthdayDay));
         
         // Change date formate from d-m-Y to Y-m-d

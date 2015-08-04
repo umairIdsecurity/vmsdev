@@ -324,7 +324,7 @@ class VisitController extends Controller {
         $oldStatus = $model->visit_status;
 
         if (!$model) {
-	        if (Yii::app()->request->isAjaxRequest) {
+    	        if (Yii::app()->request->isAjaxRequest) {
 	        	echo '<script> window.location = "' . Yii::app()->createUrl('visit/view') . '"; </script>';
 	        	exit();
 	        } else {
@@ -526,7 +526,7 @@ class VisitController extends Controller {
                             #change datetime check in and out for vic 24h.
 
                             $model->date_check_in  = $model->date_check_out;
-                            $model->date_check_out = date('Y-m-d', strtotime('+1 day', strtotime($model->date_check_out)));
+                            $model->date_check_out = date('Y-m-d', strtotime('+5 day', strtotime($model->date_check_out)));
                             $model->time_check_in  = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
                             $model->time_check_out = $model->time_check_in;
                             break;
@@ -558,7 +558,6 @@ class VisitController extends Controller {
             }
 
             // save visit model
-           
             if ($model->save()) {
                 // if has file upload then upload and save
                 if (!empty($fileUpload)) {

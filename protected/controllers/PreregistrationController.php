@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
+				'actions' => array('forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -148,30 +148,38 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionConfirmDetails(){
+
 		$session = new CHttpSession;
 
 		$model = new Registration();
 
 		$model->scenario = 'preregistration';
 
+		$error_message = '';
+
 		if (isset($_POST['Registration'])) {
-			$model->profile_type = $session['account_type'];
-			$model->email 		 = $session['username'];
-			$model->password 	 = $session['password'];
-			$model->password_repeat 	 = $session['password'];
-			$model->attributes = $_POST['Registration'];
 
-			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
+			if (!empty($_POST['Registration']['contact_state'])){
 
-			if ($model->save()) {
-				$session['visitor_id'] = $model->id;
-				$this->redirect(array('preregistration/visitReason'));
-			}
+				$model->profile_type = $session['account_type'];
+				$model->email 		 = $session['username'];
+				$model->password 	 = $session['password'];
+				$model->password_repeat 	 = $session['password'];
+				$model->attributes = $_POST['Registration'];
 
+				$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
 
+				if ($model->save()) {
+					$session['visitor_id'] = $model->id;
+					$this->redirect(array('preregistration/visitReason'));
+				}
+
+            } else {
+                $error_message = "State should not be empty";
+            }
 		}
 		
-		$this->render('confirm-details' , array('model' => $model));
+		$this->render('confirm-details' , array('model' => $model,'error_message' => $error_message));
 	}
 
 	public function actionVisitReason(){
@@ -561,6 +569,33 @@ class PreregistrationController extends Controller
 
 	}
 
+	//**************************************************************************************
+	/**
+     * Forgot password
+    */
+    public function actionForgot() {
+
+        $model = new PreregPasswordForgot();
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'forgot-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['PreregPasswordForgot'])) {
+            $model->attributes = $_POST['PreregPasswordForgot'];
+            if ($model->validate() && $model->restore()) {
+                Yii::app()->user->setFlash('success', "Please check your email for reset password instructions");
+                $this->redirect(array('preregistration/login'));
+            }
+        }
+
+        $this->render('forgot', array('model' => $model));
+    }
+
+
+    //**************************************************************************************
+	
 	public function actionDashboard(){
 		$this->render('dashboard');
 	}

@@ -264,6 +264,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 } else {
                                       $types = VisitorType::model()->getFromCardType($model->card_type);
                                       $types = CJSON::decode($types); 
+                                      if(count($types))
                                       echo $visitorForm->dropDownList($model, 'visitor_type', CHtml::listData($types, 'id', 'name')  ,['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>

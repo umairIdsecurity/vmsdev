@@ -152,15 +152,17 @@ class VisitorTypeController extends Controller {
 
                         // add any new ones
                         if (is_array($card_types)) {
+                           $vctype = VisitorTypeCardType::model()->find("visitor_type =". $model->id);   
+                           $vctype->deleteAll();
                             foreach ($card_types as $value) {
-                                if (!in_array($value, $found)) {
+                                //if (!in_array($value, $found)) {
                                     $new_row = new VisitorTypeCardType;
                                     $new_row->card_type = $value;
                                     $new_row->visitor_type = $model->id;
                                     $new_row->tenant = !empty($session['tenant'])?$session['tenant']:NULL;
                                     $new_row->tenant_agent = !empty($session['tenant_agent'])?$session['tenant_agent']:NULL;
                                     $new_row->save();
-                                }
+                                //}
                             }
                         }
                     //}

@@ -183,15 +183,25 @@ class Visit extends CActiveRecord {
                  $this->finish_time = '23:59:59';
                  $this->date_check_out = $this->date_check_in;
                  break;
+             
              case CardType::VIC_CARD_MULTIDAY: 
              case CardType::VIC_CARD_EXTENDED:  
-             case CardType::VIC_CARD_MANUAL:
-             case CardType::MULTI_DAY_VISITOR:
+             
              case CardType::MANUAL_VISITOR:
+             case CardType::MULTI_DAY_VISITOR:
              case CardType::CONTRACTOR_VISITOR:    
                  $this->time_check_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  break;
+             
+              case CardType::VIC_CARD_MANUAL:
+                 $this->time_check_out = '23:59:59';
+                 $this->finish_time = '23:59:59';
+                 if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
+                    $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
+                  }
+                  break;
+              
              case CardType::VIC_CARD_24HOURS:
                  $this->time_check_out = $this->time_check_in;
                  $this->finish_time = $this->time_check_in;

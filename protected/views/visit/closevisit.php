@@ -54,7 +54,7 @@
                 
                 $timeArr = explode(":", $model->finish_time );
                 $hours = $timeArr[0]; $minutes = $timeArr[1];
-                ?>
+               ?>
              <select class="time visit_time_in_hours_" id='Visit_time_check_out_hours' disabled style="width:70px;">
                 <?php for ($i = 1; $i <= 24; $i++): ?>
                     <option value="<?= $i; ?>" <?= $hours == $i?"selected":"";?>><?= date("H", strtotime("$i:00")); ?></option>

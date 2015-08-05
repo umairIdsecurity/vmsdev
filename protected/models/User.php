@@ -115,6 +115,9 @@ class User extends VmsActiveRecord {
         if($this->scenario == 'add_company_contact') {
             return array(
                     array('first_name, last_name, email, contact_number', 'required'),
+                     array('email','unique', 'criteria'=>array('condition'=>'`is_deleted` =:is_deleted', 'params'=>array(
+                        ':is_deleted'=>0
+                    ))),
                     array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
             );
 			

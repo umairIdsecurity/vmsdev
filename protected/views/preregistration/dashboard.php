@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/26/15
- * Time: 9:28 AM
- */
+
+$session = new CHttpSession;
 
 if(Yii::app()->user->hasState('account')){
     $account=Yii::app()->user->getState('account');
@@ -24,7 +20,8 @@ if(Yii::app()->user->hasState('account')){
 </div>
 
 <ul class="user-function">
-    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/profile'); ?>">My profile</a></li>
+
+    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">My profile</a></li>
     <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/preregisterVIC'); ?>">Preregister for a VIC</a></li>
     <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>">Notifications</a></li>
     <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/renewApplyAsic'); ?>">Apply for or Renew an ASIC</a></li>

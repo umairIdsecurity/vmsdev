@@ -262,7 +262,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     </select>
                                 <?php
                                 } else {
-                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
+                                      $types = VisitorType::model()->getFromCardType($model->card_type);
+                                      $types = CJSON::decode($types); 
+                                      echo $visitorForm->dropDownList($model, 'visitor_type', CHtml::listData($types, 'id', 'name')  ,['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>
                             <br />
@@ -283,7 +285,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td width="110px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                             <?php
-                                $reason = CHtml::listData(VisitReason::model()->findAllReason(), 'id', 'reason');
+                                $reason = CHtml::listData(VisitReason::model()->findAll('module = "CVMS"'), 'id', 'reason');
                                 $reason['Other'] = 'Other';
                                 echo $visitorForm->dropDownList($model, 'reason', $reason, ['onchange' => 'ifSelectedIsOtherShowAddReasonDiv(this)', 'empty' => 'Please select a reason']);
                             ?>

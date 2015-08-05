@@ -141,7 +141,7 @@ class VisitorType extends CActiveRecord {
     public function beforeFind() {
 
         $criteria = new CDbCriteria;
-
+        
 
         if (Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view') {
             $criteria->condition = "t.is_deleted = 0 AND t.id !=1";
@@ -153,7 +153,9 @@ class VisitorType extends CActiveRecord {
         }
         
 
-        //if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN )
+         if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN ) {
+             $criteria->condition = "t.is_deleted = 0 AND t.tenant = ".Yii::app()->user->tenant;
+         }
 
 
         $this->dbCriteria->mergeWith($criteria);
@@ -204,7 +206,7 @@ class VisitorType extends CActiveRecord {
     }
 
     public function getCardTypeVisitorTypes($card_type){
-        
+      
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
 

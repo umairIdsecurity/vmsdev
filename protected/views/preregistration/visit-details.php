@@ -9,6 +9,10 @@
 
 ?>
 
+<style type="text/css">
+.middleLabels{margin-top:16px;}
+</style>
+
 <div class="page-content">
     <h1 class="text-primary title">LOG VISIT DETAILS</h1>
     <div class="bg-gray-lighter form-info">Please select the time of your visit.</div>
@@ -36,7 +40,7 @@
         <div class="col-sm-8">
 
             <div class="form-group">
-                <label class="col-sm-4 text-primary control-label">DATE OF VISIT</label>
+                <label class="col-sm-4 text-primary control-label middleLabels">DATE OF VISIT</label>
                 <div class="col-sm-7">
                     <span class="glyphicon glyphicon-calendar"></span>
                     <?php echo $form->textField($model,'date_in',
@@ -50,7 +54,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 text-primary control-label">END DATE OF VISIT</label>
+                <label class="col-sm-4 text-primary control-label middleLabels">END DATE OF VISIT</label>
                 <div class="col-sm-7">
                     <span class="glyphicon glyphicon-calendar"></span>
                     <?php
@@ -67,7 +71,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 text-primary control-label">TIME IN</label>
+                <label class="col-sm-4 text-primary control-label middleLabels">TIME IN</label>
                 <div class="row col-sm-7">
 
                     <div class="col-xs-6">

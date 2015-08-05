@@ -178,13 +178,17 @@ class Visit extends CActiveRecord {
          //if($this->visit_status == VisitStatus::ACTIVE)
          switch( $this->card_type) {
              case CardType::VIC_CARD_SAMEDATE:
+             case CardType::SAME_DAY_VISITOR:    
                  $this->time_check_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  $this->date_check_out = $this->date_check_in;
                  break;
              case CardType::VIC_CARD_MULTIDAY: 
              case CardType::VIC_CARD_EXTENDED:  
-             case CardType::VIC_CARD_MANUAL:       
+             case CardType::VIC_CARD_MANUAL:
+             case CardType::MULTI_DAY_VISITOR:
+             case CardType::MANUAL_VISITOR:
+             case CardType::CONTRACTOR_VISITOR:    
                  $this->time_check_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  break;

@@ -1117,7 +1117,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         window.location = 'index.php?r=visitor/admin&vms=avms';
                     }
                 }else {
-                    alert(data); return;
+                     //alert(data); 
+                      return;
                 }
             },
             complete: function() {

@@ -287,7 +287,7 @@ class TenantController extends Controller {
         $session = new CHttpSession;
         $model = $this->loadModel($id);
         $model->scenario = "updatetenant";
-                       
+        $lastEmail = $model->email_address;               
         if(isset($_POST['Company'])){
             //print_r($_POST['Company']);
             $model->attributes = $_POST['Company'];
@@ -296,17 +296,15 @@ class TenantController extends Controller {
             
             if($model->validate()){
                 $model->save();
-                $userModel = User::model()->find('company=:c', ['c' => $model->id]);
+                $userModel = User::model()->find('company=:c AND email=:e', ['c' => $model->id, 'e'=>$lastEmail]);
                 /**
                   * Module Access
                  */ 
                 $access = CHelper::get_module_access($_POST);
                 
                 $userModel->allowed_module = $access; 
-
-                /*$userModel->email = $_POST['Company']['email_address'];
-                $userModel->contact_number = $_POST['Company']['mobile_number'];*/
-                
+                $userModel->email = $_POST['Company']['email_address'];
+                $userModel->contact_number = $_POST['Company']['mobile_number'];               
                 $userModel->save(false);
          
                 Yii::app()->user->setFlash('success', "Tenant updated Successfully");

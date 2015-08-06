@@ -120,18 +120,21 @@ $defaultKey = key($asicCardTypes);
                         'enableClientValidation' => true,
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){
-                                var card_status = $(".vic-host-fields #Visitor_visitor_card_status").val();
-                                if (!card_status || card_status == "") {
-                                    $(".vic-host-fields #Visitor_visitor_card_status_em_").show();
-                                    $(".vic-host-fields #Visitor_visitor_card_status_em_").html("Please enter a visitor card status");
-                                    return false;
-                                }
-                                if(!hasError){
+                            'afterValidate' => 'js:function(form,data,hasError){ 
+                              if ( $(".vic-host-fields").css("display") != "none" ){
+                                  var card_status = $(".vic-host-fields #Visitor_visitor_card_status").val();
+                                    if (!card_status || card_status == "") {
+                                        $(".vic-host-fields #Visitor_visitor_card_status_em_").show();
+                                        $(".vic-host-fields #Visitor_visitor_card_status_em_").html("Please enter a visitor card status");
+                                        return false;
+                                    } 
+                                }  
+                                                                    
+                                if(!hasError){      
                                     document.getElementById("User_company").disabled = false;
                                     document.getElementById("User_tenant").disabled = false;
                                     document.getElementById("User_tenant_agent").disabled = false;
-                                    if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
+                                     if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
                                         if($(parentElement()+".password_option").is(":checked") == false) {
                                             $(parentElement()+".user_requires_password #pass_error_").show();
                                             return false;
@@ -252,11 +255,13 @@ $defaultKey = key($asicCardTypes);
 
                             <tr>
                                 <td>
-                                    <?php echo $form->textField($userModel, 'first_name',
+                                    <input type="hidden" id="User_role" name="User[role]" value="<?php echo Roles::ROLE_STAFFMEMBER; ?>">
+                                    <input type="hidden" id="User_user_type" name="User[user_type]" value="<?php echo UserType::USERTYPE_INTERNAL; ?>">
+                                       <?php echo $form->textField($userModel, 'first_name',
                                         array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?> <span
                                         class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'first_name'); ?>
-                                </td>
+                            </td>
                             </tr>
                             <tr>
                                 <td>
@@ -898,7 +903,7 @@ $defaultKey = key($asicCardTypes);
         } else {
             var url = "<?php echo CHtml::normalizeUrl(array('user/create&view=1')); ?>";
         }
-
+ 
         $.ajax({
             type: "POST",
             url: url,

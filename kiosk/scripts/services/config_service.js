@@ -9,10 +9,10 @@
  */
 angular.module('kiosk.ConfigService', [])
   .factory('ConfigService', ['$rootScope', '$location', '$localStorage', 'DataService', function ($rootScope, $location, $localStorage, DataService) {
-    var initialConfig = {companyTagLine: '', pickupLocation: 'Reception', brandInfo: {companyLogoURL: 'images/IDSecLogo.png', actionForwardButton: {}, completeButton: {}, neutralButton: {}, navigationMenu: {}, sideMenueAndHeaderText: {}}};
+    var initialConfig = {companyTagLine: '', pickupLocation: 'Reception', brandInfo: {companyLogoURL: '/kiosk/images/IDSecLogo.png', actionForwardButton: {}, completeButton: {}, neutralButton: {}, navigationMenu: {}, sideMenueAndHeaderText: {}}};
 
     function setBrandingInfo(info) {
-		initialConfig.brandInfo.companyLogoURL = info.companyLogoURL;
+		initialConfig.brandInfo.companyLogoURL = "data:image;base64," + info.companyLogoURL;
 		var infoKeys = ['actionForwardButton', 'completeButton', 'neutralButton', 'navigationMenu', 'sideMenueAndHeaderText'];
 		angular.forEach(infoKeys, function(key) {
 			angular.forEach(info[key], function(v, k) {

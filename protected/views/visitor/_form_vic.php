@@ -1117,7 +1117,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         window.location = 'index.php?r=visitor/admin&vms=avms';
                     }
                 }else {
-                    alert(data); return;
+                     //alert(data); 
+                      return;
                 }
             },
             complete: function() {
@@ -1212,6 +1213,21 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         return true;
     }
+
+    var first_click = true;
+
+    $("#visitorCompanyRow").on("click", function(e) {
+        e.preventDefault();
+        if (first_click) {
+            first_click = false;
+            $(function(){
+                if($(window).scrollTop() == 0)
+                    $(window).scrollTop($(window).scrollTop()+1);
+                else
+                    $(window).scrollTop($(window).scrollTop()-0.1);
+            }) 
+        }
+    });
 </script>
 
 

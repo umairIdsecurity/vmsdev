@@ -37,7 +37,7 @@ if ($card) {
                 if ($model->card_type == CardType::VIC_CARD_24HOURS) {
                     echo date('dMy', strtotime($model->date_check_in . '+ 1 DAY'));
                 } else {
-                    echo date('dMy', strtotime($model->date_check_in));
+                        echo date('dMy', strtotime($model->date_check_out));
                 }
             ?>
             </strong>

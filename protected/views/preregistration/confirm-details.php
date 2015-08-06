@@ -6,8 +6,8 @@
  * Time: 10:43 AM
  */
 
-$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+/*$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');*/
 
 $countryList = CHtml::listData(Country::model()->findAll(array(
     "order" => "name asc",
@@ -25,9 +25,9 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         'enableClientValidation'=>true,
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
-            'afterValidate'    => 'js:function(form, data, hasError){
+            /*'afterValidate'    => 'js:function(form, data, hasError){
                 return afterValidate(form, data, hasError);
-            }'
+            }'*/
         ),
         'htmlOptions'=>array(
             'class'=> 'form-comfirm-detail'
@@ -48,16 +48,38 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">DATE OF BIRTH</span>
+                    <div class="col-md-6">
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'       => $model,
+                            'attribute'   => 'date_of_birth',
+                            'options'     => array(
+                                'dateFormat' => 'dd-mm-yy',
+                                'changeMonth' => true,
+                                'changeYear' => true
+                            ),
+                            'htmlOptions' => array(
+                                'size'        => '0',
+                                'maxlength'   => '10',
+                                'placeholder' => 'Date of birth',
+                                /*'style'       => 'width: 80px;',*/
+                                'class' => 'form-control input-lg'
+                            ),
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'date_of_birth',array('style' => 'margin-left:0')); ?>
+                    </div>
 
-                    <input type="hidden" id="dateofBirthBreakdownValueYear"
-                           value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
+                    <!-- <input type="hidden" id="dateofBirthBreakdownValueYear"
+                           value="<?php //echo date("Y", strtotime($model->date_of_birth)); ?>">
                     <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                           value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
+                           value="<?php //echo date("n", strtotime($model->date_of_birth)); ?>">
                     <input type="hidden" id="dateofBirthBreakdownValueDay"
-                           value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
+                           value="<?php //echo date("j", strtotime($model->date_of_birth)); ?>">
 
                     <div class="col-xs-4">
                         <select id="fromDay" name="Registration[birthdayDay]" class='daySelect form-control input-lg'>
+
                         </select>
                     </div>
                     <div class="col-xs-4">
@@ -69,10 +91,10 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         <select id="fromYear" name="Registration[birthdayYear]" class='yearSelect form-control input-lg'>
 
                         </select>
-                    </div>
+                    </div> -->
 
 
-                    <?php echo $form->error($model, 'date_of_birth'); ?>
+                    <?php //echo $form->error($model, 'date_of_birth'); ?>
 
                 </div>
                 <div class="form-group">
@@ -82,7 +104,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 </div>
                 <div class="form-group">
                     <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'class'=>'form-control input-lg')); ?>
-                    <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
+                    <?php echo $form->error($model, 'identification_document_no'); ?>
                 </div>
                 <div class="form-group">
                     <?php
@@ -91,6 +113,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <?php echo $form->error($model, 'identification_country_issued'); ?>
 
                 </div>
+
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">EXPIRY</span>
                     <div class="col-md-6">
@@ -112,8 +135,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         ?>
                         <?php echo $form->error($model, 'identification_document_expiry'); ?>
                     </div>
-
                 </div>
+
             </div>
             <div class="col-sm-6">
                 <div class="row form-group">
@@ -131,7 +154,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 <div class="row form-group form-group-custom">
                     <div class="col-xs-7">
                         <?php echo $form->textField($model, 'contact_street_name', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street Name', 'class'=>'form-control input-lg')); ?>
-                        <?php echo "<br>" . $form->error($model, 'contact_street_name'); ?>
+                        <?php echo $form->error($model, 'contact_street_name'); ?>
                     </div>
                     <div class="col-xs-5">
                         <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('empty' => 'Type', 'class'=>'form-control input-lg')); ?>
@@ -205,7 +228,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
 <script>
 
-    function afterValidate(form, data, hasError) {
+/*    function afterValidate(form, data, hasError) {
         var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Registration_date_of_birth_em_").show();
@@ -223,11 +246,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             return true;
         }
 
-    }
+    }*/
 
     $(document).ready(function () {
 
-        $('#fromDay').on('change', function () {
+        /*$('#fromDay').on('change', function () {
             var dt = new Date();
 
             if(dt.getFullYear()< $("#fromYear").val()) {
@@ -288,7 +311,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             }else{
                 $("#Registration_date_of_birth_em_").hide();
             }
-        });
+        });*/
 
 
 

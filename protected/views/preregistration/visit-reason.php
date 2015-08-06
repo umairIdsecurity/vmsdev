@@ -23,7 +23,25 @@
         <div class="form-group">
             <?php
 
-            $vt=VisitorType::model()->findAll();
+            $account=Yii::app()->user->getState('account');
+
+            $vt = '';
+
+            if($account == 'CORPORATE'){
+                $vt = Yii::app()->db->createCommand()
+                        ->select("t.id,t.name") 
+                        ->from("visitor_type t")
+                        ->where('t.module = "CVMS" and t.is_deleted =0')
+                        ->queryAll();
+                //$vt = VisitorType::model()->findAll('module = :m', [':m' => "CVMS"]);
+            }else{
+                $vt = Yii::app()->db->createCommand()
+                        ->select("t.id,t.name") 
+                        ->from("visitor_type t")
+                        ->where('t.module = "AVMS" and t.is_deleted =0')
+                        ->queryAll();
+                //$vt = VisitorType::model()->findAll('module = :m', [':m' => "AVMS"]);
+            }
 
             $list=CHtml::listData($vt,'id','name');
 
@@ -31,7 +49,7 @@
                 $list,
                 array(
                     'class'=>'form-control input-lg' ,
-                    'empty' => 'Select a Visitor Type')
+                    'empty' => 'Select Visitor Type')
             );
 
             ?>
@@ -40,7 +58,12 @@
         <div class="form-group">
             <?php
 
-            $vr=VisitReason::model()->findAll();
+            $vr = Yii::app()->db->createCommand()
+                        ->select("t.id,t.reason") 
+                        ->from("visit_reason t")
+                        ->where('t.is_deleted =0')
+                        ->queryAll();
+            //$vr=VisitReason::model()->findAll();
 
             $list=CHtml::listData($vr,'id','reason');
 
@@ -50,7 +73,7 @@
                 $list + $other,
                 array(
                     'class'=>'form-control input-lg' ,
-                    'empty' => 'Select a Reason')
+                    'empty' => 'Select Visit Reason')
             );
 
             ?>

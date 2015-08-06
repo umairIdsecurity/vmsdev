@@ -178,16 +178,30 @@ class Visit extends CActiveRecord {
          //if($this->visit_status == VisitStatus::ACTIVE)
          switch( $this->card_type) {
              case CardType::VIC_CARD_SAMEDATE:
+             case CardType::SAME_DAY_VISITOR:    
                  $this->time_check_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  $this->date_check_out = $this->date_check_in;
                  break;
+             
              case CardType::VIC_CARD_MULTIDAY: 
              case CardType::VIC_CARD_EXTENDED:  
-             case CardType::VIC_CARD_MANUAL:       
+             
+             case CardType::MANUAL_VISITOR:
+             case CardType::MULTI_DAY_VISITOR:
+             case CardType::CONTRACTOR_VISITOR:    
                  $this->time_check_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  break;
+             
+              case CardType::VIC_CARD_MANUAL:
+                 $this->time_check_out = '23:59:59';
+                 $this->finish_time = '23:59:59';
+                 if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
+                    $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
+                  }
+                  break;
+              
              case CardType::VIC_CARD_24HOURS:
                  $this->time_check_out = $this->time_check_in;
                  $this->finish_time = $this->time_check_in;
@@ -201,6 +215,21 @@ class Visit extends CActiveRecord {
           return parent::beforeSave();
      }
 
+     /**
+      * Set Auto Closed Visit expired if the checkout date passed.
+      * For 24Hour, EVIC
+      * Where Visit_status is Auto Closed and Checkout date is today or has passed. 
+      * @param type $value
+      */
+     public function beforeFind() {
+         
+         $this->updateAll(array("visit_status" => VisitStatus::EXPIRED), 
+                   " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
+                 . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'");
+         
+         return parent::beforeFind();
+     }
+     
     public function setDatecheckin1($value) {
         // set private attribute for search
         $this->_datecheckin1 = $value;

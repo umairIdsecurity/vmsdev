@@ -264,6 +264,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 } else {
                                       $types = VisitorType::model()->getFromCardType($model->card_type);
                                       $types = CJSON::decode($types); 
+                                      if(count($types))
                                       echo $visitorForm->dropDownList($model, 'visitor_type', CHtml::listData($types, 'id', 'name')  ,['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>
@@ -296,7 +297,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         <tr id="addreasonTable">
                             <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
                             <td>
-                                <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
+                                <?php //echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
                             </td>
                         </tr>
                     </table>
@@ -428,7 +429,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                 </li>
             </ul>
         </li>
-        <?php elseif ($hostModel) : ?>
+        <?php elseif ($hostModel) : ?> 
         <li class='has-sub' id='hostDetailsLi'>
             <a href="#"><span>Host Details</span></a>
             <ul>

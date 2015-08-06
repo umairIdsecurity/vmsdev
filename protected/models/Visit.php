@@ -215,6 +215,21 @@ class Visit extends CActiveRecord {
           return parent::beforeSave();
      }
 
+     /**
+      * Set Auto Closed Visit expired if the checkout date passed.
+      * For 24Hour, EVIC
+      * Where Visit_status is Auto Closed and Checkout date is today or has passed. 
+      * @param type $value
+      */
+     public function beforeFind() {
+         
+         $this->updateAll(array("visit_status" => VisitStatus::EXPIRED), 
+                   " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
+                 . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'");
+         
+         return parent::beforeFind();
+     }
+     
     public function setDatecheckin1($value) {
         // set private attribute for search
         $this->_datecheckin1 = $value;

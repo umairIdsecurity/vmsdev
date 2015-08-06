@@ -1,36 +1,41 @@
-<div class=" col-xs-offset-1">
-	<h2>Create Login</h2>
+<div class="row">
+	<h2 class="text-primary">Create Login</h2>
 	<hr/>
-	<div class="alert alert-info"><p>Please create your Visitor Profile</p></div>
-	
-	<form autocomplete="off">
-		<div class="container ">
-			<div ng-show="error" class="alert alert-danger">{{error}}</div>
-			
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
-					<input type="text" name="email" class="form-control input-lg" placeholder="Please Enter Your Email Address" ng-model="currentVisitor.email"><br/>
-				</div>
-			</div>
-			<div class="form-group">
-				<input type="text"  name="firstName" class="form-control input-lg" placeholder="First Name" ng-model="currentVisitor.firstName">
-			</div>
-			<div class="form-group">
-				<input type="text" name="lastName" class="form-control input-lg" placeholder="Last Name" ng-model="currentVisitor.lastName">
-			</div>
-			<div class="form-group">
-				<input type="text" name="company"  class="form-control input-lg" placeholder="Company" ng-model="currentVisitor.compName" ng-change="performCompanySearch()">
-			</div>
-			
-			<div ng-show="compId == null">
-				<div class="list-group">
-					<a ng-repeat="company in compOptions" ng-click="choose(company)" class="list-group-item">{{ company.name }}</a>
-				</div>
-			</div>
+	<div class="col-xs-offset-1 col-xs-10">
+		<div class="alert alert-success">
+			<p>Please create your Visitor Profile</p>
 		</div>
-		<div>&nbsp;</div>
-		<button ng-show="currentVisitor.firstName && currentVisitor.lastName && currentVisitor.compName" class="btn btn-success  sticky-pull-right" ng-style="forwardButtonStyle" ng-click="createLogin()">Next<span class="glyphicon glyphicon-chevron-right"></span></button>
-		<button class="btn btn-success  sticky-pull-left" ng-style="backButtonStyle" ng-click="goBack()"><span class="glyphicon glyphicon-chevron-left"></span>Back</button>
-	</form>
+		
+		
+		<form autocomplete="off">
+			<div class="container ">
+				<div ng-show="error" class="alert alert-danger">{{error}}</div>
+				
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
+						<input type="text" name="email" class="form-control input-lg" placeholder="Please Enter Your Email Address" ng-model="currentVisitor.email"><br/>
+					</div>
+				</div>
+				<div class="form-group">
+					<input type="text"  name="firstName" class="form-control input-lg" placeholder="First Name" ng-model="currentVisitor.firstName">
+				</div>
+				<div class="form-group">
+					<input type="text" name="lastName" class="form-control input-lg" placeholder="Last Name" ng-model="currentVisitor.lastName">
+				</div>
+				<div class="form-group">
+					<input type="text" name="company"  class="form-control input-lg" placeholder="Company" ng-model="currentVisitor.compName" ng-change="performCompanySearch()">
+				</div>
+				
+				<div ng-show="compId == null">
+					<div class="list-group">
+						<a ng-repeat="company in compOptions" ng-click="choose(company)" class="list-group-item">{{ company.name }}</a>
+					</div>
+				</div>
+			</div>
+			<div>&nbsp;</div>
+			<button ng-show="currentVisitor.firstName && currentVisitor.lastName && currentVisitor.compName" class="btn btn-primary  sticky-pull-right" ng-style="forwardButtonStyle" ng-click="createLogin()">Next<span class="glyphicon glyphicon-chevron-right"></span></button>
+			<button class="btn btn-primary  sticky-pull-left" ng-style="backButtonStyle" ng-click="goBack()"><span class="glyphicon glyphicon-chevron-left"></span>Back</button>
+		</form>
+	</div>
 </div>

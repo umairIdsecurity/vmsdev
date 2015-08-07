@@ -8,8 +8,9 @@
  * Controller of the kioskApp
  */
 angular.module('kioskApp')
-  .controller('DropOffCtrl', ['$scope', 'ConfigService', '$location', function ($scope, ConfigService, $location) {
+  .controller('DropOffCtrl', ['$scope', 'ConfigService', 'VisitorService', '$location', function ($scope, ConfigService, VisitorService, $location) {
     $scope.dropOffLocation = ConfigService.pickupLocation;
+    $scope.visitor = VisitorService;
     $scope.startOver = function() {
       $location.path('/');
     };

@@ -164,7 +164,7 @@ class SiteController extends Controller {
                 if (isset($_POST['timezone'])) {
                     $browserTimezone=$_POST['timezone'];
                 }
-                
+
                 if(!empty($browserTimezone)){
                     $session['timezone'] = $browserTimezone;
                 }

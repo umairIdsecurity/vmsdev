@@ -31,8 +31,23 @@ angular.module('kioskApp')
 	};
 	
 	/* Get the selected card detail */
-	$scope.getCDetail = function () {		
-		VisitorService.cardType = $scope.ctypes;	
+	// $scope.getCDetail = function () {		
+	// 	VisitorService.cardType = $scope.ctypes;	
+	// 	$scope.dataLoading = true;
+	// 	var onSuccess = function(data, responseCode) {
+	// 		$scope.cardImage = data.card_image;
+	// 		$scope.dataLoading = false;
+	// 	};
+	// 	var onFailure = function(data, responseCode) {
+	// 		$scope.error = data.errorDescription;
+	// 		$scope.dataLoading = false;
+	// 	};
+	// 	DataService.getCardDetail(VisitorService, onSuccess, onFailure);
+	// };
+
+	$scope.getCDetail = function ($index) {
+		$scope.selected_card = $scope.ctypeOptions[$index].id;
+		VisitorService.cardType = $scope.ctypeOptions[$index].id;
 		$scope.dataLoading = true;
 		var onSuccess = function(data, responseCode) {
 			$scope.cardImage = data.card_image;

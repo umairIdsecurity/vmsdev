@@ -1226,17 +1226,18 @@ class Visit extends CActiveRecord {
     }
 
     /**
-     * Set status as Closed of the visit if date/time checkout exceeds current date/time.
+     * Set status as Closed of the visit if date/time checkout reached current date/time.
      * 
      */
     public function afterFind() {
-        
+
         // Set closed visit if time-checkout exceeds current time.   
         if( $this->date_check_out <= date("Y-m-d")
                  && $this->visit_status == VisitStatus::ACTIVE ) {
             
              //Get current time to compare with current visit time
-             $current_hour = date("H"); $current_minutes = date("i");
+             $current_hour = date("H");
+             $current_minutes = date("i");
              $time_checkout = $this->time_check_out != "00:00:00"? $this->time_check_out: $this->finish_time;      
              $timeArr = explode(":", $time_checkout);
              

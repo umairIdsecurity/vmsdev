@@ -31,7 +31,7 @@ class PreregistrationController extends Controller
 			),
 			array(
                 'allow',
-                'actions' => array('profile'),
+                'actions' => array('profile','visitHistory'),
                 //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
                 'users' => array('@')
             ),
@@ -67,6 +67,7 @@ class PreregistrationController extends Controller
 		if(isset($_POST['EntryPoint'])){
 
 			$model->attributes=$_POST['EntryPoint'];
+
 			if($model->validate())
 			{
 				$session['workstation'] = $model->entrypoint;
@@ -79,8 +80,24 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionPrivacyPolicy(){
-		$this->render('privacy-policy');
+		
+		/*$model = new Visit();
 
+		$model->scenario = 'preregistration';
+
+		if(isset($_POST['Visit'])) {
+
+			$model->attributes = $_POST['Visit'];
+
+			if($model->validate()){
+
+				$this->redirect(array('preregistration/declaration'));
+
+			}
+		}
+		$this->render('privacy-policy',array('model'=>$model));
+*/
+		$this->render('privacy-policy');
 	}
 
 	public function actionDeclaration(){
@@ -165,22 +182,38 @@ class PreregistrationController extends Controller
 		$error_message = '';
 
 		if (isset($_POST['Registration'])) {
+			
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
 			$model->password_repeat 	 = $session['password'];
 
+			$workstation = Workstation::model()->findByPk($session['workstation']);
+
+
+			$model->tenant = $workstation->tenant;
+
 			$model->attributes = $_POST['Registration'];
 
-			$model->date_of_birth = date('Y-m-d', strtotime($_POST['Registration']['birthdayYear'] . '-' . $_POST['Registration']['birthdayMonth'] . '-' . $_POST['Registration']['birthdayDay']));
+			//$model->date_of_birth = date('Y-m-d', strtotime($_POST['Registration']['birthdayYear'] . '-' . $_POST['Registration']['birthdayMonth'] . '-' . $_POST['Registration']['birthdayDay']));
 
 
 			if (!empty($_POST['Registration']['contact_state'])){
-				if ($model->save()) {
-					$session['visitor_id'] = $model->id;
-					$this->redirect(array('preregistration/visitReason'));
-				}
 
+				if ($model->save()) {
+					//**********************************************
+					$loginModel = new PreregLogin();
+
+					$loginModel->username = $model->email;
+					$loginModel->password = $session['password'];
+
+					if ($loginModel->validate() && $loginModel->login()) {
+						$session = new CHttpSession;
+						$session['visitor_id'] = $model->id;
+						$this->redirect(array('preregistration/visitReason'));
+					}
+					//***********************************************
+				}
             } else {
             	$model->contact_country = Visitor::AUSTRALIA_ID;
                 $error_message = "Please select state";
@@ -203,6 +236,7 @@ class PreregistrationController extends Controller
 		$companyModel = new Company();
 
 		$companyModel->scenario = 'preregistration';
+		$model->scenario = 'preregistration';
 
 		if (isset($_POST['Visit']) && isset($_POST['Company']) ) {
 
@@ -213,6 +247,7 @@ class PreregistrationController extends Controller
 			{
 				$reasonModel->save();
 			}
+
 
 			$model->attributes    = $_POST['Visit'];
 
@@ -225,13 +260,16 @@ class PreregistrationController extends Controller
 				$model->reason 		 = $reasonModel->id;
 			}
 
-			$model->visitor 	  = $session['visitor_id'];
+			$model->visitor  = $session['visitor_id'];
+
+			$model->visit_status  = 2; //default visit status is 2=PREREGISTER
 
 			if($model->validate())
 			{
 				$model->save();
 			}
 
+			$companyModel->mobile_number    = $_POST['Company']['mobile_number'];
 			$companyModel->attributes    = $_POST['Company'];
 
 			if($companyModel->validate())
@@ -244,8 +282,9 @@ class PreregistrationController extends Controller
 					);
 
 				$registrationModel->company = $companyModel->id;
+				$registrationModel->visitor_type = $_POST['Visit']['visitor_type'];
 
-				if($registrationModel->save(true,array('company'))){
+				if($registrationModel->save(true,array('company','visitor_type'))){
 
 					$this->redirect(array('preregistration/addAsic'));
 				}
@@ -500,11 +539,28 @@ class PreregistrationController extends Controller
 
 		if(isset($_POST['Visit']))
 		{
-			$oClock = $_POST['Visit']['ampm'];
+			/*$oClock = $_POST['Visit']['ampm'];*/
+			
+
 			$model->attributes=$_POST['Visit'];
-			$model->time_in
+
+			$model->time_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
+			$model->time_out = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']. " + 24 hour"));
+
+			$model->time_check_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
+			$model->time_check_out = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']. " + 24 hour"));
+
+			$model->date_in = date("Y-m-d", strtotime($_POST['Visit']['date_in']));
+			$model->date_out = date("Y-m-d", strtotime($_POST['Visit']['date_in']. " +1 day"));
+
+			$model->date_check_in = date("Y-m-d", strtotime($_POST['Visit']['date_in']));
+			$model->date_check_out = date("Y-m-d", strtotime($_POST['Visit']['date_in']. " +1 day"));
+
+			
+			/*$model->time_in
 				= $oClock == 'am' ? $model->time_in :
-				date("H:i", strtotime($model->time_in . " + 12 hour"));
+				date("H:i", strtotime($model->time_in . " + 12 hour"));*/
+
 			if($model->save()){
 				$this->redirect(array('preregistration/success'));
 			}
@@ -576,7 +632,6 @@ class PreregistrationController extends Controller
 
 				$session = new CHttpSession;
 
-
 				$this->redirect(array('preregistration/dashboard'));
 			}
 		}
@@ -612,11 +667,11 @@ class PreregistrationController extends Controller
     public function actionProfile($id)
     {
 
-/*        $this->layout = "//layouts/column1";
+        $this->layout = "//layouts/column1";
 
         $model = $this->loadModel($id);
 
-
+        $companyModel = Company::model()->findByPk($model->company);
 
         if (isset($_POST['User'])) {
 
@@ -629,8 +684,52 @@ class PreregistrationController extends Controller
 
         $this->render('profile', array(
             'model' => $model,
+            'companyModel' => $companyModel,
         ));
-*/
+
+    }
+
+        /* Visitor Visits history */
+
+    public function actionVisitHistory() {
+    	
+    	$per_page = 2;
+
+    	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
+
+    	$condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id='".Yii::app()->user->id."' AND v.tenant='".Yii::app()->user->tenant."')";
+        
+        $rawData = Yii::app()->db->createCommand()
+                        ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 
+                        ->from("visit t")
+                        ->join("visitor v","v.id = t.visitor")
+                        ->join("visit_status vs","vs.id = t.visit_status")
+                        ->join("company c","c.id = v.company")
+                        ->where($condition)
+                        ->queryAll();
+        $item_count = count($rawData);
+
+        $query1 = Yii::app()->db->createCommand()
+                        ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 
+                        ->from("visit t")
+                        ->join("visitor v","v.id = t.visitor")
+                        ->join("visit_status vs","vs.id = t.visit_status")
+                        ->join("company c","c.id = v.company")
+                        ->where($condition)
+                        ->limit($per_page,$page-1) // the trick is here!
+                        ->queryAll();   
+
+		// the pagination itself
+        $pages = new CPagination($item_count);
+        $pages->setPageSize($per_page);
+
+		// render
+        $this->render('visit-history',array(
+            'query1'=>$query1,
+            'item_count'=>$item_count,
+            'page_size'=>$per_page,
+            'pages'=>$pages,
+        ));
     }
 
     public function loadModel($id)

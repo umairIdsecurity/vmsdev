@@ -69,32 +69,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <div>
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id'                     => 'register-form',
+        'id'                     => 'profile-form',
         'htmlOptions'            => array("name" => "registerform"),
         'enableAjaxValidation'   => false,
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
-            'afterValidate'    => 'js:function(form, data, hasError){
-                if (hasError) {
-                    var currentYear = new Date().getFullYear();
-                    var selectedYear = $("#fromYear").val();
-
-                    if (currentYear - selectedYear < 18) {
-                        $("#Visitor_identification_type_em_").hide();
-                        $("#Visitor_identification_document_no_em_").hide();
-                        $("#Visitor_identification_document_expiry_em_").hide();
-
-                        //remove item
-                        delete data.Visitor_identification_document_expiry;
-                        delete data.Visitor_identification_document_no;
-                        delete data.Visitor_identification_type;
-                    }
-
-                }
-                    hasError = false;
-                    return afterValidate(form, data, hasError);
-            }'
         ),
     ));
     ?>
@@ -107,11 +87,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         <table id="addvisitor-table">
             <tr>
                 <td>
-                    <?php $this->renderPartial('profile_type', array('model' => $model)); ?>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <table style="width:300px;float:left">
                         <tr>
                             <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
@@ -120,7 +95,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                            value="<?php echo $model['photo']; ?>">
                                     
                                     <?php if ($model['photo'] != NULL) {
-                                        $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                                        $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
                                         $my_image = '';
                                         if(!empty($data['db_image'])){
                                             $my_image = "url(data:image;base64," . $data['db_image'] . ")";
@@ -145,7 +120,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                                     <div class="photoDiv" style="display:none;">
                                         <?php if ($dataId != '' && $model['photo'] != NULL) {
-                                            $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                                            $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
                                             $my_image = '';
                                             if(!empty($data['db_image'])){
                                                 $my_image = "data:image;base64," . $data['db_image'];
@@ -182,87 +157,31 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <tr>
                                         <td>
                                             <?php
-                                            echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['1' => ['selected'=>true]]]); ?>
-                                            <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
-                                        </td>
 
-                                    </tr>
-                                    <tr>
-                                        <td id="visitorTenantRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            echo " class='hidden' ";
-                                        }
-                                        ?>>
-                                            <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
-                                                    name="Visitor[tenant]">
-                                                <option value='' selected>Please select a tenant</option>
-                                                <?php
-                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
-                                                foreach ($allTenantCompanyNames as $key => $value) {
-                                                    ?>
-                                                    <option value="<?php echo $value['id']; ?>"
-                                                        <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
-                                                            echo "selected ";
-                                                        }
-                                                        ?> ><?php echo $value['name']; ?></option>
-                                                <?php
+                                                $account=Yii::app()->user->getState('account');
+                                                $list = '';
+                                                if($account == 'CORPORATE'){
+                                                    $list = VisitorType::model()->findAll('t.is_deleted = 0 and module = :m', array(':m' => "CVMS"));
+                                                }else{
+                                                    $list = VisitorType::model()->findAll('t.is_deleted = 0 and module = :m', array(':m' => "AVMS"));
                                                 }
-                                                ?>
-                                            </select>
-                                            <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'tenant'); ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="visitorTenantAgentRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            echo " class='hidden' ";
-                                        }
-                                        ?> >
-                                            <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]"
-                                                    onchange="populateCompanyWithSameTenantAndTenantAgent()">
-                                                <?php
-                                                echo "<option value='' selected>Please select a tenant agent</option>";
-                                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                                    echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
-                                                }
-                                                ?>
-                                            </select>
-
-                                            <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="workstationRow">
-                                            <select id="User_workstation" name="Visitor[visitor_workstation]" disabled>
-                                            </select>
-                                            <!--<span class="required">*</span>-->
-                                            <?php //echo "<br>" . $form->error($model, 'visitor_workstation'); ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <?php
-                                            // Show Default selected to Admin only
-                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                                
-                                                $list = VisitorType::model()->findAll('created_by = :c and t.tenant = :t and module = :m', [':c' => Yii::app()->user->id,':t' => Yii::app()->user->tenant, ':m' => "AVMS"]);
 
                                                 echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                 echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
                                                 foreach( $list as $val ) {
-                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
+                                                    /*if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
+                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    } else {
+                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    }*/
+
+                                                    if ( $model->visitor_type == $val->id) {
                                                         echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
                                                     } else {
                                                         echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
                                                     }
                                                 } echo "</select>";
-                                            }  else {
-                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"name like '{$model->profile_type}%'"));
-                                            }
-
+                                            
                                             ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
@@ -391,39 +310,41 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </td>
                         </tr>
                         <tr>
-                            <td id="visitorCompanyRow">
+                            <td id="">
                                 <div style="margin-bottom: 5px;">
-                                    <?php
-                                    $this->widget('application.extensions.select2.Select2', array(
-                                        'model' => $model,
-                                        'attribute' => 'company',
-                                        'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
-                                            'id', 'name'),
-                                        'selectedItems' => array(), // Items to be selected as default
-                                        'placeHolder' => 'Please select a company'
-                                    ));
-                                    ?>
+                                    <?php echo $form->textField($companyModel, 'name', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                     <span class="required">*</span>
-                                    <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
+                                    <?php echo $form->error($companyModel, 'name', array("style" => "margin-top:0px")); ?>
+                                </div>
+                            </td>
+
+                            <td id="">
+                                <div style="margin-bottom: 5px;">
+                                    <?php echo $form->textField($companyModel, 'contact', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
+                                    <span class="required">*</span>
+                                    <?php echo $form->error($companyModel, 'contact', array("style" => "margin-top:0px")); ?>
+                                </div>
+                            </td>
+
+                            <td id="">
+                                <div style="margin-bottom: 5px;">
+                                    <?php echo $form->textField($companyModel, 'email_address', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
+                                    <span class="required">*</span>
+                                    <?php echo $form->error($companyModel, 'email_address', array("style" => "margin-top:0px")); ?>
+                                </div>
+                            </td>
+
+                            <td id="">
+                                <div style="margin-bottom: 5px;">
+                                    <?php echo $form->textField($companyModel, 'mobile_number', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
+                                    <span class="required">*</span>
+                                    <?php echo $form->error($companyModel, 'mobile_number', array("style" => "margin-top:0px")); ?>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div style="margin-bottom: 5px;" id="visitorStaffRow"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($_REQUEST['r'] == 'visitor/update') { ?>
-                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">
-                                        Add Company</a>
-                                <?php } else { ?>
-                                    <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">Add New Company</a> -->
-                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
-                                <?php } ?>
                             </td>
                         </tr>
                     </table>
@@ -910,30 +831,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         });
     });
 
-    function checkEmailIfUnique() {
-        var email = $("#Visitor_email").val();
-
-        if (email != "<?php echo $model->email ?>") {
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
-                dataType: 'json',
-                data: email,
-                success: function (r) {
-                    $.each(r.data, function (index, value) {
-                        if (value.isTaken == 1) { //if taken
-                            $(".errorMessageEmail").show();
-                        } else {
-                            $(".errorMessageEmail").hide();
-                            sendVisitorForm();
-                        }
-                    });
-                }
-            });
-        } else {
-            sendVisitorForm();
-        }
-    }
 
     function addCompany() {
 
@@ -1077,141 +974,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         }
     }
 
-    var requestRunning = false;
-    function sendVisitorForm() {
-        if (requestRunning) { // don't do anything if an AJAX request is pending
-            return;
-        }
-        $('#Visitor_contact_country').removeAttr('disabled');
-
-        if (!$('#Visitor_alternative_identification').attr('checked')) {
-            $('#Visitor_identification_alternate_document_name1').val('');
-            $('#Visitor_identification_alternate_document_no1').val('');
-            $('#Visitor_identification_alternate_document_expiry1').val('');
-            $('#Visitor_identification_alternate_document_name2').val('');
-            $('#Visitor_identification_alternate_document_no2').val('');
-            $('#Visitor_identification_alternate_document_expiry2').val('');
-        }
-
-        var form = $("#register-form").serialize();
-        //$('#Visitor_contact_country').attr('disabled', 'disabled');
-        var url;
-
-        if ($("#currentAction").val() == 'update') {
-            url = "<?php echo CHtml::normalizeUrl(array("visitor/update&id=")); ?>" + $("#currentlyEditedVisitorId").val();
-        } else {
-            url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
-        }
-
-        var ajaxOpts = {
-            type: "POST",
-            url: url,
-            data: form,
-            success: function (data, response) {
-                if(data == ''){
-                    if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                        window.location = 'index.php?r=dashboard';
-                    } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                        window.location = 'index.php?r=dashboard/viewmyvisitors';
-                    } else {
-                        window.location = 'index.php?r=visitor/admin&vms=avms';
-                    }
-                }else {
-                    alert(data); return;
-                }
-            },
-            complete: function() {
-                //$("#submitFormVisitor").data('requestRunning', false);
-                requestRunning = false;
-            },
-            error: function (data) {
-                return;
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                    window.location = 'index.php?r=dashboard';
-                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                    window.location = 'index.php?r=dashboard/viewmyvisitors';
-                } else {
-                    window.location = 'index.php?r=visitor/admin&vms=avms';
-                }
-            }
-        };
-        requestRunning = true;
-        $.ajax(ajaxOpts);
-        return false;
-    }
-
-    function getWorkstation() { /*get workstations for operator*/
-
-        var sessionRole = '<?php echo $session['role']; ?>';
-        var superadmin = 5;
-
-        if (sessionRole == superadmin) {
-            var tenant = $("#Visitor_tenant").val();
-        } else {
-            var tenant = '<?php echo $session['tenant'] ?>';
-        }
-
-        populateOperatorWorkstations(tenant);
-    }
-
-    function populateOperatorWorkstations(tenant, value) {
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
-            dataType: 'json',
-            data: tenant,
-            success: function (r) {
-                $('#User_workstation option[value!=""]').remove();
-
-                $('#User_workstation').append('<option value="">Workstation</option>');
-                $.each(r.data, function (index, value) {
-                    var str = '<option ';
-                    if (index == 0) str += 'selected';
-                    str += ' value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>';
-                    $('#User_workstation').append(str);
-                });
-                //$("#User_workstation").val(value);
-                if ($("#currentAction").val() == 'update') {
-                    $("#User_workstation").val("<?php echo $model->visitor_workstation; ?>");
-                }
-            }
-        });
-    }
-
-
-    // company change
-    $('#Visitor_company').on('change', function() {
-        var companyId = $(this).val();
-        $('#CompanySelectedId').val(companyId);
-        $modal = $('#addCompanyContactModal');
-        $.ajax({
-            type: "POST",
-            url: "<?php echo $this->createUrl('company/getContacts') ?>",
-            dataType: "json",
-            data: {id:companyId},
-            success: function(data) {
-                var companyName = $('.select2-selection__rendered').text();
-                $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
-                if (data == 0) {
-                    $('#addContactLink').hide();
-                    $('#visitorStaffRow').empty();
-                } else {
-                    $('#visitorStaffRow').html(data);
-                    $('#addContactLink').show();
-                }
-                return false;
-            }
-        });
-    });
-
-    function isEmpty(obj) {
-        for(var prop in obj) {
-            if(obj.hasOwnProperty(prop))
-                return false;
-        }
-
-        return true;
-    }
 </script>
 
 

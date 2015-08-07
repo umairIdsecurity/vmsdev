@@ -127,7 +127,9 @@ class Photo extends CActiveRecord {
             }
             
         }*/
+        
         $visitor = Visitor::model()->findByPK($visitorId);
+
         if ($visitor->photo != '') {
             $photo = Photo::model()->findByPK($visitor->photo);
             if(!empty($photo->db_image)){

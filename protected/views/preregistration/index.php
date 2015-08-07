@@ -49,7 +49,7 @@
 
             ?>
         </div>
-        <?php echo $form->errorSummary($model); ?>
+        <?php echo $form->error($model,'entrypoint'); ?>
     </div>
 
      <br><br> <br><br> <br><br>

@@ -23,7 +23,19 @@
         )
     ));
     ?>
-        <?php echo $form->errorSummary($model); ?>
+        <br>
+
+        <?php   if($model->hasErrors('declaration1'))
+                {
+                   echo $form->error($model,'declaration1'); 
+                }
+                elseif($model->hasErrors('declaration2')) {
+                    echo $form->error($model,'declaration2'); 
+                }else{
+                    echo $form->error($model,'declaration4'); 
+                }
+
+        ?>
 
         <h3 class="text-primary">Declarations</h3>
         <h5>I agree by ticking the boxes below:</h5>

@@ -1,10 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 7/22/15
- * Time: 7:10 PM
- */
+
+$timeIn = explode(":", '00:00:00');
+if ($model->time_in != '') {
+    $timeIn = explode(":", $model->time_in);
+}
 
 
 ?>
@@ -70,23 +69,70 @@
                     ?>
                 </div>
             </div>
-            <div class="form-group">
+
+
+            <!-- <div class="form-group">
                 <label class="col-sm-4 text-primary control-label middleLabels">TIME IN</label>
                 <div class="row col-sm-7">
 
                     <div class="col-xs-6">
                     <?php
-                    echo $form->dropDownList($model,'time_in', $model->visitClockTime , array('class'=>'form-control input-lg') )
+                    //echo $form->dropDownList($model,'time_in', $model->visitClockTime , array('class'=>'form-control input-lg') )
                     ?>
 
                     </div>
                     <div class="col-xs-4">
                         <?php
-                            echo $form->dropDownList($model,'ampm', $model->oClock,array('class'=>'form-control input-lg'));
+                            //echo $form->dropDownList($model,'ampm', $model->oClock,array('class'=>'form-control input-lg'));
                         ?>
                     </div>
                 </div>
+            </div> -->
+
+            <div class="form-group">
+                <label class="col-sm-4 text-primary control-label middleLabels">TIME IN</label>
+                <div class="row col-sm-7">
+
+                    <div class="col-xs-6">
+                    
+                        <select class="form-control input-lg" name='Visit[time_in_hours]' id='Visit_time_in_hours' >
+                            <?php for ($i = 1; $i <= 24; $i++): ?>
+                                <option 
+                                <?php
+                                if ($timeIn[0] == $i) {
+                                    echo " selected ";
+                                }
+                                ?>
+                                    value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
+                                <?php endfor; ?>
+                        </select> 
+                    </div>
+                    
+                    <div class="col-xs-4">
+                        <select class='form-control input-lg' name='Visit[time_in_minutes]' id='Visit_time_in_minutes'>
+                            <?php for ($i = 1; $i <= 60; $i++): ?>
+                                <option 
+                                <?php
+                                if ($timeIn[1] == $i) {
+                                    echo " selected ";
+                                }
+                                ?>
+                                    value="<?= $i; ?>"><?php
+                                        if ($i > 0 && $i < 10) {
+                                            echo '0' . $i;
+                                        } else {
+                                            echo $i;
+                                        };
+                                        ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+
+                </div>
             </div>
+
+
+
 
         </div>
         <div class="col-sm-1"></div>

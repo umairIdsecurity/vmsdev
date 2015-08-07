@@ -23,10 +23,10 @@ class CreateLogin extends CFormModel{
         return array(
 
             array('username', 'unique','className'=>'Registration','attributeName'=>'email','message'=>"Username already exists"),
-            array('username,password,account_type', 'required'),
+            array('username,password,account_type', 'required','message'=>"Please enter {attribute}"),
             array('password', 'length', 'min' => 5, 'max'=>20, 'message'=>Yii::t("translation", "{attribute} is too short.")),
-            array('username_repeat', 'compare', 'compareAttribute'=>'username', 'message'=>"Username don't match"),
-            array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match"),
+            array('username_repeat', 'compare', 'compareAttribute'=>'username', 'message'=>"Confirm Username do not match"),
+            array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Confirm Password do not match"),
 
         );
     }

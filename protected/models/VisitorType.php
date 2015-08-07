@@ -161,6 +161,8 @@ class VisitorType extends CActiveRecord {
 
         $this->dbCriteria->mergeWith($criteria);
 
+        return parent::beforeFind();
+
     }
 
 

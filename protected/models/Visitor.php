@@ -547,18 +547,22 @@ class Visitor extends CActiveRecord {
     }
 
     public function beforeFind() {
+
         $criteria = new CDbCriteria;
         $criteria->condition = 't.is_deleted = 0';
-        if (isset(yii::app()->user->role)) {
+        if (isset(Yii::app()->user->role)) {
             if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                if(isset(Yii::app()->user->tenant)){
+                if(isset(Yii::app()->user->tenant) /*&& (Yii::app()->user->tenant != Yii::app()->user->id)*/){
                     $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
-                } else {
+                } 
+                /*else {
                     $criteria->condition = 't.is_deleted = 0';
-                }
+                }*/
             }
         }
         $this->dbCriteria->mergeWith($criteria);
+
+        return parent::beforeFind();
 
     }
 
@@ -578,7 +582,7 @@ class Visitor extends CActiveRecord {
         }
 
 
-        parent::afterFind();
+       return parent::afterFind();
     }
     protected function afterValidate() {
         parent::afterValidate();

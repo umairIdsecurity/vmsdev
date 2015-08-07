@@ -513,6 +513,18 @@ class Visitor extends CActiveRecord {
             $this->password = User::model()->hashPassword($this->password);
         }
 
+        if(!empty($this->date_of_birth)){
+            $this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));
+        }else{
+            $this->date_of_birth = NULL;
+        }
+
+        if(!empty($this->identification_document_expiry)){
+            $this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
+        }else{
+            $this->identification_document_expiry = NULL;
+        }
+
         return parent::beforeSave();
     }
 
@@ -548,19 +560,39 @@ class Visitor extends CActiveRecord {
 
     public function beforeFind() {
 
+        if(!empty($this->date_of_birth)){
+            $this->date_of_birth = date("d-m-Y",strtotime($this->date_of_birth));
+        }else{
+            $this->date_of_birth = NULL;
+        }
+
+        if(!empty($this->identification_document_expiry)){
+            $this->identification_document_expiry = date("d-m-Y",strtotime($this->identification_document_expiry));
+        }else{
+            $this->identification_document_expiry = NULL;
+        }
+
         $criteria = new CDbCriteria;
         $criteria->condition = 't.is_deleted = 0';
         if (isset(Yii::app()->user->role)) {
             if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
                 if(isset(Yii::app()->user->tenant) /*&& (Yii::app()->user->tenant != Yii::app()->user->id)*/){
-                    $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                    if(Yii::app()->user->tenant == Yii::app()->user->id){
+                        $criteria->condition = 't.is_deleted = 0';
+                    }
+                    else{
+                        $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                    }
                 } 
                 /*else {
                     $criteria->condition = 't.is_deleted = 0';
                 }*/
             }
         }
+
         $this->dbCriteria->mergeWith($criteria);
+
+
 
         return parent::beforeFind();
 

@@ -4,3 +4,80 @@
 .btn{outline:0 none;}
 select {border: 1px solid #ccc;border-radius: 3px;font-size: 17px; margin: 5px 0;padding: 5px; width:270px;}
 .container{clear:both;}
+hr {
+	border-top: 2px solid #b2b2b2;
+	margin-top: 16px;
+    margin-bottom: 16px;
+}
+.text-primary {
+	color: #307dbd;
+}
+h2 {
+	font-size: 32px;
+}
+.text-normal {
+	font-weight: 400;
+}
+.btn-primary {
+	font-size: 25px;
+	font-weight: 700;
+	height: 50px;
+	border-radius: 6px;
+	padding: 0 13px 0 22px;
+	background-color: #3e88ca;
+}
+.h1, .h2, .h3, h1, h2, h3 {
+    margin-top: 10px;
+}
+.page-title {
+	margin-top: 30px;
+	padding-left: 85px;
+}
+.text-capitalize {
+	text-transform: capitalize;
+}
+.btn-search {
+	font-size: 20px;
+	font-weight: bold;
+	height: 50px;
+	padding: 0px 50px;
+	margin-top: 35px;
+	border-radius: 6px;
+	background-color: #58b757;
+}
+.text-lg {
+	font-size: 65px;
+}
+a.btn {
+	line-height: 50px;
+}
+.alert {
+	margin-top: 20px;
+	margin-bottom: 60px;
+	font-size: 18px;
+	font-weight: bold;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 17px;
+	border-width: 2px;
+}
+.alert-default {
+    background-color: #dddddd;
+    border-color: #d9d9d9;
+    color: #555555;
+}
+.vic-card {
+	display: inline-block;
+	padding: 40px 30px 100px 30px;
+	border: 1px solid transparent;
+}
+
+.vic-card.selected {
+	background: #ffffe4;
+	border: 1px solid #cbcbcb;
+	border-radius: 6px;
+}
+
+.vic-card img{
+	cursor: pointer;
+}

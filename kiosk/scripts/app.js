@@ -86,45 +86,43 @@ angular
 	$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data):/);
   }])
   .run(['$rootScope', '$location', '$http', '$cookies', '$localStorage', '$templateCache','DataService' , function run($rootScope, $location, $http, $cookies, $localStorage, $templateCache, DataService) {
-			  	
-        /** keep user logged in after page refresh */			
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-			
-			if (typeof(current) !== 'undefined'){
-				$templateCache.remove(current.templateUrl);
-			}
-			
-            /** redirect to login page if not logged in and trying to access a restricted page */			
-            var restrictedPage = $.inArray($location.path(), ['/', '/register']) === -1;
-			//$rootScope.globals = $cookies.getObject('globals') || {};
-			$rootScope.globals = $localStorage.globals || {};
-			
-            var aToken = $rootScope.globals.accessToken;
-			var adminEmail = $rootScope.globals.adminEmail;
-			
-			if(aToken){
-				DataService.authToken = aToken;
-				DataService.adminEmail = adminEmail;
-			}
-			
-			if(!!$localStorage.kioskInfo){
-				DataService.kiosk = $localStorage.kioskInfo.kiosk;
-				DataService.workstation = $localStorage.kioskInfo.workstation;
-				DataService.ktoken = $localStorage.kioskInfo.ktoken;				
-			}
-						
-            if (restrictedPage && !aToken) {/* If not Authorized, send back to login screen */
-				
-                $location.path('/');
-				
-            }else if(!restrictedPage && aToken){
-				$http.defaults.headers.common['HTTP_X_VMS_TOKEN'] = aToken;
-				
-				if(!!$localStorage.kioskInfo.ktoken){/* Kiosk already registered */
-					$location.path('/intro');
-				}else{
-					$location.path('/workstation');
-				}								
-			}
-        });
-    }]);
+
+      /** keep user logged in after page refresh */			
+      $rootScope.$on('$locationChangeStart', function (event, next, current) {
+  			if (typeof(current) !== 'undefined'){
+  				$templateCache.remove(current.templateUrl);
+  			}
+  			
+        /** redirect to login page if not logged in and trying to access a restricted page */			
+        var restrictedPage = $.inArray($location.path(), ['/', '/register']) === -1;
+  			//$rootScope.globals = $cookies.getObject('globals') || {};
+  			$rootScope.globals = $localStorage.globals || {};
+  			
+        var aToken = $rootScope.globals.accessToken;
+  			var adminEmail = $rootScope.globals.adminEmail;
+  			
+  			if(aToken){
+  				DataService.authToken = aToken;
+  				DataService.adminEmail = adminEmail;
+  			}
+  			
+  			if(!!$localStorage.kioskInfo){
+  				DataService.kiosk = $localStorage.kioskInfo.kiosk;
+  				DataService.workstation = $localStorage.kioskInfo.workstation;
+  				DataService.ktoken = $localStorage.kioskInfo.ktoken;				
+  			}
+  						
+        if (restrictedPage && !aToken) {/* If not Authorized, send back to login screen */
+  				$location.path('/');
+  				
+        }else if(!restrictedPage && aToken){
+  				$http.defaults.headers.common['HTTP_X_VMS_TOKEN'] = aToken;
+  				
+  				if(!!$localStorage.kioskInfo.ktoken){/* Kiosk already registered */
+  					$location.path('/intro');
+  				}else{
+  					$location.path('/workstation');
+  				}								
+  			}
+    });
+  }]);

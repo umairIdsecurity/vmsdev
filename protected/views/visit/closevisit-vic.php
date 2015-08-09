@@ -19,14 +19,20 @@
     </tr>
     <tr>
         <td>
-            <select class="time visit_time_in_hours" id='Visit_time_check_out_hours' disabled style="width:70px;">
+            <?php  if( !is_null($model->finish_time) ) {
+                
+                $timeArr = explode(":", $model->finish_time );
+                $hours = $timeArr[0]; $minutes = $timeArr[1];
+              ?>
+            
+            <select class="time visit_time_in_hours_" id='Visit_time_check_out_hours' disabled style="width:70px;">
                 <?php for ($i = 1; $i <= 24; $i++): ?>
-                    <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
+                    <option value="<?= $i; ?>" <?= $hours == $i?"selected":"";?>><?= date("H", strtotime("$i:00")); ?></option>
                 <?php endfor; ?>
             </select> :
-            <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
+            <select class='time visit_time_in_minutes_'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
                 <?php for ($i = 1; $i <= 60; $i++): ?>
-                    <option value="<?= $i; ?>"><?php
+                    <option value="<?= $i; ?>" <?= $minutes == $i?"selected":"";?>><?php
                         if ($i > 0 && $i < 10) {
                             echo '0' . $i;
                         } else {
@@ -35,6 +41,7 @@
                         ?></option>
                 <?php endfor; ?>
             </select>
+            <?php } ?>
         </td>
     </tr>
 
@@ -96,6 +103,7 @@
                         echo $closeVisitForm->fileField($model, 'card_lost_declaration_file');
                     }
                 ?>
+                <br />
                 <br />
                 <?php echo $closeVisitForm->error($model, 'card_lost_declaration_file'); ?>
                 <div style="display: none" id="card_lost_declaration_required" class="errorMessage">Please add card lost declaration file.</div>

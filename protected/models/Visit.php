@@ -119,7 +119,13 @@ class Visit extends CActiveRecord {
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('visitor', 'required', 'on' => 'api'),
+            
             //array('other_reason', 'unique','className'=>'VisitReason','attributeName'=>'reason','message'=>"Reason must be unique"),
+            
+            array('visitor_type,reason','required','on' => 'preregistration','message'=>'Please select {attribute}'),
+            
+            
+
             array('reason,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
@@ -130,7 +136,7 @@ class Visit extends CActiveRecord {
             // @todo Please remove those attributes that should not be searched.
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search'),
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search_history'),
-            array('card_lost_declaration_file', 'file', 'types' => 'pdf,doc,docx,jpg,gif,png', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * 10),
+            array('card_lost_declaration_file', 'file', 'types' => 'pdf,doc,docx,jpg,jpeg,gif,png', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * 10, 'wrongType'=>'Please upload file with these extensions pdf, doc, docx, jpg, jpeg, gif, png.'),
             
         );
     }
@@ -163,7 +169,72 @@ class Visit extends CActiveRecord {
 //        if (!empty($this->card_returned_date)) $this->card_returned_date =  date('Y-m-d', strtotime($this->card_returned_date));
 //        return parent::beforeSave();
 //    }
+    
+   /* 
+    * Below is rule for check out time for all VIC visits:
+        1. Manual: Midnight of check out date
+        2. 24 hour: same time as check in time
+        3. EVIC: Midnight of the check out date
+        4. Multiday: Midnight of the check out date
+        5. Same day: Midnight of the check out date
+    * 
+    */
+     public function beforeSave() { 
+       
+         //if($this->visit_status == VisitStatus::ACTIVE)
+         switch( $this->card_type) {
+             case CardType::VIC_CARD_SAMEDATE:
+             case CardType::SAME_DAY_VISITOR:    
+                 $this->time_check_out = '23:59:59';
+                 $this->finish_time = '23:59:59';
+                 $this->date_check_out = $this->date_check_in;
+                 break;
+             
+             case CardType::VIC_CARD_MULTIDAY: 
+             case CardType::VIC_CARD_EXTENDED:             
+             case CardType::MANUAL_VISITOR:
+             case CardType::MULTI_DAY_VISITOR:
+             case CardType::CONTRACTOR_VISITOR:    
+                 $this->time_check_out = '23:59:59';
+                 $this->finish_time = '23:59:59';
+                 break;
+             
+              case CardType::VIC_CARD_MANUAL:
+                 $this->time_check_out = '23:59:59';
+                 $this->finish_time = '23:59:59';
+                 if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
+                    $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
+                  }
+                  break;
+              
+             case CardType::VIC_CARD_24HOURS:
+                 $this->time_check_out = $this->time_check_in;
+                 $this->finish_time = $this->time_check_in;
+                 if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
+                    $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
+                  }
+                 break;
+             default :
+                 break;
+         }
+          return parent::beforeSave();
+     }
 
+     /**
+      * Set Auto Closed Visit expired if the checkout date passed.
+      * For 24Hour, EVIC
+      * Where Visit_status is Auto Closed and Checkout date is today or has passed. 
+      * @param type $value
+      */
+     public function beforeFind() {
+         
+         $this->updateAll(array("visit_status" => VisitStatus::EXPIRED), 
+                   " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
+                 . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'");
+                 
+         return parent::beforeFind();
+     }
+     
     public function setDatecheckin1($value) {
         // set private attribute for search
         $this->_datecheckin1 = $value;
@@ -1101,7 +1172,12 @@ class Visit extends CActiveRecord {
                 break;
 
             case CardType::VIC_CARD_MULTIDAY:
-                $totalCount = $dateNow->diff($dateIn)->days + 1;
+                $isExpired = $dateOut->format("d") - $dateNow->format("d");
+                if( $isExpired > 0 )
+                     $totalCount = $dateNow->diff($dateIn)->days + 1;
+                else
+                     $totalCount = $dateOut->diff($dateIn)->days + 1;
+                
                 if ($this->count($criteria) > 0) {
                     $totalCount += $this->count($criteria);
                 }
@@ -1160,15 +1236,51 @@ class Visit extends CActiveRecord {
     }
 
     /**
-     * Change date formate to Australian after fetech
-     * 
+     * Set status as Closed of the VIC 24Hours visit only if date/time checkout reached current date/time.
+     * Below is the flow for the all VIC visit cards:
+        * 24 hour* – Saved, Preregister, Active, Auto Closed (Operator can Preregister for future dates)
+        * Same day* - Saved, Preregister, Active, Expired, Closed
+        * Extended* - Saved, Preregister, Active, Auto Closed (Operator can Preregister for future dates) / Expired, Closed
+        * Multiday *- Saved, Preregister, Active, Expired, Closed
+        * Manual *- Saved, Preregister, Active, Closed 
      */
-//    public function afterFind() {
-//        
-//        //$this->date_check_in = (string) date("Y-m-d", $this->date_check_in);
-//        //$this->date_check_out = (string) date("Y-m-d", $this->date_check_out);
-//        return parent::afterFind();
-//    }
+    public function afterFind() {
+         $session = new CHttpSession;
+         $timezone = $session["timezone"]; 
+        // Set closed visit if time-checkout reached current time.   
+        if( $this->date_check_out <= date("Y-m-d")
+                && $this->visit_status == VisitStatus::ACTIVE ) {
+            
+            $status = "";
+            //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
+            if( $this->card_type == CardType::VIC_CARD_24HOURS ) {
+                $status = VisitStatus::CLOSED;
+            } else if( $this->card_type != CardType::VIC_CARD_24HOURS 
+                    && $this->card_type != CardType::VIC_CARD_MANUAL 
+                    && $this->card_type != CardType::MANUAL_VISITOR ) {
+                $status = VisitStatus::EXPIRED;
+            } 
+             //Get current time to compare with current visit time
+             $current = new DateTime('NOW', new DateTimeZone($timezone));
+             $current_hour = $current->format("H");
+             $current_minutes = $current->format("i"); 
+             
+            // Visit Time
+             $time_checkout = $this->time_check_out != "00:00:00"? $this->time_check_out: $this->finish_time;      
+             $checkoutdatetime = $this->date_check_out." ".$time_checkout;
+             $checkout = new DateTime($checkoutdatetime);
+             $checkout->setTimezone(new DateTimeZone($timezone));
+            //compare Time hours and minutes
+             if( ($current_hour > $checkout->format("H") || $this->date_check_out < date("Y-m-d") )
+                     || ( $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
+                     //Update
+                     if( !empty($status) )
+                     $this->updateByPk($this->id, array("visit_status" => $status));                   
+             }
+        } 
+         
+        return parent::afterFind();
+    }
 
     /**
      * If visit is preregistered and date of entry passes 48 hours after proposed visit date 

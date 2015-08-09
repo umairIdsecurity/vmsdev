@@ -117,7 +117,7 @@ class UserWorkstations extends CActiveRecord {
         }
     }
 
-    public function getAllUserWorkstationsCanBeEditedBySuperAdmin($currentlyEditedUser, $currentSessionRole) {
+    public function getAllUserWorkstationsCanBeEditedBySuperAdmin($currentlyEditedUser, $currentSessionRole, $sort) {
 
         $user = User::model()->findByPk($currentlyEditedUser);
         $currentlyLoggedInUser = User::model()->findByPK(Yii::app()->user->id);
@@ -145,6 +145,9 @@ class UserWorkstations extends CActiveRecord {
         $Criteria = new CDbCriteria();
         $Criteria->condition = $queryCondition;
         $Criteria->addCondition("is_deleted = 0");
+        if ($sort != null) {
+            $Criteria->order = $sort;
+        }
         $workstations = Workstation::model()->findAll($Criteria);
 
         return $workstations;

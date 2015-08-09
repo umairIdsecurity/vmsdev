@@ -195,10 +195,10 @@ class Visitor extends CActiveRecord {
         // will receive user inputs.
         $rules = array(
             array('first_name, last_name, email, contact_number', 'required'),
-            array('tenant','required','message' =>'Please select a {attribute}'),
+            //array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-            array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
+            array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),
             array(
                 'date_of_birth,
                 notes,
@@ -466,7 +466,7 @@ class Visitor extends CActiveRecord {
         if($user->role != Roles::ROLE_SUPERADMIN){
             //if(Yii::app()->controller->id === 'visit'){
                // if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
-                    $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                    $criteria->addCondition("t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant);
                 //}
             //}
         }
@@ -513,6 +513,18 @@ class Visitor extends CActiveRecord {
             $this->password = User::model()->hashPassword($this->password);
         }
 
+        if(!empty($this->date_of_birth)){
+            $this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));
+        }else{
+            $this->date_of_birth = NULL;
+        }
+
+        if(!empty($this->identification_document_expiry)){
+            $this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
+        }else{
+            $this->identification_document_expiry = NULL;
+        }
+
         return parent::beforeSave();
     }
 
@@ -547,18 +559,42 @@ class Visitor extends CActiveRecord {
     }
 
     public function beforeFind() {
+
+        if(!empty($this->date_of_birth)){
+            $this->date_of_birth = date("d-m-Y",strtotime($this->date_of_birth));
+        }else{
+            $this->date_of_birth = NULL;
+        }
+
+        if(!empty($this->identification_document_expiry)){
+            $this->identification_document_expiry = date("d-m-Y",strtotime($this->identification_document_expiry));
+        }else{
+            $this->identification_document_expiry = NULL;
+        }
+
         $criteria = new CDbCriteria;
         $criteria->condition = 't.is_deleted = 0';
-        if (isset(yii::app()->user->role)) {
+        if (isset(Yii::app()->user->role)) {
             if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                if(isset(Yii::app()->user->tenant)){
-                    $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
-                } else {
+                if(isset(Yii::app()->user->tenant) /*&& (Yii::app()->user->tenant != Yii::app()->user->id)*/){
+                    if(Yii::app()->user->tenant == Yii::app()->user->id){
+                        $criteria->condition = 't.is_deleted = 0';
+                    }
+                    else{
+                        $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                    }
+                } 
+                /*else {
                     $criteria->condition = 't.is_deleted = 0';
-                }
+                }*/
             }
         }
+
         $this->dbCriteria->mergeWith($criteria);
+
+
+
+        return parent::beforeFind();
 
     }
 
@@ -578,7 +614,7 @@ class Visitor extends CActiveRecord {
         }
 
 
-        parent::afterFind();
+       return parent::afterFind();
     }
     protected function afterValidate() {
         parent::afterValidate();
@@ -771,5 +807,14 @@ class Visitor extends CActiveRecord {
 
     public function getCompanyForLogVisit() {
         return Company::model()->findByPk($this->company);
+    }
+
+    public function restorePassword($email)
+    {
+        if($visitor = $this->findByAttributes(array('email' => $email))){
+            return PreregPasswordChangeRequest::model()->generateResetLink($visitor);
+        } else {
+            return "Email address does not exist in system.";
+        }
     }
 }

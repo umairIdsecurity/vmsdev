@@ -146,6 +146,7 @@ class CustomController extends RestfulController {
 						$aArray[] = array(
 							'id' => $row[$key]['cardType']['id'],
 							'name' => $name,
+							'card_image'=> $this->getAssetsBase()."/".$row[$key]['cardType']['card_background_image_path']
 						);
 					}
 				} else {

@@ -1,28 +1,38 @@
 <div class="col-xs-12">
-	<h2>Notify Host</h2>
+	<h2 class="text-primary text-uppercase page-title">Host Information</h2>
 	<hr>
 </div>
 
+<div class="col-xs-10 col-xs-offset-1">
+  <div class="alert alert-success">Who are you visiting today? Please enter the first and last name of your host</div>
+</div>
+
 <div class="container default">
-	<div ng-show="error" class="alert alert-danger">{{error}}</div>
-	<div class="text-center">
-		<h3>Welcome<br/><br/>{{ visitor.firstName }} {{ visitor.lastName }}</h3>
-	</div>
+	<div class="centered-child">
+		<div ng-show="error" class="alert alert-danger">{{error}}</div>
+		<!-- <div class="text-center">
+			<h3>Welcome<br/><br/>{{ visitor.firstName }} {{ visitor.lastName }}</h3>
+		</div> -->
 
-	<div class="form-group">
-		<input type="text" name="host_query" id="host_query" ng-change="performNewSearch()" class="form-control input-lg" ng-model="query" placeholder="Please enter your Host's Name">
-	</div>
-
-	<div ng-show="host == null">
-		<div class="list-group">
-			<a ng-repeat="h in hostOptions" ng-click="choose(h)" class="list-group-item">{{ h.firstName }} {{ h.lastName }}</a>
+		<div class="form-group">
+			<input type="text" name="host_query" id="host_query" ng-change="performNewSearch()" class="form-control input-lg" ng-model="query" placeholder="First Name">
 		</div>
-	</div>
+		<div class="form-group">
+			<input type="text" name="host_query_last_name" class="form-control input-lg" ng-model="query_last_name" placeholder="Last Name">
+		</div>
 
-	<div ng-show="query == null && host !== null" class="sticky-pull-right notification_btn">
-		<h4>{{ host.firstName }} {{ host.lastName }}</h4>
-		<button class="btn btn-success notify-btn" ng-style="forwardButtonStyle" ng-click="notifyHost()">Send Notification</button>
+		<div ng-show="host == null">
+			<div class="list-group">
+				<a ng-repeat="h in hostOptions" ng-click="choose(h)" class="list-group-item">{{ h.firstName }} {{ h.lastName }}</a>
+			</div>
+		</div>
+
+		<div ng-show="query == null && host !== null" class="sticky-pull-right notification_btn">
+			<h4>{{ host.firstName }} {{ host.lastName }}</h4>
+			<button class="btn btn-primary notify-btn" ng-style="forwardButtonStyle" ng-click="notifyHost()">Next</button>
+		</div>
 	</div>
 </div>
 
-<button class="btn btn-success  sticky-pull-left" ng-click="goBack()" ng-style="backButtonStyle"><span class="glyphicon glyphicon-chevron-left"></span>Back</button>
+<button class="btn btn-primary  sticky-pull-left" ng-click="goBack()" ng-style="backButtonStyle"><span class="glyphicon glyphicon-chevron-left"></span>Back</button>
+<button class="btn btn-primary  sticky-pull-right">Next<span class="glyphicon glyphicon-chevron-right"></span></button>

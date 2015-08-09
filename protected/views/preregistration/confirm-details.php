@@ -6,8 +6,8 @@
  * Time: 10:43 AM
  */
 
-$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+/*$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');*/
 
 $countryList = CHtml::listData(Country::model()->findAll(array(
     "order" => "name asc",
@@ -25,9 +25,9 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         'enableClientValidation'=>true,
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
-            'afterValidate'    => 'js:function(form, data, hasError){
+            /*'afterValidate'    => 'js:function(form, data, hasError){
                 return afterValidate(form, data, hasError);
-            }'
+            }'*/
         ),
         'htmlOptions'=>array(
             'class'=> 'form-comfirm-detail'
@@ -48,26 +48,53 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">DATE OF BIRTH</span>
+                    <div class="col-md-6">
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'       => $model,
+                            'attribute'   => 'date_of_birth',
+                            'options'     => array(
+                                'dateFormat' => 'dd-mm-yy',
+                                'changeMonth' => true,
+                                'changeYear' => true
+                            ),
+                            'htmlOptions' => array(
+                                'size'        => '0',
+                                'maxlength'   => '10',
+                                'placeholder' => 'Date of birth',
+                                /*'style'       => 'width: 80px;',*/
+                                'class' => 'form-control input-lg'
+                            ),
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'date_of_birth',array('style' => 'margin-left:0')); ?>
+                    </div>
 
-                    <input type="hidden" id="dateofBirthBreakdownValueYear"
-                           value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
+                    <!-- <input type="hidden" id="dateofBirthBreakdownValueYear"
+                           value="<?php //echo date("Y", strtotime($model->date_of_birth)); ?>">
                     <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                           value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
+                           value="<?php //echo date("n", strtotime($model->date_of_birth)); ?>">
                     <input type="hidden" id="dateofBirthBreakdownValueDay"
-                           value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
+                           value="<?php //echo date("j", strtotime($model->date_of_birth)); ?>">
 
                     <div class="col-xs-4">
-                        <select id="fromDay" name="Registration[birthdayDay]" class='daySelect form-control input-lg'></select>
+                        <select id="fromDay" name="Registration[birthdayDay]" class='daySelect form-control input-lg'>
+
+                        </select>
                     </div>
                     <div class="col-xs-4">
-                        <select id="fromMonth" name="Registration[birthdayMonth]" class='monthSelect form-control input-lg'></select>
+                        <select id="fromMonth" name="Registration[birthdayMonth]" class='monthSelect form-control input-lg'>
+
+                        </select>
                     </div>
                     <div class="col-xs-4">
-                        <select id="fromYear" name="Registration[birthdayYear]" class='yearSelect form-control input-lg'></select>
-                    </div>
+                        <select id="fromYear" name="Registration[birthdayYear]" class='yearSelect form-control input-lg'>
+
+                        </select>
+                    </div> -->
 
 
-                    <?php echo $form->error($model, 'date_of_birth'); ?>
+                    <?php //echo $form->error($model, 'date_of_birth'); ?>
 
                 </div>
                 <div class="form-group">
@@ -77,7 +104,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 </div>
                 <div class="form-group">
                     <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'class'=>'form-control input-lg')); ?>
-                    <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
+                    <?php echo $form->error($model, 'identification_document_no'); ?>
                 </div>
                 <div class="form-group">
                     <?php
@@ -86,6 +113,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <?php echo $form->error($model, 'identification_country_issued'); ?>
 
                 </div>
+
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">EXPIRY</span>
                     <div class="col-md-6">
@@ -107,8 +135,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         ?>
                         <?php echo $form->error($model, 'identification_document_expiry'); ?>
                     </div>
-
                 </div>
+
             </div>
             <div class="col-sm-6">
                 <div class="row form-group">
@@ -126,7 +154,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 <div class="row form-group form-group-custom">
                     <div class="col-xs-7">
                         <?php echo $form->textField($model, 'contact_street_name', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street Name', 'class'=>'form-control input-lg')); ?>
-                        <?php echo "<br>" . $form->error($model, 'contact_street_name'); ?>
+                        <?php echo $form->error($model, 'contact_street_name'); ?>
                     </div>
                     <div class="col-xs-5">
                         <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('empty' => 'Type', 'class'=>'form-control input-lg')); ?>
@@ -141,21 +169,35 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_postcode'); ?>
                 </div>
+                
                 <div class="form-group form-group-custom">
-                    <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'class'=>'form-control input-lg')); ?>
-                    <?php echo $form->error($model, 'contact_state'); ?>
-
-                </div>
-                <div class="form-group form-group-custom">
-
                     <?php
                     echo $form->dropDownList($model, 'contact_country', $countryList,
                         array('prompt' => 'Country', 'class'=>'form-control input-lg',
                             'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                     ?>
                     <?php echo $form->error($model, 'contact_country'); ?>
-
                 </div>
+
+                <div class="form-group form-group-custom">
+
+                    <div id="stateDropdown">
+                        <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'class'=>'form-control input-lg')); ?>
+                    </div>
+                    
+                    <div style="display:none;" id="stateTextbox">
+                        <?php echo $form->textField($model, 'contact_state', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'State', 'class'=>'form-control input-lg','disabled'=>'disabled')); ?>
+                    </div> 
+
+                    <?php 
+                        if(isset($error_message) && !empty($error_message)){
+                            echo '<span style="color:red">'.$error_message.'</span>';
+                        }
+                    ?>
+                    <?php //echo $form->error($model, 'contact_state'); ?>
+                    
+                </div>
+
                 <div class="form-group">
                     <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_number'); ?>
@@ -186,7 +228,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
 <script>
 
-    function afterValidate(form, data, hasError) {
+/*    function afterValidate(form, data, hasError) {
         var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Registration_date_of_birth_em_").show();
@@ -204,11 +246,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             return true;
         }
 
-    }
+    }*/
 
     $(document).ready(function () {
 
-        $('#fromDay').on('change', function () {
+        /*$('#fromDay').on('change', function () {
             var dt = new Date();
 
             if(dt.getFullYear()< $("#fromYear").val()) {
@@ -269,6 +311,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             }else{
                 $("#Registration_date_of_birth_em_").hide();
             }
+        });*/
+
+
+
+        $('#Registration_contact_country').on('change', function () {
+            var countryId = parseInt($(this).val());
+            //Dropdown: id=13,value=Australia
+            if(countryId == 13){
+                $("#stateDropdown").show();
+                $("#stateTextbox").hide();
+                $("#stateTextbox input").prop("disabled",true);
+                $("#stateDropdown select").prop("disabled",false);
+            }else{
+                $("#stateTextbox").show();
+                $("#stateDropdown").hide();
+                $("#stateDropdown select").prop("disabled",true);
+                $("#stateTextbox input").prop("disabled",false);
+            }
+
         });
 
 

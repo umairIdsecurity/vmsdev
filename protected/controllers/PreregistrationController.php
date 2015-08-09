@@ -18,9 +18,10 @@ class PreregistrationController extends Controller
 	 * @return array access control rules
 	 */
 	public function accessRules() {
+		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
+				'actions' => array('forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -28,6 +29,12 @@ class PreregistrationController extends Controller
 				'users' => array('@'),
 				//'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
+			array(
+                'allow',
+                'actions' => array('profile','visitHistory'),
+                //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
+                'users' => array('@')
+            ),
 			array('deny',
 				'users'=>array('*'),
 			),
@@ -60,6 +67,7 @@ class PreregistrationController extends Controller
 		if(isset($_POST['EntryPoint'])){
 
 			$model->attributes=$_POST['EntryPoint'];
+
 			if($model->validate())
 			{
 				$session['workstation'] = $model->entrypoint;
@@ -72,8 +80,24 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionPrivacyPolicy(){
-		$this->render('privacy-policy');
+		
+		/*$model = new Visit();
 
+		$model->scenario = 'preregistration';
+
+		if(isset($_POST['Visit'])) {
+
+			$model->attributes = $_POST['Visit'];
+
+			if($model->validate()){
+
+				$this->redirect(array('preregistration/declaration'));
+
+			}
+		}
+		$this->render('privacy-policy',array('model'=>$model));
+*/
+		$this->render('privacy-policy');
 	}
 
 	public function actionDeclaration(){
@@ -148,30 +172,55 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionConfirmDetails(){
+
 		$session = new CHttpSession;
 
 		$model = new Registration();
 
 		$model->scenario = 'preregistration';
 
+		$error_message = '';
+
 		if (isset($_POST['Registration'])) {
+			
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
 			$model->password_repeat 	 = $session['password'];
+
+			$workstation = Workstation::model()->findByPk($session['workstation']);
+
+
+			$model->tenant = $workstation->tenant;
+
 			$model->attributes = $_POST['Registration'];
 
-			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
-
-			if ($model->save()) {
-				$session['visitor_id'] = $model->id;
-				$this->redirect(array('preregistration/visitReason'));
-			}
+			//$model->date_of_birth = date('Y-m-d', strtotime($_POST['Registration']['birthdayYear'] . '-' . $_POST['Registration']['birthdayMonth'] . '-' . $_POST['Registration']['birthdayDay']));
 
 
+			if (!empty($_POST['Registration']['contact_state'])){
+
+				if ($model->save()) {
+					//**********************************************
+					$loginModel = new PreregLogin();
+
+					$loginModel->username = $model->email;
+					$loginModel->password = $session['password'];
+
+					if ($loginModel->validate() && $loginModel->login()) {
+						$session = new CHttpSession;
+						$session['visitor_id'] = $model->id;
+						$this->redirect(array('preregistration/visitReason'));
+					}
+					//***********************************************
+				}
+            } else {
+            	$model->contact_country = Visitor::AUSTRALIA_ID;
+                $error_message = "Please select state";
+            }
 		}
 		
-		$this->render('confirm-details' , array('model' => $model));
+		$this->render('confirm-details' , array('model' => $model,'error_message' => $error_message));
 	}
 
 	public function actionVisitReason(){
@@ -187,6 +236,7 @@ class PreregistrationController extends Controller
 		$companyModel = new Company();
 
 		$companyModel->scenario = 'preregistration';
+		$model->scenario = 'preregistration';
 
 		if (isset($_POST['Visit']) && isset($_POST['Company']) ) {
 
@@ -197,6 +247,7 @@ class PreregistrationController extends Controller
 			{
 				$reasonModel->save();
 			}
+
 
 			$model->attributes    = $_POST['Visit'];
 
@@ -209,13 +260,16 @@ class PreregistrationController extends Controller
 				$model->reason 		 = $reasonModel->id;
 			}
 
-			$model->visitor 	  = $session['visitor_id'];
+			$model->visitor  = $session['visitor_id'];
+
+			$model->visit_status  = 2; //default visit status is 2=PREREGISTER
 
 			if($model->validate())
 			{
 				$model->save();
 			}
 
+			$companyModel->mobile_number    = $_POST['Company']['mobile_number'];
 			$companyModel->attributes    = $_POST['Company'];
 
 			if($companyModel->validate())
@@ -228,8 +282,9 @@ class PreregistrationController extends Controller
 					);
 
 				$registrationModel->company = $companyModel->id;
+				$registrationModel->visitor_type = $_POST['Visit']['visitor_type'];
 
-				if($registrationModel->save(true,array('company'))){
+				if($registrationModel->save(true,array('company','visitor_type'))){
 
 					$this->redirect(array('preregistration/addAsic'));
 				}
@@ -253,6 +308,11 @@ class PreregistrationController extends Controller
 		$model = new Registration();
 
 		$model->scenario = 'asic';
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
 
 		if (isset($_POST['Registration'])) {
 
@@ -334,7 +394,7 @@ class PreregistrationController extends Controller
 					)
 				);
 				if(!empty($model)){
-					foreach($model as $data){
+					/*foreach($model as $data){
 						echo '<tr>
 						<th scope="row">
 							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data->id.'">
@@ -343,7 +403,22 @@ class PreregistrationController extends Controller
 						<td>'.$data->last_name.'</td>
 						<td>'.$data->visitorStatus->name.'</td>
 					</tr>';
+					}*/
+					foreach($model as $data){
+						$companyModel = Company::model()->findByPk($data->company);
+						if(!empty($companyModel)){
+							$companyName = $companyModel->name;
+						}
+						else{
+							$companyName = '-';
+						}
+
+						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data->id.'">',$data->first_name,$data->last_name,$companyName);
+
 					}
+
+					echo json_encode($dataSet);
+
 				}
 				else{
 					echo "No Record";
@@ -464,11 +539,28 @@ class PreregistrationController extends Controller
 
 		if(isset($_POST['Visit']))
 		{
-			$oClock = $_POST['Visit']['ampm'];
+			/*$oClock = $_POST['Visit']['ampm'];*/
+			
+
 			$model->attributes=$_POST['Visit'];
-			$model->time_in
+
+			$model->time_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
+			$model->time_out = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']. " + 24 hour"));
+
+			$model->time_check_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
+			$model->time_check_out = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']. " + 24 hour"));
+
+			$model->date_in = date("Y-m-d", strtotime($_POST['Visit']['date_in']));
+			$model->date_out = date("Y-m-d", strtotime($_POST['Visit']['date_in']. " +1 day"));
+
+			$model->date_check_in = date("Y-m-d", strtotime($_POST['Visit']['date_in']));
+			$model->date_check_out = date("Y-m-d", strtotime($_POST['Visit']['date_in']. " +1 day"));
+
+			
+			/*$model->time_in
 				= $oClock == 'am' ? $model->time_in :
-				date("H:i", strtotime($model->time_in . " + 12 hour"));
+				date("H:i", strtotime($model->time_in . " + 12 hour"));*/
+
 			if($model->save()){
 				$this->redirect(array('preregistration/success'));
 			}
@@ -523,6 +615,8 @@ class PreregistrationController extends Controller
 
 	public function actionLogin(){
 
+		Yii::app()->session->destroy();
+
 		$model = new PreregLogin();
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'prereg-login-form') {
@@ -531,9 +625,13 @@ class PreregistrationController extends Controller
 		}
 
 		if (isset($_POST['PreregLogin'])) {
+
 			$model->attributes = $_POST['PreregLogin'];
 
 			if ($model->validate() && $model->login()) {
+
+				$session = new CHttpSession;
+
 				$this->redirect(array('preregistration/dashboard'));
 			}
 		}
@@ -541,6 +639,165 @@ class PreregistrationController extends Controller
 
 	}
 
+	//**************************************************************************************
+	/**
+     * Forgot password
+    */
+    public function actionForgot() {
+
+        $model = new PreregPasswordForgot();
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'forgot-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['PreregPasswordForgot'])) {
+            $model->attributes = $_POST['PreregPasswordForgot'];
+            if ($model->validate() && $model->restore()) {
+                Yii::app()->user->setFlash('success', "Please check your email for reset password instructions");
+                $this->redirect(array('preregistration/login'));
+            }
+        }
+
+        $this->render('forgot', array('model' => $model));
+    }
+
+
+    public function actionProfile($id)
+    {
+
+        $model = $this->loadModel($id);
+
+        $model->scenario = 'preregistration';
+
+        if (isset($_POST['Visitor'],$_POST['Company'])) {
+
+        	
+            $companyModel = Company::model()->findByPk($model->company);
+
+            $model->attributes = $_POST['Visitor'];
+
+            /*
+			* This removes Integrity Constraint Issue
+            */
+            if(!empty($_POST['Visitor']['visitor_type'])){
+				$model->visitor_type = $_POST['Visitor']['visitor_type'];             	
+            }else{
+            	$model->visitor_type = NULL;             	
+            }
+
+            /*
+			* This removes Integrity Constraint Issue
+            */
+            if(!empty($_POST['Visitor']['photo'])){
+				$model->photo = $_POST['Visitor']['photo'];             	
+            }else{
+            	$model->photo = NULL;             	
+            }
+
+            $companyModel->attributes = $_POST['Company'];
+
+		    $companyModel->created_by_visitor = $model->id;
+		    $companyModel->mobile_number = $_POST['Company']['contact'];
+		    $companyModel->tenant = Yii::app()->user->tenant;
+
+		    /*
+			* This removes Integrity Constraint Issue
+            */
+		   	if(!empty($_POST['Company']['logo'])){
+				$companyModel->logo = $_POST['Company']['logo'];             	
+            }else{
+            	$companyModel->logo = NULL;             	
+            }
+
+            /*
+			* This removes Integrity Constraint Issue
+            */
+            if(!empty($_POST['Company']['created_by_user'])){
+				$companyModel->created_by_user = $_POST['Company']['created_by_user'];             	
+            }else{
+            	$companyModel->created_by_user = NULL;             	
+            }
+
+	        if($model->save(false))
+	        {
+	            if ($companyModel->save(false)) {
+					Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
+				}else{
+					Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+				}
+	        }
+	        else{
+	        	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+	        }
+
+	        
+        }
+
+        $companyModel = Company::model()->findByPk($model->company);
+
+        $this->render('profile', array(
+            'model' => $model,
+            'companyModel' => $companyModel,
+        ));
+
+    }
+
+        /* Visitor Visits history */
+
+    public function actionVisitHistory() {
+    	
+    	$per_page = 10;
+
+    	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
+
+    	$condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id='".Yii::app()->user->id."' AND v.tenant='".Yii::app()->user->tenant."')";
+        
+        $rawData = Yii::app()->db->createCommand()
+                        ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 
+                        ->from("visit t")
+                        ->join("visitor v","v.id = t.visitor")
+                        ->join("visit_status vs","vs.id = t.visit_status")
+                        ->join("company c","c.id = v.company")
+                        ->where($condition)
+                        ->queryAll();
+        $item_count = count($rawData);
+
+        $query1 = Yii::app()->db->createCommand()
+                        ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 
+                        ->from("visit t")
+                        ->join("visitor v","v.id = t.visitor")
+                        ->join("visit_status vs","vs.id = t.visit_status")
+                        ->join("company c","c.id = v.company")
+                        ->where($condition)
+                        ->limit($per_page,$page-1) // the trick is here!
+                        ->queryAll();   
+
+		// the pagination itself
+        $pages = new CPagination($item_count);
+        $pages->setPageSize($per_page);
+
+		// render
+        $this->render('visit-history',array(
+            'query1'=>$query1,
+            'item_count'=>$item_count,
+            'page_size'=>$per_page,
+            'pages'=>$pages,
+        ));
+    }
+
+    public function loadModel($id)
+    {
+        $model = Visitor::model()->findByPk($id);
+        if ($model === null) {
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        return $model;
+    }
+
+
+    //**************************************************************************************
 	public function actionDashboard(){
 		$this->render('dashboard');
 	}
@@ -553,7 +810,7 @@ class PreregistrationController extends Controller
 
 	public function actionLogout() {
 		Yii::app()->user->logout();
-		//$this->redirect('index.php?r=site/login');
+		$this->redirect(array('preregistration/login'));
 	}
 
 }

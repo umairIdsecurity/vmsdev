@@ -65,7 +65,10 @@ class Company extends CActiveRecord {
         // will receive user inputs.
 		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1){
 		return array(
-	            array('name', 'required'),
+	            array('name', 'required','message'=>'Please enter {attribute}'),
+
+                //array('name', 'required','on' => 'preregistration','message'=>'Please enter {attribute}'),
+
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
                 array('password_requirement,password_option,user_password','safe'),
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
@@ -96,9 +99,12 @@ class Company extends CActiveRecord {
 		else{
 			return array(
 
-                            array('name', 'required'),
+                            array('name', 'required','message'=>'Please enter {attribute}'),
+                            
+                            //array('name', 'required','on' => 'preregistration','message'=>'Please enter {attribute}'),
+
                             array('code', 'required', 'except' => 'preregistration'),
-                            array(' email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
+                            array('email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
                             array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
 
                             array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
@@ -354,7 +360,7 @@ class Company extends CActiveRecord {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where("id != 1 and tenant=" . Yii::app()->user->id . " AND is_deleted = 0")
+                    ->where("id != 1 and tenant=" . Yii::app()->user->tenant . " AND is_deleted = 0")
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()

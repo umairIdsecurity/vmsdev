@@ -262,7 +262,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     </select>
                                 <?php
                                 } else {
-                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
+                                      $types = VisitorType::model()->getFromCardType($model->card_type);
+                                      $types = CJSON::decode($types); 
+                                      if(count($types))
+                                      echo $visitorForm->dropDownList($model, 'visitor_type', CHtml::listData($types, 'id', 'name')  ,['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>
                             <br />
@@ -283,7 +286,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td width="110px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                             <?php
-                                $reason = CHtml::listData(VisitReason::model()->findAllReason(), 'id', 'reason');
+                                $reason = CHtml::listData(VisitReason::model()->findAll('module = "CVMS"'), 'id', 'reason');
                                 $reason['Other'] = 'Other';
                                 echo $visitorForm->dropDownList($model, 'reason', $reason, ['onchange' => 'ifSelectedIsOtherShowAddReasonDiv(this)', 'empty' => 'Please select a reason']);
                             ?>
@@ -294,7 +297,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         <tr id="addreasonTable">
                             <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
                             <td>
-                                <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
+                                <?php //echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
                             </td>
                         </tr>
                     </table>
@@ -426,7 +429,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                 </li>
             </ul>
         </li>
-        <?php elseif ($hostModel) : ?>
+        <?php elseif ($hostModel) : ?> 
         <li class='has-sub' id='hostDetailsLi'>
             <a href="#"><span>Host Details</span></a>
             <ul>

@@ -188,15 +188,27 @@ class Registration extends CActiveRecord {
 		// will receive user inputs.
 		return array(
 
-            array('first_name, last_name, email, contact_number', 'required' , 'except'=>'asic'),
+            array('first_name, last_name, email, contact_number', 'required' , 'except'=>'asic', 'message'=>'Please enter {attribute}'),
+
             array('email', 'unique', 'className' => 'Registration',
                 'attributeName' => 'email',
                 'message'=>'This Email is already in use'),
 
-			array('identification_type,
-			identification_document_no, identification_document_expiry, contact_unit , contact_street_no,
-			contact_street_name, contact_street_type, contact_suburb, contact_postcode,
-			contact_state', 'required' ,'on' => 'preregistration'),
+
+			array('identification_document_no,contact_suburb', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
+
+            array('visitor_type', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
+
+            array('date_of_birth', 'required' ,'on' => 'preregistration', 'message'=>'Please update your {attribute}'),
+            array('contact_unit', 'required' ,'on' => 'preregistration', 'message'=>'Please enter unit / flat no.'),
+            array('identification_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Identification'),
+            array('identification_document_expiry', 'required' ,'on' => 'preregistration', 'message'=>'Please select Expiry date'),
+            array('contact_street_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street type'),
+            array('contact_street_no', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street no.'),
+            array('contact_street_name', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street name'),
+            array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please select Postcode'),
+
+
 
             //array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),
             array('password', 'required' , 'on' => 'asic-pass'),
@@ -216,7 +228,7 @@ class Registration extends CActiveRecord {
 			array('profile_type', 'length', 'max'=>9),
 			array('identification_type', 'length', 'max'=>15),
 			array('contact_street_type', 'length', 'max'=>8),
-			array('contact_state', 'length', 'max'=>3),
+			array('contact_state', 'length', 'max'=>50),
 			array('contact_postcode', 'length', 'max'=>10),
 			array('date_of_birth, notes, identification_document_expiry, identification_alternate_document_expiry1, identification_alternate_document_expiry2, asic_expiry,key_string , selected_asic_id', 'safe'),
 			// The following rule is used by search().
@@ -402,6 +414,18 @@ class Registration extends CActiveRecord {
             $this->password = null;
         } else {
             $this->password = User::model()->hashPassword($this->password);
+        }
+
+        if(!empty($this->date_of_birth)){
+            $this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));
+        }else{
+            $this->date_of_birth = NULL;
+        }
+
+        if(!empty($this->identification_document_expiry)){
+            $this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
+        }else{
+            $this->identification_document_expiry = NULL;
         }
 
         return parent::beforeSave();

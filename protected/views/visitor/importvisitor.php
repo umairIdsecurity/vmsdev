@@ -8,7 +8,7 @@
         </ol>
 <br>  
 
-<div class="form" style="width: 12%;">
+<div class="form">
  
 <?php
 $form = $this->beginWidget('CActiveForm', array(
@@ -23,16 +23,15 @@ $form = $this->beginWidget('CActiveForm', array(
  
      
              <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>">
-                 <label class="myLabel" for="ImportCsvForm_file">
+                 <label class="myLabel" for="ImportCsvForm_file" style="width: 70px;">
                      <?php echo $form->fileField($model,'file'); ?>
                       <span>Browse File</span>
                  </label>  
                  
-                  <div class="row">
+                  <div class="row message-no-margin">
                     <?php echo $form->error($model,'file'); ?>
                  </div> 
               </div>
-    <br>
               <div class="row">
              <?php echo CHtml::submitButton('Upload File', array("class"=>"completeButton")); ?>   
               </div>

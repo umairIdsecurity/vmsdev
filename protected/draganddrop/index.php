@@ -259,7 +259,7 @@ if (isset($_GET['viewFrom'])) {
                 }
 
                 var currentAction = $("#actionUpload").val();
-
+                
                 if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
                 {
                     /*logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
@@ -319,9 +319,7 @@ if (isset($_GET['viewFrom'])) {
                                     var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
                                     $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
-                                    logo.src = "data:image;base64,"+ value.db_image;
-
-                                } else {
+                                    } else {
 
                                     /*logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
                                     logo.src = "data:image;base64,"+ value.db_image;

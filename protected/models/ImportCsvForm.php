@@ -12,7 +12,9 @@ class ImportCsvForm extends CFormModel
         return array(  
              array('file', 'file', 'types'=>'csv', 'maxSize'=>1024 * 1024 * 10, // 10MB
                             'tooLarge'=>'The file was larger than 10MB. Please upload a smaller file.',
-                            'allowEmpty' => false                             
+                            'allowEmpty' => false,
+                            'message' => 'Please upload a file.',
+                            'wrongType' => 'Only CSV files are allowed.'                             
                    ),
              );
     }

@@ -173,12 +173,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) { ?>
                 <li class='has-sub'>
                     <a class='managevisitorrecords'
-                       href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'>
+                       href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'cvms')); ?>'>
                         <span>CVMS Access Control</span>
                     </a>
                     <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules') ? "style='display:block'" : "style='display:none'"; ?>>
                         <li>
-                            <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Workstation Access Control</span></a>
+                            <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'cvms')); ?>'><span>Workstation Access Control</span></a>
                         </li>
                     </ul>
                 </li>
@@ -299,12 +299,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) { ?>
                 <li class='has-sub'>
                     <a class='managevisitorrecords'
-                       href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'>
+                       href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'avms')); ?>'>
                         <span>AVMS Access Control</span>
                     </a>
                     <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules') ? "style='display:block'" : "style='display:none'"; ?>>
                         <li>
-                            <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Workstation Access Control</span></a>
+                            <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'avms')); ?>'><span>Workstation Access Control</span></a>
                         </li>
                     </ul>
                 </li>
@@ -424,20 +424,16 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('visit/vicTotalVisitCount'); ?>'><span>Total Visits VICs</span></a>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/vicTotalVisitCount'); ?>'><span>Total Visits</span></a>
                     </li>
                     <li>
                         <a href='<?php echo Yii::app()->createUrl('visit/vicRegister'); ?>'><span>VIC Register</span></a>
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/totalVicsByWorkstation'); ?>'><span>Total VICs by Workstation</span></a></li>
-                    
-                    <li><a href='<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>'><span>New Visitor Types ASIC & VIC</span></a></li>
-                    
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByType'); ?>'><span>Total VICs by Visitor Type</span></a></li>
-                
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByCardType'); ?>'><span>Total VICs by Card Type</span></a></li>
-
-                    <li><a href='<?php echo Yii::app()->createUrl('reports/conversionVicToAsic'); ?>'><span>Conversion of Total VICs to ASIC</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>'><span>New Visitors</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/conversionVicToAsic'); ?>'><span>Conversion of VIC to ASIC</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('auditTrail/avms'); ?>'><span>Audit Trail</span></a></li>
                 </ul>
             </li>

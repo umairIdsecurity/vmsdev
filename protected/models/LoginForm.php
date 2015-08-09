@@ -101,8 +101,8 @@ class LoginForm extends CFormModel {
             $validateNotifiSend2Weeks = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 2 weeks'");
             $validateNotifiSend1Day = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 1 day'");
             if(empty($validateNotifiSend2Weeks)){
-                //2 weeks or 15 days prior to expiry date from today date
-                if (strtotime($date_db) <= strtotime($current_date) + 86400*14) {
+                //2 weeks or 14 days prior to expiry date from today date
+                if (strtotime($date_db) <= strtotime($current_date) + 86400*14 && strtotime($date_db) > strtotime($current_date) + 86400*13) {
                     $model=new Notification;
                     $model->created_by = Yii::app()->user->tenant;
                     $model->date_created = date("Y-m-d");

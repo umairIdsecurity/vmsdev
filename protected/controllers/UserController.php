@@ -85,6 +85,7 @@ class UserController extends Controller
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
         $workstation = null;
+        
         if (isset($session['workstation']))
             $workstation = $session['workstation'];
 		

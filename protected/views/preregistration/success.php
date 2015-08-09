@@ -18,7 +18,7 @@
 
     $(document).ready(function () {
         window.setTimeout(function () {
-            location.href = '<?=Yii::app()->getBaseUrl(true)?>/index.php/preregistration';
+            location.href = '<?=Yii::app()->getBaseUrl(true)?>/index.php/preregistration/dashboard';
         }, 5000);
     });
 

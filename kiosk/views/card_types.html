@@ -1,12 +1,17 @@
-<div class=" col-xs-offset-1">
-	<h2>Select Card Types</h2>
-	<hr>
+<div class="col-xs-12">
+  <h2 class="text-primary text-uppercase page-title">Select Card</h2>
+  <hr>
+</div>
+<div class="col-xs-10 col-xs-offset-1">
+  <div class="alert alert-success">Please select card below</div>
+</div>
+<div class="">
 
 	<form name="form" ng-submit="nextStep()" role="form">
 		<div class="container" align="center">
 			<div ng-show="error" class="alert alert-danger">{{error}}</div>
 	
-			<div class="form-group" ng-class="{ 'has-error': form.ctypes.$invalid }">
+			<!-- <div class="form-group" ng-class="{ 'has-error': form.ctypes.$invalid }">
 				<select name="ctypes" ng-model="ctypes" required ng-change="getCDetail()" >
 					<option value="">Please Select Card Type</option>
 					<option ng:repeat="ctype in ctypeOptions" value="{{ctype.id}}">{{ctype.name}}</option>
@@ -16,16 +21,21 @@
 			</div>
 			<div ng-show="form.ctypes" align="center">
 				<img ng-src="{{cardImage}}"><br/>
+			</div> -->
+			<div ng-show="ctypeOptions">
+				<div ng-repeat="ctype in ctypeOptions" class="vic-card" ng-class="{ 'selected': ctype.id == selected_card }">
+					<img ng-src="{{ctype.card_image}}" ng-click="getCDetail($index)"><br/>
+				</div>
 			</div>
 		</div>
 		<div>&nbsp;</div>
 		<div class="row">
-			<div ng-show="form.ctypes.$valid" class="sticky-pull-right">
-				<a class="btn  btn-success sticky-pull-right" ng-style="forwardButtonStyle" ng-click="goNext()">Next
+			<div ng-show="cardImage" class="sticky-pull-right">
+				<a class="btn btn-primary sticky-pull-right" ng-style="forwardButtonStyle" ng-click="goNext()">Next
 					<span class="glyphicon glyphicon-chevron-right"></span>
 				</a>
 			</div>
-			<a class="btn  btn-success sticky-pull-left" ng-style="backButtonStyle" ng-click="goBack()">
+			<a class="btn btn-primary sticky-pull-left" ng-style="backButtonStyle" ng-click="goBack()">
 				<span class="glyphicon glyphicon-chevron-left"></span>Back
 			</a>
 		</div>

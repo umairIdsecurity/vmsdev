@@ -44,9 +44,32 @@
 
     </div>
 
+    <?php   /*$form=$this->beginWidget('CActiveForm', array(
+                'id'=>'privacy-notice-form',
+                'enableAjaxValidation'=>true,
+                'clientOptions' => array(
+                    'validateOnSubmit'=>true
+                ),
+            )); */
+    ?>
+
     <div class="declarations" style="padding: 10px 0 0 20px;">
-        <div class="form-group">
-            <label class="checkbox"><input name="name1" type="checkbox" value="YES" ><span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).</label>
+        <div class="form-group" id="privacy_notice">
+            
+            <!-- <label class="checkbox">
+                <?php //echo $form->checkBox($model, 'privacy_notice'); ?>
+                <span class="checkbox-style"></span>
+                I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).
+            </label>
+            
+            <?php //echo $form->error($model, 'privacy_notice'); ?> -->
+
+            <label class="checkbox"><input id="toggleCheckbox" name="name1" type="checkbox" value="0" onclick="$(this).val(this.checked ? 1 : 0)"><span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).</label>
+            
+            <div id="errorDiv" style="display:none;color:red;">
+                Please mark Privacy Notice
+            </div>
+
         </div>
     </div>
 
@@ -56,8 +79,28 @@
         </div>
 
         <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
-            <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-primary btn-next">NEXT <span class="glyphicon glyphicon-chevron-right"></span></a>
+            <?php
+                //echo CHtml::tag('button', array('type'=>'submit','class' => 'btn btn-primary btn-next'), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+            ?>
+            <a id="nextLink" href="<?php echo Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-primary btn-next">NEXT <span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
     </div>
 
+    <?php //$this->endWidget(); ?>
+
 </div>
+
+<script>
+    $("#nexlink").on("click",function(e){
+        var checkboxVal = parseInt($("#toggleCheckbox").val());
+        alert(checkboxVal);
+
+        if(checkboxVal == 0){
+            $("#errorDiv").show();
+            e.preventDefault();
+            return false;
+        }else{
+            $("#errorDiv").hide();
+        }
+    });
+</script>

@@ -287,7 +287,7 @@ class TenantController extends Controller {
         $session = new CHttpSession;
         $model = $this->loadModel($id);
         $model->scenario = "updatetenant";
-                       
+        $lastEmail = $model->email_address;               
         if(isset($_POST['Company'])){
             //print_r($_POST['Company']);
             $model->attributes = $_POST['Company'];
@@ -296,17 +296,15 @@ class TenantController extends Controller {
             
             if($model->validate()){
                 $model->save();
-                $userModel = User::model()->find('company=:c', ['c' => $model->id]);
+                $userModel = User::model()->find('company=:c AND email=:e', ['c' => $model->id, 'e'=>$lastEmail]);
                 /**
                   * Module Access
                  */ 
                 $access = CHelper::get_module_access($_POST);
                 
                 $userModel->allowed_module = $access; 
-
-                /*$userModel->email = $_POST['Company']['email_address'];
-                $userModel->contact_number = $_POST['Company']['mobile_number'];*/
-                
+                $userModel->email = $_POST['Company']['email_address'];
+                $userModel->contact_number = $_POST['Company']['mobile_number'];               
                 $userModel->save(false);
          
                 Yii::app()->user->setFlash('success', "Tenant updated Successfully");
@@ -336,18 +334,24 @@ class TenantController extends Controller {
      public function actionDelete($id) {
 
         if(Yii::app()->request->isPostRequest)
-        { 
-            $sql = "UPDATE tenant SET is_deleted=1 WHERE id=$id";
+        {  
+            // Now Disable Tenant Record
+            $sql = "UPDATE tenant SET is_deleted = 1 WHERE id=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
             
-            // Delete user from User table
-            $model = Tenant::model()->findByPk($id);        
-            $userId = $model->tenantContacts[0]->user; 
-            $user = User::model()->findByPk($userId);
-            $user->is_deleted = 1;
-            $user->save(false);
-                                                
+            // Disable user from User table 
+            $users = new User;
+            $users->updateAll( array('is_deleted'=>1), 'tenant = '.$id);
+            
+            //Disable Company     
+            $company = new Company;
+            $company->updateAll( array('is_deleted'=>1), 'tenant = '.$id); 
+      
+            //Workstation of this tenant   
+            $workstation = new Workstation;
+            $workstation->updateAll( array('is_deleted'=>1), 'tenant = '.$id);
+            
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

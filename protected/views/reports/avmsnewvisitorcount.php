@@ -13,7 +13,7 @@ $form=$this->beginWidget('CActiveForm', array(
     <div id="datePickersDiv">   
         <label> Date From:  </label><br>
             <?php
-                $this->widget( 'ext.jui.EJuiDateTimePicker',array(
+                $this->widget( 'zii.widgets.jui.CJuiDatePicker',array(
                     'attribute'   => 'date_from_filter',
                     'language'=> 'en',
                     'name'=>'date_from_filter',
@@ -31,7 +31,7 @@ $form=$this->beginWidget('CActiveForm', array(
         <br><br>
         <label> Date To: </label><br>
                 <?php 
-                    $this->widget('ext.jui.EJuiDateTimePicker', array(
+                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                         'attribute'   => 'date_to_filter',
                         'language'=> 'en',
                         'name'=>'date_to_filter',

@@ -127,8 +127,10 @@ class VisitController extends Controller {
             //check $reasonId has exist until add new.
             if ($model->reason == 'Other' || !$model->reason){
                 $newReason = new VisitReason();
-                $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : '');
-                
+                $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : 'Other');
+                $newReason->created_by = Yii::app()->user->id;
+                $newReason->tenant = Yii::app()->user->tenant;
+                $newReason->module = "AVMS";
                 if($newReason->save()){
                     $model->reason = $newReason->id;
                 }
@@ -322,7 +324,7 @@ class VisitController extends Controller {
         $oldStatus = $model->visit_status;
 
         if (!$model) {
-	        if (Yii::app()->request->isAjaxRequest) {
+    	        if (Yii::app()->request->isAjaxRequest) {
 	        	echo '<script> window.location = "' . Yii::app()->createUrl('visit/view') . '"; </script>';
 	        	exit();
 	        } else {
@@ -481,17 +483,6 @@ class VisitController extends Controller {
                 }
             }
 
-            // If operator select other reason then save new one
-            if (isset($_POST['VisitReason'])) {
-                $visitReasonModel             = new VisitReason;
-                $visitReasonService           = new VisitReasonServiceImpl;
-                $visitReasonParams            = Yii::app()->request->getPost('VisitReason');
-                $visitReasonModel->attributes = $visitReasonParams;
-                if (!$visitReasonService->save($visitReasonModel, $session['id'])) {
-                    // Do something if visit reason do not save
-                }
-            }
-
             $visitorModel->attributes           = Yii::app()->request->getPost('Visitor');
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
             $visitorModel->setScenario('updateVic');
@@ -509,6 +500,19 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $visitParams;
+            // If operator select other reason then save new one
+            if (isset($_POST['VisitReason'])) {
+                $visitReasonModel             = new VisitReason;
+                $visitReasonService           = new VisitReasonServiceImpl;
+                $visitReasonParams            = Yii::app()->request->getPost('VisitReason');
+                $visitReasonModel->attributes = $visitReasonParams;
+                $newReasonID = $visitReasonService->save($visitReasonModel, $session['id']);
+                if (!$newReasonID) {
+                    $model->reason = NULL;
+                }  else {
+                    $model->reason = $newReasonID;
+                }
+            }
             
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
@@ -522,7 +526,7 @@ class VisitController extends Controller {
                             #change datetime check in and out for vic 24h.
 
                             $model->date_check_in  = $model->date_check_out;
-                            $model->date_check_out = date('Y-m-d', strtotime('+1 day', strtotime($model->date_check_out)));
+                            $model->date_check_out = date('Y-m-d', strtotime('+5 day', strtotime($model->date_check_out)));
                             $model->time_check_in  = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
                             $model->time_check_out = $model->time_check_in;
                             break;
@@ -554,7 +558,6 @@ class VisitController extends Controller {
             }
 
             // save visit model
-           
             if ($model->save()) {
                 // if has file upload then upload and save
                 if (!empty($fileUpload)) {
@@ -1199,9 +1202,9 @@ class VisitController extends Controller {
             'company0.mobile_number' => 'Contact Phone',
             'finish_date' => 'Date of Issue',
             'card_returned_date' => 'Date of Return',
-            'identification_type' => 'Document Type',
-            'identification_document_no' => 'Number',
-            'identification_document_expiry' => 'Expiry',
+            'visitor0.identification_type' => 'Document Type',
+            'visitor0.identification_document_no' => 'Number',
+            'visitor0.identification_document_expiry' => 'Expiry',
             'visitor0.asic_no' => 'ASIC ID Number',
             'visitor0.asic_expiry' => 'ASIC Expiry',
             'workstation0.name' => 'Workstation'

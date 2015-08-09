@@ -16,6 +16,7 @@ class UserIdentity extends CUserIdentity {
      * @return boolean whether authentication succeeds.
      */
     private $_id;
+    
 
     public function authenticate() {
         
@@ -29,8 +30,9 @@ class UserIdentity extends CUserIdentity {
             $this->_id = $user->id;
             $this->setState('email', $user->email);
             $this->setState('role', $user->role);
-            $this->setState('tenant', ( !is_null($user->tenant) )?$user->tenant:$user->id );
-            $this->setState('allowed_module', ( !is_null($user->allowed_module)) ?$user->allowed_module:''  );
+            
+            $this->setState('tenant', (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id );
+            $this->setState('allowed_module', (isset($user->allowed_module) && !is_null($user->allowed_module)) ?$user->allowed_module:''  );
              
             if ($user->tenant_agent == '') {
                 $this->setState('tenant_agent', '');
@@ -63,5 +65,7 @@ class UserIdentity extends CUserIdentity {
     public function getId() {
         return $this->_id;
     }
+
+    
  
 }

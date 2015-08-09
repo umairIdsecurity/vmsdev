@@ -78,7 +78,7 @@ class TenantForm extends CFormModel
 
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),
-            array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'`is_deleted` =:is_deleted', 'params'=>array(
+            array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 ))),
           

@@ -115,7 +115,7 @@ class User extends VmsActiveRecord {
         if($this->scenario == 'add_company_contact') {
             return array(
                     array('first_name, last_name, email, contact_number', 'required'),
-                     array('email','unique', 'criteria'=>array('condition'=>'`is_deleted` =:is_deleted', 'params'=>array(
+                     array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                         ':is_deleted'=>0
                     ))),
                     array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
@@ -131,7 +131,7 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,password,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
-                array('email','unique', 'criteria'=>array('condition'=>'`is_deleted` =:is_deleted', 'params'=>array(
+                array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 ))),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
@@ -156,7 +156,7 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
-                 array('email','unique', 'criteria'=>array('condition'=>'`is_deleted` =:is_deleted', 'params'=>array(
+                 array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 ))),
                 array('role, company', 'required', 'message' => 'Please select a {attribute}'),

@@ -197,13 +197,13 @@ class Company extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $post_count_sql = "( " . $this->tenantQuery . " AND c.id=t.id)";
-
-        // select
-        $criteria->select = array(
-            '*',
-            $post_count_sql . " as isTenant",
-        );
+//        $post_count_sql = "( " . $this->tenantQuery . " AND c.id=t.id)";
+//
+//        // select
+//        $criteria->select = array(
+//            '*',
+//            $post_count_sql . " as isTenant",
+//        );
 
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
@@ -228,7 +228,7 @@ class Company extends CActiveRecord {
         if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
             $criteria->compare('tenant', $_SESSION["tenant"]);
         }
-        $criteria->compare($post_count_sql, $this->isTenant);
+        //$criteria->compare($post_count_sql, $this->isTenant);
 
         $data = new CActiveDataProvider($this, array(
             'criteria' => $criteria,

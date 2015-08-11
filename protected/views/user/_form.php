@@ -251,7 +251,7 @@ $form = $this->beginWidget('CActiveForm', array(
                     if (($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) && $session['tenant'] == $value['id']) {
                         echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
                     }
-                    ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                    ?> value="<?php echo $value['id']; ?>"><?php echo $value["id0"]['name']; ?></option>
                 <?php
                 }
                 ?>
@@ -291,6 +291,8 @@ $form = $this->beginWidget('CActiveForm', array(
 <tr id="companyTr">
     <td id='companyRow'>
         <?php
+        
+        $label = 'Please select a company';
         $companyList = array();
         $selectedItem = array();
 
@@ -302,9 +304,14 @@ $form = $this->beginWidget('CActiveForm', array(
         if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN ||
             $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN || CHelper::is_accessing_avms_features()
         ) {
-            $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-
-            if ($this->action->id == 'update') {
+            if(Yii::app()->user->role == Roles::ROLE_SUPERADMIN) { 
+                $companyList = CHtml::listData(User::model()->findAllCompanyTenant(), 'id', 'id0.name');
+                $label = 'Please select a Tenant';
+            }
+            else {
+                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');   
+            }
+             if ($this->action->id == 'update') {
                 $companyId = User::model()->getCompany($currentlyEditedUserId);
             } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 $companyId = User::model()->getCompany($currentLoggedUserId);
@@ -327,7 +334,7 @@ $form = $this->beginWidget('CActiveForm', array(
             'attribute' => 'company',
             'items' => $companyList,
             'selectedItems' => $selectedItem, // Items to be selected as default
-            'placeHolder' => 'Please select a company',
+            'placeHolder' => $label,
 
         ));
         ?>
@@ -653,7 +660,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
                                     <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                                     <input onclick="generatepassword();" class="complete btn btn-info"
-                                           style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:14px"
+                                           style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px"
                                            type="button" value="Autogenerate Password"/>
 
                                 </div>

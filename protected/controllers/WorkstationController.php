@@ -124,7 +124,7 @@ class WorkstationController extends Controller {
             if ($model->save()) {
 
                 WorkstationCardType::model()->deleteAll(
-                        "workstation='" . $model->id . "'"
+                        "workstation=" . $model->id . ""
                 );
                 if (!empty($model->card_type)) {
                     foreach ($model->card_type as $card) {
@@ -170,7 +170,10 @@ class WorkstationController extends Controller {
             $criteria = new CDbCriteria();
             $criteria->addCondition("workstation=" . $id);
             $criteria->addInCondition("visit_status", array(1, 2));
-            $criteria->addCondition("str_to_date(t.date_check_in,'%d-%m-%Y') > DATE_ADD(now(),interval 0 day)");
+            //$criteria->addCondition("str_to_date(t.date_check_in,'%d-%m-%Y') > DATE_ADD(now(),interval 0 day)");
+            $currDate = new DateTime("NOW");
+            $criteria->addCondition("t.date_check_in > CONVERT('".$currDate->format("Y-m-d") ."', DATE)");
+            
             $visits = Visit::model()->findAll($criteria);
            
             if (!empty($visits) && count($visits) > 0) {

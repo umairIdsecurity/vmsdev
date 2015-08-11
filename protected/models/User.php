@@ -396,7 +396,7 @@ class User extends VmsActiveRecord {
                 break;
         }
         if (Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin') {
-            $criteria->addCondition("t.id !='" . $user->id . "' and role in " . $rolein . " and (" . $queryCondition . ")");
+            $criteria->addCondition("t.id !=" . $user->id . "'and role in " . $rolein . " and (" . $queryCondition . ")");
         } else {
             $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
         }
@@ -465,11 +465,11 @@ class User extends VmsActiveRecord {
     }
 
     public function beforeDelete() {
-        $visitExists = Visit::model()->exists("is_deleted = 0 and host ='" . $this->id . "'");
-        $isTenant = Company::model()->exists("is_deleted = 0 and tenant ='" . $this->id . "'");
-        $userWorkstation = UserWorkstations::model()->exists("user = '" . $this->id . "'");
-        $visitorExists = Visitor::model()->exists("tenant = '" . $this->id . "' and is_deleted=0");
-        $isTenantAgent = Company::model()->exists("tenant_agent = '" . $this->id . "' and is_deleted=0");
+        $visitExists = Visit::model()->exists("is_deleted = 0 and host =" . $this->id . "");
+        $isTenant = Company::model()->exists("is_deleted = 0 and tenant =" . $this->id . "");
+        $userWorkstation = UserWorkstations::model()->exists("user = " . $this->id . "");
+        $visitorExists = Visitor::model()->exists("tenant = " . $this->id . " and is_deleted=0");
+        $isTenantAgent = Company::model()->exists("tenant_agent = " . $this->id . " and is_deleted=0");
         if ($visitExists || $isTenant || $userWorkstation || $visitorExists || $isTenantAgent) {
             return false;
         } else {
@@ -526,14 +526,11 @@ class User extends VmsActiveRecord {
     }
 
     public function getCompany($id) {
-        $connection = Yii::app()->db;
-        $sql = 'select company from '.Yii::app()->params['userTbl'].' where id = ' . $id;
-        $command = $connection->createCommand($sql);
-        $row = $command->queryRow();
-        foreach ($row as $key => $val) {
-            $company = $val;
-        }
-        return $company;
+        $user = User::model()->findByPk($id);
+        if( $user )
+            return $user->company;
+        else
+            return 0;
     }
 
     public function getFullName() {
@@ -543,13 +540,15 @@ class User extends VmsActiveRecord {
 
 
     public function findAllCompanyTenant() {
-        return Yii::app()->db->createCommand()
-                        ->select('c.id as id, c.name as name,c.tenant')
-                        ->from('user u')
-                        ->join('company c', 'u.company=c.id')
-                        ->where('u.id=c.tenant and c.id !=1 and u.is_deleted = 0')
-                        ->queryAll();
-                        
+//        return Yii::app()->db->createCommand()
+//                        ->select('c.id as id, c.name as name,c.tenant')
+//                        ->from('user u')
+//                        ->join('company c', 'u.tenant=c.id')
+//                        ->where('u.id=c.tenant and c.id !=1 and u.is_deleted = 0')
+//                        ->queryAll();
+         $criteria = new CDbCriteria();
+         $criteria->condition = "user0.is_deleted = 0 AND id0.is_deleted = 0";
+         return $tenant = Tenant::model()->with("user0", "id0")->findAll( $criteria );
                         // Todo: Why you change that query it cause log visit bug
                         // if you change please check that log visit run normally, thanks
                         /*->select('c.id as id, c.name as name,c.tenant')
@@ -630,7 +629,7 @@ class User extends VmsActiveRecord {
             $company = Yii::app()->db->createCommand()
                 ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.first_name, u.last_name')
                 ->from('user u')
-                ->join('company c', 'u.company=c.id')
+                ->join('company c', 'u.tenant=c.id')
                 ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role =" . Roles::ROLE_AGENT_ADMIN . " and c.is_deleted = 0")
                 ->queryAll();
 
@@ -773,7 +772,8 @@ class User extends VmsActiveRecord {
         $aArray = array();
         if ($tenantAgentId != '') {
             //$user = User::model()->findByPk($tenantAgentId);
-            $company = User::model()->findByPk($tenantAgentId);
+            //$company = User::model()->findByPk($tenantAgentId);
+             $company = Company::model()->findByPk($tenantId);
         } else {
             //$user = User::model()->findByPk($tenantId);
             $company = Company::model()->findByPk($tenantId);
@@ -781,7 +781,7 @@ class User extends VmsActiveRecord {
 
         $Criteria = new CDbCriteria();
         if ($company) {
-            $Criteria->condition = "id = " . $company->id . " AND is_deleted = 0";
+            $Criteria->condition = "tenant = " . $company->id . " AND is_deleted = 0";
         } else {
 
         }

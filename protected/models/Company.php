@@ -197,13 +197,13 @@ class Company extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $post_count_sql = "( " . $this->tenantQuery . " AND c.id=t.id)";
-
-        // select
-        $criteria->select = array(
-            '*',
-            $post_count_sql . " as isTenant",
-        );
+//        $post_count_sql = "( " . $this->tenantQuery . " AND c.id=t.id)";
+//
+//        // select
+//        $criteria->select = array(
+//            '*',
+//            $post_count_sql . " as isTenant",
+//        );
 
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
@@ -228,7 +228,7 @@ class Company extends CActiveRecord {
         if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
             $criteria->compare('tenant', $_SESSION["tenant"]);
         }
-        $criteria->compare($post_count_sql, $this->isTenant);
+        //$criteria->compare($post_count_sql, $this->isTenant);
 
         $data = new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -315,7 +315,7 @@ class Company extends CActiveRecord {
     public function isUserAllowedToViewCompany($companyId, $user) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "'";
+        $Criteria->condition = "company = " . $companyId . " and id=" . $user->id . "";
         $users = User::model()->findAll($Criteria);
 
         //$users = array_filter($users);
@@ -328,7 +328,7 @@ class Company extends CActiveRecord {
 
     public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '" . $companyName . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = "name = '" . $companyName . "' and tenant=" . $tenant . "";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -337,7 +337,7 @@ class Company extends CActiveRecord {
 
     public function isCompanyCodeUniqueWithinTheTenant($companyCode, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "code = '" . $companyCode . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = "code = '" . $companyCode . "' and tenant=" . $tenant . "";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -346,7 +346,7 @@ class Company extends CActiveRecord {
 
 	public function isWithoutCompanyCodeUniqueWithinTheTenant($tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant='" . $tenant . "'";
+        $Criteria->condition = "tenant=" . $tenant . "";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);

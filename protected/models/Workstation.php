@@ -155,7 +155,7 @@ class Workstation extends CActiveRecord {
     public function getWorkstations($userId, $workstationId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = " . $userId . " and workstation=" . $workstationId . "";
+        $Criteria->condition = "t.user = " . $userId . " and t.workstation=" . $workstationId;
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $userworkstations = array_filter($userworkstations);

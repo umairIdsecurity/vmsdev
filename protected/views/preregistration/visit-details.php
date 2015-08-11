@@ -110,7 +110,7 @@ if ($model->time_in != '') {
                     
                     <div class="col-xs-4">
                         <select class='form-control input-lg' name='Visit[time_in_minutes]' id='Visit_time_in_minutes'>
-                            <?php for ($i = 1; $i <= 60; $i++): ?>
+                            <?php for ($i = 0; $i <= 59; $i++): ?>
                                 <option 
                                 <?php
                                 if ($timeIn[1] == $i) {
@@ -118,7 +118,7 @@ if ($model->time_in != '') {
                                 }
                                 ?>
                                     value="<?= $i; ?>"><?php
-                                        if ($i > 0 && $i < 10) {
+                                        if ($i >= 0 && $i < 10) {
                                             echo '0' . $i;
                                         } else {
                                             echo $i;

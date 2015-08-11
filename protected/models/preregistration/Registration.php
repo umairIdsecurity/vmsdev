@@ -197,16 +197,18 @@ class Registration extends CActiveRecord {
 
 			array('identification_document_no,contact_suburb', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
 
-            array('visitor_type', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
+            //array('visitor_type', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
 
             array('date_of_birth', 'required' ,'on' => 'preregistration', 'message'=>'Please update your {attribute}'),
-            array('contact_unit', 'required' ,'on' => 'preregistration', 'message'=>'Please enter unit / flat no.'),
+            
+            //array('contact_unit', 'required' ,'on' => 'preregistration', 'message'=>'Please enter unit / flat no.'),
+            
             array('identification_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Identification'),
             array('identification_document_expiry', 'required' ,'on' => 'preregistration', 'message'=>'Please select Expiry date'),
             array('contact_street_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street type'),
-            array('contact_street_no', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street no.'),
-            array('contact_street_name', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street name'),
-            array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please select Postcode'),
+            array('contact_street_no', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Street no.'),
+            array('contact_street_name', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Street name'),
+            array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Postcode'),
 
 
 

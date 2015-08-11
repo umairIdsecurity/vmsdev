@@ -9,8 +9,6 @@
 ?>
 <div class="page-content">
 
-    
-
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'prereg-login-form',
         'enableClientValidation'=>true,

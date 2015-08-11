@@ -94,7 +94,7 @@
             <?php echo $form->error($companyModel, 'name'); ?>
         </div>
         <div class="form-group">
-            <?php echo $form->textField($companyModel, 'contact', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Jane Schimdt' ,'class'=>'form-control input-lg')); ?>
+            <?php echo $form->textField($companyModel, 'contact', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Contact' ,'class'=>'form-control input-lg')); ?>
 
             <?php echo $form->error($companyModel, 'contact'); ?>
         </div>

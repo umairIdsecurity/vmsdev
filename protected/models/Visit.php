@@ -191,8 +191,7 @@ class Visit extends CActiveRecord {
                  break;
              
              case CardType::VIC_CARD_MULTIDAY: 
-             case CardType::VIC_CARD_EXTENDED:  
-             
+             case CardType::VIC_CARD_EXTENDED:             
              case CardType::MANUAL_VISITOR:
              case CardType::MULTI_DAY_VISITOR:
              case CardType::CONTRACTOR_VISITOR:    
@@ -927,7 +926,7 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    LEFT JOIN card_generated ON card_generated.id = visit.`card`
+                    LEFT JOIN card_generated ON card_generated.id = visit.card
                     SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
                     WHERE CURRENT_DATE > date_out AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
@@ -1039,7 +1038,7 @@ class Visit extends CActiveRecord {
         try {
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    LEFT JOIN card_generated ON card_generated.id = visit.`card` 
+                    LEFT JOIN card_generated ON card_generated.id = visit.card 
                     SET visit_status = '" . VisitStatus::EXPIRED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
                     WHERE CURRENT_DATE > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'")->execute();
@@ -1173,7 +1172,12 @@ class Visit extends CActiveRecord {
                 break;
 
             case CardType::VIC_CARD_MULTIDAY:
-                $totalCount = $dateNow->diff($dateIn)->days + 1;
+                $isExpired = $dateOut->format("d") - $dateNow->format("d");
+                if( $isExpired > 0 )
+                     $totalCount = $dateNow->diff($dateIn)->days + 1;
+                else
+                     $totalCount = $dateOut->diff($dateIn)->days + 1;
+                
                 if ($this->count($criteria) > 0) {
                     $totalCount += $this->count($criteria);
                 }
@@ -1232,27 +1236,46 @@ class Visit extends CActiveRecord {
     }
 
     /**
-     * Set status as Closed of the visit if date/time checkout exceeds current date/time.
-     * 
+     * Set status as Closed of the VIC 24Hours visit only if date/time checkout reached current date/time.
+     * Below is the flow for the all VIC visit cards:
+        * 24 hour* – Saved, Preregister, Active, Auto Closed (Operator can Preregister for future dates)
+        * Same day* - Saved, Preregister, Active, Expired, Closed
+        * Extended* - Saved, Preregister, Active, Auto Closed (Operator can Preregister for future dates) / Expired, Closed
+        * Multiday *- Saved, Preregister, Active, Expired, Closed
+        * Manual *- Saved, Preregister, Active, Closed 
      */
     public function afterFind() {
-        
-        // Set closed visit if time-checkout exceeds current time.   
+         $session = new CHttpSession;
+         $timezone = $session["timezone"]; 
+        // Set closed visit if time-checkout reached current time.   
         if( $this->date_check_out <= date("Y-m-d")
-                 && $this->visit_status == VisitStatus::ACTIVE ) {
+                && $this->visit_status == VisitStatus::ACTIVE ) {
             
+            $status = "";
+            //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
+            if( $this->card_type == CardType::VIC_CARD_24HOURS ) {
+                $status = VisitStatus::CLOSED;
+            } else if( $this->card_type != CardType::VIC_CARD_24HOURS 
+                    && $this->card_type != CardType::VIC_CARD_MANUAL 
+                    && $this->card_type != CardType::MANUAL_VISITOR ) {
+                $status = VisitStatus::EXPIRED;
+            } 
              //Get current time to compare with current visit time
-             $current_hour = date("H"); $current_minutes = date("i");
-             $time_checkout = $this->time_check_out != "00:00:00"? $this->time_check_out: $this->finish_time;      
-             $timeArr = explode(":", $time_checkout);
+             $current = new DateTime('NOW', new DateTimeZone($timezone));
+             $current_hour = $current->format("H");
+             $current_minutes = $current->format("i"); 
              
+            // Visit Time
+             $time_checkout = $this->time_check_out != "00:00:00"? $this->time_check_out: $this->finish_time;      
+             $checkoutdatetime = $this->date_check_out." ".$time_checkout;
+             $checkout = new DateTime($checkoutdatetime);
+             $checkout->setTimezone(new DateTimeZone($timezone));
             //compare Time hours and minutes
-             if( $current_hour > $timeArr[0] 
-                     || ( $current_hour == $timeArr[0] && $current_minutes >= $timeArr[1]) ) {
-                 
-                     //Update to Close visit
-                     $this->updateByPk($this->id, array("visit_status" => VisitStatus::CLOSED));
-                    
+             if( ($current_hour > $checkout->format("H") || $this->date_check_out < date("Y-m-d") )
+                     || ( $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
+                     //Update
+                     if( !empty($status) )
+                     $this->updateByPk($this->id, array("visit_status" => $status));                   
              }
         } 
          

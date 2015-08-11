@@ -12,8 +12,9 @@ defined('YII_DEBUG') or define('YII_DEBUG',true);
 
 require_once($yii);
 
-if(isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg'){
-
+if( (isset($_SERVER['HTTP_HOST']) && substr($_SERVER['HTTP_HOST'],0,5) =='vmspr' ) ||
+    (isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg')
+    ){
 
     $config = require(dirname(__FILE__) . '/protected/config/prereg_main.php');
 

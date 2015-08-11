@@ -428,7 +428,7 @@ class PreregistrationController extends Controller
 			else{
 
 				$connection=Yii::app()->db;
-				$sql="SELECT * FROM `visitor` WHERE
+				$sql="SELECT * FROM visitor WHERE
 					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
 					  AND profile_type = 'ASIC' ";
 
@@ -667,20 +667,75 @@ class PreregistrationController extends Controller
     public function actionProfile($id)
     {
 
-        $this->layout = "//layouts/column1";
-
         $model = $this->loadModel($id);
 
-        $companyModel = Company::model()->findByPk($model->company);
+        $model->scenario = 'preregistration';
 
-        if (isset($_POST['User'])) {
+        if (isset($_POST['Visitor'],$_POST['Company'])) {
 
-            $model->attributes = $_POST['User'];
-            // $model->detachBehavior('DateTimeZoneAndFormatBehavior');
-            if ($model->save()) {
-                Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
+        	
+            $companyModel = Company::model()->findByPk($model->company);
+
+            $model->attributes = $_POST['Visitor'];
+
+            /*
+			* This removes Integrity Constraint Issue
+            */
+            if(!empty($_POST['Visitor']['visitor_type'])){
+				$model->visitor_type = $_POST['Visitor']['visitor_type'];             	
+            }else{
+            	$model->visitor_type = NULL;             	
             }
+
+            /*
+			* This removes Integrity Constraint Issue
+            */
+            if(!empty($_POST['Visitor']['photo'])){
+				$model->photo = $_POST['Visitor']['photo'];             	
+            }else{
+            	$model->photo = NULL;             	
+            }
+
+            $companyModel->attributes = $_POST['Company'];
+
+		    $companyModel->created_by_visitor = $model->id;
+		    $companyModel->mobile_number = $_POST['Company']['contact'];
+		    $companyModel->tenant = Yii::app()->user->tenant;
+
+		    /*
+			* This removes Integrity Constraint Issue
+            */
+		   	if(!empty($_POST['Company']['logo'])){
+				$companyModel->logo = $_POST['Company']['logo'];             	
+            }else{
+            	$companyModel->logo = NULL;             	
+            }
+
+            /*
+			* This removes Integrity Constraint Issue
+            */
+            if(!empty($_POST['Company']['created_by_user'])){
+				$companyModel->created_by_user = $_POST['Company']['created_by_user'];             	
+            }else{
+            	$companyModel->created_by_user = NULL;             	
+            }
+
+	        if($model->save(false))
+	        {
+	            if ($companyModel->save(false)) {
+					Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
+				}else{
+					Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+				}
+	        }
+	        else{
+	        	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+	        }
+
+	        
         }
+
+        $companyModel = Company::model()->findByPk($model->company);
 
         $this->render('profile', array(
             'model' => $model,
@@ -693,7 +748,7 @@ class PreregistrationController extends Controller
 
     public function actionVisitHistory() {
     	
-    	$per_page = 2;
+    	$per_page = 10;
 
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
 

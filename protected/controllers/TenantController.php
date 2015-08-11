@@ -183,7 +183,7 @@ class TenantController extends Controller {
                                         $body .= "Password: ".$_POST['TenantForm']['password']."<br>";
                                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
 
-                                        mail($to, $subject, $body, $headers);
+                                        @mail($to, $subject, $body, $headers);
                                     }
                                     elseif ($passwordRequire == 2) {
 
@@ -301,8 +301,8 @@ class TenantController extends Controller {
                   * Module Access
                  */ 
                 $access = CHelper::get_module_access($_POST);
-                
-                $userModel->allowed_module = $access; 
+                if( !is_null($access))
+                    $userModel->allowed_module = $access; 
                 $userModel->email = $_POST['Company']['email_address'];
                 $userModel->contact_number = $_POST['Company']['mobile_number'];               
                 $userModel->save(false);

@@ -1,8 +1,5 @@
 <?php
 
-$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
-
 $session = new CHttpSession;
 
 $dataId = '';
@@ -17,6 +14,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 ?>
 
 <style>
+    
+    .required{
+        color: red;
+    }
 
     #addCompanyLink {
         width: 124px;
@@ -59,18 +60,24 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         margin-left: 50px;
     }
 
-    .required {
-        padding-left: 10px;
-    }
-
 </style>
 
+   
 
-<div>
+<div class="page-content">
+    
+    <h1 class="text-primary title">Visitor Profile</h1>
+    
+    <?php
+        foreach(Yii::app()->user->getFlashes() as $key => $message) {
+            echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+        }
+    ?>
+
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id'                     => 'profile-form',
-        'htmlOptions'            => array("name" => "registerform"),
+        'htmlOptions'            => array("name" => "profileform"),
         'enableAjaxValidation'   => false,
         'enableClientValidation' => true,
         'clientOptions'          => array(
@@ -79,8 +86,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     ));
     ?>
 
-    <input type="hidden" id="emailIsUnique" value="0"/>
-    <input type="hidden" name="profile_type" id="Visitor_profile_type" value="<?php echo $model->profile_type; ?>"/>
 
     <div>
 
@@ -115,7 +120,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                                     <br>
                                     
-                                    <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                                    <?php //require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
                                     
 
                                     <div class="photoDiv" style="display:none;">
@@ -159,28 +164,37 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             <?php
 
                                                 $account=Yii::app()->user->getState('account');
-                                                $list = '';
+                                                $types = '';
                                                 if($account == 'CORPORATE'){
-                                                    $list = VisitorType::model()->findAll('t.is_deleted = 0 and module = :m', array(':m' => "CVMS"));
+                                                    $types = VisitorType::model()->findAll('t.is_deleted = 0 and module = :m', array(':m' => "CVMS"));
                                                 }else{
-                                                    $list = VisitorType::model()->findAll('t.is_deleted = 0 and module = :m', array(':m' => "AVMS"));
+                                                    $types = VisitorType::model()->findAll('t.is_deleted = 0 and module = :m', array(':m' => "AVMS"));
                                                 }
 
-                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                                $list = array();
+                                                foreach ($types as $key => $type) {
+                                                    $list[$type['id']]=$type['name'];
+                                                }
+                                                
+
+                                                echo $form->dropDownList($model,'visitor_type',$list,array('class' => 'form-control','empty' => 'Select Visitor Type', 'style' => '')); 
+                                
+
+                                                /*echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type" class="form-control">';
                                                 echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
                                                 foreach( $list as $val ) {
-                                                    /*if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
-                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    } else {
-                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    }*/
-
-                                                    if ( $model->visitor_type == $val->id) {
+                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
                                                         echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
                                                     } else {
                                                         echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
                                                     }
-                                                } echo "</select>";
+
+                                                    if ($model->visitor_type == $val->id) {
+                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    } else {
+                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    }
+                                                } echo "</select>";*/
                                             
                                             ?>
                                             <span class="required">*</span>
@@ -191,58 +205,63 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </td>
                         </tr>
                     </table>
-                    <table style="float:left;width:300px;">
+                    <table style="float:left;width:300px;margin-left:50px">
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
+                                <?php echo $form->textField($model, 'first_name', array('class' => 'form-control input-xs', 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
+                                <?php echo $form->textField($model, 'middle_name', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
+                                <?php echo $form->textField($model, 'last_name', array('class' => 'form-control input-xs', 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td class="birthdayDropdown">
+                            <td class="">
                                 <span>Date of Birth</span> <br/>
-                                <input type="hidden" id="dateofBirthBreakdownValueYear"
-                                       value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                                       value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueDay"
-                                       value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                                <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
-                                <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
-                                <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
-                                <?php //echo $form->dropDownList($model, 'birthdayYear',array(), array('class' => 'yearSelect')) ;?>
+                                <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'model'       => $model,
+                                        'attribute'   => 'date_of_birth',
+                                        'options'     => array(
+                                            'dateFormat' => 'dd-mm-yy',
+                                            'changeMonth' => true,
+                                            'changeYear' => true
+                                        ),
+                                        'htmlOptions' => array(
+                                            
+                                            'maxlength'   => '10',
+                                            'placeholder' => 'Date of birth',
+                                            /*'style'       => 'width: 80px;',*/
+                                            'class' => 'form-control input-xs'
+                                        ),
+                                    ));
+                                    ?>
                                 <span class="required">*</span>
+
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td width="37%">
-                                <input type="text" id="Visitor_email" name="Visitor[email]" maxlength="50" size="50"
-                                       placeholder="Email" value="<?php echo $model->email; ?>"/><span
-                                    class="required">*</span>
+                                <?php echo $form->textField($model, 'email', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Email Address')); ?>
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
-                                <div style="" class="errorMessageEmail">A profile already exists for this email address.
-                                </div>
-
+                                <!-- <div style="" class="errorMessageEmail">A profile already exists for this email address.</div> -->
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number')); ?>
+                                <?php echo $form->textField($model, 'contact_number', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Mobile Number')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                             </td>
@@ -250,8 +269,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'contact_unit', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Unit', 'style' => 'width: 80px;')); ?>
-                                <?php echo $form->textField($model, 'contact_street_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street No.', 'style' => 'width: 110px;')); ?>
+                                <?php echo $form->textField($model, 'contact_unit', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Unit', 'style' => '')); ?>
+                                <?php echo $form->textField($model, 'contact_street_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Street No.', 'style' => '')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_unit'); ?>
                                 <?php echo $form->error($model, 'contact_street_no'); ?>
@@ -259,8 +278,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'contact_street_name', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street Name', 'style' => 'width: 110px;')); ?>
-                                <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('empty' => 'Type', 'style' => 'width: 95px;')); ?>
+                                <?php echo $form->textField($model, 'contact_street_name', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Street Name', 'style' => '')); ?>
+                                <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('class' => 'form-control input-xs','empty' => 'Type', 'style' => '')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_street_name'); ?>
                                 <?php echo $form->error($model, 'contact_street_type'); ?>
@@ -268,7 +287,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'contact_suburb', array('size' => 15, 'maxlength' => 50, 'placeholder' => 'Suburb')); ?>
+                                <?php echo $form->textField($model, 'contact_suburb', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Suburb')); ?>
                                 <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
                             </td>
                         </tr>
@@ -276,15 +295,13 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             <td>
                                 <i id="cstate">
                                     <?php
-                                    if(Yii::app()->controller->action->id == 'addvisitor'){
-                                        echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
-                                    } elseif(Yii::app()->controller->action->id == 'update' && $model->contact_country == Visitor::AUSTRALIA_ID ) {
-                                        echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
+                                    if(Yii::app()->controller->action->id == 'update' && $model->contact_country == Visitor::AUSTRALIA_ID ) {
+                                        echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('class' => 'form-control input-xs','empty' => 'State', 'style' => ''));
                                     } else {
-                                        echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 62px;'));
+                                        echo $form->textField($model, 'contact_state', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'State', 'style' => ''));
                                     } ?>
                                 </i>
-                                <select id="state_copy" style="display: none">
+                                <select id="state_copy" style="display: none" class="form-control input-xs">
                                     <?php
                                     if(isset(Visitor::$AUSTRALIAN_STATES) && is_array(Visitor::$AUSTRALIAN_STATES)){
                                         foreach (Visitor::$AUSTRALIAN_STATES as $key=>$value):
@@ -293,7 +310,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     }
                                     ?>
                                 </select>
-                                <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
+                                <?php echo $form->textField($model, 'contact_postcode', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => '')); ?>
                                 <span class="required">*</span>
                                 <?php echo $form->error($model, 'contact_state'); ?>
                                 <?php echo $form->error($model, 'contact_postcode'); ?>
@@ -302,59 +319,25 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         <tr>
                             <td>
                                 <?php
-                                echo $form->dropDownList($model, 'contact_country', $countryList,
-                                    array('prompt' => 'Country', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                                echo $form->dropDownList($model, 'contact_country', $countryList, array('class' => 'form-control input-xs','prompt' => 'Country', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                 ?><span class="required">*</span>
                                 <br/>
                                 <?php echo $form->error($model, 'contact_country'); ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td id="">
-                                <div style="margin-bottom: 5px;">
-                                    <?php echo $form->textField($companyModel, 'name', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
-                                    <span class="required">*</span>
-                                    <?php echo $form->error($companyModel, 'name', array("style" => "margin-top:0px")); ?>
-                                </div>
-                            </td>
-
-                            <td id="">
-                                <div style="margin-bottom: 5px;">
-                                    <?php echo $form->textField($companyModel, 'contact', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
-                                    <span class="required">*</span>
-                                    <?php echo $form->error($companyModel, 'contact', array("style" => "margin-top:0px")); ?>
-                                </div>
-                            </td>
-
-                            <td id="">
-                                <div style="margin-bottom: 5px;">
-                                    <?php echo $form->textField($companyModel, 'email_address', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
-                                    <span class="required">*</span>
-                                    <?php echo $form->error($companyModel, 'email_address', array("style" => "margin-top:0px")); ?>
-                                </div>
-                            </td>
-
-                            <td id="">
-                                <div style="margin-bottom: 5px;">
-                                    <?php echo $form->textField($companyModel, 'mobile_number', array('maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
-                                    <span class="required">*</span>
-                                    <?php echo $form->error($companyModel, 'mobile_number', array("style" => "margin-top:0px")); ?>
-                                </div>
-                            </td>
-                        </tr>
+                        
                         <tr>
                             <td>
                                 <div style="margin-bottom: 5px;" id="visitorStaffRow"></div>
                             </td>
                         </tr>
                     </table>
-                    <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) &&
-                            $this->action->id == 'update') || $this->action->id == 'addvisitor'
-                    ) { ?>
-                        <table style="float:left;width:300px;">
+
+
+                    <table style="float:left;width:300px;margin-left:50px">
                             <tr>
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type'));
+                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('class' => 'form-control input-xs','prompt' => 'Identification Type'));
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
                                 </td>
@@ -362,14 +345,14 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             <tr>
                                 <td>
                                     <?php
-                                    echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Country of Issue', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                                    echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('class' => 'form-control input-xs','empty' => 'Country of Issue', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_country_issued'); ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
+                                    <?php echo $form->textField($model, 'identification_document_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => '')); ?>
 
                                     <?php
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -384,7 +367,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             'size'        => '0',
                                             'maxlength'   => '10',
                                             'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
+                                            'style'       => '',
+                                            'class' => 'form-control input-xs',
                                         ),
                                     ));
                                     ?><span class="required primary-identification-require">*</span>
@@ -392,230 +376,67 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>
                             </tr>
-                            <?php
-                            $birthYear = date('Y', strtotime($model->date_of_birth));
-                            $visibility = 'none';
-                            if (Yii::app()->controller->action->id == 'update' && (date('Y') - $birthYear) < 18) {
-                                $visibility = 'block';
-                            }
-                            ?>
-                            <tr id="u18_identification" style="display: <?php echo $visibility; ?>">
-                                <td>
-                                    <?php
-                                    echo $form->checkBox($model, 'is_under_18', ['style' => 'float:left;']);
-                                    ?>
-                                    <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
-                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_is_under_18_em_">Please verify the age of the applicant.</div>
-                                    <?php echo $form->textField($model, 'under_18_detail', ['placeholder' => 'Detail']); ?>
 
-                                </td>
-                            </tr>
-                            <?php if (!in_array($session['role'], [Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_AGENT_AIRPORT_OPERATOR])): ?>
                             <tr>
-                                <td>
-                                    <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
-                                    <label for="Visitor_alternative_identification" class="form-label">Applicant does not have one of the above identifications</label>
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->textField($companyModel, 'name', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Company Name', 'style' => '')); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($companyModel, 'name', array("style" => "margin-top:0px")); ?>
+                                    </div>
                                 </td>
                             </tr>
-                            <?php endif; ?>
-                            <tr class="row_document_name_number" style="display:none">
-                                <td>
-                                    <?php echo $form->textField($model, 'identification_alternate_document_name1', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));
-                                    ?><span class="required alternate-identification-require">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_name1'); ?>
+                            
+                            <tr>    
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->textField($companyModel, 'trading_name', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Trading Name', 'style' => '')); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($companyModel, 'trading_name', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr>    
 
-                                </td>
-                            </tr>
-                            <tr class="row_document_name_number" style="display:none">
-                                <td>
-                                    <?php echo $form->textField($model, 'identification_alternate_document_no1', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
-
-                                    <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'model'       => $model,
-                                        'attribute'   => 'identification_alternate_document_expiry1',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
-                                    ));
-                                    ?><span class="required alternate-identification-require">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no1'); ?>
-                                    <?php echo $form->error($model, 'identification_alternate_document_expiry1'); ?>
-                                </td>
-                            </tr>
-                            <tr class="row_document_name_number" style="display:none">
-                                <td>
-                                    <?php echo $form->textField($model, 'identification_alternate_document_name2', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));
-                                    ?><span class="required alternate-identification-require">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_name2'); ?>
-
-                                </td>
-                            </tr>
-                            <tr class="row_document_name_number" style="display:none">
-                                <td>
-                                    <?php echo $form->textField($model, 'identification_alternate_document_no2', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
-
-                                    <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'model'       => $model,
-                                        'attribute'   => 'identification_alternate_document_expiry2',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
-                                    ));
-                                    ?><span class="required alternate-identification-require">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no2'); ?>
-                                    <?php echo $form->error($model, 'identification_alternate_document_expiry2'); ?>
-
-                                    <?php echo $form->checkBox($model, 'verifiable_signature', array('style' => 'float: left;')); ?>
-                                    <label  class="form-label">One of these has a verifiable signature</label>
-                                </td>
-                            </tr>
-                            <tr class="hidden">
-                                <td>
-                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
-                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
-                                           type="password" id="Visitor_password" name="Visitor[password]"
-                                           value="(NULL)">
-                                    <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'password'); ?>
-                                </td>
-                            </tr>
-                            <tr class="hidden">
-                                <td>
-                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
-                                           id="Visitor_repeatpassword" data-match="user.passwords"
-                                           name="Visitor[repeatpassword]" value="(NULL)"/>
-                                    <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                                </td>
-                            </tr>
                             <tr>
-                                <td>
-                                    <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->textField($companyModel, 'email_address', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Email address', 'style' => '')); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($companyModel, 'email_address', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr>    
+                                
+                            <tr>    
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->textField($companyModel, 'contact', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Contact Number', 'style' => '')); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($companyModel, 'contact', array("style" => "margin-top:0px")); ?>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
-                        <div style="float:right; margin-right: 35px"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
-                    <?php } ?>
 
+                        <div style="float:right;"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
                 </td>
             </tr>
         </table>
-        <input type="hidden" name="Visitor[visitor_status]" value="<?php echo VisitorStatus::VISITOR_STATUS_SAVE; ?>"
-               style='display:none;' />
+        <input type="hidden" name="Visitor[visitor_status]" value="<?php echo VisitorStatus::VISITOR_STATUS_SAVE; ?>" style='display:none;' />
     </div>
     <?php $this->endWidget(); ?>
 </div>
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
-<input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {
-    echo $_GET['id'];
-} ?>">
+<input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) { echo $_GET['id']; } ?>">
+
 
 <script>
 
-    function afterValidate(form, data, hasError) {
-        var dt = new Date();
-        if(dt.getFullYear()< $("#fromYear").val()) {
-            $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-            $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }else if(
-            dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-            $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }
+/*    $(document).ready(function () {
 
-        if ($('#u18_identification:hidden').length != 1) {
-            if (!$('#Visitor_is_under_18').is(':checked')) {
-                $('#Visitor_is_under_18_em_').show();
-                return false;
-            } else {
-                $('#Visitor_is_under_18_em_').hide();
-            }
-        } else {
-            $('#Visitor_is_under_18_em_').hide();
-        }
-
-        var companyValue = $("#Visitor_company").val();
-        var workstation = $("#User_workstation").val();
-
-//        if (!workstation || workstation == "") {
-//            $("#Visitor_visitor_workstation_em_").show();
-//            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
-//            return false;
-//        }
-
-        if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
-            if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
-                $('.visitor_password').empty().hide();
-                $('.visitor_password_repeat').empty().hide();
-                var password_temp = $('#Visitor_password_input').val();
-                var password_repeat_temp = $('#Visitor_repeatpassword_input').val();
-                if (password_temp == '') {
-                    $('.visitor_password').html('Password should be specified').show();
-                    return false;
-                } else if (password_repeat_temp == '') {
-                    $('.visitor_password_repeat').html('Please confirm a password').show();
-                    return false;
-                } else if (password_temp != password_repeat_temp) {
-                    $('.visitor_password_repeat').html('Passwords are not matched').show();
-                    return false;
-                }
-                $('input[name="Visitor[password]"]').val(password_temp);
-                $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
-            }
-        } else {
-            $('.visitor_password').empty().hide();
-            $('.visitor_password_repeat').empty().hide();
-        }
-
-        if (!hasError) {
-            if (!companyValue || companyValue == "") {
-                $("#company_error_").show();
-                return false;
-            } else {
-                checkEmailIfUnique();
-            }
-        }
-    }
-
-    function switchIdentification() {
-
-        if ($('#Visitor_alternative_identification').attr('checked')) {
-            $('.primary-identification-require').hide();
-            $('.alternate-identification-require').show();
-            $('.row_document_name_number').show('slow');
-
-        } else {
-            $('.primary-identification-require').show();
-            $('.alternate-identification-require').hide();
-            $('.row_document_name_number').hide();
-        }
-    }
-
-    $(document).ready(function () {
-
-        $(".workstationRow").show();
+       $(".workstationRow").show();
         getWorkstation();
 
         $('#Visitor_identification_document_expiry').datepicker({
@@ -624,144 +445,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             changeYear: true,
             changeMonth: true
         });
-
-        if($('#Visitor_contact_country').length){
-            $('#Visitor_contact_country').change(function(){
-                if($(this).val() != <?php echo Visitor::AUSTRALIA_ID ?>){
-                    $("#cstate").html('<input size="15" style="width: 126px;" maxlength="50" placeholder="State" name="Visitor[contact_state]" id="Visitor_contact_state" type="text">');
-                }else{
-                    $("#cstate").html('<select id="#Visitor_contact_state" name="Visitor[contact_state]" style="width: 140px;">'+$('#state_copy').html()+'</select>');
-                }
-            });
-        }
-
-        $('#fromDay').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-
-        $('#fromMonth').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-
-        $('#fromYear').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{//u18_identification
-                if (dt.getFullYear() - $("#fromYear").val() < 18) {
-                    $('#u18_identification').show();
-                    $('.primary-identification-require').hide();
-                } else {
-                    $('#u18_identification').hide();
-                    $('.primary-identification-require').show();
-                }
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-
-
-//        $('#User_workstation').on('change', function () {
-//            var workstation = $("#User_workstation").val();
-//            if (!workstation || workstation == "") {
-//                $("#Visitor_visitor_workstation_em_").show();
-//                $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
-//            } else {
-//                $("#Visitor_visitor_workstation_em_").hide();
-//            }
-//        });
-
-        $("#Visitor_alternative_identification").on('change', switchIdentification);
-        switchIdentification();
-
-        if ($("#currentAction").val() == 'update') {
-
-            $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
-            $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
-            $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
-
-            $('#Visitor_visitor_card_status').val(<?php echo $model->visitor_card_status; ?>);
-            $('#Visitor_visitor_type').val(<?php echo $model->visitor_type; ?>);
-            $('#Visitor_contact_country').val(<?php echo $model->contact_country; ?>);
-            $('#Visitor_identification_country_issued').val(<?php echo $model->identification_country_issued; ?>);
-
-            if ($("#Visitor_photo").val() != '') {
-                $("#cropImageBtn").show();
-            }
-
-            if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#currentRoleOfLoggedInUser").val() != 1) {
-                $("#User_workstation").prop("disabled", false);
-               // $('#Visitor_company option[value!=""]').remove();
-
-                if ($("#Visitor_tenant_agent").val() == '') {
-                    getCompanyWithSameTenant($("#Visitor_tenant").val());
-                } else {
-                    getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
-                }
-            } else {
-                populateTenantAgentAndCompanyField();
-            }
-
-            if ($('#Visitor_identification_alternate_document_name1').val() != '') {
-                $('#Visitor_alternative_identification').prop('checked', true);
-                $('.row_document_name_number').show();
-            }
-
-        } else {
-
-            if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#currentRoleOfLoggedInUser").val() != 1) {
-                $("#User_workstation").prop("disabled", false);
-              //  $('#Visitor_company option[value!=""]').remove();
-
-                if ($("#Visitor_tenant_agent").val() == '') {
-                    getCompanyWithSameTenant($("#Visitor_tenant").val());
-                } else {
-                    getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
-                }
-            }
-        }
 
         $('#photoCropPreview').imgAreaSelect({
             handles: true,
@@ -805,7 +488,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});*/
 
                                 //showing image from DB as saved in DB -- image is not present in folder
-                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+                                /*var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
 
                                 document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
                                 document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
@@ -829,151 +512,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 ias.cancelSelection();
             });
         });
-    });
-
-
-    function addCompany() {
-
-        var url;
-
-        if ($("#Visitor_tenant").val() == '') {
-            $("#Visitor_company_em_").html("Please select a tenant");
-            $("#Visitor_company_em_").show();
-        } else {
-            if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
-                /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
-                url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
-            } else {
-                url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
-            }
-
-            $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
-            $("#modalBtn").click();
-        }
-    }
-
-    function populateTenantAgentAndCompanyField() {
-
-        //$('#Visitor_company option[value!=""]').remove();
-
-        $('#Visitor_tenant_agent option[value!=""]').remove();
-        $("#User_workstation").empty();
-        getWorkstation();
-        $("#User_workstation").prop("disabled", false);
-        var tenant = $("#Visitor_tenant").val();
-        var selected;
-
-        if ($("#currentAction").val() == 'update') {
-            selected = "<?php echo $model->tenant_agent; ?>";
-        } else {
-            selected = "";
-        }
-
-        getTenantAgentWithSameTenant(tenant, selected);
-        getCompanyWithSameTenant(tenant);
-    }
-
-    function getTenantAgentWithSameTenant(tenant, selected) {
-
-        $('#Visitor_tenant_agent').empty();
-        $('#Visitor_tenant_agent').append('<option value="">Please select a tenant agent</option>');
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,
-            dataType: 'json',
-            data: tenant,
-            success: function (r) {
-                $.each(r.data, function (index, value) {
-                    $('#Visitor_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
-                });
-                $("#Visitor_tenant_agent").val(selected);
-            }
-        });
-    }
-
-    function getCompanyWithSameTenant(tenant, newcompanyId) {
-
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenant&id='); ?>' + tenant,
-            dataType: 'json',
-            data: tenant,
-            success: function (r) {
-                $.each(r.data, function (index, value) {
-                    $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                });
-
-                if ($("#currentAction").val() == 'update') {
-                    $("#Visitor_company").val("<?php echo $model->company; ?>")
-                }
-
-                newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
-
-                if (newcompanyId != 'defaultValue') {
-                    $("#Visitor_company").val(newcompanyId);
-                }
-            }
-        });
-
-        if ($("#Visitor_tenant_agent").val() != '') {
-            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), '<?php echo $model->tenant_agent; ?>');
-        }
-    }
-
-    function populateCompanyWithSameTenantAndTenantAgent() {
-
-        $('#Visitor_company option[value!=""]').remove();
-        getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
-    }
-
-    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent, newcompanyId) {
-
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
-            dataType: 'json',
-            data: tenant,
-            success: function (r) {
-                // $('#Visitor_company option[value=""]').remove();
-                $.each(r.data, function (index, value) {
-                    $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                });
-
-                if ($("#currentAction").val() == 'update') {
-                    $("#Visitor_company").val("<?php echo $model->company; ?>")
-                }
-
-                newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
-
-                if (newcompanyId != 'defaultValue') {
-                    $("#Visitor_company").val(newcompanyId);
-                }
-            }
-        });
-    }
-
-    function trim(el) {
-
-        el.value = el.value.
-            replace(/(^\s*)|(\s*$)/gi, "").// removes leading and trailing spaces
-            replace(/[ ]{2,}/gi, " ").// replaces multiple spaces with one space
-            replace(/\n +/, "\n");           // Removes spaces after newlines
-        return;
-    }
-
-    function dismissModal(id) {
-
-        $("#dismissModal").click();
-        $('#Visitor_company option[value!=""]').remove();
-
-        if ($("#Visitor_tenant_agent").val() == "") {
-            // populateCompanyofTenant($("#Visitor_tenant").val(), id);
-            getCompanyWithSameTenant($("#Visitor_tenant").val(), id)
-        } else {
-            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(), id);
-        }
-    }
-
+    });*/
 </script>
 
 

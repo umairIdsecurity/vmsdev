@@ -396,7 +396,7 @@ class User extends VmsActiveRecord {
                 break;
         }
         if (Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin') {
-            $criteria->addCondition("t.id !='" . $user->id . "' and role in " . $rolein . " and (" . $queryCondition . ")");
+            $criteria->addCondition("t.id !=" . $user->id . "'and role in " . $rolein . " and (" . $queryCondition . ")");
         } else {
             $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
         }
@@ -465,11 +465,11 @@ class User extends VmsActiveRecord {
     }
 
     public function beforeDelete() {
-        $visitExists = Visit::model()->exists("is_deleted = 0 and host ='" . $this->id . "'");
-        $isTenant = Company::model()->exists("is_deleted = 0 and tenant ='" . $this->id . "'");
-        $userWorkstation = UserWorkstations::model()->exists("user = '" . $this->id . "'");
-        $visitorExists = Visitor::model()->exists("tenant = '" . $this->id . "' and is_deleted=0");
-        $isTenantAgent = Company::model()->exists("tenant_agent = '" . $this->id . "' and is_deleted=0");
+        $visitExists = Visit::model()->exists("is_deleted = 0 and host =" . $this->id . "");
+        $isTenant = Company::model()->exists("is_deleted = 0 and tenant =" . $this->id . "");
+        $userWorkstation = UserWorkstations::model()->exists("user = " . $this->id . "");
+        $visitorExists = Visitor::model()->exists("tenant = " . $this->id . " and is_deleted=0");
+        $isTenantAgent = Company::model()->exists("tenant_agent = " . $this->id . " and is_deleted=0");
         if ($visitExists || $isTenant || $userWorkstation || $visitorExists || $isTenantAgent) {
             return false;
         } else {

@@ -112,7 +112,7 @@ class VisitorType extends CActiveRecord {
 
         // Allow Admin to View and Manage his own created Types
         //if( Yii::app()->user->role == Roles::ROLE_ADMIN )
-        //    $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
+        //    $criteria->addCondition("created_by =" . Yii::app()->user->id . "'");
 
 
 

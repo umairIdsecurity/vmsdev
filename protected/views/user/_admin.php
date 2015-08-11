@@ -272,7 +272,7 @@ function isUserTenantOfCompany($userId) {
 }
 
 function isUserAssignedToAWorkstation($userId) {
-    return UserWorkstations::model()->exists("user = '" . $userId . "''");
+    return UserWorkstations::model()->exists("user = '" . $userId . "'");
 }
 
 function isUserTenantOfVisitor($userId) {

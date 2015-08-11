@@ -526,14 +526,11 @@ class User extends VmsActiveRecord {
     }
 
     public function getCompany($id) {
-        $connection = Yii::app()->db;
-        $sql = 'select company from '.Yii::app()->params['userTbl'].' where id = ' . $id;
-        $command = $connection->createCommand($sql);
-        $row = $command->queryRow();
-        foreach ($row as $key => $val) {
-            $company = $val;
-        }
-        return $company;
+        $user = User::model()->findByPk($id);
+        if( $user )
+            return $user->company;
+        else
+            return 0;
     }
 
     public function getFullName() {

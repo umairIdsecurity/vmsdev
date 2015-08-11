@@ -44,9 +44,9 @@ class UploadFileController extends Controller
 
         $fltemp = null;
         if (isset($folderName)) {
-            $fltemp = Folder::model()->findAll("name = '$folderName' and user_id = '" . Yii::app()->user->id . "'");
+            $fltemp = Folder::model()->findAll("name = '$folderName' and user_id = " . Yii::app()->user->id);
         } else {
-            $fltemp = Folder::model()->findAll("default = 1 and user_id = '" . Yii::app()->user->id . "'");
+            $fltemp = Folder::model()->findAll("t.default = 1 and t.user_id = " . Yii::app()->user->id);
         }
         $folder = $fltemp[0];
 

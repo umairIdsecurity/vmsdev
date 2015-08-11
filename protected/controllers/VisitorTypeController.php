@@ -329,7 +329,7 @@ class VisitorTypeController extends Controller {
                 ->from('visitor_type t')
                 ->join("visitor visitors",'t.id = visitors.visitor_type')
                 ->where($dateCondition)
-                ->group('t.id')
+                ->group('t.id,DATE(visitors.date_created)')
                 ->queryAll();
         
         $this->render("visitortypecount", array("visit_count"=>$visitsCount));
@@ -373,7 +373,7 @@ class VisitorTypeController extends Controller {
                 ->from('workstation t')
                 ->join("visitor visitors",'t.id = visitors.visitor_workstation')
                 ->where($dateCondition)
-                ->group('t.id')
+                ->group('t.id,DATE(visitors.date_created,t.name)')
                 ->queryAll();
         
         $otherWorkstations = array();

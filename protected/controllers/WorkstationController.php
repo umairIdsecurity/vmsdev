@@ -171,7 +171,8 @@ class WorkstationController extends Controller {
             $criteria->addCondition("workstation=" . $id);
             $criteria->addInCondition("visit_status", array(1, 2));
             //$criteria->addCondition("str_to_date(t.date_check_in,'%d-%m-%Y') > DATE_ADD(now(),interval 0 day)");
-            $criteria->addCondition("t.date_check_in > NOW()");
+            $currDate = new DateTime("NOW");
+            $criteria->addCondition("t.date_check_in > ".$currDate->format("Y-m-d"));
             
             $visits = Visit::model()->findAll($criteria);
            

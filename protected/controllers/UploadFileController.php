@@ -46,7 +46,7 @@ class UploadFileController extends Controller
         if (isset($folderName)) {
             $fltemp = Folder::model()->findAll("name = '$folderName' and user_id = " . Yii::app()->user->id);
         } else {
-            $fltemp = Folder::model()->findAll("t.default = 1 and t.user_id = " . Yii::app()->user->id);
+            $fltemp = Folder::model()->findAll("t.is_default = 1 and t.user_id = " . Yii::app()->user->id);
         }
         $folder = $fltemp[0];
 
@@ -55,7 +55,7 @@ class UploadFileController extends Controller
         $criteria->compare('id', $model->id, true);
         $criteria->compare('folder_id', $model->folder_id, true);
         $criteria->compare('file', $model->file, true);
-        if ($folder->default != 1)
+        if ($folder->is_default != 1)
             $criteria->addCondition("folder_id ='" . $folder->id . "'");
         else {
             $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');

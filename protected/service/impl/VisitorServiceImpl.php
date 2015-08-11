@@ -126,7 +126,7 @@ class VisitorServiceImpl implements VisitorService {
                 break;
         }    
         $visitor->tenant = Yii::app()->user->tenant; 
-        $visitor->date_created = new CDbExpression('NOW()'); // Current timestamp to fix issues on SQL Server.
+        $visitor->date_created = date("Y-m-d H:i:s"); // Current timestamp to fix issues on SQL Server.
         if (!($result = $visitor->save())) {
             return false;
         }

@@ -107,7 +107,7 @@ class Folder extends CActiveRecord
             if ($folders) {
                 $list = array();
                 foreach ($folders as $folder) {
-                    $list[] = array('default' => $folder->default, 'name' => $folder->name, 'number_file' => File::model()->getAllFilesFromFolder($folder,true));
+                    $list[] = array('default' => $folder->is_default, 'name' => $folder->name, 'number_file' => File::model()->getAllFilesFromFolder($folder,true));
                 }
                 return $list;
             }
@@ -161,7 +161,7 @@ class Folder extends CActiveRecord
                 $folder->user_id = $user_id;
                 $folder->date_created = date('Y-m-d H:i:s');
                 if ($name == 'Help Documents')
-                    $folder->default = 1;
+                    $folder->is_default = 1;
                 $folder->save();
             }
 

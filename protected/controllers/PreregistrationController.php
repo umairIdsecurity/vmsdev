@@ -413,7 +413,7 @@ class PreregistrationController extends Controller
 							$companyName = '-';
 						}
 
-						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data->id.'">',$data->first_name,$data->last_name,$companyName);
+						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value='.$data->id.'>',$data->first_name,$data->last_name,$companyName);
 
 					}
 
@@ -752,7 +752,7 @@ class PreregistrationController extends Controller
 
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
 
-    	$condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id='".Yii::app()->user->id."' AND v.tenant='".Yii::app()->user->tenant."')";
+    	$condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".Yii::app()->user->id." AND v.tenant=".Yii::app()->user->tenant.")";
         
         $rawData = Yii::app()->db->createCommand()
                         ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 

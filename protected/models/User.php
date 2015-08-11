@@ -353,7 +353,7 @@ class User extends VmsActiveRecord {
                                     Roles::ROLE_STAFFMEMBER . ', '.
                                     implode(',',$avms_roles). ')';
                 }
-                $queryCondition = "t.tenant = '" . $user->tenant . "'";
+                $queryCondition = "t.tenant = " . $user->tenant . "";
                 break;
             case Roles::ROLE_AGENT_ADMIN:
                 $avms_roles = Roles::get_agent_admin_allowed_roles(true);
@@ -367,7 +367,7 @@ class User extends VmsActiveRecord {
                                     implode(',',$avms_roles). ')';
                 }
 
-                $queryCondition = "t.tenant_agent='" . $user->tenant_agent . "'";
+                $queryCondition = "t.tenant_agent=" . $user->tenant_agent . "";
                 break;
              // Show in Listing   
             case Roles::ROLE_AGENT_AIRPORT_ADMIN:
@@ -375,7 +375,7 @@ class User extends VmsActiveRecord {
                                     Roles::ROLE_STAFFMEMBER . ',' .
                                     Roles::ROLE_VISITOR . ', '.
                                     Roles::ROLE_AGENT_AIRPORT_OPERATOR. ')';
-                $queryCondition = "t.tenant_agent='" . $user->tenant_agent . "'";
+                $queryCondition = "t.tenant_agent=" . $user->tenant_agent . "";
                 break;
             default:
                 $avms_roles = Roles::get_avms_roles();
@@ -396,7 +396,7 @@ class User extends VmsActiveRecord {
                 break;
         }
         if (Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin') {
-            $criteria->addCondition("t.id !=" . $user->id . "'and role in " . $rolein . " and (" . $queryCondition . ")");
+            $criteria->addCondition("t.id !=" . $user->id . "and role in " . $rolein . " and (" . $queryCondition . ")");
         } else {
             $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
         }
@@ -583,7 +583,7 @@ class User extends VmsActiveRecord {
     public function findAllAgentAdmin() {
         $criteria = new CDbCriteria;
         $criteria->select = 'id,tenant,first_name,last_name';
-        $criteria->addCondition("role ='" . Roles::ROLE_AGENT_ADMIN . "'");
+        $criteria->addCondition("role =" . Roles::ROLE_AGENT_ADMIN . "");
 
         return User::model()->findAll($criteria);
     }
@@ -591,12 +591,12 @@ class User extends VmsActiveRecord {
     public function isTenantOrTenantAgentOfUserViewed($currentlyEditedUserId, $user) {
 
         $connection = Yii::app()->db;
-        $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
+        $ownerCondition = "where id =" . $currentlyEditedUserId . "";
 
         if ($user->role == Roles::ROLE_ADMIN) {
-            $ownerCondition = "WHERE tenant = '" . $user->tenant . "' ";
+            $ownerCondition = "WHERE tenant = " . $user->tenant . " ";
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-            $ownerCondition = "WHERE tenant_agent='" . $user->tenant_agent . "'";
+            $ownerCondition = "WHERE tenant_agent=" . $user->tenant_agent . "";
         }
         $ownerQuery = 'select * FROM user
                             ' . $ownerCondition . ' and id =' . $currentlyEditedUserId . '
@@ -654,7 +654,7 @@ class User extends VmsActiveRecord {
 
         $Criteria = new CDbCriteria();
 
-        $Criteria->condition = "tenant ='" . $company['tenant'] . "' and id !=1 and id != " . $company->id;
+        $Criteria->condition = "tenant =" . $company['tenant'] . " and id !=1 and id != " . $company->id;
          
         $companyList = Company::model()->findAll($Criteria);
 
@@ -682,7 +682,7 @@ class User extends VmsActiveRecord {
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
             $criteria->condition = "tenant = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
         } else {
-            $criteria->condition = "tenant = '" . $session['tenant'] . "' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
+            $criteria->condition = "tenant = " . $session['tenant'] . " and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent IS NULL) AND is_deleted = 0";
         }
 
         $workstation = Workstation::model()->findAll($criteria);
@@ -701,7 +701,7 @@ class User extends VmsActiveRecord {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $tenantId . "' and tenant_agent='" . $tenantAgentId . "' AND is_deleted = 0";
+        $Criteria->condition = "tenant = " . $tenantId . " and tenant_agent=" . $tenantAgentId . " AND is_deleted = 0";
         $workstation = Workstation::model()->findAll($Criteria);
         foreach ($workstation as $index => $value) {
             $aArray[] = array(
@@ -732,9 +732,9 @@ class User extends VmsActiveRecord {
         $session = new CHttpSession;
         if ($tenantId != '') {
             if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenantId . "' and is_deleted!=1";
+                $Criteria->condition = "email = '" . $email . "' and tenant = " . $tenantId . " and is_deleted!=1";
             } else {
-                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session["tenant"] . "' and is_deleted!=1";
+                $Criteria->condition = "email = '" . $email . "' and tenant = " . $session["tenant"] . " and is_deleted!=1";
             }
         } else { //if position is admin compare to email only
             $Criteria->condition = "email = '" . $email . "' and is_deleted!=1";

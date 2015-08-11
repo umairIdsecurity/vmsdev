@@ -40,7 +40,7 @@
 <?php
 $session = new CHttpSession;
 $merge = new CDbCriteria;
-$merge->addCondition("visit_status ='" . VisitStatus::CLOSED . "'");
+$merge->addCondition("visit_status =" . VisitStatus::CLOSED . "");
 
 
 ?>

@@ -374,7 +374,7 @@ class VisitorController extends Controller {
         $searchInfo = $_GET['id'];
         $tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
         if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-            $tenant_agent = "tenant_agent='" . $_GET["tenant_agent"] . "' and";
+            $tenant_agent = "tenant_agent=" . $_GET["tenant_agent"] . " and";
         } else {
             $tenant_agent = "";
         }

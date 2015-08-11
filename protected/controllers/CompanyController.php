@@ -466,7 +466,7 @@ class CompanyController extends Controller
 
                 if ($contact->save()) {
                     $options = [$contact->id, $contact->getFullName()];
-                    $contactDropDown = '<option value="' . $contact->id . '" >' . $contact->getFullName() . '</option>';
+                    $contactDropDown = '<option value="' . $contact->id . '" >' . $contact->getFullName() . '</option>'; // seriously why is this here?
                     if (isset($_POST['typePostForm']) && $_POST['typePostForm'] == 'company') {
                         $id = $company->id;
                     } else {

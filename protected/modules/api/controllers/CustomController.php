@@ -132,7 +132,7 @@ class CustomController extends RestfulController {
                 $data = CJSON::decode($data);
 				
 				$Criteria = new CDbCriteria();
-				$Criteria->condition = "workstation = '" . $data['workstation'] ."'";	
+				$Criteria->condition = "workstation = " . $data['workstation'] ."";
 				$row = WorkstationCardType::model()->with('cardType')->findAll($Criteria);
 				
 				if ($row) {
@@ -181,7 +181,7 @@ class CustomController extends RestfulController {
                 $data = CJSON::decode($data);
 				
 				$Criteria = new CDbCriteria();
-				$Criteria->condition = "id = '" . $data['ctype'] ."'";	
+				$Criteria->condition = "id = " . $data['ctype'] ."";
 				$row = CardType::model()->find($Criteria);
 				
 				$image_path = $this->getAssetsBase()."/".$row->card_background_image_path;				

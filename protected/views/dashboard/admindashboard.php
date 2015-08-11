@@ -29,7 +29,7 @@ switch ($session['role']) {
     case Roles::ROLE_OPERATOR:
     case Roles::ROLE_AGENT_OPERATOR:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user  IN ('".Yii::app()->user->id."')";
+        $Criteria->condition = "user  IN (".Yii::app()->user->id.")";
         $workstationList = UserWorkstations::model()->findAll($Criteria);
         break;
 }
@@ -85,7 +85,7 @@ foreach ($workstationList as $workstation) {
     } else {
         $workstationId = $workstation->id;
     }
-    $merge->addCondition("workstation ='" . $workstationId . "' and (visit_status ='" . VisitStatus::ACTIVE . "' or visit_status ='" . VisitStatus::PREREGISTERED . "')");
+    $merge->addCondition("workstation =" . $workstationId . " and (visit_status =" . VisitStatus::ACTIVE . " or visit_status =" . VisitStatus::PREREGISTERED . ")");
 
     ?><div  class="admindashboardDiv"><?php
         $this->widget('zii.widgets.grid.CGridView', array(

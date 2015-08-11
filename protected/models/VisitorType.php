@@ -240,7 +240,7 @@ class VisitorType extends CActiveRecord {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
         //$criteria->select = "card_type";
-        $criteria->addCondition("t.visitor_type='" . $visitor_type."'");
+        $criteria->addCondition("t.visitor_type=" . $visitor_type."");
         
         //$criteria->addCondition("t.tenant=" . $session['tenant'] . " AND t.is_deleted=0");
 

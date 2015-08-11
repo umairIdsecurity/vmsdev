@@ -15,7 +15,7 @@ $session = new CHttpSession;
 $visitorName = $_GET['id'];
 
 if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-    $tenant_agent = "tenant_agent='" . $_GET["tenant_agent"] . "' and";
+    $tenant_agent = "tenant_agent=" . $_GET["tenant_agent"] . " and";
 } 
 
 else {
@@ -115,7 +115,7 @@ function returnVisitorDetailLink($visitorId) {
     $criteria = new CDbCriteria;
     $criteria->order = 'id DESC';
     $visit = Visit::model()->findByAttributes(array('visitor' => $visitorId), $criteria);
-    //$visit = Yii::app()->db->createCommand("SELECT * FROM visit WHERE visitor = '".$visitorId."' ORDER BY ' DESC")->queryRow();
+    //$visit = Yii::app()->db->createCommand("SELECT * FROM visit WHERE visitor = ".$visitorId." ORDER BY ' DESC")->queryRow();
     if (!empty($visit)) {
         $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit['id'];
     }

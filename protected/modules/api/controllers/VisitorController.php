@@ -40,7 +40,7 @@ class VisitorController extends RestfulController {
 						
 						# Getting card types
 						$Criteria = new CDbCriteria();
-						$Criteria->condition = "workstation = '" . $data['workstation'] ."'";	
+						$Criteria->condition = "workstation = " . $data['workstation'] ."";
 						$row = WorkstationCardType::model()->with('cardType')->findAll($Criteria);
 						if(count($row) > 1){# If more than one card type available
 							$result['CtypeCount'] = count($row);

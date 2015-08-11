@@ -489,7 +489,7 @@ class Registration extends CActiveRecord {
         $aArray = array();
         $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = "tenant = ".$tenantId." and (id!=1 and id !=".$tenant->company.")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -505,7 +505,7 @@ class Registration extends CActiveRecord {
     public function findAllCompanyByTenant($tenantId) {
         $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = "tenant = ".$tenantId." and (id!=1 and id !=".$tenant->company.")";
         return Company::model()->findAll($Criteria);
     }
 
@@ -514,7 +514,7 @@ class Registration extends CActiveRecord {
         $tenant = User::model()->findByPk($id);
         $tenantagent = User::model()->findByPk($tenantAgentId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$tenant->company."') and id !='".$tenantagent->company."'";
+        $Criteria->condition = "((tenant = $id and tenant_agent= $tenantAgentId) || id =".$tenant->company.") and id !=".$tenantagent->company."";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

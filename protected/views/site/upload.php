@@ -55,7 +55,7 @@ if (isset($_FILES["myfile"])) {
         if ($action == 'update' && ($controllerId == 'visitor' || $controllerId == 'user') ) {
             $ret = Yii::app()->db->lastInsertID;
         } elseif ($action == 'update') {
-            $update = $connection->createCommand("update company set logo='" . Yii::app()->db->lastInsertID . "' where id='" . $_GET['companyId'] . "'");
+            $update = $connection->createCommand("update company set logo=" . Yii::app()->db->lastInsertID . " where id=" . $_GET['companyId'] . "");
             $update->query();
             $ret = $path;
         } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail' || $action == 'customisation') {

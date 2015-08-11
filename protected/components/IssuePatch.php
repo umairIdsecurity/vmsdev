@@ -47,13 +47,13 @@ class IssuePatch extends CComponent {
                 $commandA = $db->createCommand("select id,visit_status,visitor,tenant,tenant_agent from visit where (visit_status=1 or visit_status=3) and (card IS NULL or card ='')");
                 $resultA = $commandA->queryAll();
                 foreach ($resultA as $key => $value) {
-                    $commandB = $db->createCommand("select code from company where id=(Select company from user where id='" . $value['tenant'] . "')");
+                    $commandB = $db->createCommand("select code from company where id=(Select company from user where id=" . $value['tenant'] . ")");
                     $resultB = $commandB->queryAll();
                     foreach ($resultB as $key => $valueB) {
                         $card_code = $valueB['code'];
                     }
 
-                    $commandC = $db->createCommand("select max(card_count) + 1 as max from card_generated where tenant='" . $value['tenant'] . "'");
+                    $commandC = $db->createCommand("select max(card_count) + 1 as max from card_generated where tenant=" . $value['tenant'] . "");
                     $resultC = $commandC->queryAll();
                     foreach ($resultC as $key => $valueC) {
                         $card_count = $valueC['max'];

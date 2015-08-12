@@ -23,12 +23,21 @@ class LicenseDetailsController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create', 'update', 'fileUpload', 'imageUpload', 'imageList'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
+        );
+    }
+
+    public function actions()
+    {
+        return array(
+            'fileUpload'=>'ext.redactor.actions.FileUpload',
+            'imageUpload'=>'ext.redactor.actions.ImageUpload',
+            'imageList'=>'ext.redactor.actions.ImageList',
         );
     }
     

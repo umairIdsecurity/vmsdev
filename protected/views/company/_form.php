@@ -556,7 +556,7 @@ if (isset($_GET['viewFrom'])) {
 
 </script>
 
-<div class="modal hide fade" id="viewLicense" style="width:600px;">
+<!-- <div class="modal hide fade" id="viewLicense" style="width:600px;">
     <div class="modal-header">
         <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
         <br>
@@ -567,6 +567,21 @@ if (isset($_GET['viewFrom'])) {
         ?>
     </div>
 
+</div> -->
+<div class="modal hide fade" id="viewLicense" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a data-dismiss="modal" class="close" id="dismissModal">×</a>
+        <br>
+        </div>
+      <div style="padding:20px;" id="modalBody">
+        <?php
+        echo LicenseDetails::model()->getLicenseDetails();
+        ?>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal hide fade" id="generate_password" style="width: 410px">
     <div style="border:5px solid #BEBEBE; width:405px">

@@ -269,7 +269,7 @@ if ($this->action->id == 'update') {
                                                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                                                 <div class="row buttons" style="text-align:center;">
                                                     <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-                                                           style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                                           style="<?php echo $background; ?>position: relative; padding: 3px 6px 5px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
                                                 </div>
                                             </td>
                                         </tr>

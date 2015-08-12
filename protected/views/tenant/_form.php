@@ -105,6 +105,13 @@ $currentLoggedUserId = $session['id'];
                                 <?php echo "<br>" . $form->error($model, 'tenant_code'); ?>
                             </td>
                         </tr>
+                        <tr>
+                            <td><?php echo $form->textField($model, 'workstation', array('size' => 50,'placeholder'=>'Workstation')); ?>
+                                <span class="required">*</span>
+
+                                <?php echo "<br>" . $form->error($model, 'workstation'); ?>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

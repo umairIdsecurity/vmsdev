@@ -467,7 +467,7 @@ class User extends VmsActiveRecord {
     public function beforeDelete() {
         $visitExists = Visit::model()->exists("is_deleted = 0 and host =" . $this->id . "");
         $isTenant = Company::model()->exists("is_deleted = 0 and tenant =" . $this->id . "");
-        $userWorkstation = UserWorkstations::model()->exists("user = " . $this->id . "");
+        $userWorkstation = UserWorkstations::model()->exists("user_id = " . $this->id . "");
         $visitorExists = Visitor::model()->exists("tenant = " . $this->id . " and is_deleted=0");
         $isTenantAgent = Company::model()->exists("tenant_agent = " . $this->id . " and is_deleted=0");
         if ($visitExists || $isTenant || $userWorkstation || $visitorExists || $isTenantAgent) {

@@ -23,6 +23,7 @@ class TenantForm extends CFormModel
     public $photo;
     public $timezone_id;
     public $allowed_module;
+    public $workstation;
     
 
     public static $USER_ROLE_LIST = array(
@@ -59,7 +60,7 @@ class TenantForm extends CFormModel
         return array(
             // name, email, subject and message are required
             array('timezone_id','required','message' =>'Please select a timezone'),
-            array('tenant_name,tenant_code,first_name, last_name, email, contact_number', 'required'),
+            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required'),
 
             array('password_opt','required','message' => 'Please select a {attribute}'),
             

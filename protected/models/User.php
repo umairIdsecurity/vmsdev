@@ -181,7 +181,7 @@ class User extends VmsActiveRecord {
 
     public function avms_user()
     {
-        $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .")";
+        $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .") ";
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
             'with' => 'role',
@@ -246,7 +246,7 @@ class User extends VmsActiveRecord {
             'userStatuses' => array(self::HAS_MANY, 'UserStatus', 'created_by'),
             'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
             'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),
-            'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
+            'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user_id, workstation)'),
             'photo1' => array(self::BELONGS_TO, 'Photo', 'photo'),
             'userTimezones' => array(self::BELONGS_TO, 'timezone', 'timezone_id'),
         );
@@ -398,7 +398,7 @@ class User extends VmsActiveRecord {
         if (Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin') {
             $criteria->addCondition("t.id !=" . $user->id . " and role in " . $rolein . " and (" . $queryCondition . ")");
         } else {
-            $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
+            $criteria->addCondition("role in " . $rolein . " and (" . $queryCondition . ")");
         }
 
 
@@ -420,7 +420,7 @@ class User extends VmsActiveRecord {
 
         if ($users) {
             $user_ids = array_values(CHtml::listData($users, 'id', 'id'));
-            $criteria->addCondition('t.id in (' . implode(', ', $user_ids) . ')');
+            $criteria->addCondition("t.id in (" . implode(", ", $user_ids) . ") ");
         }
 
         if ($merge !== null) {

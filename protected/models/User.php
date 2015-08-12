@@ -608,7 +608,7 @@ class User extends VmsActiveRecord {
     public function saveWorkstation($userId, $workstationId, $currentUserId) {
 
         $post = new UserWorkstations;
-        $post->user = $userId;
+        $post->user_id = $userId;
         $post->workstation = $workstationId;
         $post->created_by = $currentUserId;
         $post->is_primary = '1';

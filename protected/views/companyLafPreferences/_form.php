@@ -622,8 +622,8 @@ $company = Company::model()->findByPk($session['company']);
 </script>
 
 <!-- PHOTO CROP-->
-<div id="light" class="white_content">
-    <img id="photoCropPreview" src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>">
+<div id="light" class="white_content" style="height: 380px;">
+    <img id="photoCropPreview" src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>" style="max-width: 500px !important;">
 
 </div>
 <div id="fade" class="black_overlay">

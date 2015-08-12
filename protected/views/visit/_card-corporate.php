@@ -173,7 +173,7 @@ if (isset($host)) {
 
         #visitorDetailDiv .ajax-file-upload{
             display: block;
-            margin-left: 31px !important;
+            margin-left: 20px !important;
         }
         #visitorDetailDiv .ajax-file-upload-error {
             margin:0 0 0 31px !important;

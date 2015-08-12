@@ -30,11 +30,11 @@ class UserWorkstations extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('user, workstation', 'required'),
-            array('user, workstation, created_by,is_primary', 'numerical', 'integerOnly' => true),
+            array('user_id, workstation', 'required'),
+            array('user_id, workstation, created_by,is_primary', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, user, workstation, created_by', 'safe', 'on' => 'search'),
+            array('id, user_id, workstation, created_by', 'safe', 'on' => 'search'),
         );
     }
 
@@ -47,7 +47,7 @@ class UserWorkstations extends CActiveRecord {
         return array(
             'workstation0' => array(self::BELONGS_TO, 'Workstations', 'workstation'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
-            'user0' => array(self::BELONGS_TO, 'User', 'user'),
+            'user0' => array(self::BELONGS_TO, 'User', 'user_id'),
         );
     }
 
@@ -57,7 +57,7 @@ class UserWorkstations extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'user' => 'User',
+            'user_id' => 'User',
             'workstation' => 'Workstation',
             'created_by' => 'Created By',
             'is_primary' => 'Is_Primary',
@@ -82,7 +82,7 @@ class UserWorkstations extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('user', $this->user);
+        $criteria->compare('user_id', $this->user);
         $criteria->compare('workstation', $this->workstation);
         $criteria->compare('created_by', $this->created_by);
         $criteria->compare('is_primary', $this->is_primary);
@@ -105,7 +105,7 @@ class UserWorkstations extends CActiveRecord {
 
     public static function getAllworkstations($userid) {
         $criteria = new CDbCriteria();
-        $criteria->addCondition('id IN (select workstation from user_workstation where "user" = '. $userid . ')');
+        $criteria->addCondition("id IN (select workstation from user_workstation where user_id = ". $userid . ")");
 
         $workstations = Workstation::model()->findAll($criteria);
         if ($workstations) {
@@ -156,13 +156,13 @@ class UserWorkstations extends CActiveRecord {
     public function deleteAllUserWorkstationsWithSameUserId($userId) {
 
         UserWorkstations::model()->deleteAll(array(
-            'condition' => "user = '$userId'",
+            'condition' => "user_id = '$userId'",
         ));
     }
 
     public function checkIfWorkstationIsPrimaryOfUser($currentlyEditedUser, $workstationId) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = $currentlyEditedUser and workstation =" . $workstationId . "";
+        $Criteria->condition = "user_id = $currentlyEditedUser and workstation =" . $workstationId . "";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         foreach ($userworkstations as $index => $value) {

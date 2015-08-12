@@ -373,7 +373,7 @@ class VisitorTypeController extends Controller {
                 ->from('workstation t')
                 ->join("visitor visitors",'t.id = visitors.visitor_workstation')
                 ->where($dateCondition)
-                ->group('t.id,DATE(visitors.date_created,t.name)')
+                ->group('t.id, DATE(visitors.date_created) ,t.name')
                 ->queryAll();
         
         $otherWorkstations = array();

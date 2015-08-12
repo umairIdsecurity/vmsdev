@@ -17,7 +17,7 @@ class EntryPoint extends CFormModel{
     {
         return array(
 
-            array('entrypoint', 'required' , 'message'=>'Please select Workstation'),
+            array('entrypoint', 'required' , 'message'=>'Please choose your entry point'),
 
         );
     }

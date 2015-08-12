@@ -123,7 +123,7 @@ class UserWorkstations extends CActiveRecord {
         $currentlyLoggedInUser = User::model()->findByPK(Yii::app()->user->id);
         switch ($currentSessionRole) {
             case Roles::ROLE_ADMIN:
-                $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "'";
+                $queryCondition = "tenant=" . $currentlyLoggedInUser->tenant . "";
                 if ($user->role == Roles::ROLE_OPERATOR) {
                     $queryCondition = "tenant= " . $user->tenant . " and tenant_agent IS NULL";
                 } else {
@@ -162,7 +162,7 @@ class UserWorkstations extends CActiveRecord {
 
     public function checkIfWorkstationIsPrimaryOfUser($currentlyEditedUser, $workstationId) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '$currentlyEditedUser' and workstation ='" . $workstationId . "'";
+        $Criteria->condition = "user = $currentlyEditedUser and workstation =" . $workstationId . "";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         foreach ($userworkstations as $index => $value) {
@@ -176,7 +176,7 @@ class UserWorkstations extends CActiveRecord {
 
     public function checkIfWorkstationIsAssignedAsPrimary($workstationId) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "workstation ='" . $workstationId . "' and is_primary='1'";
+        $Criteria->condition = "workstation =" . $workstationId . " and is_primary=1";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         if (count($userworkstations) != 0) {

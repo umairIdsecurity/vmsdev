@@ -264,11 +264,11 @@ function getAssignableRoles($user_role) {
 }
 
 function isUserInVisitExists($userId) {
-    return Visit::model()->exists("is_deleted = 0 and host ='" . $userId . "'");
+    return Visit::model()->exists("is_deleted = 0 and host =" . $userId . "");
 }
 
 function isUserTenantOfCompany($userId) {
-    return Company::model()->exists("is_deleted = 0 and tenant ='" . $userId . "'");
+    return Company::model()->exists("is_deleted = 0 and tenant =" . $userId . "");
 }
 
 function isUserAssignedToAWorkstation($userId) {
@@ -276,11 +276,11 @@ function isUserAssignedToAWorkstation($userId) {
 }
 
 function isUserTenantOfVisitor($userId) {
-    return Visitor::model()->exists("tenant = '" . $userId . "' and is_deleted=0");
+    return Visitor::model()->exists("tenant = " . $userId . " and is_deleted=0");
 }
 
 function isUserTenantAgent($userId) {
-    return Company::model()->exists("tenant_agent = '" . $userId . "' and is_deleted=0");
+    return Company::model()->exists("tenant_agent = " . $userId . " and is_deleted=0");
 }
 
 function getCompany($id) {

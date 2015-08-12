@@ -765,7 +765,7 @@ class VisitController extends Controller {
         }
 
         $merge = new CDbCriteria;
-        $merge->addCondition("visit_status ='" . VisitStatus::ACTIVE . "'");
+        $merge->addCondition("visit_status =" . VisitStatus::ACTIVE . "");
 
         $dp = $model->search($merge);
 
@@ -838,7 +838,7 @@ class VisitController extends Controller {
         }
 
         $merge = new CDbCriteria;
-        $merge->addCondition("visit_status ='" . VisitStatus::CLOSED . "'");
+        $merge->addCondition("visit_status =" . VisitStatus::CLOSED . "");
 
         $dp = $model->search($merge);
 
@@ -1081,7 +1081,7 @@ class VisitController extends Controller {
 
     public function actionGetVisitDetailsOfVisitor($id) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "visitor = '" . $id . "' and visit_status='" . VisitStatus::SAVED . "'";
+        $Criteria->condition = "visitor = " . $id . " and visit_status=" . VisitStatus::SAVED . "";
         $visit = Visit::model()->findAll($Criteria);
         $resultMessage['data'] = $visit;
         echo CJavaScript::jsonEncode($resultMessage);
@@ -1300,7 +1300,7 @@ class VisitController extends Controller {
             ->from('workstation t')
             ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)
-            ->group('t.id')
+            ->group('t.id, visitors.date_created, t.name')
             ->queryAll();
 //        $allWorkstations = Yii::app()->db->createCommand()
 //            ->select( 't.id,t.tenant,t.name')

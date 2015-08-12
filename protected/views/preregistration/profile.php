@@ -2,11 +2,11 @@
 
 $session = new CHttpSession;
 
-$dataId = '';
+/*$dataId = '';
 
 if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
-}
+}*/
 
 $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 // set default country is Australia = 13
@@ -17,6 +17,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     
     .required{
         color: red;
+        margin-left: 315px;
+        margin-top: -23px;
+        position: absolute;
     }
 
     #addCompanyLink {
@@ -99,7 +102,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                                            value="<?php echo $model['photo']; ?>">
                                     
-                                    <?php if ($model['photo'] != NULL) {
+                                    <?php if ($model['photo'] != NULL)
+                                     {
                                         $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
                                         $my_image = '';
                                         if(!empty($data['db_image'])){
@@ -115,7 +119,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>
-                                    <?php }
+                                    <?php 
+                                     }
                                     ?>
 
                                     <br>
@@ -123,42 +128,45 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php //require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
                                     
 
-                                    <div class="photoDiv" style="display:none;">
-                                        <?php if ($dataId != '' && $model['photo'] != NULL) {
-                                            $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
-                                            $my_image = '';
-                                            if(!empty($data['db_image'])){
-                                                $my_image = "data:image;base64," . $data['db_image'];
-                                            }else{
-                                                $my_image = $data['relative_path'];
-                                            }
-                                         ?>
-                                            <img id='photoPreview'
-                                                 src = "<?php echo $my_image ?>"
-                                                 style='display:block;height:174px;width:133px;'/>
-                                        <?php } elseif ($model['photo'] == NULL) {
-                                            ?>
-
-                                            <img id='photoPreview'
-                                                 src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
-                                                 style='display:block;height:174px;width:133px;'/>
-
-                                        <?php } else { ?>
-
-                                            <img id='photoPreview' src="data:image;base64,<?php
-                                                if ($this->action->id == 'update' && $model->photo != '') {
-                                                    echo Company::model()->getPhotoRelativePath($model->photo);
+                                    <div class="photoDiv" style="">
+                                        <?php   
+                                                if (/*$dataId != '' &&*/$model['photo'] != NULL) 
+                                                {
+                                                    $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
+                                                    $my_image = '';
+                                                    if(!empty($data['db_image']))
+                                                    {
+                                                        $my_image = "data:image;base64," . $data['db_image'];
+                                                    }
+                                                    else
+                                                    {
+                                                        $my_image = $data['relative_path'];
+                                                    }
+                                                 ?>
+                                                    <img id='photoPreview'
+                                                         src = "<?php echo $my_image ?>"
+                                                         style='display:block;height:174px;width:133px;'/>
+                                        <?php 
                                                 }
-                                                ?>
-                                                " style='display:none;'/>
+                                                elseif($model['photo'] == NULL)
+                                                {
+                                        ?>
+                                                    <img id='photoPreview'
+                                                        src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
+                                                        style='display:block;height:174px;width:133px;'/>
+                                        <?php
+                                                }
+                                        ?>
 
-                                        <?php } ?>
+
+
+
                                     </div>
 
                                     </td>
                                     </tr>
                                 </table>
-                                <table style="margin-top: 70px;">
+                                <table style="margin-top:70px;width:300px;">
                                     <tr>
                                         <td>
                                             <?php
@@ -176,26 +184,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                     $list[$type['id']]=$type['name'];
                                                 }
                                                 
-
                                                 echo $form->dropDownList($model,'visitor_type',$list,array('class' => 'form-control','empty' => 'Select Visitor Type', 'style' => '')); 
-                                
-
-                                                /*echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type" class="form-control">';
-                                                echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                                foreach( $list as $val ) {
-                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
-                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    } else {
-                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    }
-
-                                                    if ($model->visitor_type == $val->id) {
-                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    } else {
-                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    }
-                                                } echo "</select>";*/
-                                            
                                             ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
@@ -205,26 +194,35 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </td>
                         </tr>
                     </table>
-                    <table style="float:left;width:300px;margin-left:50px">
+                    <table style="float:left;width:300px;margin-left:55px">
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'first_name', array('class' => 'form-control input-xs', 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
+                                <?php echo $form->textField($model, 'first_name', array('class' => 'form-control', 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                                <?php echo $form->error($model, 'first_name'); ?>
                             </td>
                         </tr>
+                        
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'middle_name', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
                             </td>
                         </tr>
+
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'last_name', array('class' => 'form-control input-xs', 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                                <?php echo $form->error($model, 'last_name'); ?>
                             </td>
                         </tr>
+
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td class="">
                                 <span>Date of Birth</span> <br/>
@@ -248,57 +246,75 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ?>
                                 <span class="required">*</span>
 
-                                <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
+                                <?php echo $form->error($model, 'date_of_birth'); ?>
                             </td>
                         </tr>
+
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td width="37%">
                                 <?php echo $form->textField($model, 'email', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Email Address')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
+                                <?php echo $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
                                 <!-- <div style="" class="errorMessageEmail">A profile already exists for this email address.</div> -->
                             </td>
                         </tr>
+                        
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'contact_number', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Mobile Number')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
+                                <?php echo $form->error($model, 'contact_number'); ?>
                             </td>
                         </tr>
 
+                        <tr><td>&nbsp;</td></tr>
+                        
+
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'contact_unit', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Unit', 'style' => '')); ?>
-                                <?php echo $form->textField($model, 'contact_street_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Street No.', 'style' => '')); ?>
+                                <?php echo $form->textField($model, 'contact_unit', array('class' => 'form-control', 'maxlength' => 50, 'placeholder' => 'Unit', 'style' => 'width: 120px;')); ?>
+                                <?php echo $form->textField($model, 'contact_street_no', array('class' => 'form-control', 'maxlength' => 50, 'placeholder' => 'Street No.', 'style' => 'width:175px;margin-top:-34px;margin-left:125px')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'contact_unit'); ?>
-                                <?php echo $form->error($model, 'contact_street_no'); ?>
+                                <?php //echo $form->error($model, 'contact_unit'); ?>
+                                <?php echo $form->error($model, 'contact_street_no',array('style' => 'margin-left:125px')); ?>
                             </td>
                         </tr>
+
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'contact_street_name', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Street Name', 'style' => '')); ?>
-                                <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('class' => 'form-control input-xs','empty' => 'Type', 'style' => '')); ?>
+                                <?php echo $form->textField($model, 'contact_street_name', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Street Name', 'style' => 'width: 175px;')); ?>
+                                <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('class' => 'form-control input-xs','empty' => 'Type', 'style' => 'width:120px;margin-top:-34px;margin-left:180px')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'contact_street_name'); ?>
+                                <?php echo $form->error($model, 'contact_street_name'); ?>
                                 <?php echo $form->error($model, 'contact_street_type'); ?>
                             </td>
                         </tr>
+
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'contact_suburb', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Suburb')); ?>
                                 <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
                             </td>
                         </tr>
+
+                        <tr><td>&nbsp;</td></tr>
+                        
                         <tr>
                             <td>
                                 <i id="cstate">
                                     <?php
-                                    if(Yii::app()->controller->action->id == 'update' && $model->contact_country == Visitor::AUSTRALIA_ID ) {
-                                        echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('class' => 'form-control input-xs','empty' => 'State', 'style' => ''));
+                                    if(Yii::app()->controller->action->id == 'profile' && $model->contact_country == Visitor::AUSTRALIA_ID ) {
+                                        echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('class' => 'form-control input-xs','empty' => 'State', 'style' => 'width: 180px;'));
                                     } else {
-                                        echo $form->textField($model, 'contact_state', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'State', 'style' => ''));
+                                        echo $form->textField($model, 'contact_state', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width:180px;'));
                                     } ?>
                                 </i>
                                 <select id="state_copy" style="display: none" class="form-control input-xs">
@@ -310,18 +326,20 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     }
                                     ?>
                                 </select>
-                                <?php echo $form->textField($model, 'contact_postcode', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => '')); ?>
+                                <?php echo $form->textField($model, 'contact_postcode', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width:115px;margin-top:-34px;margin-left:185px')); ?>
                                 <span class="required">*</span>
                                 <?php echo $form->error($model, 'contact_state'); ?>
                                 <?php echo $form->error($model, 'contact_postcode'); ?>
                             </td>
                         </tr>
+
+                        <tr><td>&nbsp;</td></tr>
+
                         <tr>
                             <td>
                                 <?php
                                 echo $form->dropDownList($model, 'contact_country', $countryList, array('class' => 'form-control input-xs','prompt' => 'Country', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                 ?><span class="required">*</span>
-                                <br/>
                                 <?php echo $form->error($model, 'contact_country'); ?>
                             </td>
                         </tr>
@@ -334,25 +352,31 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     </table>
 
 
-                    <table style="float:left;width:300px;margin-left:50px">
+                    <table style="float:left;width:300px;margin-left:55px">
                             <tr>
                                 <td>
                                     <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('class' => 'form-control input-xs','prompt' => 'Identification Type'));
                                     ?><span class="required primary-identification-require">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
+                                    <?php echo $form->error($model, 'identification_type'); ?>
                                 </td>
                             </tr>
+
+                            <tr><td>&nbsp;</td></tr>
+
                             <tr>
                                 <td>
                                     <?php
                                     echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('class' => 'form-control input-xs','empty' => 'Country of Issue', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                     ?><span class="required primary-identification-require">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'identification_country_issued'); ?>
+                                    <?php echo $form->error($model, 'identification_country_issued'); ?>
                                 </td>
                             </tr>
+
+                            <tr><td>&nbsp;</td></tr>
+
                             <tr>
                                 <td>
-                                    <?php echo $form->textField($model, 'identification_document_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => '')); ?>
+                                    <?php echo $form->textField($model, 'identification_document_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width:175px;')); ?>
 
                                     <?php
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -367,15 +391,17 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             'size'        => '0',
                                             'maxlength'   => '10',
                                             'placeholder' => 'Expiry',
-                                            'style'       => '',
+                                            'style'       => 'width:120px;margin-top:-34px;margin-left:180px',
                                             'class' => 'form-control input-xs',
                                         ),
                                     ));
                                     ?><span class="required primary-identification-require">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
+                                    <?php echo $form->error($model, 'identification_document_no'); ?>
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>
                             </tr>
+
+                            <tr><td>&nbsp;</td></tr>
 
                             <tr>
                                 <td id="">
@@ -386,6 +412,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     </div>
                                 </td>
                             </tr>
+
+                            <tr><td>&nbsp;</td></tr>
                             
                             <tr>    
                                 <td id="">
@@ -395,7 +423,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         <?php echo $form->error($companyModel, 'trading_name', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
-                            </tr>    
+                            </tr>  
+
+                            <tr><td>&nbsp;</td></tr>  
 
                             <tr>
                                 <td id="">
@@ -406,6 +436,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     </div>
                                 </td>
                             </tr>    
+
+                            <tr><td>&nbsp;</td></tr>
                                 
                             <tr>    
                                 <td id="">
@@ -422,7 +454,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 </td>
             </tr>
         </table>
-        <input type="hidden" name="Visitor[visitor_status]" value="<?php echo VisitorStatus::VISITOR_STATUS_SAVE; ?>" style='display:none;' />
+       
+        <!-- <input type="hidden" name="Visitor[visitor_status]" value="<?php //echo VisitorStatus::VISITOR_STATUS_SAVE; ?>" style='display:none;' /> -->
+
     </div>
     <?php $this->endWidget(); ?>
 </div>

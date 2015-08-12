@@ -124,7 +124,7 @@ class WorkstationController extends Controller {
             if ($model->save()) {
 
                 WorkstationCardType::model()->deleteAll(
-                        "workstation='" . $model->id . "'"
+                        "workstation=" . $model->id . ""
                 );
                 if (!empty($model->card_type)) {
                     foreach ($model->card_type as $card) {

@@ -315,7 +315,7 @@ class Company extends CActiveRecord {
     public function isUserAllowedToViewCompany($companyId, $user) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "'";
+        $Criteria->condition = "company = " . $companyId . " and id=" . $user->id . "";
         $users = User::model()->findAll($Criteria);
 
         //$users = array_filter($users);
@@ -328,7 +328,7 @@ class Company extends CActiveRecord {
 
     public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '" . $companyName . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = "name = '" . $companyName . "' and tenant=" . $tenant . "";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -337,7 +337,7 @@ class Company extends CActiveRecord {
 
     public function isCompanyCodeUniqueWithinTheTenant($companyCode, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "code = '" . $companyCode . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = "code = '" . $companyCode . "' and tenant=" . $tenant . "";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -346,7 +346,7 @@ class Company extends CActiveRecord {
 
 	public function isWithoutCompanyCodeUniqueWithinTheTenant($tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant='" . $tenant . "'";
+        $Criteria->condition = "tenant=" . $tenant . "";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -385,7 +385,7 @@ class Company extends CActiveRecord {
         $session = new CHttpSession;
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $session['id'] . "'";
+        $Criteria->condition = "tenant = " . $session['id'] . "";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

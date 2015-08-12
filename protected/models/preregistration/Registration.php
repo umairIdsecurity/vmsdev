@@ -197,16 +197,18 @@ class Registration extends CActiveRecord {
 
 			array('identification_document_no,contact_suburb', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
 
-            array('visitor_type', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
+            //array('visitor_type', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
 
             array('date_of_birth', 'required' ,'on' => 'preregistration', 'message'=>'Please update your {attribute}'),
-            array('contact_unit', 'required' ,'on' => 'preregistration', 'message'=>'Please enter unit / flat no.'),
+            
+            //array('contact_unit', 'required' ,'on' => 'preregistration', 'message'=>'Please enter unit / flat no.'),
+            
             array('identification_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Identification'),
             array('identification_document_expiry', 'required' ,'on' => 'preregistration', 'message'=>'Please select Expiry date'),
             array('contact_street_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street type'),
-            array('contact_street_no', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street no.'),
-            array('contact_street_name', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street name'),
-            array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please select Postcode'),
+            array('contact_street_no', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Street no.'),
+            array('contact_street_name', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Street name'),
+            array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Postcode'),
 
 
 
@@ -489,7 +491,7 @@ class Registration extends CActiveRecord {
         $aArray = array();
         $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = "tenant = ".$tenantId." and (id!=1 and id !=".$tenant->company.")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -505,7 +507,7 @@ class Registration extends CActiveRecord {
     public function findAllCompanyByTenant($tenantId) {
         $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = "tenant = ".$tenantId." and (id!=1 and id !=".$tenant->company.")";
         return Company::model()->findAll($Criteria);
     }
 
@@ -514,7 +516,7 @@ class Registration extends CActiveRecord {
         $tenant = User::model()->findByPk($id);
         $tenantagent = User::model()->findByPk($tenantAgentId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$tenant->company."') and id !='".$tenantagent->company."'";
+        $Criteria->condition = "((tenant = $id and tenant_agent= $tenantAgentId) || id =".$tenant->company.") and id !=".$tenantagent->company."";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

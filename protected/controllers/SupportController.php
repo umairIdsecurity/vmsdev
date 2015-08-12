@@ -40,9 +40,9 @@ class SupportController extends Controller
 
         $fltemp = null;
         if (isset($folderName)) {
-            $fltemp = Folder::model()->findAll("name = '$folderName' and user_id = '" . Yii::app()->user->id . "'");
+            $fltemp = Folder::model()->findAll("name = '$folderName' and user_id = " . Yii::app()->user->id);
         } else {
-            $fltemp = Folder::model()->findAll("default = 1 and user_id = '" . Yii::app()->user->id . "'");
+            $fltemp = Folder::model()->findAll("default = 1 and user_id = " . Yii::app()->user->id);
         }
         $folder = $fltemp[0];
 
@@ -52,10 +52,10 @@ class SupportController extends Controller
         $criteria->compare('folder_id', $model->folder_id, true);
         $criteria->compare('file', $model->file, true);
         if ($folder->default != 1)
-            $criteria->addCondition("folder_id ='" . $folder->id . "'");
+            $criteria->addCondition("folder_id =" . $folder->id . "");
         else {
-            $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
-            $criteria->addCondition("folder_id ='0'", 'OR');
+            $criteria->addCondition("folder_id =" . $folder->id . "", 'OR');
+            $criteria->addCondition("folder_id =0", 'OR');
         }
 
         $dataProvider = new CActiveDataProvider($model, array(

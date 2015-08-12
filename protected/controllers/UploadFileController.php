@@ -56,10 +56,10 @@ class UploadFileController extends Controller
         $criteria->compare('folder_id', $model->folder_id, true);
         $criteria->compare('file', $model->file, true);
         if ($folder->is_default != 1)
-            $criteria->addCondition("folder_id ='" . $folder->id . "'");
+            $criteria->addCondition("folder_id =" . $folder->id . "");
         else {
-            $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
-            $criteria->addCondition("folder_id ='0'", 'OR');
+            $criteria->addCondition("folder_id =" . $folder->id . "", 'OR');
+            $criteria->addCondition("folder_id =0", 'OR');
         }
 
         $dataProvider = new CActiveDataProvider($model, array(

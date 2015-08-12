@@ -589,7 +589,7 @@ class Visit extends CActiveRecord {
                 if (!empty($workstations)) {
                     $text = "";
                     foreach ($workstations as $key => $value) {
-                        $text .= "'" . $value['id'] . "',";
+                        $text .= "" . $value['id'] . ",";
                     }
                     $workstations = "IN (" . rtrim($text, ',') . ")";
 
@@ -808,7 +808,7 @@ class Visit extends CActiveRecord {
                 if (!empty($workstations)) {
                     $text = "";
                     foreach ($workstations as $key => $value) {
-                        $text .="'" . $value['id'] . "',";
+                        $text .="" . $value['id'] . ",";
                     }
                     $workstations = "IN (" . rtrim($text, ',') . ")";
 
@@ -828,7 +828,7 @@ class Visit extends CActiveRecord {
         }
 
         if (Yii::app()->controller->action->id == 'view' && (!empty($this->date_check_in) || !empty($this->date_check_out))) {
-            $criteria->addCondition("visit_status ='" . VisitStatus::ACTIVE . "'");
+            $criteria->addCondition("visit_status =" . VisitStatus::ACTIVE . "");
         }
         
         if (Yii::app()->controller->action->id == 'admindashboard') {
@@ -927,9 +927,9 @@ class Visit extends CActiveRecord {
 
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.card
-                    SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
-                    WHERE CURRENT_DATE > date_out AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
+                    SET visit_status = " . VisitStatus::CLOSED . ",card_status =" . CardStatus::NOT_RETURNED . "
+                    WHERE CURRENT_DATE > date_out AND visit_status = " . VisitStatus::ACTIVE . "
+                    AND card_status = " . CardStatus::ACTIVE . " and card_type= " . CardType::SAME_DAY_VISITOR . "")->execute();
             echo "Affected Rows : " . $command . "<br>";
             if ($command > 0) {
                 echo "Update visit to close status successful.";
@@ -954,13 +954,13 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    SET visit_status = '" . VisitStatus::EXPIRED
-                        . "', card_option ='" . CardStatus::RETURNED
-                        . "', finish_date = CURRENT_DATE, finish_time = CURRENT_TIME
+                    SET visit_status = " . VisitStatus::EXPIRED
+                        . ", card_option =" . CardStatus::RETURNED
+                        . ", finish_date = CURRENT_DATE, finish_time = CURRENT_TIME
                     WHERE CURRENT_DATE > date_check_out
-                    AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "'
-                    OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+                    AND visit_status = " . VisitStatus::ACTIVE . "
+                    AND (card_type = " . CardType::VIC_CARD_EXTENDED . "
+                    OR card_type = ". CardType::VIC_CARD_MULTIDAY .")")->execute();
 
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
@@ -983,13 +983,13 @@ class Visit extends CActiveRecord {
     public function updateOneDayVisitsToClose() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED
-                    . "', card_option ='" . CardStatus::RETURNED
-                    . "', finish_date = CURRENT_DATE, finish_time = CURRENT_TIME
+                "UPDATE visit SET visit_status = " . VisitStatus::CLOSED
+                    . ", card_option =" . CardStatus::RETURNED
+                    . ", finish_date = CURRENT_DATE, finish_time = CURRENT_TIME
                     WHERE CURRENT_DATE > date_check_out
                     AND CURRENT_TIME > time_check_out
-                    AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
+                    AND visit_status = " . VisitStatus::ACTIVE . "
+                    AND card_type = " . CardType::VIC_CARD_24HOURS . "")->execute();
 
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
@@ -1008,13 +1008,13 @@ class Visit extends CActiveRecord {
     public function updateSameDayVisitsToExpired() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED
-                    . "', card_option ='" . CardStatus::RETURNED
-                    . "', finish_date = CURRENT_DATE , finish_time = CURRENT_TIME
+                "UPDATE visit SET visit_status = " . VisitStatus::EXPIRED
+                    . ", card_option =" . CardStatus::RETURNED
+                    . ", finish_date = CURRENT_DATE , finish_time = CURRENT_TIME
                     WHERE CURRENT_DATE >= date_check_out
                     AND CURRENT_TIME > time_check_out
-                    AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+                    AND visit_status = " . VisitStatus::ACTIVE . "
+                    AND card_type = " . CardType::VIC_CARD_SAMEDATE . "")->execute();
 
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
@@ -1039,9 +1039,9 @@ class Visit extends CActiveRecord {
 
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.card 
-                    SET visit_status = '" . VisitStatus::EXPIRED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
-                    WHERE CURRENT_DATE > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'")->execute();
+                    SET visit_status = " . VisitStatus::EXPIRED . ",card_status =" . CardStatus::NOT_RETURNED . "
+                    WHERE CURRENT_DATE > date_expiration AND visit_status = " . VisitStatus::ACTIVE . "
+                    AND card_status =" . CardStatus::ACTIVE . " and card_type=" . CardType::MULTI_DAY_VISITOR . "")->execute();
 
             echo "Affected Rows : " . $command . "<br>";
             if ($command > 0) {

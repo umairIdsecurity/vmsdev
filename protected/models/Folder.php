@@ -73,7 +73,7 @@ class Folder extends CActiveRecord
         $criteria->compare('name', $this->name, true);
 
         #if( Yii::app()->user->role == Roles::ROLE_ADMIN )
-            $criteria->addCondition("user_id ='" . Yii::app()->user->id . "'");
+            $criteria->addCondition("user_id =" . Yii::app()->user->id . "");
 
         $data =  new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -99,7 +99,7 @@ class Folder extends CActiveRecord
             $criteria->compare('id', $this->id, true);
             $criteria->compare('user_id', $this->user_id, true);
             $criteria->compare('name', $this->name, true);
-            $criteria->addCondition("user_id ='" . $user_id . "'");
+            $criteria->addCondition("user_id =" . $user_id . "");
 
             $criteria->order = 'date_created ASC';
 
@@ -123,7 +123,7 @@ class Folder extends CActiveRecord
     public function getNumberFolders($user_id)
     {
         $criteria = new CDbCriteria;
-        $criteria->addCondition("user_id ='" . $user_id . "'");
+        $criteria->addCondition("user_id =" . $user_id . "");
         $count = $this->count($criteria);
         return $count;
     }
@@ -136,8 +136,8 @@ class Folder extends CActiveRecord
     public function checkNameExist($user_id,$name){
         if($user_id && $name){
             $criteria = new CDbCriteria;
-            $criteria->addCondition("user_id ='" . $user_id . "'");
-            $criteria->addCondition("name ='" . $name . "'");
+            $criteria->addCondition("user_id =" . $user_id . "");
+            $criteria->addCondition("name =" . $name . "");
             $folders = $this->findAll($criteria);
             if($folders){
                 return true;

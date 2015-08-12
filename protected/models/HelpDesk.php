@@ -126,7 +126,7 @@ class HelpDesk extends CActiveRecord {
     public function getHelpDesks($userId, $helpdeskId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '" . $userId . "' and helpdesk='" . $helpdeskId . "'";
+        $Criteria->condition = "user = " . $userId . " and helpdesk=" . $helpdeskId . "";
         $userhelpdesks = UserHelpDesks::model()->findAll($Criteria);
 
         $userhelpdesks = array_filter($userhelpdesks);
@@ -141,8 +141,8 @@ class HelpDesk extends CActiveRecord {
     
     public function beforeDelete() {
         //before delete check user helpdesk if has record
-        $userHelpDesk = UserHelpDesks::model()->exists("helpdesk ='".$this->id."' ");
-        $visit = Visit::model()->exists("helpdesk='".$this->id."'");
+        $userHelpDesk = UserHelpDesks::model()->exists("helpdesk =".$this->id." ");
+        $visit = Visit::model()->exists("helpdesk=".$this->id."");
         if ($userHelpDesk || $visit) {
             return false;
         } else {

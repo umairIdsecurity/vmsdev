@@ -17,16 +17,24 @@ class VisitorServiceImpl implements VisitorService {
         $visitor->created_by = $sessionId;
         if(!empty($visitor->birthdayYear) )
             $visitor->date_of_birth = date('Y-m-d', strtotime($visitor->birthdayYear . '-' . $visitor->birthdayMonth . '-' . $visitor->birthdayDay));
-        
+        else
+            $visitor->date_of_birth = NULL;
         // Change date formate from d-m-Y to Y-m-d
         if( !empty($visitor->identification_document_expiry))
             $visitor->identification_document_expiry = date("Y-m-d", strtotime($visitor->identification_document_expiry));
+        else
+            $visitor->identification_document_expiry = NULL;
+        
         if( !empty($visitor->identification_alternate_document_expiry1))
             $visitor->identification_alternate_document_expiry1 = date("Y-m-d", strtotime($visitor->identification_alternate_document_expiry1) );
+        else
+            $visitor->identification_alternate_document_expiry1 = NULL;
+        
         if( !empty($visitor->identification_alternate_document_expiry2))
             $visitor->identification_alternate_document_expiry2 = date("Y-m-d", strtotime($visitor->identification_alternate_document_expiry2) );
-
-
+        else
+           $visitor->identification_alternate_document_expiry2 = NULL;
+ 
         if (Yii::app()->controller->action->id == 'create' || Yii::app()->controller->action->id == 'addvisitor') {
 
 
@@ -118,6 +126,7 @@ class VisitorServiceImpl implements VisitorService {
                 break;
         }    
         $visitor->tenant = Yii::app()->user->tenant; 
+        $visitor->date_created = date("Y-m-d H:i:s"); // Current timestamp to fix issues on SQL Server.
         if (!($result = $visitor->save())) {
             return false;
         }

@@ -54,9 +54,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             'model'       => $model,
                             'attribute'   => 'date_of_birth',
                             'options'     => array(
+                                //'maxDate' => '0',
                                 'dateFormat' => 'dd-mm-yy',
                                 'changeMonth' => true,
-                                'changeYear' => true
+                                'changeYear' => true,
+                                'yearRange' => '-100:+0', // last hundred years
                             ),
                             'htmlOptions' => array(
                                 'size'        => '0',
@@ -69,33 +71,6 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         ?>
                         <?php echo $form->error($model, 'date_of_birth',array('style' => 'margin-left:0')); ?>
                     </div>
-
-                    <!-- <input type="hidden" id="dateofBirthBreakdownValueYear"
-                           value="<?php //echo date("Y", strtotime($model->date_of_birth)); ?>">
-                    <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                           value="<?php //echo date("n", strtotime($model->date_of_birth)); ?>">
-                    <input type="hidden" id="dateofBirthBreakdownValueDay"
-                           value="<?php //echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                    <div class="col-xs-4">
-                        <select id="fromDay" name="Registration[birthdayDay]" class='daySelect form-control input-lg'>
-
-                        </select>
-                    </div>
-                    <div class="col-xs-4">
-                        <select id="fromMonth" name="Registration[birthdayMonth]" class='monthSelect form-control input-lg'>
-
-                        </select>
-                    </div>
-                    <div class="col-xs-4">
-                        <select id="fromYear" name="Registration[birthdayYear]" class='yearSelect form-control input-lg'>
-
-                        </select>
-                    </div> -->
-
-
-                    <?php //echo $form->error($model, 'date_of_birth'); ?>
-
                 </div>
                 <div class="form-group">
                     <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type' , 'class'=>'form-control input-lg')); ?>

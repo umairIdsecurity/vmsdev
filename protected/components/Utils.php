@@ -16,7 +16,7 @@ class Utils
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "id ='" . $session['workstation'] . "' AND is_deleted = 0";
+                $Criteria->condition = "id =" . $session['workstation'] . " AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
 
@@ -24,14 +24,14 @@ class Utils
                 if ($session['tenant'] == null) {
                     $tenantsearchby = "IS NULL";
                 } else {
-                    $tenantsearchby = "='" . $session['tenant'] . "'";
+                    $tenantsearchby = "=" . $session['tenant'] . "";
                 }
 
                 if ($session['tenant_agent'] == null) {
                     //$tenantagentsearchby = "and tenant_agent IS NULL";
                     $tenantagentsearchby = "";
                 } else {
-                    $tenantagentsearchby = "and tenant_agent ='" . $session['tenant_agent'] . "'";
+                    $tenantagentsearchby = "and tenant_agent =" . $session['tenant_agent'] . "";
                 }
                 $Criteria = new CDbCriteria();
                 $Criteria->condition = "tenant $tenantsearchby  $tenantagentsearchby AND is_deleted = 0";
@@ -56,7 +56,7 @@ class Utils
 
             case Roles::ROLE_AGENT_ADMIN:
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
+                $Criteria->condition = "tenant =" . $session['tenant'] . " and tenant_agent =" . $session['tenant_agent'] . " AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
             default :

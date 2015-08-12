@@ -1,3 +1,7 @@
+<?php
+
+$session = new CHttpSession;
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
 <head>
@@ -33,24 +37,15 @@
                     </a>
                 </div>
                 <ul class="icons">
+                    <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
+                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>"><span class="glyphicon glyphicon-user"></span></a></li>
+                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>"><span class="glyphicon glyphicon-envelope"></span></a></li>
+                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>"><span class="glyphicon glyphicon-question-sign"></span></a></li>
+                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>"><span class="glyphicon glyphicon-log-out"></span></a></li>
                     <?php
-                    if(
-                        Yii::app()->user->isGuest ||
-                        Yii::app()->urlManager->parseUrl(Yii::app()->request) =='preregistration/login'
-                      ) {
-                        ?>
-                        <li class="group-1"><a href="#"><span class="glyphicon glyphicon-log-in"></span></a></li>
-                    <?php
-                    }
-                    else{
-                        ?>
-                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-user"></span></a></li>
-                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-envelope"></span></a></li>
-                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></li>
-                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-log-out"></span></a></li>
-                    <?php
-                    }
+                        }
                     ?>
+                    
                 </ul>
             </div>
         </div>

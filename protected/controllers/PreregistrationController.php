@@ -31,7 +31,7 @@ class PreregistrationController extends Controller
 			),
 			array(
                 'allow',
-                'actions' => array('profile','visitHistory'),
+                'actions' => array('profile','visitHistory','helpdesk'),
                 //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
                 'users' => array('@')
             ),
@@ -64,13 +64,21 @@ class PreregistrationController extends Controller
 		if(isset($session['workstation']) && $session['workstation']!=""){
 			$model->entrypoint = $session['workstation'];
 		}
+
 		if(isset($_POST['EntryPoint'])){
 
 			$model->attributes=$_POST['EntryPoint'];
 
 			if($model->validate())
 			{
-				$session['workstation'] = $model->entrypoint;
+				$workstation = Workstation::model()->findByPk($model->entrypoint);
+
+				//these will be used to ensure the nothing left in flow
+				$session['workstation'] = $workstation->id;
+				$session['created_by'] = $workstation->created_by;
+				$session['tenant'] = $workstation->tenant;
+
+
 				$session['pre-page'] = 2;
 				$this->redirect(array('preregistration/privacyPolicy'));
 			}
@@ -80,23 +88,6 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionPrivacyPolicy(){
-		
-		/*$model = new Visit();
-
-		$model->scenario = 'preregistration';
-
-		if(isset($_POST['Visit'])) {
-
-			$model->attributes = $_POST['Visit'];
-
-			if($model->validate()){
-
-				$this->redirect(array('preregistration/declaration'));
-
-			}
-		}
-		$this->render('privacy-policy',array('model'=>$model));
-*/
 		$this->render('privacy-policy');
 	}
 
@@ -186,16 +177,23 @@ class PreregistrationController extends Controller
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
-			$model->password_repeat 	 = $session['password'];
-
-			$workstation = Workstation::model()->findByPk($session['workstation']);
+			$model->password_repeat = $session['password'];
 
 
-			$model->tenant = $workstation->tenant;
+			$model->tenant = $session['tenant'];
+			$model->created_by = $session['created_by'];
+			$model->visitor_workstation = $session['workstation'];
 
 			$model->attributes = $_POST['Registration'];
-
-			//$model->date_of_birth = date('Y-m-d', strtotime($_POST['Registration']['birthdayYear'] . '-' . $_POST['Registration']['birthdayMonth'] . '-' . $_POST['Registration']['birthdayDay']));
+			
+			/*
+			* This removes Integrity Constraint Issue
+            */
+            if(!empty($_POST['Registration']['visitor_type'])){
+				$model->visitor_type = $_POST['Registration']['visitor_type'];             	
+            }else{
+            	$model->visitor_type = NULL;             	
+            }
 
 
 			if (!empty($_POST['Registration']['contact_state'])){
@@ -213,6 +211,9 @@ class PreregistrationController extends Controller
 						$this->redirect(array('preregistration/visitReason'));
 					}
 					//***********************************************
+				}else{
+					$msg = print_r($model->getErrors(),1);
+					throw new CHttpException(400,'Data not saved because: '.$msg );
 				}
             } else {
             	$model->contact_country = Visitor::AUSTRALIA_ID;
@@ -261,6 +262,12 @@ class PreregistrationController extends Controller
 			}
 
 			$model->visitor  = $session['visitor_id'];
+			
+			
+			$model->card_type = 6; //VIC 24 hour Card
+			$model->created_by = $session['created_by'];
+			$model->workstation  = $session['workstation'];
+			$model->tenant = $session['tenant'];
 
 			$model->visit_status  = 2; //default visit status is 2=PREREGISTER
 
@@ -270,6 +277,12 @@ class PreregistrationController extends Controller
 			}
 
 			$companyModel->mobile_number    = $_POST['Company']['mobile_number'];
+
+			$companyModel->company_type = 3; // company_type is 3 which means VISITOR in company_type table
+			$companyModel->created_by_user = $session['created_by'];
+			$companyModel->created_by_visitor  = $session['visitor_id'];
+			$companyModel->tenant = $session['tenant'];
+
 			$companyModel->attributes    = $_POST['Company'];
 
 			if($companyModel->validate())
@@ -413,7 +426,7 @@ class PreregistrationController extends Controller
 							$companyName = '-';
 						}
 
-						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data->id.'">',$data->first_name,$data->last_name,$companyName);
+						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value='.$data->id.'>',$data->first_name,$data->last_name,$companyName);
 
 					}
 
@@ -720,6 +733,18 @@ class PreregistrationController extends Controller
             	$companyModel->created_by_user = NULL;             	
             }
 
+
+            /*echo "<pre>";
+            print_r($model);
+            
+
+            echo "<br>";
+
+            echo "<pre>";
+            print_r($companyModel);
+            die;*/
+            
+
 	        if($model->save(false))
 	        {
 	            if ($companyModel->save(false)) {
@@ -752,7 +777,7 @@ class PreregistrationController extends Controller
 
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
 
-    	$condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id='".Yii::app()->user->id."' AND v.tenant='".Yii::app()->user->tenant."')";
+    	$condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".Yii::app()->user->id." AND v.tenant=".Yii::app()->user->tenant.")";
         
         $rawData = Yii::app()->db->createCommand()
                         ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 
@@ -785,6 +810,22 @@ class PreregistrationController extends Controller
             'page_size'=>$per_page,
             'pages'=>$pages,
         ));
+    }
+
+    /* Help Desk history */
+
+    public function actionHelpdesk() {
+    	$helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup();
+
+    	/*echo "<pre>";
+    	print_r($helpDeskGroupRecords);
+    	die;*/
+
+        $session = new CHttpSession;
+        $this->render('helpdesk', array(
+            'helpDeskGroupRecords' => $helpDeskGroupRecords
+        ));
+    	
     }
 
     public function loadModel($id)

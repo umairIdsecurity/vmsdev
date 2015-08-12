@@ -112,7 +112,7 @@ class VisitorType extends CActiveRecord {
 
         // Allow Admin to View and Manage his own created Types
         //if( Yii::app()->user->role == Roles::ROLE_ADMIN )
-        //    $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
+        //    $criteria->addCondition("created_by =" . Yii::app()->user->id . "'");
 
 
 
@@ -240,7 +240,7 @@ class VisitorType extends CActiveRecord {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
         //$criteria->select = "card_type";
-        $criteria->addCondition("t.visitor_type='" . $visitor_type."'");
+        $criteria->addCondition("t.visitor_type=" . $visitor_type."");
         
         //$criteria->addCondition("t.tenant=" . $session['tenant'] . " AND t.is_deleted=0");
 

@@ -27,11 +27,24 @@
         <br><br>
 
         <h3 class="form-title">Where will you be collecting your VIC?</h3>
+        
+        <div class="text-center icon-info" style="margin-top:-32px">
+            <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>(VIC) What is this?</a>
+        </div>
+        
+        <br>
+
+        <div class="hidden sms-info">
+            <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
+            <h3>What is a Visitor Identification Card (VIC)?</h3>
+            <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
+        </div>
 
         <br><br>
         
         <!-- form-fields-area -->
-    <div class="" style="width:480px;">
+    <div class="" style="width:480px;margin-left:auto;margin-right:auto">
+        
         <div class="form-group">
 
             <?php
@@ -44,26 +57,16 @@
                 $list,
                 array(
                     'class'=>'form-control input-lg' ,
-                    'empty' => 'Select a workstation')
+                    'empty' => 'Chose your entry point')
             );
 
             ?>
         </div>
         <?php echo $form->error($model,'entrypoint'); ?>
+ 
     </div>
 
      <br><br> <br><br> <br><br>
-
-    <div class="text-center icon-info">
-        <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>(VIC) What is this?</a>
-    </div>
-
-    <div class="hidden sms-info">
-        <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
-        <h3>What is a Visitor Identification Card (VIC)?</h3>
-        <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
-    </div>
-
 
     <div class="row next-prev-btns">
         <div class="col-md-1">

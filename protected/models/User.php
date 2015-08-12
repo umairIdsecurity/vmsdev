@@ -589,25 +589,20 @@ class User extends VmsActiveRecord {
     }
 
     public function isTenantOrTenantAgentOfUserViewed($currentlyEditedUserId, $user) {
-
-        $connection = Yii::app()->db;
-        $ownerCondition = "where id =" . $currentlyEditedUserId . "";
-
-        if ($user->role == Roles::ROLE_ADMIN) {
-            $ownerCondition = "WHERE tenant = " . $user->tenant . " ";
+      
+        $criteria = new CDbCriteria();
+        $criteria->addCondition( "id =" . $currentlyEditedUserId );
+        
+         if ($user->role == Roles::ROLE_ADMIN) {
+            $criteria->addCondition( "tenant =" . $user->tenant );
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-            $ownerCondition = "WHERE tenant_agent=" . $user->tenant_agent . "";
-        }
-        $ownerQuery = 'select * FROM user
-                            ' . $ownerCondition . ' and id =' . $currentlyEditedUserId . '
-                            ';
-        $command = $connection->createCommand($ownerQuery);
-        $row = $command->query();
-        if ($row->rowCount !== 0) {
+            $criteria->addCondition( "tenant_agent=" . $user->tenant_agent );
+        } 
+        $userInfo = $this->find($criteria);
+        if( $userInfo )
             return true;
-        } else {
+        else
             return false;
-        }
     }
 
     public function saveWorkstation($userId, $workstationId, $currentUserId) {

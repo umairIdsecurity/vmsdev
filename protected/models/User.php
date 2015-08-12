@@ -396,7 +396,7 @@ class User extends VmsActiveRecord {
                 break;
         }
         if (Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin') {
-            $criteria->addCondition("t.id !=" . $user->id . "and role in " . $rolein . " and (" . $queryCondition . ")");
+            $criteria->addCondition("t.id !=" . $user->id . " and role in " . $rolein . " and (" . $queryCondition . ")");
         } else {
             $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
         }

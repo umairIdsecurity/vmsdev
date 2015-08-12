@@ -117,6 +117,10 @@ if (isset($company) && !empty($company)) {
     .select2 {
         margin: 0.2em 0 0.5em;
     }
+
+    #ui-datepicker-div {
+        z-index: 9 !important;
+    }
 </style>
 
 <input type="hidden" id="passwordUser" value="<?php echo isset($password) ? $password : ''; ?>">

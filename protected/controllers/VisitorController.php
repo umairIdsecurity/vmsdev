@@ -625,7 +625,7 @@ class VisitorController extends Controller {
                             }
                         }
                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-                        mail($to, $subject, $body, $headers);
+                        @mail($to, $subject, $body, $headers);
                     }
                 }
                 if( $model->profile_type == "CORPORATE" ) {

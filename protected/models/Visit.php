@@ -1120,7 +1120,7 @@ class Visit extends CActiveRecord {
 //                                                        WHERE $userTbl.is_deleted=0
 //                                                        AND $userTbl.company=" . $company)->queryAll();
             
-            $res_host = User::model()->findAll("is_delete = 0");
+            $res_host = User::model()->findAll();
 
             if ($res_host) {
                 foreach ($res_host as $arr_val) {
@@ -1144,6 +1144,8 @@ class Visit extends CActiveRecord {
             } else {
                 return [];
             }
+
+
         }
         return [];
     }

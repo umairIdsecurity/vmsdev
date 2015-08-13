@@ -44,7 +44,7 @@ for ($i = 0; $i < $arrayCount; $i++) {
 
             <tr >
                 <td style="text-align: center">
-                    <button id='submitBtn'>Continue</button>
+                    <button id='submitBtn' class="actionForward">Continue</button>
                     <input type="submit" value="Continue" name="submit" id='submit' style='display: none;'>
                 </td>
             </tr>
@@ -82,7 +82,7 @@ for ($i = 0; $i < $arrayCount; $i++) {
 
 <?php 
 function checkIfWorkstationIsPrimary($workstationId){
-    $userWorkstation = UserWorkstations::model()->find("workstation=".$workstationId." and user=".Yii::app()->user->id."");
+    $userWorkstation = UserWorkstations::model()->find("workstation=".$workstationId." and user_id=".Yii::app()->user->id."");
     if(isset($userWorkstation->is_primary) && $userWorkstation->is_primary ==1){
         return true;
     } else {

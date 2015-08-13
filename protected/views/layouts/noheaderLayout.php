@@ -27,6 +27,17 @@ $userRole = $session['role'];
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/form.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/style.css" />
+	<?php
+    $company = Company::model()->findByPk($session['tenant']);
+
+    if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
+        $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+        ?>
+		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . "/index.php?r=companyLafPreferences/css"; ?>" />
+
+    <?php
+    }
+    ?>
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 

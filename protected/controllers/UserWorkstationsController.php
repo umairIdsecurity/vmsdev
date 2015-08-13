@@ -124,7 +124,7 @@ class UserWorkstationsController extends Controller {
             if (isset($_POST['cbColumn'])) {
                 foreach ($_POST['cbColumn'] as $id) {
                     $userworkstation = new UserWorkstations;
-                    $userworkstation->user = $_POST['userId'];
+                    $userworkstation->user_id = $_POST['userId'];
                     $userworkstation->workstation = $id;
                     $userworkstation->created_by = $session['id'];
                     $userworkstation->is_primary = $_POST['radioSetPrimaryInput'][$id];

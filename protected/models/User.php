@@ -181,7 +181,7 @@ class User extends VmsActiveRecord {
 
     public function avms_user()
     {
-        $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .")";
+        $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .") ";
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
             'with' => 'role',
@@ -246,7 +246,7 @@ class User extends VmsActiveRecord {
             'userStatuses' => array(self::HAS_MANY, 'UserStatus', 'created_by'),
             'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
             'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),
-            'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
+            'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user_id, workstation)'),
             'photo1' => array(self::BELONGS_TO, 'Photo', 'photo'),
             'userTimezones' => array(self::BELONGS_TO, 'timezone', 'timezone_id'),
         );
@@ -398,7 +398,7 @@ class User extends VmsActiveRecord {
         if (Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin') {
             $criteria->addCondition("t.id !=" . $user->id . " and role in " . $rolein . " and (" . $queryCondition . ")");
         } else {
-            $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
+            $criteria->addCondition("role in " . $rolein . " and (" . $queryCondition . ")");
         }
 
 
@@ -420,7 +420,7 @@ class User extends VmsActiveRecord {
 
         if ($users) {
             $user_ids = array_values(CHtml::listData($users, 'id', 'id'));
-            $criteria->addCondition('t.id in (' . implode(', ', $user_ids) . ')');
+            $criteria->addCondition("t.id in (" . implode(", ", $user_ids) . ") ");
         }
 
         if ($merge !== null) {
@@ -467,7 +467,7 @@ class User extends VmsActiveRecord {
     public function beforeDelete() {
         $visitExists = Visit::model()->exists("is_deleted = 0 and host =" . $this->id . "");
         $isTenant = Company::model()->exists("is_deleted = 0 and tenant =" . $this->id . "");
-        $userWorkstation = UserWorkstations::model()->exists("user = " . $this->id . "");
+        $userWorkstation = UserWorkstations::model()->exists("user_id = " . $this->id . "");
         $visitorExists = Visitor::model()->exists("tenant = " . $this->id . " and is_deleted=0");
         $isTenantAgent = Company::model()->exists("tenant_agent = " . $this->id . " and is_deleted=0");
         if ($visitExists || $isTenant || $userWorkstation || $visitorExists || $isTenantAgent) {
@@ -595,31 +595,26 @@ class User extends VmsActiveRecord {
     }
 
     public function isTenantOrTenantAgentOfUserViewed($currentlyEditedUserId, $user) {
-
-        $connection = Yii::app()->db;
-        $ownerCondition = "where id =" . $currentlyEditedUserId . "";
-
-        if ($user->role == Roles::ROLE_ADMIN) {
-            $ownerCondition = "WHERE tenant = " . $user->tenant . " ";
+      
+        $criteria = new CDbCriteria();
+        $criteria->addCondition( "id =" . $currentlyEditedUserId );
+        
+         if ($user->role == Roles::ROLE_ADMIN) {
+            $criteria->addCondition( "tenant =" . $user->tenant );
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-            $ownerCondition = "WHERE tenant_agent=" . $user->tenant_agent . "";
-        }
-        $ownerQuery = 'select * FROM user
-                            ' . $ownerCondition . ' and id =' . $currentlyEditedUserId . '
-                            ';
-        $command = $connection->createCommand($ownerQuery);
-        $row = $command->query();
-        if ($row->rowCount !== 0) {
+            $criteria->addCondition( "tenant_agent=" . $user->tenant_agent );
+        } 
+        $userInfo = $this->find($criteria);
+        if( $userInfo )
             return true;
-        } else {
+        else
             return false;
-        }
     }
 
     public function saveWorkstation($userId, $workstationId, $currentUserId) {
 
         $post = new UserWorkstations;
-        $post->user = $userId;
+        $post->user_id = $userId;
         $post->workstation = $workstationId;
         $post->created_by = $currentUserId;
         $post->is_primary = '1';

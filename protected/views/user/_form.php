@@ -664,7 +664,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
                                     <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                                     <input onclick="generatepassword();" class="complete btn btn-info"
-                                           style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px"
+                                           style="<?php echo $background; ?>position: relative; padding: 3px 6px 5px; overflow: hidden; cursor:pointer;font-size:13px"
                                            type="button" value="Autogenerate Password"/>
 
                                 </div>

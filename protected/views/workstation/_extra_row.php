@@ -3,7 +3,7 @@
     $btn = array();
     $i=1;
     foreach($cards as $card){
-        $btn[$i] = ($card->back_text == NULL )?"":"btn-primary";
+        $btn[$i] = ($card->back_text == NULL )?"complete":"btn-primary";
         $i++;
     } 
     $module = CHelper::get_allowed_module();

@@ -421,7 +421,7 @@ $asicEscort = new AddAsicEscort();
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onClick="vicCheck(true)" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
+        <button type="button" onClick="vicCheck(true)" class="btn btn-primary complete" id="btnVicConfirm" style="width: auto !important; height: auto !important;">Confirm</button>
     </div>
 </div>
 
@@ -471,7 +471,7 @@ $asicEscort = new AddAsicEscort();
                 <td>
                     <input type="text" id="search-escort" style="width:293px" name="search-host"
                            placeholder="Enter name, email address" class="search-text"/>
-                    <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
+                    <button type="button" class="btn btn-primary neutral" id="findEscortBtn" style="margin-bottom: 14px!important;width: auto !important; height: auto !important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
                     <div id="divMsg" style="display:none;">
                         <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />
                     </div>
@@ -486,7 +486,7 @@ $asicEscort = new AddAsicEscort();
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" class="btn btn-primary complete" id="btnAsicConfirm" style="width: auto !important; height: auto !important;">Confirm</button>
     </div>
 </div>
 

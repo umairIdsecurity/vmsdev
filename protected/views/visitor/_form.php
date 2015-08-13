@@ -80,7 +80,7 @@ $form = $this->beginWidget('CActiveForm', array(
 ?>
 
 <input type="hidden" id="emailIsUnique" value="0"/>
-
+ <input type="hidden" name="profile_type" id="Visitor_profile_type" value="<?php echo $model->profile_type; ?>"/>
 <div>
 <?php    
 foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -384,7 +384,7 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
         if ($_REQUEST['r'] == 'visitor/update') {
             ?>
 
-            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
+            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;" class="actionForward">
 
                 Add Company</a>
 
@@ -393,8 +393,8 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 
             ?>
             <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"> -->
-            <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-            <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
+            <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink" class="actionForward">Add Company</a>
+            <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info actionForward" role="button" data-toggle="modal">Add Contact</a>
         <?php } ?>
     </td>
 </tr>
@@ -740,7 +740,6 @@ $(document).ready(function () {
 });
 
 function checkEmailIfUnique() {
-
     var email = $("#Visitor_email").val();
 
     if (email != "<?php echo $model->email ?>") {
@@ -1010,6 +1009,7 @@ function dismissModal(id) {
 
 var requestRunning = false;
 function sendVisitorForm() {
+    
     if (requestRunning) { // don't do anything if an AJAX request is pending
         return;
     }
@@ -1028,6 +1028,7 @@ function sendVisitorForm() {
         url: url,
         data: form,
         success: function (data) {
+            
             if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
                 window.location = 'index.php?r=dashboard';
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {

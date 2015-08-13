@@ -599,7 +599,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             <ul>
                 <li>
                 <?php if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) : ?>
-                    <button type="submit" class="greenBtn btnUpdateVisitorInfo" name="updateVisitorInfo">Update</button>
+                    <button type="submit" class="greenBtn btnUpdateVisitorInfo actionForward" name="updateVisitorInfo">Update</button>
                 <?php endif; ?>
                 </li>
             </ul>

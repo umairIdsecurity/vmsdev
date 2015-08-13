@@ -37,6 +37,7 @@ if ($visitorType != VisitorType::PATIENT_VISITOR) {
                     return CHtml::link('Select '.$hostTitle, 'javascript:void(0)', array(
                                 'id' => $data['id'],
                                 'onclick' => "parent.populateFieldHost({$data['id']})",
+                                'class' => "actionForward"
                                     )
                     );
                 },

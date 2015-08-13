@@ -112,15 +112,6 @@ $session = new CHttpSession;
                         <td><?php echo $form->error($model, 'name'); ?></td>
                     </tr>
                     <tr>
-                        <?php
-                        $isTrue = $model->assign_kiosk?"true":"false";
-                        ?>
-                        <td><?php echo $form->labelEx($model, 'assign_kiosk'); ?></td>
-                        <td colspan="2">
-                            <?php echo $form->checkBox($model,'assign_kiosk', array("data-ng-init"=>"Workstation['assign_kiosk']=".$isTrue, "data-ng-model" => "Workstation['assign_kiosk']")  ); ?>
-                        <td>
-                    </tr>
-                    <tr>
                         <td><?php echo $form->labelEx($model, 'location'); ?></td>
                         <td><?php echo $form->textField($model, 'location', array('size' => 60, 'maxlength' => 100)); ?></td>
                         <td><?php echo $form->error($model, 'location'); ?></td>
@@ -288,10 +279,10 @@ $session = new CHttpSession;
         <?php
         $arrayRuleButton = null;
         if($model->password){
-            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match : false");
+            $arrayRuleButton = array("class"=>"complete", "data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match : false");
         }
         else {
-            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false");
+            $arrayRuleButton = array("class"=>"complete", "data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false");
         }
 
         ?>

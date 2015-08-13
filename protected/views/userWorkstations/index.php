@@ -69,7 +69,7 @@ else {
                             <input type="radio" id="setPrimary<?php echo $user['id']; ?>" name="rButtons" class="rButtons"
                             <?php echo $checked; ?>
                                    />
-                            <label for="setPrimary<?php echo $user['id']; ?>" id="setPrimary<?php echo $user['id']; ?>" class="rButtons"><?php echo $label; ?></label>
+                            <label for="setPrimary<?php echo $user['id']; ?>" id="setPrimary<?php echo $user['id']; ?>" class="rButtons actionForward"><?php echo $label; ?></label>
                             <input type="text" style="display:none;" name="radioSetPrimaryInput[<?php echo $user['id']; ?>]" value="<?php echo $isPrimary; ?>"/>
 
                         </td>

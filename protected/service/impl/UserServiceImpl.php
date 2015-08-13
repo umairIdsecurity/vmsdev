@@ -28,6 +28,7 @@ class UserServiceImpl implements UserService {
         if ($user->isNewRecord) {
 			
             $user->created_by = $userLoggedIn->id;
+            $user->tenant = Yii::app()->user->tenant;
 			
         } else {
             if (Yii::app()->user->role == Roles::ROLE_SUPERADMIN) {

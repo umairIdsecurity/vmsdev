@@ -86,8 +86,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 </form>
             </div>
             <div class="modal-footer" id="negate_footer">
-                <button type="button" id="btnNegate" class="btn btn-primary">Negate</button>
-                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" id="btnNegate" class="btn btn-primary complete">Negate</button>
+                <button type="button" id="btnCancel" class="btn btn-default neutral" data-dismiss="modal">Cancel</button>
             </div>
 
         </div>
@@ -125,8 +125,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnReset" class="btn btn-primary">Reset</button>
-                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" id="btnReset" class="btn btn-primary actionForward">Reset</button>
+                <button type="button" id="btnCancel" class="btn btn-default neutral" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

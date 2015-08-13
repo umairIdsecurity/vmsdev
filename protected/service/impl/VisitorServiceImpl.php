@@ -127,6 +127,7 @@ class VisitorServiceImpl implements VisitorService {
         }    
         $visitor->tenant = Yii::app()->user->tenant; 
         $visitor->date_created = date("Y-m-d H:i:s"); // Current timestamp to fix issues on SQL Server.
+        $visitor->profile_type = $visitor->profile_type == "NCORPORATE" ? "CORPORATE":$visitor->profile_type;
         if (!($result = $visitor->save())) {
             return false;
         }

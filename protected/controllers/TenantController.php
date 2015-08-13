@@ -156,12 +156,15 @@ class TenantController extends Controller {
                         if ($tenantModel->validate()) {
                             $tenantModel->save();
                             $tenantLastID = $tenantModel->id;
-                            //echo ":tenantModel:".$tenantLastID;
-
                             $tenantContact->tenant = $tenantLastID;
                             $tenantContact->user = $userLastID;
                             if ($tenantContact->validate()) {
-                                $tenantContact->save();                               
+                                $tenantContact->save();
+                                
+                                /**
+                                 * Create and save New Workstation
+                                 */
+                                $this->saveTenantWorkstation($_POST, $companyModel->id, $userModel->id); 
                                 $transaction->commit();
 
                                 //email sending
@@ -187,26 +190,8 @@ class TenantController extends Controller {
                                     }
                                     elseif ($passwordRequire == 2) {
 
-                                        /*$loggedUserEmail = Yii::app()->user->email;
-                                        $headers = "MIME-Version: 1.0" . "\r\n";
-                                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-                                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-                                        $to=$_POST['TenantForm']['email'];
-                                        $subject="Tenant registration notification email";
-
-                                        
-
-                                        $body = "<html><body>Hi,<br><br>".
-                                                "This is Tenant registration confirmation.<br><br>".*/
-                                                //"Please click on the below URL to access application:<br><br>".
-                                                //Yii::app()->getBaseUrl(true) . '/index.php?r=site/reset/hash/' . md5(time() . $userLastID . $_POST['TenantForm']['email']. 'Some salt 9ht3ldjnhuy)jnt47thlJ&');
-
                                         User::model()->restorePassword($_POST['TenantForm']['email']);
-
-                                        //$body .= "<br>";
-                                        //$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-
-                                        //mail($to, $subject, $body, $headers);
+                                        
                                     }
                                 }
 
@@ -252,7 +237,37 @@ class TenantController extends Controller {
             'model' => $model,
         ));
     }
-
+    
+/**
+ * Create and save new Workstation for newly created Tenant
+ * @param array $post 
+ * @param int $tenant_id
+ */
+    public function saveTenantWorkstation($post, $tenant_id, $user_id) {
+        
+        $workstation = new Workstation;
+        $workstation->name = $post["TenantForm"]["workstation"];
+        $workstation->contact_name = $post["TenantForm"]["first_name"].' '.$post["TenantForm"]["last_name"];
+        $workstation->contact_email_address = $post["TenantForm"]["email"];
+        $workstation->contact_number = $post["TenantForm"]["contact_number"];
+        $workstation->createdBy = Yii::app()->user->id;
+        $workstation->tenant = $tenant_id;
+        $workstation->tenant_agent = $user_id;
+        $workstation->password = NULL;
+        $workstation->timezone_id = $post["TenantForm"]["timezone_id"];
+        if( $workstation->save() ) {
+            $userWorkstation = new UserWorkstations;
+            $userWorkstation->user_id = $user_id;
+            $userWorkstation->workstation = $workstation->id;
+            $userWorkstation->createdBy = Yii::app()->user->id;
+            $userWorkstation->is_primary = 1;
+            
+            $userWorkstation->save();
+            return true;
+        }
+        return;
+        
+    }
     protected function performAjaxValidation($model)
     {
         if(isset($_POST['ajax']) && $_POST['ajax']==='tenant-form')

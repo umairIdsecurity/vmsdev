@@ -84,6 +84,10 @@ nav.navigation ul li a{
 color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
 }
 
+nav.navigation ul li.loggedin-as {
+	color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
+}
+
 .top_nav ul li a {
 color:<?php echo $companyLafPreferences->nav_bg_color; ?> !important;
 }
@@ -106,7 +110,7 @@ color:<?php echo $companyLafPreferences->sidemenu_hover_font_color; ?> !importan
 
 /*headers*/
 
-.wrapper h1,.visitor-title,.has-sub-sub span {
+.wrapper h1,.visitor-title,.has-sub-sub span, .header-text {
 color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
 }
 
@@ -183,6 +187,7 @@ ul.yiiPager .selected a {
 
 .sidebarTitle{
 background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_bg_color; ?> !important;
+color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
 }
 <?php 
 } ?>

@@ -1100,25 +1100,28 @@ class Visit extends CActiveRecord {
         if ($res_visitor) {
             $visitor = $res_visitor[0]['visitor'];
             $userTbl = Yii::app()->params['userTbl'];
-            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
-                                                        FROM visit
-                                                        LEFT JOIN $userTbl ON $userTbl.id = visit.host
-                                                        LEFT JOIN company ON $userTbl.company = company.id
-                                                        WHERE company.is_deleted = 0
-                                                        AND visit.id = " . $visitId)->queryAll();
+//            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
+//                                                        FROM visit
+//                                                        LEFT JOIN $userTbl ON $userTbl.id = visit.host
+//                                                        LEFT JOIN company ON $userTbl.company = company.id
+//                                                        WHERE company.is_deleted = 0
+//                                                        AND visit.id = " . $visitId)->queryAll();
+            $res_company = Visit::model()->with("company0", "host0", "visitor0")->find("t.id = ".$visitId);
+            
             if ($res_company) {
-                $company = $res_company[0]['company_id'];
+                $company = $res_company["company0"]['id'];  
             } else {
                 $company = 0;
             }
 
 
-            $res_host = Yii::app()->db->createCommand("SELECT id
-                                                        FROM $userTbl
-                                                        WHERE $userTbl.is_deleted=0
-                                                        AND $userTbl.company=" . $company)->queryAll();
+//            $res_host = Yii::app()->db->createCommand("SELECT id
+//                                                        FROM $userTbl
+//                                                        WHERE $userTbl.is_deleted=0
+//                                                        AND $userTbl.company=" . $company)->queryAll();
+            
+            $res_host = User::model()->findAll("is_delete = 0");
 
-            //var_dump($res_host);
             if ($res_host) {
                 foreach ($res_host as $arr_val) {
                     $arr[] = $arr_val['id'];
@@ -1135,17 +1138,12 @@ class Visit extends CActiveRecord {
 
                 $countData = array('allVisitsByVisitor' => $allVisitsByVisitor[0]['cnt'],
                                     'companyVisitsByVisitor' => $companyVisitsByVisitor[0]['cnt'],
-                                    'companyName' => $res_company[0]['company_name']);
+                                    'companyName' => $res_company["company0"]['name']);
 
                 return $countData;
             } else {
                 return [];
             }
-
-
-            //echo $hosts;echo "<br> ============ <br> ";
-            //echo $company;echo "<br> ============ <br> ";
-            //echo $visitor;echo "<br> ============ <br> ";	die();
         }
         return [];
     }

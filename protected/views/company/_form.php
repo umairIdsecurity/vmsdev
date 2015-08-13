@@ -269,7 +269,7 @@ if ($this->action->id == 'update') {
                                                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                                                 <div class="row buttons" style="text-align:center;">
                                                     <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-                                                           style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                                           style="<?php echo $background; ?>position: relative; padding: 3px 6px 5px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
                                                 </div>
                                             </td>
                                         </tr>
@@ -300,7 +300,7 @@ if ($this->action->id == 'update') {
         } else {
         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             ?>
-            <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
+            <button class="yiiBtn neutral" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
         <?php } else { ?>
         <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>
         <?php

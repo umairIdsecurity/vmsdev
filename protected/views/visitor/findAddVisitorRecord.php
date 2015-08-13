@@ -310,8 +310,8 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr>
                                 <td>
-                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;  margin-bottom: 12px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="font-size: 12px; font-weight: bold; display: none; margin-bottom: 10px;" role="button" data-toggle="modal">Add Contact</a>
+                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;  margin-bottom: 12px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink" class="actionForward">Add Company</a>
+                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info actionForward" style="font-size: 12px; font-weight: bold; display: none; margin-bottom: 10px;" role="button" data-toggle="modal">Add Contact</a>
                                 </td>
                             </tr>
 

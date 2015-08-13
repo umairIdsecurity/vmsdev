@@ -59,6 +59,8 @@ $date_check_out = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 // DONT FORGET TO ADD TRUE this will create the datepicker return as string
 ), true);
 
+$login_url = $this->createUrl('site/login');
+
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'              => 'view-visitor-records',
 	'dataProvider'    => $model->search_history(),
@@ -72,6 +74,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
         jQuery('#Visit_date_check_out').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
     }",
+    'ajaxUpdateError' => "function(id, data) {window.location.replace('$login_url');}",
 
 	'columns'         => array(
 		array(

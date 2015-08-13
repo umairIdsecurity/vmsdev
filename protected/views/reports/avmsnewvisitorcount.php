@@ -47,7 +47,7 @@ $form=$this->beginWidget('CActiveForm', array(
                 ?>
         
             &nbsp;
-            <input id="filterBtn" type="submit" name="yt0" value="Filter">
+            <input id="filterBtn" type="submit" name="yt0" value="Filter" class="complete">
         
     </div>
             

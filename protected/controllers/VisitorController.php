@@ -119,7 +119,7 @@ class VisitorController extends Controller {
      * If update is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id) {                           
         $model = $this->loadModel($id);
         $oldProfileType        = $model->profile_type;
         $visitorService     = new VisitorServiceImpl;
@@ -133,10 +133,14 @@ class VisitorController extends Controller {
         }
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
+         // For Corporate Visitor
+        if( Yii::app()->request->getParam("profile_type", "CORPORATE") == "CORPORATE")  
+            $this->performAjaxValidation($model);
         
         $visitorParams = Yii::app()->request->getPost('Visitor');
 
         if (isset($visitorParams)) {
+            
             $currentCardStatus = $model->visitor_card_status;
             if (isset($visitorParams['visitor_card_status']) && $currentCardStatus != $visitorParams['visitor_card_status'] && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
                 $activeVisit = $model->activeVisits;
@@ -149,18 +153,7 @@ class VisitorController extends Controller {
                     $totalVisitCountBefore = $model->totalVisit;
                     $model->attributes = $visitorParams;
                     if ($visitorService->save($model, NULL, $session['id'])) {
-//                        if ($totalVisitCountBefore > 0) {
-//                            $resetHistory = new ResetHistory;
-//                            $resetHistory->visitor_id = $model->id;
-//                            $resetHistory->reset_time = date("Y-m-d H:i:s");
-//                            $resetHistory->reason     = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
-//                            if ($resetHistory->save()) {
-//                                foreach ($activeVisit as $item) {
-//                                    $item->reset_id = $resetHistory->id;
-//                                    $item->save();
-//                                }
-//                            }
-//                        }
+
                         switch ($isViewedFromModal) {
                             case "1":
                                 break;
@@ -217,23 +210,28 @@ class VisitorController extends Controller {
                 $contact->user_status    = 1;
                 $contact->role           = 9;
 
-                if ($contact->save()) {
+                if ($contact->save()) {               
                     switch ($isViewedFromModal) {
                         case "1":
                             break;
-
+                        
                         default:
                             echo $updateErrorMessage;
-                    }
+                }
                 }
 
             }
-
+              if( $model->profile_type == "CORPORATE" ) {
+                        Yii::app()->user->setFlash('success', 'Corporate Visitor Updated Successfully!');
+                        $this->redirect(array("visitor/update&id=".$id));
+                    }
         } else{
             $this->render('update', array(
                 'model' => $model,
             ));
-        }
+    }
+   
+    
     }
 
     /* Visitor detail page */

@@ -80,7 +80,7 @@ $form = $this->beginWidget('CActiveForm', array(
 ?>
 
 <input type="hidden" id="emailIsUnique" value="0"/>
-
+ <input type="hidden" name="profile_type" id="Visitor_profile_type" value="<?php echo $model->profile_type; ?>"/>
 <div>
 <?php    
 foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -740,7 +740,6 @@ $(document).ready(function () {
 });
 
 function checkEmailIfUnique() {
-
     var email = $("#Visitor_email").val();
 
     if (email != "<?php echo $model->email ?>") {
@@ -1010,6 +1009,7 @@ function dismissModal(id) {
 
 var requestRunning = false;
 function sendVisitorForm() {
+    
     if (requestRunning) { // don't do anything if an AJAX request is pending
         return;
     }
@@ -1028,23 +1028,24 @@ function sendVisitorForm() {
         url: url,
         data: form,
         success: function (data) {
+            
             if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                window.location = 'index.php?r=dashboard';
+               // window.location = 'index.php?r=dashboard';
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                window.location = 'index.php?r=dashboard/viewmyvisitors';
+               // window.location = 'index.php?r=dashboard/viewmyvisitors';
             } else {
-                window.location = 'index.php?r=visitor/admin&vms=cvms';
+                //window.location = 'index.php?r=visitor/admin&vms=cvms';
             }
         },
         error: function (data) {
-            if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                window.location = 'index.php?r=dashboard';
-            } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                window.location = 'index.php?r=dashboard/viewmyvisitors';
-            } else {
-                window.location = 'index.php?r=visitor/admin&vms=cvms';
-            }
-        }
+//            if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+//                window.location = 'index.php?r=dashboard';
+//            } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+//                window.location = 'index.php?r=dashboard/viewmyvisitors';
+//            } else {
+//                window.location = 'index.php?r=visitor/admin&vms=cvms';
+//            }
+//        }
     };
     requestRunning = true;
     $.ajax(ajaxOpts);

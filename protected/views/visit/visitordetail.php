@@ -5,6 +5,7 @@ $session = new CHttpSession;
 
 // asic sponsor
 $asic = $model->getAsicSponsor();
+
 $asicEscort = $model->getAsicEscort();
 
 if ($asic && $hostModel == null) {

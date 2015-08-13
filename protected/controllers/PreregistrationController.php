@@ -185,20 +185,26 @@ class PreregistrationController extends Controller
 			$model->visitor_workstation = $session['workstation'];
 
 			$model->attributes = $_POST['Registration'];
+
+			
 			
 			/*
 			* This removes Integrity Constraint Issue
             */
-            if(!empty($_POST['Registration']['visitor_type'])){
+            if(!empty($_POST['Registration']['visitor_type']))
+            {
 				$model->visitor_type = $_POST['Registration']['visitor_type'];             	
-            }else{
+            }
+            else
+            {
             	$model->visitor_type = NULL;             	
             }
 
 
-			if (!empty($_POST['Registration']['contact_state'])){
-
-				if ($model->save()) {
+			if (!empty($_POST['Registration']['contact_state']))
+			{
+				if ($model->save()) 
+				{
 					//**********************************************
 					$loginModel = new PreregLogin();
 
@@ -211,11 +217,13 @@ class PreregistrationController extends Controller
 						$this->redirect(array('preregistration/visitReason'));
 					}
 					//***********************************************
-				}else{
+				}
+				else{
 					$msg = print_r($model->getErrors(),1);
 					throw new CHttpException(400,'Data not saved because: '.$msg );
 				}
-            } else {
+            } 
+            else {
             	$model->contact_country = Visitor::AUSTRALIA_ID;
                 $error_message = "Please select state";
             }
@@ -274,6 +282,7 @@ class PreregistrationController extends Controller
 			if($model->validate())
 			{
 				$model->save();
+				$session['visit_id'] = $model->id;
 			}
 
 			$companyModel->mobile_number    = $_POST['Company']['mobile_number'];
@@ -318,6 +327,8 @@ class PreregistrationController extends Controller
 
 	public function actionAddAsic(){
 
+		$session = new CHttpSession;
+
 		$model = new Registration();
 
 		$model->scenario = 'asic';
@@ -334,13 +345,13 @@ class PreregistrationController extends Controller
 			if($_POST['Registration']['is_asic_verification']==0){
 				$this->redirect(array('preregistration/uploadPhoto'));
 			}
-			else{
+			else
+			{
 				if(!empty($model->selected_asic_id)){
 
-					$asicModel =
-						Registration::model()->findByPk(
-							$model->selected_asic_id
-						);
+					$asicModel = Registration::model()->findByPk($model->selected_asic_id);
+
+					$session['host'] = $asicModel->id;
 
 					$loggedUserEmail = 'Admin@perthairport.com.au';
 					$headers = "MIME-Version: 1.0" . "\r\n";
@@ -364,6 +375,9 @@ class PreregistrationController extends Controller
 						$model->key_string = hash('ripemd160', uniqid());
 
 						if ($model->save()) {
+
+							$session['host'] = $model->id;
+
 							$loggedUserEmail = 'Admin@perthairport.com.au';
 							$headers = "MIME-Version: 1.0" . "\r\n";
 							$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -493,11 +507,11 @@ class PreregistrationController extends Controller
 
 			$model->attributes=$_POST['UploadForm'];
 
-			$name       = $_FILES['UploadForm']['name']['image'];
+			$name  = $_FILES['UploadForm']['name']['image'];
 
 			if(!empty($name)){
 
-				$ext        = pathinfo($name, PATHINFO_EXTENSION);
+				$ext  = pathinfo($name, PATHINFO_EXTENSION);
 
 				$newNameHash = hash('adler32', time());
 
@@ -515,11 +529,20 @@ class PreregistrationController extends Controller
 					$photoModel->unique_filename = $newName;
 					$photoModel->relative_path = $relativeImgSrc;
 
+
+			        $file=file_get_contents($fullImgSource);
+			        $image = base64_encode($file);
+
+			        $photoModel->db_image = $image;
+
 					if($photoModel->save()){
-						$visitorModel =
-							Registration::model()->findByPk(
-								$session['visitor_id']
-							);
+						
+						if (file_exists($fullImgSource)) {
+				            unlink($fullImgSource);
+				        }
+
+						$visitorModel = Registration::model()->findByPk($session['visitor_id']);
+
 						$visitorModel->photo = $photoModel->id;
 						$visitorModel->save(true,array('photo'));
 						$session['imgName'] = $newName;
@@ -574,6 +597,8 @@ class PreregistrationController extends Controller
 				= $oClock == 'am' ? $model->time_in :
 				date("H:i", strtotime($model->time_in . " + 12 hour"));*/
 
+			$model->host = $session['host'];
+				
 			if($model->save()){
 				$this->redirect(array('preregistration/success'));
 			}

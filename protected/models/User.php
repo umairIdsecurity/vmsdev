@@ -546,15 +546,21 @@ class User extends VmsActiveRecord {
 //                        ->join('company c', 'u.tenant=c.id')
 //                        ->where('u.id=c.tenant and c.id !=1 and u.is_deleted = 0')
 //                        ->queryAll();
-         $criteria = new CDbCriteria();
-         $criteria->condition = "user0.is_deleted = 0 AND id0.is_deleted = 0";
-         return $tenant = Tenant::model()->with("user0", "id0")->findAll( $criteria );
-                        // Todo: Why you change that query it cause log visit bug
+
+        
+
+        $criteria = new CDbCriteria();
+        $criteria->condition = "user0.is_deleted = 0 AND id0.is_deleted = 0";
+        return $tenant = Tenant::model()->with("user0", "id0")->findAll( $criteria );
+                        
+        // Todo: Why you change that query it cause log visit bug
                         // if you change please check that log visit run normally, thanks
                         /*->select('c.id as id, c.name as name,c.tenant')
                         ->from('tenant t')
                         ->join('company c', 'u.company=c.id')
-                        ->where('t.id=c.id and c.id !=1 and u.is_deleted = 0')
+                        ->where('t.id=c.id and c.id !=1 and u.is_deleted = 0')*/
+
+        /*return Yii::app()->db->createCommand()
                         ->select('c.id as id, c.name as name, c.id as tenant')
                         ->from('tenant t')
                         ->join('company c', 't.id = c.id')
@@ -683,6 +689,10 @@ class User extends VmsActiveRecord {
             $criteria->condition = "tenant = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
         } else {
             $criteria->condition = "tenant = " . $session['tenant'] . " and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent IS NULL) AND is_deleted = 0";
+        }
+
+        if ($user->role == Roles::ROLE_SUPERADMIN) {
+            $criteria->condition = "is_deleted = 0";
         }
 
         $workstation = Workstation::model()->findAll($criteria);

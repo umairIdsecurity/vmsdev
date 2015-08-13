@@ -78,6 +78,18 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td>
+            <?php
+                /*$hours = '';
+                $minutes = '';
+                if(!empty($model->time_check_in) && !is_null($model->time_check_in)) 
+                {   
+                    echo $model->id."<br>";
+                    echo $model->time_check_in."<br>";
+                    echo $hours = date("h",strtotime($model->time_check_in))."<br>";
+                    echo $minutes = date("i",strtotime($model->time_check_in));
+                }*/
+            ?>
+
             <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;">
                 <?php for ($i = 1; $i <= 24; $i++): ?>
                     <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>

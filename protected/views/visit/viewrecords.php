@@ -72,6 +72,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
         jQuery('#Visit_date_check_out').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
     }",
+    'ajaxUpdateError' => "function(id, data) {window.location.replace('?r=site/login');}",
 
 	'columns'         => array(
 		array(

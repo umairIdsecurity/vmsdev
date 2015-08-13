@@ -49,7 +49,7 @@
 
             <?php
 
-            $ws=Workstation::model()->findAll();
+            $ws=Workstation::model()->findAll('is_deleted=0');
 
             $list=CHtml::listData($ws,'id','name');
 

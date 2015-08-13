@@ -196,13 +196,9 @@ class Registration extends CActiveRecord {
 
 
 			array('identification_document_no,contact_suburb', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
-
             //array('visitor_type', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
-
             array('date_of_birth', 'required' ,'on' => 'preregistration', 'message'=>'Please update your {attribute}'),
-            
             //array('contact_unit', 'required' ,'on' => 'preregistration', 'message'=>'Please enter unit / flat no.'),
-            
             array('identification_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Identification'),
             array('identification_document_expiry', 'required' ,'on' => 'preregistration', 'message'=>'Please select Expiry date'),
             array('contact_street_type', 'required' ,'on' => 'preregistration', 'message'=>'Please select Street type'),
@@ -410,7 +406,7 @@ class Registration extends CActiveRecord {
     public function beforeSave() {
         $this->email = trim($this->email);
 
-        $this->contact_country = self::AUSTRALIA_ID;
+        //$this->contact_country = self::AUSTRALIA_ID;
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;

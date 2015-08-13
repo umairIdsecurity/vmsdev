@@ -3,11 +3,11 @@
     <table class="table table-striped" border="0">
         <thead>
             <tr class="active">
-                <td>Date in</td>
-                <td>Name</td>
-                <td>Company</td>
-                <td>Date out</td>
-                <td>Status</td>
+                <td><b>Date in</b></td>
+                <td><b>Name</b></td>
+                <td><b>Company</b></td>
+                <td><b>Date out</b></td>
+                <td><b>Status</b></td>
             </tr>
         </thead>
         <tbody>
@@ -17,7 +17,7 @@
 		                <td><?php echo $q['first_name']; ?></td>
 		                <td><?php echo $q['name']; ?></td>
 		                <td><?php echo date("j-n-Y",strtotime($q['date_out'])); ?></td>
-		                <td><?php echo $q['status']; ?></td>
+		                <td><?php echo $q['status'] == "Pre-registered" ? "Preregistered":$q['status']; ?></td>
         			</tr>	
         	<?php } ?> 
         </tbody>

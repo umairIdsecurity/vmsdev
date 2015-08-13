@@ -194,11 +194,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             echo " class='hidden' ";
                                         }
                                         ?>>
-                                            <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
-                                                    name="Visitor[tenant]">
+                                            <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]">
                                                 <option value='' selected>Please select a tenant</option>
                                                 <?php
                                                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+
                                                 foreach ($allTenantCompanyNames as $key => $value) {
                                                     ?>
                                                     <option value="<?php echo $value['id']; ?>"
@@ -206,7 +206,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                         if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
-                                                        ?> ><?php echo $value['name']; ?></option>
+                                                        ?> ><?php echo $value["id0"]['name']; ?></option>
                                                 <?php
                                                 }
                                                 ?>
@@ -246,10 +246,18 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         <td>
                                             <?php
                                             // Show Default selected to Admin only
+                                            
+                                            $condition = '';
                                             if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                                
-                                                $list = VisitorType::model()->findAll('created_by = :c and t.tenant = :t and module = :m', [':c' => Yii::app()->user->id,':t' => Yii::app()->user->tenant, ':m' => "AVMS"]);
+                                                $condition .= "created_by =".Yii::app()->user->id." and t.tenant =".Yii::app()->user->tenant." and ";                          
+                                            }
 
+                                            $condition .= "module ='AVMS'";
+                                            
+                                            //$list = VisitorType::model()->findAll('created_by = :c and t.tenant = :t and module = :m', [':c' => Yii::app()->user->id,':t' => Yii::app()->user->tenant, ':m' => "AVMS"]);    
+                                            
+                                            $list = VisitorType::model()->findAll($condition);    
+                                            
                                                 echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                 echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
                                                 foreach( $list as $val ) {
@@ -259,9 +267,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                         echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
                                                     }
                                                 } echo "</select>";
-                                            }  else {
+
+                                            /*}  else {
+
                                                 echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"name like '{$model->profile_type}%'"));
-                                            }
+                                            }*/
 
                                             ?>
                                             <span class="required">*</span>
@@ -362,7 +372,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     } elseif(Yii::app()->controller->action->id == 'update' && $model->contact_country == Visitor::AUSTRALIA_ID ) {
                                         echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
                                     } else {
-                                        echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 62px;'));
+                                        echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 126px;'));
                                     } ?>
                                 </i>
                                 <select id="state_copy" style="display: none">
@@ -945,9 +955,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         } else {
             if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
                 /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
-                url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
+                url = "<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>" + $('#Visitor_tenant').val() + "&tenant_agent=" + $('#Visitor_tenant_agent').val();
             } else {
-                url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
+                url = "<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>";
             }
 
             $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
@@ -1143,13 +1153,13 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
     function getWorkstation() { /*get workstations for operator*/
 
-        var sessionRole = '<?php echo $session['role']; ?>';
+        var sessionRole = "<?php echo $session['role']; ?>";
         var superadmin = 5;
 
         if (sessionRole == superadmin) {
             var tenant = $("#Visitor_tenant").val();
         } else {
-            var tenant = '<?php echo $session['tenant'] ?>';
+            var tenant = "<?php echo $session['tenant'] ?>";
         }
 
         populateOperatorWorkstations(tenant);
@@ -1158,23 +1168,31 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     function populateOperatorWorkstations(tenant, value) {
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
+            url: "<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>" + tenant,
             dataType: 'json',
             data: tenant,
             success: function (r) {
+                
+               
                 $('#User_workstation option[value!=""]').remove();
 
-                $('#User_workstation').append('<option value="">Workstation</option>');
+                //$('#User_workstation').append('<option value="">Workstation</option>');
+
                 $.each(r.data, function (index, value) {
                     var str = '<option ';
-                    if (index == 0) str += 'selected';
+                    
+                    if (value.id == parseInt("<?php echo $model->visitor_workstation; ?>"))
+                    {
+                         str += 'selected';   
+                    }
+
                     str += ' value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>';
                     $('#User_workstation').append(str);
                 });
                 //$("#User_workstation").val(value);
-                if ($("#currentAction").val() == 'update') {
+                /*if ($("#currentAction").val() == 'update') {
                     $("#User_workstation").val("<?php echo $model->visitor_workstation; ?>");
-                }
+                }*/
             }
         });
     }

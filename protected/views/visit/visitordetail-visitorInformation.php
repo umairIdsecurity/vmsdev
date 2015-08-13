@@ -96,7 +96,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             </td>
                         </tr>
 
-                        <?php if ($asic) : ?>
+                        <?php //if ($asic) : ?>
+                        <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR) : ?>
+
                             <tr>
                                 <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                     Middle Name
@@ -105,7 +107,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     <?php echo $visitorForm->textField($visitorModel, 'middle_name', ['disabled' => $disabled]); ?>
                                 </td>
                             </tr>
+
                         <?php endif; ?>
+
                         <tr>
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Last Name
@@ -117,7 +121,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             </td>
                         </tr>
 
-                        <?php if ($asic) : ?>
+                        <?php //if ($asic) : ?>
+                        <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR) : ?>
+
                         <tr>
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Date of Birth
@@ -210,7 +216,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->getFullName(): ""]); ?>
+                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled]); ?>
                                 <br />
                                 <?php echo $visitorForm->error($company, 'contact'); ?>
                             </td>
@@ -221,7 +227,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->contact_number : ""]); ?>
+                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled]); ?>
                                 <br />
                                 <?php echo $visitorForm->error($company, 'mobile_number'); ?>
                             </td>
@@ -232,7 +238,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->email : ""]); ?>
+                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled]); ?>
                                 <br />
                                 <?php echo $visitorForm->error($company, 'email_address'); ?>
                             </td>
@@ -243,7 +249,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             </ul>
         </li>
         <?php endif; ?>
-        <?php if (!$asic) : ?>
+
+        <?php //if (!$asic) : ?>
+        <?php if ($model->card_type <= CardType::CONTRACTOR_VISITOR) : ?>
+
         <li class='has-sub' id="visitorTypeDetailsLi"><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
@@ -254,18 +263,22 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td width="110px;" style="padding-top:4px;"><?php echo $visitorForm->labelEx($model, 'visitor_type', array('style' => 'padding-left:0;')); ?></td>
                             <td>
                             <?php
-                                if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                                if ($session['role'] == Roles::ROLE_STAFFMEMBER)
+                                {
                                     ?>
                                     <select id="Visit_visitor_type" name="Visit[visitor_type]"
                                             class="visitortypedetails">
                                         <option selected="selected" value="2">Corporate Visitor</option>
                                     </select>
                                 <?php
-                                } else {
-                                      $types = VisitorType::model()->getFromCardType($model->card_type);
-                                      $types = CJSON::decode($types); 
-                                      if(count($types))
-                                      echo $visitorForm->dropDownList($model, 'visitor_type', CHtml::listData($types, 'id', 'name')  ,['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
+                                } 
+                                else {
+                                    
+                                    $types = VisitorType::model()->getFromCardType($model->card_type);
+                                    $types = CJSON::decode($types); 
+                                    
+                                    if(count($types))
+                                        echo $visitorForm->dropDownList($model, 'visitor_type', CHtml::listData($types, 'id', 'name')  ,['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>
                             <br />
@@ -277,7 +290,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             </ul>
         </li>
         <?php endif; ?>
-        <?php if (!$asic) : ?>
+
+        <?php //if (!$asic) : ?>
+        <?php if ($model->card_type <= CardType::CONTRACTOR_VISITOR) : ?>
+
         <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
             <ul>
                 <li>
@@ -286,7 +302,14 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td width="110px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                             <?php
-                                $reason = CHtml::listData(VisitReason::model()->findAll('module = "CVMS"'), 'id', 'reason');
+                                $cond = '';
+                                if($model->card_type > 4){
+                                    $cond .= "t.module='AVMS'";
+                                }else{
+                                    $cond .= "t.module='CVMS'";
+                                }
+
+                                $reason = CHtml::listData(VisitReason::model()->findAll($cond), 'id', 'reason');
                                 $reason['Other'] = 'Other';
                                 echo $visitorForm->dropDownList($model, 'reason', $reason, ['onchange' => 'ifSelectedIsOtherShowAddReasonDiv(this)', 'empty' => 'Please select a reason']);
                             ?>
@@ -361,7 +384,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             </ul>
         </li>
         <?php endif;?>
+
         <?php if ($asic) : ?>
+        <?php //if ($model->card_type > CardType::CONTRACTOR_VISITOR) : ?>
+
         <li class='has-sub' id="asicDetails1Li">
             <a href="#"><span>ASIC Sponsor</span></a>
             <ul>
@@ -520,7 +546,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             </ul>
         </li>
         <?php endif ?>
-        <?php if (!$asic) : ?>
+
+        <?php //if (!$asic) : ?>
+        <?php if ($model->card_type <= CardType::CONTRACTOR_VISITOR) : ?>
+
         <li class='has-sub' id='patientDetailsLi'><a href="#"><span>Patient Details</span></a>
             <ul>
                 <li>

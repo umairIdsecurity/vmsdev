@@ -72,7 +72,7 @@
 
 </style>
 <div class="page-content">
-    <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
+    <a href="<?php echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1></a>
 
     <!--  searching ASIC -->
     <div class="form-create-login">
@@ -159,6 +159,7 @@
                         'model'       => $model,
                         'attribute'   => 'asic_expiry',
                         'options'     => array(
+                            'minDate' => '0',
                             'dateFormat' => 'dd-mm-yy',
                         ),
                         'htmlOptions' => array(

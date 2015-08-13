@@ -104,7 +104,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     <div id="logVisitDiv">
                                         <?php
 
-                                        if ($asic) {
+
+                                        if ($model->card_type > CardType::CONTRACTOR_VISITOR){
+                                        //if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
                                                 'model'        => $model,
                                                 'visitorModel' => $visitorModel,

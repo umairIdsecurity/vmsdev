@@ -283,6 +283,8 @@ class VisitorType extends CActiveRecord {
 
         if ($visitorTypeId == NULL) {
             $VISITOR_TYPE_LIST=array(""=>'Select Visitor Type')+$VISITOR_TYPE_LIST;
+
+
             return $VISITOR_TYPE_LIST;
         } else {
             if ($visitorTypeId != 1) {

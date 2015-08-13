@@ -292,7 +292,7 @@ if ($this->action->id == 'update') {
                                                         if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
-                                                        ?> ><?php echo $value['name']; ?></option>
+                                                        ?> ><?php echo $value["id0"]['name']; ?></option>
                                                 <?php
                                                 }
                                                 ?>

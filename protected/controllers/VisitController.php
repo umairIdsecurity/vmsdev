@@ -79,7 +79,7 @@ class VisitController extends Controller {
             }
 
             if (!isset($visitParams['reason']) || empty($visitParams['reason'])) {
-                $visitParams['reason'] = 1;
+                $visitParams['reason'] = NULL;
             }
 
             $model->attributes = $visitParams;
@@ -1425,7 +1425,7 @@ class VisitController extends Controller {
                             $visitModel = new Visit();
                             $visitModel->card = isset($cardId) ? $cardId : '';
                             $visitModel->visitor = isset($visitorId) ? $visitorId : $visitor['id'];
-                            $visitModel->reason = isset($reason) ? $reason['id'] : 1;
+                            $visitModel->reason = isset($reason) ? $reason['id'] : NULL;
                             $visitModel->date_check_in = $row['F'];
                             $visitModel->date_check_out = $row['H'];
                             $visitModel->host = Yii::app()->user->id;

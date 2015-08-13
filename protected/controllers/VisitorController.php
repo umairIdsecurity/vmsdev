@@ -739,7 +739,7 @@ class VisitorController extends Controller {
                                 $visitInfo->visit_status = 3; //Closed visit History
                                 $visitInfo->workstation = $session['workstation'];                               
                                 $visitInfo->tenant = Yii::app()->user->tenant;
-                                $visitInfo->reason = '1';
+                                $visitInfo->reason = NULL;
                                 //$visitInfo->visitor_type = '2';
                     
                                 $visitInfo->save();

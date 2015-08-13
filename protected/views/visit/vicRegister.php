@@ -26,7 +26,7 @@ $form = $this->beginWidget('CActiveForm', array(
 <div class="row" style="margin-left: 224px">
     <?php echo 'Search: ';?>
     <?php echo $form->textField($model, 'filterProperties', array('size' => 40, 'maxlength' => 70));?>
-    <?php echo CHtml::submitButton('Search', array('style' => 'margin-bottom: 10px'));?>
+    <?php echo CHtml::submitButton('Search', array('style' => 'margin-bottom: 10px', 'class' => 'neutral'));?>
     <?php echo '&nbsp|&nbsp&nbsp';
 echo CHtml::link('Reset Filter', Yii::app()->createUrl($this->route));?>
 </div>

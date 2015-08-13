@@ -146,8 +146,8 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-default neutral" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary complete">Save changes</button>
         </div>
         <?php echo CHtml::endForm(); ?>
     </div>

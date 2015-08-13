@@ -31,7 +31,7 @@
         <?php } ?>
     </div>
     <div class="right">
-        <h2>
+        <h2 class="header-text">
             <?php if(isset($folder)) echo $folder->name; else echo 'Help Documents'; ?>
             <?php if(isset($folder)) {
                 if ($folder->name != 'Help Documents') { ?>
@@ -42,8 +42,8 @@
         </h2>
         <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: auto ;display:none">Couldn't delete files.</div>
         <form id="form-submit-files" method="post" class="upload-function" enctype="multipart/form-data">
-            <label class="btn btn-default btn-upload" id="upload_multi_label">Upload Files</label>
-            <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
+            <label class="btn btn-default btn-upload complete" id="upload_multi_label">Upload Files</label>
+            <button class="btn btn-default btn-delete neutral" id="btn_delete_file" disabled>Delete</button>
             <div class="preview-files" style="display: block">
                 <input multiple type="file" name="file[]" id="upload_multi" style="width: 0px;height: 0px;overflow: hidden" />
                 <!--<table class="table preview-files-list"></table>-->
@@ -52,7 +52,7 @@
             <div class="btn-submit" style="margin-top: 10px; margin-bottom: 5px; display: none">
                 <input name="File[folder_id]" value="<?php echo $folder->id; ?>" type="hidden"/>
                 <input name="File[user_id]" value="<?php echo Yii::app()->user->id;  ?>" type="hidden"/>
-                <input id="btn-submit-files" type="button" value="Upload">
+                <input id="btn-submit-files" type="button" value="Upload" class="actionForward">
             </div>
             <!--<table class="hidden">
                 <tbody id="previewFilesTemplate" >
@@ -162,8 +162,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary newfolder" id="btn-newfolder">Add</button>
+                <button type="button" class="btn btn-default neutral" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary newfolder complete" id="btn-newfolder">Add</button>
             </div>
         </div>
     </div>

@@ -77,7 +77,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
 <div class="dropdown" style="margin-left: 21px; text-align: left;">
 <?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
 
-    <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card
+    <button class="btn btn-info printCardBtn dropdown-toggle actionForward" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 1)) ?>">Print On Standard Printer</a></li>
@@ -85,7 +85,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 <?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) == strtotime($model->finish_date)): ?>
-    <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card
+    <button class="btn btn-info printCardBtn dropdown-toggle actionForward" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
         <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
             <li role="presentation">
@@ -93,7 +93,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
             </li>
         </ul>
 <?php else: ?>
-    <button class="complete btn btn-info printCardBtn dropdown-toggle" disabled="disabled" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card<span class="caret pull-right"></span>
+    <button class="btn btn-info printCardBtn dropdown-toggle actionForward" disabled="disabled" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card<span class="caret pull-right"></span>
     </button>
 <?php endif; ?>
 </div>
@@ -199,7 +199,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
 
     ?>
         <input type="hidden" name="updateVisitorDetailForm">
-        <button type="submit" name="updateVisitorDetailForm" id="updateVisitorDetailForm" class="greenBtn btnUpdateVisitorDetailForm">Update</button>
+        <button type="submit" name="updateVisitorDetailForm" id="updateVisitorDetailForm" class="greenBtn btnUpdateVisitorDetailForm actionForward">Update</button>
     </div>
 <?php $this->endWidget(); ?>
 

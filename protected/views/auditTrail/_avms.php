@@ -62,6 +62,9 @@
 				'view' => array(//the name {reply} must be same
 					'label' => 'View', // text label of the button
 					'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+					'options' => array(
+			            'class'=> 'view complete',
+			        ),
 				),
 
 			),

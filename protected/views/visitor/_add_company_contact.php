@@ -176,8 +176,8 @@ $session = new CHttpSession;
 
     </div>
     <div class="modal-footer">
-        <button class="btn" id="btnCloseModalAddCompanyContact" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button type="button" id="btnAddCompanyContact" class="btn btn-primary">Save</button>
+        <button class="btn neutral" id="btnCloseModalAddCompanyContact" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button type="button" id="btnAddCompanyContact" class="btn complete">Save</button>
         <button type="submit" id="btnAddCompanyContactConfirm" class="hidden"></button>
     </div>
 <?php $this->endWidget(); ?>

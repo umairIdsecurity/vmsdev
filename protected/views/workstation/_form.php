@@ -288,10 +288,10 @@ $session = new CHttpSession;
         <?php
         $arrayRuleButton = null;
         if($model->password){
-            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match : false");
+            $arrayRuleButton = array("class"=>"complete", "data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match : false");
         }
         else {
-            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false");
+            $arrayRuleButton = array("class"=>"complete", "data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false");
         }
 
         ?>

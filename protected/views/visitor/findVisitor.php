@@ -107,6 +107,7 @@ function displaySelectVisitorButton($visitorData) {
     return CHtml::link("Select Visitor", "javascript:void(0)", array(
                 "id" => $visitorData["id"],
                 "onclick" => "parent.closeAndPopulateField({$visitorData['id']})",
+                "class" => "actionForward"
                     )
     );
 }

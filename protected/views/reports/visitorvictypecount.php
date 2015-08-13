@@ -40,7 +40,7 @@
                     )); 
                 ?>
          
-	 <?php echo CHtml::submitButton('Filter'); ?>
+	 <?php echo CHtml::submitButton('Filter', array("class"=>"complete")); ?>
 	 
         <?php $this->endWidget()?>    
     </div>

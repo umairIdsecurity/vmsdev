@@ -44,7 +44,7 @@ for ($i = 0; $i < $arrayCount; $i++) {
 
             <tr >
                 <td style="text-align: center">
-                    <button id='submitBtn'>Continue</button>
+                    <button id='submitBtn' class="actionForward">Continue</button>
                     <input type="submit" value="Continue" name="submit" id='submit' style='display: none;'>
                 </td>
             </tr>

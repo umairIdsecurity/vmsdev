@@ -137,7 +137,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
                             
                             <!--  issue: CAV-794 onclick="checkIfActiveVisitConflictsWithAnotherVisit()" -->
-                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
+                            <button type="button" id='registerNewVisit' class='greenBtn actionForward'>Activate Visit</button>
                             
                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
@@ -150,12 +150,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $disabled = 'disabled';
                             }
                             ?>
-                            <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn">Preregister Visit</button>
+                            <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn actionForward">Preregister Visit</button>
                         <?php else:
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) : ?>
                                 <input type="submit" value="Back Date Visit" class="complete"/>
                             <?php else: ?>
-                                <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
+                                <button type="button" id="registerNewVisit" class="greenBtn actionForward">Activate Visit</button>
                                 <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
@@ -327,7 +327,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnIdentificationConfirm">Confirm</button>
+        <button type="button" class="btn btn-primary complete" id="btnIdentificationConfirm">Confirm</button>
     </div>
 </div>
 <!-- END Identification Modal -->

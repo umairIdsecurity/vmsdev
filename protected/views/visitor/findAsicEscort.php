@@ -75,11 +75,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
     )
 ));
 ?>
-<input id="btnBackSearchAsicEscort" class="AsicEscort-backBtn " type="button" onclick="javascript:backFillAsicEscort();return false;" value="Back">
+<input id="btnBackSearchAsicEscort" class="AsicEscort-backBtn neutral" type="button" onclick="javascript:backFillAsicEscort();return false;" value="Back" style="width: auto !important; height: auto !important;">
 <?php
 function displaySelectVisitorButton($visitorData) {
     return CHtml::link("Select", "javascript:void(0)", array(
             "id" => $visitorData["id"],
+            "class" => "actionForward",
             "style" => "text-align:center!important",
             "onclick" => "selectEscort({$visitorData['id']})",
         )

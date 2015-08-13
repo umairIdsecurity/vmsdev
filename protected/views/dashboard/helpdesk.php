@@ -15,9 +15,9 @@ $session = new ChttpSession;
 <div class="row buttons" style="margin-top: 30px;">
          <input type="text" name="txt_search"  id="txt_search" value="" placeholder="Example: How do I add a new visit?" style="margin-bottom: 0;
   margin-left: 50px; width: 500px;"  />
-		<input type="submit" name="searchFaq" id="searchFaq" value="Search" class="actionForward"  />
-        <input type="submit" name="showAllFaq" id="showAllFaq"  value="Show All"   />
-        <input type="submit" name="askAQuestion" value="Ask a Question" onclick="window.location.href='<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>'"  />
+		<input type="submit" name="searchFaq" id="searchFaq" value="Search" class="neutral"  />
+        <input type="submit" name="showAllFaq" id="showAllFaq"  value="Show All" class="complete"  />
+        <input type="submit" name="askAQuestion" class="complete" value="Ask a Question" onclick="window.location.href='<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>'"  />
 	</div>
 
 

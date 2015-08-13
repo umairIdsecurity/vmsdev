@@ -7,6 +7,39 @@ class SiteController extends Controller {
      */
     public $layout = '//layouts/noheaderLayout';
 
+    /**
+     * @return array action filters
+     */
+    public function filters()
+    {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+            'postOnly + delete', // we only allow deletion via POST request
+        );
+    }
+
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules()
+    {
+        return array(
+            array('allow', // allow user to perform all actions
+                'actions'=>array('captcha', 'page', 'index', 'error', 'contact', 'login', 'logout', 'forgot', 'reset', 'upload', 'shutdown'),
+                'users'=>array('*'),
+            ),
+            array('allow', // allow authenticated user to perform 'selectWorkstation' actions
+                'actions'=>array('selectWorkstation'),
+                'users'=>array('@'),
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
     public function actions() {
         return array(
             // captcha action renders the CAPTCHA image displayed on the contact page

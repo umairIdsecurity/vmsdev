@@ -1030,22 +1030,22 @@ function sendVisitorForm() {
         success: function (data) {
             
             if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-               // window.location = 'index.php?r=dashboard';
+                window.location = 'index.php?r=dashboard';
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-               // window.location = 'index.php?r=dashboard/viewmyvisitors';
+                window.location = 'index.php?r=dashboard/viewmyvisitors';
             } else {
-                //window.location = 'index.php?r=visitor/admin&vms=cvms';
+                window.location = 'index.php?r=visitor/admin&vms=cvms';
             }
         },
         error: function (data) {
-//            if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-//                window.location = 'index.php?r=dashboard';
-//            } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-//                window.location = 'index.php?r=dashboard/viewmyvisitors';
-//            } else {
-//                window.location = 'index.php?r=visitor/admin&vms=cvms';
-//            }
-//        }
+            if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                window.location = 'index.php?r=dashboard';
+            } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                window.location = 'index.php?r=dashboard/viewmyvisitors';
+            } else {
+                window.location = 'index.php?r=visitor/admin&vms=cvms';
+            }
+        }
     };
     requestRunning = true;
     $.ajax(ajaxOpts);

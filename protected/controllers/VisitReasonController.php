@@ -55,6 +55,10 @@ class VisitReasonController extends Controller {
         if (isset($_GET['register'])) {
             $isViewedFromModal = 1;
         }
+        $vms = 'avms';
+        if (isset($_GET['vms'])) {
+            $vms = $_GET['vms'];
+        }
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -67,7 +71,7 @@ class VisitReasonController extends Controller {
                     case 1:
                         break;
                     default:
-                        $this->redirect(array('admin'));
+                        $this->redirect(array('admin', 'vms' => $vms));
                 }
             }
         }

@@ -209,7 +209,7 @@ class Visitor extends CActiveRecord {
                 profile_type,
                 middle_name,
                 company,
-                staff_id
+                staff_id,
                 identification_type,
                 identification_country_issued,
                 identification_document_no,
@@ -239,7 +239,7 @@ class Visitor extends CActiveRecord {
                 alternative_identification,
                 verifiable_signature,
                 escort_flag,
-                key_string
+                key_string,
                 is_under_18,
                 under_18_detail',
                 'safe'

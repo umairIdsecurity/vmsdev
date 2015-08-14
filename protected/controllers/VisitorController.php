@@ -669,16 +669,18 @@ class VisitorController extends Controller {
                     $csvFile = CUploadedFile::getInstance($model,'file');  
                     $tempLoc = $csvFile->getTempName();
                     $handle = fopen($tempLoc, "r");
-                    $i = 1; $duplicates = false;
+                    $i = 0; $duplicates = false;
                     
                     while( $line = fgetcsv($handle, 2000) ){
                         
                         if( !isset($line[12]))
                            $this->redirect(array("visitor/importVisitHistory"));
                         //Dont insert first row as it will be title
+                        $i = $i + 1;
                         if($i == 1) {
-                           $i++; continue;
+                           continue;
                         }
+
                         // Find Duplicate Visitor if any
                         $visitor = Visitor::model()->find(" ( first_name = '{$line[0]}' AND last_name = '{$line[1]}' ) OR email  = '{$line[2]}'");
                         
@@ -688,7 +690,7 @@ class VisitorController extends Controller {
                             $duplicates = $importVisits->saveVisitors($line);
                     
                         } else {
-                            // If not a duplicate Visitor then Add it to Visitor and Visits tables
+                               // If not a duplicate Visitor then Add it to Visitor and Visits tables
                             $visitorInfo = new Visitor;
                             $visitorInfo->first_name = $line[0];
                             $visitorInfo->last_name  = $line[1];
@@ -727,23 +729,21 @@ class VisitorController extends Controller {
                                 // Insert Visit Now
                                 $visitInfo = new Visit;
                                 $visitInfo->visitor = $visitorInfo->id;
-                                //$visitInfo->visitor_type = '2'; // Corporate
                                 $visitInfo->visitor_status = 1;
                                 $visitInfo->card = isset($card) ? $card->id:"";
                                 $visitInfo->host = Yii::app()->user->id;
                                 $visitInfo->created_by = Yii::app()->user->id;
-                                $visitInfo->date_check_in  = date("Y-m-d", strtotime($line[3]) );
+                                $visitInfo->date_check_in = date("Y-m-d", strtotime($line[3]));
                                 $visitInfo->time_check_in = $line[4];
                                 $visitInfo->time_check_out = $line[6];
-                                $visitInfo->date_check_out = date("Y-m-d", strtotime($line[5]) );
+                                $visitInfo->date_check_out = date("Y-m-d", strtotime($line[5]));
                                 $visitInfo->visit_status = 3; //Closed visit History
                                 $visitInfo->workstation = $session['workstation'];                               
                                 $visitInfo->tenant = Yii::app()->user->tenant;
                                 $visitInfo->reason = NULL;
-                                //$visitInfo->visitor_type = '2';
                     
                                 $visitInfo->save();
-                            }                    
+                            }                 
                         }
                     
                    }  

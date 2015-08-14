@@ -181,31 +181,30 @@ class ImportVisitor extends CActiveRecord
      * @return booleanSa
      */
     public function saveVisitors( $line ) {
-        // Insert ONLY DUPLICATE Into Temp table to resolve duplicate visitor record. 
-                                           
-                            $this->first_name = $line[0];
-                            $this->last_name = $line[1];
-                            $this->email = $line[2];
-                            $this->check_in_date  = date("Y-m-d", strtotime($line[3]));
-                            $this->check_in_time  = $line[4];                           
-                            $this->check_out_date = date("Y-m-d", strtotime($line[5]) );
-                            $this->check_out_time = $line[6];
-                            $this->company = $line[7];
-                            $this->position = $line[8];
-                            $this->card_code = $line[9];
-                            $this->date_printed = date("Y-m-d", strtotime($line[10]));
-                            $this->date_expiration = date("Y-m-d", strtotime($line[11]));
-                            //$this->vehicle = $line[12];
-                            $this->contact_number = $line[12];
-                            
-                            $this->imported_by = Yii::app()->user->id;
-                            $this->import_date = date("Y-m-d");
-                            
-                            if( $this->validate() ) {
-                                $this->save();
-                                return true; // Duplicate found. Just a flag to redirect admin to resolve duplicate entries. 
-                            } else 
-                                return false;
+        // Insert ONLY DUPLICATE Into Temp table to resolve duplicate visitor record.                
+        $this->first_name = $line[0];
+        $this->last_name = $line[1];
+        $this->email = $line[2];
+        $this->check_in_date  = date("Y-m-d", strtotime($line[3]));
+        $this->check_in_time  = $line[4];                           
+        $this->check_out_date = date("Y-m-d", strtotime($line[5]) );
+        $this->check_out_time = $line[6];
+        $this->company = $line[7];
+        $this->position = $line[8];
+        $this->card_code = $line[9];
+        $this->date_printed = date("Y-m-d", strtotime($line[10]));
+        $this->date_expiration = date("Y-m-d", strtotime($line[11]));
+        //$this->vehicle = $line[12];
+        $this->contact_number = $line[12];
+        
+        $this->imported_by = Yii::app()->user->id;
+        $this->import_date = date("Y-m-d");
+        
+        if( $this->validate() ) {
+            $this->save();
+            return true; // Duplicate found. Just a flag to redirect admin to resolve duplicate entries. 
+        } else 
+            return false;
     }
 
     public function behaviors()

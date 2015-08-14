@@ -309,30 +309,38 @@ if ($this->action->id == 'update') {
         ?>
     </div>
 
-    <?php $this->endWidget(); ?>
     <div class="page-header">
       <h1>Organisation Contacts</h1>
     </div>
-    <?php if (isset($contacts) && !empty($contacts)): ?>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Email</th>
-                    <th>Number</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach($contacts as $contact): ?>
-                <tr>
-                    <td><?php echo $contact->getFullName(); ?></td>
-                    <td><?php echo $contact->email; ?></td>
-                    <td><?php echo $contact->contact_number; ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+    <?php
+    $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'contacts-grid',
+        'dataProvider' => new CArrayDataProvider($contacts),
+        'enableSorting' => false,
+        'afterAjaxUpdate' => "
+        function(id, data) {
+            $('th > .asc').append('<div></div>');
+            $('th > .desc').append('<div></div>');
+        }",
+        'columns' => array(
+            array(
+                'name' => 'User',
+                'value' => '$data->getFullName()',
+            ),
+            array(
+                'name' => 'email',
+                'header' => 'Email',
+            ),
+            array(
+                'name' => 'contact_number',
+                'header' => 'Number',
+            ),
+        ),
+    ));
+    ?>
+
+<?php $this->endWidget(); ?>
+    
 
 </div><!-- form -->
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">

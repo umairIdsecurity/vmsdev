@@ -55,7 +55,7 @@ if (isset($host)) {
         </div>
         <div class="card-footer">
             <div class="logo-company"><img src="<?= $companyLogo?>"></div>
-            <div class="full-name">
+            <div class="full-name" style="word-break: break-word;width: 118px;overflow: hidden;">
                 <div class="first-name"><?=$host_first_name?></div>
                 <div class="last-name"><?=$host_last_name?></div>
             </div>
@@ -181,7 +181,7 @@ if (isset($host)) {
         }
         #visitorDetailDiv .editImageBtn {
             float: left;
-            margin-left: 31px !important;
+            margin-left: 20px !important;
             position: relative;
             z-index: 1;
         }

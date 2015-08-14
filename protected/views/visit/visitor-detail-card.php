@@ -65,7 +65,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
 
 
 <?php if ($visitorModel->photo != '') : ?>
-<input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+<input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
 <?php endif; ?>
 

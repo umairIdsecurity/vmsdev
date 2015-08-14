@@ -313,7 +313,7 @@ $form = $this->beginWidget('CActiveForm', array(
                 $label = 'Please select a Tenant';
             }
             else {
-                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');   
+                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name'); 
             }
              if ($this->action->id == 'update') {
                 $companyId = User::model()->getCompany($currentlyEditedUserId);
@@ -327,7 +327,7 @@ $form = $this->beginWidget('CActiveForm', array(
             }
 
             if (isset($companyId)) {
-                if (!in_array($companyId, $companyList)) {
+                if (!in_array($companyId, $companyList) && $companyId != Yii::app()->user->tenant) {
                     $companyList[$companyId] = Company::model()->getCompanyName($companyId);
                 }
             }
@@ -349,7 +349,7 @@ $form = $this->beginWidget('CActiveForm', array(
             <?php
             $criteria = new CDbCriteria();
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                $criteria->addCondition("tenant=" . $session['id'] . " and id!= 1 and id!=" . $session['company']);
+                $criteria->addCondition("tenant=" . $session['tenant'] . " and id!= 1 and id!=" . $session['company']);
             } else {
                 $criteria->addCondition("id!= 1");
             }

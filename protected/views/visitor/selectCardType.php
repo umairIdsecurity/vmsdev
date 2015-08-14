@@ -93,8 +93,13 @@ if (!$cardTypeWorkstationModel) {
                 success: function (r) {
                     if(r) {
                         var opt = '<option value ="">Select Visitor Type</option>';
+                        var isDefault;
                         $.each(r, function (index, value) {
-                            opt += '<option value="' + value.id + '">Visitor Type: ' + value.name + '</option>';
+                            
+                            isDefault = "";
+                            if( value.is_default_value )
+                                isDefault = "selected";
+                            opt += '<option value="' + value.id + '" '+ isDefault +'>Visitor Type: ' + value.name + '</option>';
                         });
                         $('#Visitor_visitor_type').html(opt);
                     }

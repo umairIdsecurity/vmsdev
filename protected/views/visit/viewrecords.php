@@ -125,7 +125,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'filter'      => $date_check_in,
 			'type'        => 'html',
 			'htmlOptions' => array('width' => '100px'),
-			'value'       => 'formatDate($data->date_check_in, $data->visit_status)',
+			//'value'       => 'formatDate($data->date_check_in, $data->visit_status)',
 		),
 		array(
 			'name'        => 'time_check_in',
@@ -139,7 +139,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'type'        => 'html',
 			'filter'      => $date_check_out,
 			'htmlOptions' => array('width' => '110px'),
-			'value'       => 'formatDate($data->date_check_out, $data->visit_status)',
+			//'value'       => 'formatDate($data->date_check_out, $data->visit_status)',
 		),
 		array(
 			'name'        => 'time_check_out',

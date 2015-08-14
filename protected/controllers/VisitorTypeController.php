@@ -153,6 +153,7 @@ class VisitorTypeController extends Controller {
                         // add any new ones
                         if (is_array($card_types)) {
                            $vctype = VisitorTypeCardType::model()->find("visitor_type =". $model->id);   
+                           if( $vctype )
                            $vctype->deleteAll();
                             foreach ($card_types as $value) {
                                 //if (!in_array($value, $found)) {

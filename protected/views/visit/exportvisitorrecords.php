@@ -69,7 +69,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'visitor_type',
-            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+            'value' => 'VisitorType::model()->returnVisitorType($data->visitor_type)',
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(

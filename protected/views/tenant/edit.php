@@ -277,9 +277,7 @@ $currentLoggedUserId = $session['id'];
 
                                         <td>
                                             <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
-                                             
-
-                                            <?php  echo $form->error($model,'password'); ?>
+                 
 
                                         </td>
                                     </tr>
@@ -288,7 +286,8 @@ $currentLoggedUserId = $session['id'];
                                         <td>
                                             <input placeholder="Repeat Password" type="password" id="TenantForm_cnf_password"  name="TenantForm[cnf_password]">
                                             
-                                            <?php echo $form->error($model,'cnf_password'); ?>
+                                             <?php // echo $form->error($model,'password'); ?>
+                                            <div class="hidingMsgPassword"> Password must be repeated exactly. </div>
 
                                         </td>
 
@@ -360,6 +359,25 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+    
+     
+ $('.hidingMsgPassword').hide();
+    $('#TenantForm_password, #TenantForm_cnf_password').on('keyup', function () {
+        if ($('#TenantForm_password').val() == $('#TenantForm_cnf_password').val()) {    
+
+            $('#TenantForm_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});         
+            $('#TenantForm_cnf_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
+            $('.hidingMsgPassword').hide();
+        } else {
+            $('.hidingMsgPassword').css("color","red");
+            $('.hidingMsgPassword').show();
+            $('#TenantForm_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
+            $('#TenantForm_cnf_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
+       }
+            
+    });
+    
+    
     function generatepassword() {
 
         $("#random_password").val('');

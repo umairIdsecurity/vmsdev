@@ -72,7 +72,7 @@ class TenantForm extends CFormModel
              array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id', 'params'=>array(
                 ':is_deleted'=>0, ':id'=>Yii::app()->user->id
                 )), 'on'=>'edit_form'),
-            // array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'edit_form'),
+           array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'edit_form'),
             // End Edit Tenant Rules 
             
             array('email', 'filter', 'filter' => 'trim'),

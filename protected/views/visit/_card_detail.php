@@ -12,8 +12,18 @@ if ($tenant) {
         $companyCode = "N/A";
     }
 
-    $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+    // $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
     $userPhoto =  Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+
+    $id = @is_null($company->logo)?1:$company->logo;
+
+    $photo = Photo::model()->findByPk($id);
+    if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
+        $companyLogo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+    } else {
+         $companyLogo = 'data:image/'.pathinfo($photo->filename, PATHINFO_EXTENSION).';base64,'.$photo->db_image;
+    }
+
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }
@@ -46,8 +56,8 @@ if ($card) {
                 <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p>
         </div>
         <div class="box-card-logo">
-            <div style="width:134px; overflow: hidden;  min-height:34px; max-height: 34px;   margin-left: -85px; margin-top:2px; display:inline-block;">
-                <img border="1" style="height:34px !important;width:100%;" src="<?= $companyLogo; ?>">
+            <div style="width:134px; overflow: hidden;  min-height:34px; max-height: 40px;margin-top:2px; display:block;">
+                <img border="1" style="height:38px !important;width:auto;" src="<?= $companyLogo; ?>">
             </div>
         </div>
     </div>

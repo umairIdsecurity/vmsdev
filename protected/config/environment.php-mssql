@@ -1,0 +1,14 @@
+<?php
+
+return array(
+    'name' => 'Visitor Management System ',
+    'components' => array(
+        'db' => array(
+            'connectionString' => 'sqlsrv:Server=localhost;Database=vmsdev',
+            'username' => 'user_vmsdev',
+            'password' => 'HFz7c9dHrmPqwNGr',
+        )
+    )
+);
+
+?>

@@ -46,7 +46,7 @@ $userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model-
 if ($userPhoto  == Photo::model()->defaultAbsoluteImage() ){
     $userPhoto = null;
 }*/
-
+$a = $model->card;
 $card = CardGenerated::model()->findByPk($model->card);
 if ($card) {
     $cardCode = $card->card_number;
@@ -105,6 +105,25 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         $backText = NULL;
     }
 }
+$labelWidth   = 54.0;
+$labelHeight  = 85.5;
+$imageWidth   = 31.0;
+$imageHeight  = 42.0;
+$imagePadLeft = 03.5;
+$imagePadTop  = 03.5;
+$footerHeight = 08.0;
+
+$labelHeightPx = 415;
+$labelWidthPx = 258;
+
+$imageWidthPx   = ($imageWidth/$labelWidth) * $labelWidthPx;
+$imageHeightPx  = ($imageHeight/$labelHeight) * $labelHeightPx;
+$imagePadLeftPx = ($imagePadLeft/$labelWidth) * $labelWidthPx;
+$imagePadTopPx  = ($imagePadTop/$labelHeight) * $labelHeightPx;
+$footerHeightPx = ($footerHeight/$labelHeight) * $labelHeightPx;
+
+$fontScale = 2;
+
 
 //die;
 ?>
@@ -116,10 +135,9 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
 </head>
 <style>
     .card-print {
-        /*width:256px;*/
-        width:205px;
-        /*height:405px;*/
-        height:325px;border:1px solid #000;
+        width:<?php echo $labelWidthPx; ?>px;
+        height:<?php echo $labelHeightPx; ?>px;
+        /*border:1px solid #000;*/
         border-radius:20px;
         background:<?= $bgcolor; ?>;
         position: relative;
@@ -127,16 +145,17 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     }
 
     .card-print .img-visitor {
-        width:135px;
-        height:180px;
+        width:<?php echo $imageWidthPx; ?>px;
+        height:<?php echo $imageHeightPx; ?>px;
         background:#fff;
-        margin-left:15px;
-        margin-top:13px;
+        margin-left:<?php echo $imagePadLeftPx; ?>px;
+        margin-top:<?php echo $imagePadTopPx; ?>px;
         border:1px solid #000;
+
     }
     .card-print .img-visitor img {
-        width:135px;
-        height:180px;
+        width:<?php echo $imageWidthPx; ?>px;
+        height:<?php echo $imageHeightPx; ?>px;
         border: none;
     }
 
@@ -148,12 +167,12 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         margin-left: 5px;
         line-height: 32px;
         margin-top: 3px;*/
-        font-size: 15px;
+        font-size: <?php echo 20*$fontScale ?>px;
         font-weight: bold;
         text-align: left;
         margin-bottom: 0px;
         margin-left: 5px;
-        line-height: 12px;
+        line-height: <?php echo 20*$fontScale ?>px;
         margin-top: 0px;
     }
 
@@ -162,7 +181,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         font-size: 60px;
         vertical-align: top;*/
         margin-top:0px;
-        font-size: 40px;
+        font-size: <?php echo 40*$fontScale ?>px;
         vertical-align: top;
     }
 
@@ -178,11 +197,11 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         line-height:24px;
         margin:5px 0 3px 0;
         text-transform: capitalize;*/
-        font-size:12px;
+        font-size:<?php echo 12*$fontScale ?>px;
         width:205px;
         float:left;
         font-weight:bold;
-        line-height:12px;
+        line-height:<?php echo 12*$fontScale ?>px;
         margin:2px 0 1px 0;
         text-transform: capitalize;
     }
@@ -194,7 +213,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         /*font-size:25px;
         font-weight:bold;
         margin:0 0 10px 0;*/
-        font-size:12px;
+        font-size:<?php echo 12*$fontScale ?>px;
         font-weight:bold;
         margin:0;
     }
@@ -209,7 +228,8 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         background:#fff;
         border-bottom-right-radius: 20px;
         border-bottom-left-radius: 20px;
-        width:206px; height:40px;
+        width:<?php echo $labelWidthPx; ?>px;
+        height:<?php echo $footerHeightPx; ?>px;
         padding-top: 8px;
         position: absolute;
         bottom: 1px; left: 1px;
@@ -220,8 +240,8 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         margin-left:15px;
         margin-top:2px;
         display:inline-block;*/
-        width:69px;
-        height:30px;
+        width:<?php echo $labelWidthPx; ?>px;
+        height:<?php echo $footerHeightPx; ?>px;
         margin-left:15px;
         margin-top:2px;
         display:inline-block;
@@ -285,7 +305,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                                 <p class="card-visit-info">
                                     <span class="first-name"><?=$first_name ?></span><br/>
                                     <span class="last-name"><?=$last_name ?></span><br/>
-                                    <span class="card-code"><?= $cardCode ?></span>
+                                    <span class="card-code"><?= $cardCode.XXX ?></span>
                                 </p>
                             </div>
                             <div class="card-footer">
@@ -371,10 +391,12 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
             </div>
 
         </div>
+        <?php if($backText != ''){ ?>
         <!--Box 2-->
         <div class="card-text">
             <div class="card-text-content"><?= $backText ?></div>
         </div>
+        <?php } ?>
     <?php
     }
     ?>

@@ -24,7 +24,7 @@ class TenantController extends Controller {
                 'expression' => 'CHelper::check_module_authorization("Admin")'
             ),
             array('allow', // allow user if same company
-                'actions' => array('update'),
+                'actions' => array('update', 'edit'),
                 'expression' => 'Yii::app()->controller->isUserAllowedToUpdate(Yii::app()->user)',
             ),
             array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
@@ -238,6 +238,47 @@ class TenantController extends Controller {
         ));
     }
     
+    /**
+     * Tenant Edit for Tenant Admin 
+     */
+    public function actionEdit($id) {
+        
+        $model = Tenant::model()->with("id0", "user0")->find("t.id = ".$id . " AND user0.id = ".Yii::app()->user->id);
+        $modelForm = new TenantForm;
+        $this->performAjaxValidation($modelForm);
+        
+        if (isset($_POST['TenantForm'])) {
+            // Save Updated Data
+           $company = Company::model()->findByPk($model->id);
+           $company->name = $_POST['TenantForm']['tenant_name'];
+           $company->code = $_POST['TenantForm']['tenant_code'];
+           $company->save(false); // Dont validate as we have already Validated it.
+           
+           //User Tenant user data
+           $user = User::model()->findByPk($model->user0[0]['id']);
+           $user->first_name = $_POST['TenantForm']['first_name'];
+           $user->last_name  = $_POST['TenantForm']['last_name'];
+           $user->email = $_POST['TenantForm']['email'];
+           $user->contact_number = $_POST['TenantForm']['contact_number'];
+           $user->timezone_id = $_POST['TenantForm']['timezone_id'];
+          //Save Password. 
+           if( !empty( $_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] == $_POST['TenantForm']['cnf_password']){
+                 $user->password = CPasswordHelper::hashPassword($_POST['TenantForm']['password']);          
+           }
+           //Save Photo
+            if (isset($_POST['TenantForm']['photo']) && $_POST['TenantForm']['photo'] != "") {
+                $user->photo = $_POST['TenantForm']['photo'];
+            } 
+           $user->save(false); 
+           Yii::app()->user->setFlash("success", "Organization Settings Updated Succcessfully");
+           $this->redirect(array("tenant/edit/&id=".$id));
+        } 
+         
+         $this->render('edit', array(
+            'model' => $modelForm,
+            'TenantModel'=>$model,
+        ));
+    }
 /**
  * Create and save new Workstation for newly created Tenant
  * @param array $post 
@@ -272,9 +313,17 @@ class TenantController extends Controller {
     {
         if(isset($_POST['ajax']) && $_POST['ajax']==='tenant-form')
         {
+            $model->scenario = "save";
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+         if(isset($_POST['ajax']) && $_POST['ajax']==='tenant-edit-form')
+        {
+            $model->scenario = "edit_form"; 
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+        
     }
 
     private function isCompanyUnique($sessionTenant, $sessionRole, $companyName, $selectedTenant) {

@@ -395,9 +395,10 @@ class SiteController extends Controller {
             //******************************************************************
             if(!isset($session['timezone']) || empty($session['timezone'])){
                 $wokstationTimezone = Workstation::model()->with('workstationTimezones')->find('t.tenant='.Yii::App()->user->tenant.' and t.id='.$_POST['userWorkstation']);
+
                 if(!empty($wokstationTimezone)){
                     $attributes = $wokstationTimezone->attributes;
-                    $timezone=$attributes['timezone_value'];
+                    $timezone=Timezone::model()->findByPk($attributes['timezone_id'])->timezone_value;
                     $session['timezone'] = $timezone;
                 }else{
                     $this->checkTimezone();

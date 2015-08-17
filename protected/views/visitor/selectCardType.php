@@ -84,7 +84,6 @@ if (!$cardTypeWorkstationModel) {
                 e.stopImmediatePropagation();
                 return false;
             }
-
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('VisitorType/getFromCardType&cardtype='); ?>' + card_type_value,
@@ -97,7 +96,7 @@ if (!$cardTypeWorkstationModel) {
                         $.each(r, function (index, value) {
                             
                             isDefault = "";
-                            if( value.is_default_value )
+                            if( value.is_default_value == "1" )
                                 isDefault = "selected";
                             opt += '<option value="' + value.id + '" '+ isDefault +'>Visitor Type: ' + value.name + '</option>';
                         });

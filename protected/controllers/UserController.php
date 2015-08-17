@@ -100,7 +100,7 @@ class UserController extends Controller
             }
             // User Allowed Module
             $model->allowed_module = Yii::app()->user->allowed_module;
-                    
+            $model->isNewRecord = 1;        
             if ($userService->save($model, Yii::app()->user, $workstation)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
                 if (Yii::app()->request->isAjaxRequest) {

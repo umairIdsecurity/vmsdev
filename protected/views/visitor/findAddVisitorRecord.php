@@ -419,7 +419,7 @@ $model->identification_country_issued = 13;
                                 <td>
 
                                     <?php
-                                    if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
+                                   // if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                         
                                         //$list = VisitorType::model()->findAll('created_by = :c and tenant = :t and module = :m', [':c' => Yii::app()->user->id,':t' => Yii::app()->user->tenant, ':m' => CHelper::get_module_focus()]);
 
@@ -434,14 +434,15 @@ $model->identification_country_issued = 13;
                                             }
                                         } 
                                         echo "</select>";
-                                    } else {
-
-                                        echo $form->dropDownList($model, 'visitor_type',
-                                        VisitorType::model()->getCardTypeVisitorTypes(null,""), array(
-                                            'onchange' => 'showHideHostPatientName(this)',
-                                            //'prompt' => 'Select Visitor Type',
-                                        ));
-                                    }
+//                                    } else {
+//
+//                                        echo $form->dropDownList($model, 'visitor_type',
+//                                        VisitorType::model()->getCardTypeVisitorTypes(5), array(
+//                                            'onchange' => 'showHideHostPatientName(this)',
+//                                            'id'=>'Visitor_visitor_type2'
+//                                            //'prompt' => 'Select Visitor Type',
+//                                        ));
+//                                    }
                                     
                                     ?>
                                     <span class="required">*</span>

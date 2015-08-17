@@ -313,30 +313,32 @@ if ($this->action->id == 'update') {
       <h1>Organisation Contacts</h1>
     </div>
     <?php
-    $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'contacts-grid',
-        'dataProvider' => new CArrayDataProvider($contacts),
-        'enableSorting' => false,
-        'afterAjaxUpdate' => "
-        function(id, data) {
-            $('th > .asc').append('<div></div>');
-            $('th > .desc').append('<div></div>');
-        }",
-        'columns' => array(
-            array(
-                'name' => 'User',
-                'value' => '$data->getFullName()',
+    if (isset($contacts) && !empty($contacts)) {
+        $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'contacts-grid',
+            'dataProvider' => new CArrayDataProvider($contacts),
+            'enableSorting' => false,
+            'afterAjaxUpdate' => "
+            function(id, data) {
+                $('th > .asc').append('<div></div>');
+                $('th > .desc').append('<div></div>');
+            }",
+            'columns' => array(
+                array(
+                    'name' => 'User',
+                    'value' => '$data->getFullName()',
+                ),
+                array(
+                    'name' => 'email',
+                    'header' => 'Email',
+                ),
+                array(
+                    'name' => 'contact_number',
+                    'header' => 'Number',
+                ),
             ),
-            array(
-                'name' => 'email',
-                'header' => 'Email',
-            ),
-            array(
-                'name' => 'contact_number',
-                'header' => 'Number',
-            ),
-        ),
-    ));
+        ));
+    }
     ?>
 
 <?php $this->endWidget(); ?>

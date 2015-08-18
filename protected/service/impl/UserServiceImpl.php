@@ -62,7 +62,7 @@ class UserServiceImpl implements UserService {
          * if agent admin logged in , all created 
          * * */
         $company = Company::model()->findByPk($user->company);
-
+        $company->id = Yii::app()->user->tenant;
         if (Yii::app()->controller->action->id == 'create') {
 
             switch ($userLoggedIn->role) {

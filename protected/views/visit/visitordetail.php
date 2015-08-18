@@ -514,7 +514,7 @@ $this->renderPartial('visithistory', array('model' => $model,
         }
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",
+            url: '<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id . "&new_created=" . $new_created)); ?>',
             data: visitForm,
             success: function(data) {
                 if (data && !isNaN(data)) {

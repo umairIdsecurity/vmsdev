@@ -143,7 +143,7 @@ class VisitController extends Controller {
 
                     $this->renderPartial('_email_asic_verify', array('visitor' => $visitor, 'host' => $host));
                 }
-                $this->redirect(array('visit/detail', 'id' => $model->id));
+                $this->redirect(array('visit/detail', 'id' => $model->id, 'new_created' => true));
             }
         }
         $this->render('create', array(
@@ -312,7 +312,7 @@ class VisitController extends Controller {
      *   
      */
 
-    public function actionDetail($id) {
+    public function actionDetail($id, $new_created=NULL) {
         $session = new CHttpSession;
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
@@ -581,7 +581,8 @@ class VisitController extends Controller {
             'newPatient'    => $newPatient,
             'newHost'       => $newHost,
             'visitCount'    => $visitCount,
-            'cardTypeModel' => $cardTypeModel
+            'cardTypeModel' => $cardTypeModel,
+            'new_created' => $new_created
         ));
     }
 
@@ -983,7 +984,16 @@ class VisitController extends Controller {
         return true;
     }
 
-    public function actionDuplicateVisit($id, $type = '') {
+    public function actionDuplicateVisit($id, $type = '', $new_created = NULL) {
+        if($new_created){
+            $visitService          = new VisitServiceImpl;
+            $session               = new CHttpSession;
+            $model = $this->loadModel($id);
+            $model->attributes = Yii::app()->request->getPost('Visit');
+            $model->save();
+            echo $model->id;
+            Yii::app()->end();
+        }
         $visitService          = new VisitServiceImpl;
         $session               = new CHttpSession;
         $model                 = $this->loadModel($id); // record that we want to duplicate

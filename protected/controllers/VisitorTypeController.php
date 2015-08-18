@@ -26,10 +26,17 @@ class VisitorTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete','adminAjax','visitorsByWorkstationReport','visitorsByTypeReport', 'index','GetFromCardType'),
+                'actions' => array('create', 'update', 'admin', 'delete','adminAjax','visitorsByWorkstationReport','visitorsByTypeReport', 'index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
+            
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('GetFromCardType'),
+                'users' => array("@"),
+           
+            ),
+            
             array('deny', // deny all users
                 'users' => array('*'),
             ),
@@ -137,8 +144,8 @@ class VisitorTypeController extends Controller {
                             $card_types = array();
 
                         $found = array();
-                        $existing = VisitorType::model()->getActiveCardTypes($model->id);
-
+                        $existing = VisitorType::model()->getActiveCardTypes($id);
+ 
                         if (is_array($existing)) {
 
                             // delete card types not in the array
@@ -152,9 +159,10 @@ class VisitorTypeController extends Controller {
 
                         // add any new ones
                         if (is_array($card_types)) {
-                           $vctype = VisitorTypeCardType::model()->find("visitor_type =". $model->id);   
-                           if( $vctype )
-                           $vctype->deleteAll();
+                           $vctype = VisitorTypeCardType::model()->find("visitor_type =". $id);   
+                           if( $vctype ) { 
+                               VisitorTypeCardType::model()->deleteAll("visitor_type =". $id);
+                           }
                             foreach ($card_types as $value) {
                                 //if (!in_array($value, $found)) {
                                     $new_row = new VisitorTypeCardType;

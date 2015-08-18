@@ -238,6 +238,7 @@ class CardGeneratedController extends Controller {
         
         #data of user of card
         $model = Visit::model()->findByPk($id);
+        $a = $model->card;
 
         $visitorModel = Visitor::model()->findByPk($model->visitor);
 

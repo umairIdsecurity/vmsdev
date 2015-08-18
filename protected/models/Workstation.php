@@ -209,7 +209,7 @@ class Workstation extends CActiveRecord {
     public function findWorkstationAvailableForUser($userId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = Yii::app()->params['userTbl'] .'='.$userId;
+        $Criteria->condition = 'user_id ='.$userId;
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $aArray = array();

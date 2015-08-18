@@ -69,7 +69,7 @@ class LoginForm extends CFormModel {
     public function findWorkstations($id) {
         
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '$id'";
+        $Criteria->condition = "user_id = '$id'";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $aArray = array();

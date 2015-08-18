@@ -60,28 +60,26 @@ class TenantForm extends CFormModel
         return array(
             // name, email, subject and message are required
             array('timezone_id','required','message' =>'Please select a timezone'),
-            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required'),
-
-            array('password_opt','required','message' => 'Please select a {attribute}'),
-            
-
+            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'save'),
+            array('password_opt','required','message' => 'Please select a {attribute}', 'on'=>'save'),  
             array('tenant_name,first_name, last_name, email', 'length', 'max' => 50),
             array('tenant_code', 'length', 'max' => 3),
             array('tenant_code', 'length', 'min' => 3),
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
 
-
-            //array('user_type', 'required', 'message' => 'Please select a {attribute}'),
+            //Edit Tenant 
+             array('tenant_name,tenant_code,, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form"),
+             array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id', 'params'=>array(
+                ':is_deleted'=>0, ':id'=>Yii::app()->user->id
+                )), 'on'=>'edit_form'),
+           array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'edit_form'),
+            // End Edit Tenant Rules 
             
-            //array('user_type', 'safe'),
-            //array('user_status', 'safe'),
-            
-
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),
             array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
-                ))),
+                )), 'on'=>'save'),
           
             array('password,cnf_password', 'required','on'=>'passwordrequire', 'message' => 'Please enter password or Autogenerate password'),
 

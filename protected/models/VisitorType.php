@@ -189,7 +189,7 @@ class VisitorType extends CActiveRecord {
         
         // Only one value can be set default for a specific tenant ID
         if( isset($this->is_default_value) && $this->is_default_value ) {
-            $this->updateAll(array("is_default_value"=>0), "tenant = '".$this->tenant."'" );
+            $this->updateAll(array("is_default_value"=>0), "module ='".$this->module."' AND tenant = '".$this->tenant."'" );
         }
        
         return parent::beforeSave();
@@ -209,14 +209,9 @@ class VisitorType extends CActiveRecord {
     }
 
     public function getCardTypeVisitorTypes($card_type){
-      
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-
-        $criteria->addCondition("t.tenant=".$session['tenant']." AND t.is_deleted=0");
-
-        //$criteria->addCondition("t.module='".CHelper::get_module_focus()."'");
-
+            
         if($card_type > 4){
             $criteria->addCondition("t.module='AVMS'");
         }else{
@@ -230,13 +225,15 @@ class VisitorType extends CActiveRecord {
 
         $criteria->join = 'JOIN visitor_type_card_type'
                                         .' ON visitor_type_card_type.visitor_type = t.id';
+        
+         
 
         return VisitorType::model()->findAll($criteria);
 
     }
 
     public function getActiveCardTypes($visitor_type){
-
+ 
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
         //$criteria->select = "card_type";

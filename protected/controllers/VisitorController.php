@@ -628,8 +628,8 @@ class VisitorController extends Controller {
                 }
                 if( $model->profile_type == "CORPORATE" ) {
                     Yii::app()->user->setFlash('success', 'Corporate Visitor Created Successfully!');
-                    $this->redirect(array("visitor/addvisitor"));
-                    echo '<script> window.location = "'.Yii::app()->createUrl("/visitor/addvisitor").'"; </script>';
+                    $this->redirect(array("visitor/admin&vms=cvms"));
+                    echo '<script> window.location = "'.Yii::app()->createUrl("/isitor/admin&vms=cvms").'"; </script>';
                 }
                 else {
                     Yii::app()->end();
@@ -637,6 +637,9 @@ class VisitorController extends Controller {
                 
             }  else {  // Not Save record then
                 //$errors = $model->getErrors(); print_r($errors); exit;
+                 if( $model->profile_type == "CORPORATE" ) {
+                     $this->redirect(array("visitor/addvisitor"));
+                 }
             }
         }
               

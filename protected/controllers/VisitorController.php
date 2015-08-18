@@ -552,9 +552,9 @@ class VisitorController extends Controller {
 
     public function actionAddVisitor() {
         $model = new Visitor;
-        
+        $profile_type = Yii::app()->request->getParam("profile_type", "CORPORATE");
         // For Corporate Visitor
-        if( Yii::app()->request->getParam("profile_type", "CORPORATE") == "CORPORATE")  
+        if( $profile_type == "CORPORATE")  
             $this->performAjaxValidation($model);
         
         $visitorService = new VisitorServiceImpl;

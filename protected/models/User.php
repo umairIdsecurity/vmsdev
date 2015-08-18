@@ -624,22 +624,21 @@ class User extends VmsActiveRecord {
 
     public function findAllTenantAgent($tenantId) {
         //select all companies of tenant agents with same tenant
-        $tenantId = trim($tenantId);
+       $tenantId = trim($tenantId);
         $aArray = array();
         if ($tenantId) {
             $company = Yii::app()->db->createCommand()
-                ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.first_name, u.last_name')
+                ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.id as user_id, u.first_name, u.last_name')
                 ->from('user u')
                 ->join('company c', 'u.tenant=c.id')
-                ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role =" . Roles::ROLE_AGENT_ADMIN . " and c.is_deleted = 0")
+                ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role IN (" . Roles::ROLE_ADMIN . ", ".Roles::ROLE_AGENT_ADMIN."   ) and c.is_deleted = 0")
                 ->queryAll();
-
             foreach ($company as $index => $value) {
                 $aArray[] = array(
                     'id' => $value['id'],
                     'name' => $value['first_name'] . ' ' . $value['last_name'],
                     'tenant' => $value['tenant'],
-                    'tenant_agent' => $value['tenant_agent'],
+                    'tenant_agent' => $value['user_id'],
                 );
             }
         }

@@ -44,6 +44,7 @@ border:1px solid <?php echo $companyLafPreferences->complete_hover_color2; ?> !i
 /* NEUTRAL*/
 
 .visitor-findBtn,.delete,.host-findBtn,.neutral{
+width: <?php echo $companyLafPreferences->id; ?>;
 background: -webkit-gradient(linear, center top, center bottom, from(<?php echo $companyLafPreferences->neutral_bg_color; ?>), to(<?php echo $companyLafPreferences->neutral_bg_color2; ?>)) !important;
 background: -moz-linear-gradient(center top , <?php echo $companyLafPreferences->neutral_bg_color; ?>, <?php echo $companyLafPreferences->neutral_bg_color2; ?>) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 background: -webkit-gradient(linear, center top, center bottom, from(<?php echo $companyLafPreferences->neutral_bg_color; ?>), to(<?php echo $companyLafPreferences->neutral_bg_color2; ?>)) !important;

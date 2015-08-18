@@ -424,6 +424,12 @@ class Registration extends CActiveRecord {
             $this->identification_document_expiry = NULL;
         }
 
+        if(!empty($this->asic_expiry)){
+            $this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));
+        }else{
+            $this->asic_expiry = NULL;
+        }
+
         return parent::beforeSave();
     }
 

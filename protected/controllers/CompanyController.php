@@ -22,7 +22,7 @@ class CompanyController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact', 'getContact','checkNameUnique'),
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact','addCompany', 'getContacts', 'addContact', 'getContact','checkNameUnique'),
                 'users' => array('@'),
                 //'expression' => 'CHelper::check_module_authorization("CVMS")'
             ),
@@ -483,7 +483,74 @@ class CompanyController extends Controller
             echo "0";
         }
         Yii::app()->end();
+    }
 
+
+
+    /**
+     * PREREGISTRATION : Add company contact from ASIC SPONSOR 
+     */
+    public function actionAddCompany()
+    {
+        
+        $session = new CHttpSession;
+        $company = new Company();
+
+        $company->scenario = 'preregistrationAddComp';
+
+        if (isset($_POST['Company'])) 
+        {
+
+            if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
+                
+                $formInfo = $_POST['Company'];
+                
+                $company->name = $formInfo['name'];
+
+                $company->contact = $formInfo['user_first_name'] . ' ' . $formInfo['user_last_name'];
+                $company->email_address = $formInfo['user_email'];
+                $company->mobile_number = $formInfo['user_contact_number'];
+                $company->tenant = $session['tenant'];
+
+                $company->company_type = 3;
+                //todo: update Company Code later
+                $company->code = strtoupper(substr($company->name, 0, 3));
+
+                $companyService = new CompanyServiceImpl();
+                $companyService->save($company, $session['tenant'], $session['role'], 'addCompany');
+
+                // save contact into company
+                if (isset($company->id) && $company->id > 0) {
+                    $contact = new User('add_company_contact');
+                    $contact->company = $company->id;
+                    $contact->first_name = $formInfo['user_first_name'];
+                    $contact->last_name = $formInfo['user_last_name'];
+                    $contact->email = $formInfo['user_email'];
+                    $contact->contact_number = $formInfo['user_contact_number'];
+                    $contact->created_by = Yii::app()->user->id;
+
+                    // Todo: temporary value for saving contact, will be update later
+                    $contact->timezone_id = 1;
+                    $contact->photo = 0;
+
+                    // foreign keys // todo: need to check and change for HARD-CODE
+                    $contact->tenant = $session['tenant'];
+                    $contact->user_type = 1;
+                    $contact->user_status = 1;
+                    $contact->role = 9;
+
+                    if ($contact->save()) {
+                        Yii::app()->user->setFlash('success', 'Company add Successfully');
+                        return true;
+                    } 
+                }
+            }
+            else
+            {
+                Yii::app()->user->setFlash('error', 'Company name has already been taken');
+                return false;
+            }
+        }
     }
 
     public function actionGetContacts()

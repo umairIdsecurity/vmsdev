@@ -22,9 +22,15 @@ class CompanyServiceImpl implements CompanyService {
             $company->code = strtoupper(substr($company->name, 0, 3));
         }
 
-        if (!($company->save())) {
+        if($company->validate()){
+            if (!($company->save())) {
+                return false;
+            }    
+        }
+        else{
             return false;
         }
+        
         
         /* if logged in is admin
          * set company tenant to tenant of admin

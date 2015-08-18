@@ -233,6 +233,8 @@
                         if (value.isTaken == 1) { //if taken
                             $("#loginModal").modal({
                                 show : true,
+                                keyboard: false,
+                                backdrop: 'static'
                             });
                             $("#login_fail").show();
                         }

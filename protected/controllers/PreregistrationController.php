@@ -233,7 +233,8 @@ class PreregistrationController extends Controller
 		$this->render('confirm-details' , array('model' => $model,'error_message' => $error_message));
 	}
 
-	public function actionVisitReason(){
+	public function actionVisitReason()
+	{
 
 		$session = new CHttpSession;
 
@@ -246,6 +247,7 @@ class PreregistrationController extends Controller
 		$companyModel = new Company();
 
 		$companyModel->scenario = 'preregistration';
+		
 		$model->scenario = 'preregistration';
 
 		if (isset($_POST['Visit']) && isset($_POST['Company']) ) {
@@ -376,6 +378,12 @@ class PreregistrationController extends Controller
 						$model->profile_type = 'ASIC';
 						$model->key_string = hash('ripemd160', uniqid());
 
+						$model->tenant = Yii::app()->user->tenant;
+						$model->visitor_workstation = $session['workstation'];
+						$model->created_by = $session['created_by'];
+
+						$model->role = 9; //Staff Member/Intranet
+
 						if ($model->save()) {
 
 							$session['host'] = $model->id;
@@ -404,7 +412,10 @@ class PreregistrationController extends Controller
 
 		}
 
-		$this->render('asic-sponsor' , array('model'=>$model) );
+		$companyModel = new Company();
+		$companyModel->scenario = 'preregistrationAddComp';
+
+		$this->render('asic-sponsor' , array('model'=>$model,'companyModel'=>$companyModel) );
 	}
 
 	public function actionAjaxAsicSearch(){

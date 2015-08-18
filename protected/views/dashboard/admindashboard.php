@@ -32,6 +32,8 @@ switch ($session['role']) {
         $Criteria->condition = "user_id  IN (".Yii::app()->user->id.")";
         $workstationList = UserWorkstations::model()->findAll($Criteria);
         break;
+    default:
+        $workstationList = array();
 }
 $x = 0; //initiate variable for foreach
 if (empty($workstationList)) {

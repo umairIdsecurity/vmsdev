@@ -72,8 +72,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'id' => 'visitor-form',
     'htmlOptions' => array("name" => "registerform"),
     'enableAjaxValidation' => true,
-      'clientOptions'=>array('validateOnSubmit'=>true, 'validateOnChange'=>true,
-      'validateOnType'=>false),
+      'clientOptions'=>array('validateOnSubmit'=>true),
     
  ));
 

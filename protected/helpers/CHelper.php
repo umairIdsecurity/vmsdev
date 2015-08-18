@@ -244,5 +244,21 @@ class CHelper
         return self::get_module_focus()=='AVMS';
     }
 
-
+    // Get Module AUthorization by Workstation ID
+    public static function get_module_authorization_by_workstation( $workstation_id ) {
+        
+        $user = Yii::app()->db->createCommand()
+                ->select("u.*")
+                ->from("user u")
+                ->leftJoin("workstation w", "u.id = w.tenant_agent")
+                ->where("w.id = ".$workstation_id)
+                ->queryRow();
+        
+      
+        if( $user ) {
+           return $user["allowed_module"];
+        } else
+            return 3;
+         
+    }
 }

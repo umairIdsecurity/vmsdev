@@ -21,11 +21,11 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
+				'actions' => array('forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique'),
 				'users' => array('*'),
 			),
 			array('allow',
-				'actions'=>array('details','logout' , 'dashboard'),
+				'actions'=>array('details','logout','dashboard'),
 				'users' => array('@'),
 				//'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
@@ -159,7 +159,8 @@ class PreregistrationController extends Controller
 
 		}
 
-		$this->render('registration', array('model' => $model));
+		$preModel = new PreregLogin();
+		$this->render('registration', array('model' => $model,'preModel' => $preModel));
 	}
 
 	public function actionConfirmDetails(){
@@ -343,6 +344,7 @@ class PreregistrationController extends Controller
 			$model->attributes = $_POST['Registration'];
 
 			if($_POST['Registration']['is_asic_verification']==0){
+				
 				$this->redirect(array('preregistration/uploadPhoto'));
 			}
 			else
@@ -457,7 +459,7 @@ class PreregistrationController extends Controller
 				$connection=Yii::app()->db;
 				$sql="SELECT * FROM visitor WHERE
 					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
-					  AND profile_type = 'ASIC' ";
+					  AND profile_type = 'ASIC' AND is_deleted=0";
 
 				$command = $connection->createCommand($sql);
 
@@ -878,6 +880,22 @@ class PreregistrationController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(array('preregistration/login'));
 	}
+
+	public function actionCheckEmailIfUnique($email, $id = 0) {
+        if (Registration::model()->isEmailAddressTaken($email, $id)) {
+            $aArray[] = array(
+                'isTaken' => 1,
+            );
+        } else {
+            $aArray[] = array(
+                'isTaken' => 0,
+            );
+        }
+
+        $resultMessage['data'] = $aArray;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
 
 }
 

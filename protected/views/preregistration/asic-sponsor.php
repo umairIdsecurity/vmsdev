@@ -7,6 +7,23 @@
  */
 ?>
 <style type="text/css">
+    table.dataTable.no-footer{
+        border-bottom: 0px solid #111 !important;
+    }
+
+    table.dataTable thead th, table.dataTable thead td {
+        border-bottom: 0px solid #111 !important;
+        padding: 10px 18px;
+    }
+
+    table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+        border-top: 0px solid #ddd !important;
+    }
+
+    table.dataTable thead tr {
+        background-color: #eee;
+    }
+
     #search_asic_error{
         display: none;
     }
@@ -259,7 +276,7 @@
                             $('#asic_holder').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="asic_table"></table>' );
 
                             $('#asic_table').dataTable( {
-                                "ordering": false,
+                                //"ordering": false,
                                 "bLengthChange": false,
                                 "bFilter": false,
                                 "data": dataSet,

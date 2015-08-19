@@ -85,7 +85,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     array('vms' => 'cvms')); ?>'><span>CVMS Users</span></a>
 
                 <ul <?php
-                if ($this->id == 'user' && !CHelper::is_accessing_avms_features()) {
+                if ($this->id == 'user' && !CHelper::is_accessing_avms_features() && $this->action->id != 'systemaccessrules') {
                     echo "style='display:block ;'";
                 }
                 ?>>
@@ -176,7 +176,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                        href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'cvms')); ?>'>
                         <span>CVMS Access Control</span>
                     </a>
-                    <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules') ? "style='display:block'" : "style='display:none'"; ?>>
+                    <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules' && CHelper::is_cvms_users_requested()) ? "style='display:block'" : "style='display:none'"; ?>>
                         <li>
                             <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'cvms')); ?>'><span>Workstation Access Control</span></a>
                         </li>
@@ -302,7 +302,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                        href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'avms')); ?>'>
                         <span>AVMS Access Control</span>
                     </a>
-                    <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules') ? "style='display:block'" : "style='display:none'"; ?>>
+                    <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules' && CHelper::is_avms_users_requested()) ? "style='display:block'" : "style='display:none'"; ?>>
                         <li>
                             <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'avms')); ?>'><span>Workstation Access Control</span></a>
                         </li>

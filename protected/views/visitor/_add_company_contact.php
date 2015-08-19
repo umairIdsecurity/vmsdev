@@ -279,6 +279,8 @@ $session = new CHttpSession;
                 }
                 return false;
             }
+        }).fail(function() {
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
     }
 

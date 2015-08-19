@@ -16,7 +16,11 @@
     function(id, data) {
         $('th > .asc').append('<div></div>');
         $('th > .desc').append('<div></div>');
+        if (data.indexOf('Visitor Management System  - Login') > -1) {
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+        }
     }",
+    'ajaxUpdateError' => "function(id, data) {window.location.replace('?r=site/login');}",
 	'columns'=>array(
 
 		array(

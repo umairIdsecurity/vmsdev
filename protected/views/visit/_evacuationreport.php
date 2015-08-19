@@ -174,6 +174,9 @@ function formatTime($time) {
                     $('#view-visitor-records').removeClass('grid-view-loading');
                     window.location = '<?php echo $this->createUrl('exportFile'); ?>';
                 },
+                error: function() {
+                    window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
+                },
                 data: $('#view-visitor-records').serialize() + '&export=true'
             });
         }

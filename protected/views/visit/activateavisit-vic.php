@@ -699,10 +699,16 @@ $asicEscort = new AddAsicEscort();
                     url: "<?php echo CHtml::normalizeUrl(array("visitor/getAsicEscort")); ?>",
                     data: {searchInfo :searchInfo},
                     success: function(data) {
+                        console.log(data);
+                        if (data.indexOf("Visitor Management System  - Login") > -1) {
+                            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+                        }
                         searchAsicEscortResult.append(data);
                         $('#findEscortBtn' ).show();
                         $('#divMsg').hide();
                     }
+                }).fail(function() {
+                    window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
                 });
             }
         });

@@ -72,8 +72,16 @@ $form = $this->beginWidget('CActiveForm', array(
     'id' => 'visitor-form',
     'htmlOptions' => array("name" => "registerform"),
     'enableAjaxValidation' => true,
-      'clientOptions'=>array('validateOnSubmit'=>true, 'validateOnChange'=>true,
-      'validateOnType'=>false),
+    'clientOptions'=>array(
+        'validateOnSubmit'=>true, 
+        'validateOnChange'=>true,
+        'validateOnType'=>false,
+        'afterValidate' => 'js:function(form,data,hasError){ 
+            if(!hasError){
+                window.location = "<?php echo Yii::app()->createUrl("site/login");?>";
+            };return false;
+        }'
+    ),
     
  ));
 

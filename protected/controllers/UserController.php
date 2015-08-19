@@ -72,7 +72,10 @@ class UserController extends Controller
 
     public function isTenantOfUserViewed($user)
     {
-        return User::model()->isTenantOrTenantAgentOfUserViewed($_GET['id'], $user);
+        if(isset($user) && !empty($user->id)) {
+            return User::model()->isTenantOrTenantAgentOfUserViewed($_GET['id'], $user);
+        }
+        return false;
     }
 
     /**

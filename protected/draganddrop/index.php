@@ -251,7 +251,7 @@ if (isset($_GET['viewFrom'])) {
             {
 
                 if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit' || $("#controllerId").val() == 'companyLafPreferences') {
-                    var logo = document.getElementById('photoPreview');
+                    //var logo = document.getElementById('photoPreview');
                 } else {
                     var logo = document.getElementById('companyLogo');
                 }

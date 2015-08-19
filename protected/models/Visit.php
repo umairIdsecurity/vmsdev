@@ -1184,7 +1184,11 @@ class Visit extends CActiveRecord {
                  // Add Old visits
                 if ($oldVisitsCount > 0) {
                     $totalCount += $oldVisitsCount;
-                }               
+                }
+                // Count active date as first visit
+                if( $this->visit_status == VisitStatus::ACTIVE)
+                    $totalCount += 1;
+                
                 return $totalCount;
                 break;
             case CardType::VIC_CARD_EXTENDED:
@@ -1204,7 +1208,11 @@ class Visit extends CActiveRecord {
                 if ($oldVisitsCount > 0) {
                     $totalCount += $oldVisitsCount;
                 }
-                    
+                
+                 // Count active date as first visit
+                if( $this->visit_status == VisitStatus::ACTIVE)
+                    $totalCount += 1;
+                
                 return $totalCount;
                 break;
         }

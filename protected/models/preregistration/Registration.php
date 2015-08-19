@@ -190,9 +190,7 @@ class Registration extends CActiveRecord {
 
             array('first_name, last_name, email, contact_number', 'required' , 'except'=>'asic', 'message'=>'Please enter {attribute}'),
 
-            array('email', 'unique', 'className' => 'Registration',
-                'attributeName' => 'email',
-                'message'=>'This Email is already in use'),
+            array('email', 'unique', 'className' => 'Registration','attributeName' => 'email','message'=>'This Email is already in use'),
 
 
 			array('identification_document_no,contact_suburb', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
@@ -426,7 +424,21 @@ class Registration extends CActiveRecord {
             $this->identification_document_expiry = NULL;
         }
 
+        if(!empty($this->asic_expiry)){
+            $this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));
+        }else{
+            $this->asic_expiry = NULL;
+        }
+
         return parent::beforeSave();
+    }
+
+    public function beforeFind() 
+    {
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "is_deleted=0";
+        return parent::beforeFind();
     }
 
 

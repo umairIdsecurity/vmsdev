@@ -45,6 +45,8 @@ class PreregUserIdentity extends CUserIdentity {
             $session['role'] = $user->role;
             $session['account'] = $user->profile_type;
 
+            $session['tenant'] = ( isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id;
+
             $this->errorCode = self::ERROR_NONE;
         }
 

@@ -25,7 +25,7 @@ $session = new ChttpSession;
                     <span >Preregister Visit</span>
                 </a>
             </li>-->
-            <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
+            <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor/&profile_type=CORPORATE'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
             <?php  $module = CHelper::get_allowed_module(); 
                       if ($module != "CVMS") { ?>
                 <li>

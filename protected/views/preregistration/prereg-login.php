@@ -21,7 +21,7 @@
     )); ?>
 
         <div class="form-group">
-            <h1 class="text-primary title">LOGIN</h1>
+            <h1 class="text-primary title">AVMS LOGIN</h1>
         </div>
 
         <?php
@@ -56,6 +56,8 @@
         </div>
 
     <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-primary btn-next')); ?>
-    <a class="btn btn-link" href="<?php echo Yii::app()->createUrl('preregistration/forgot'); ?>">Forgot password?</a>
+    <a class="btn btn-link" href="<?php echo Yii::app()->createUrl('preregistration'); ?>">Create AVMS Login</a>
+    <br><br>
+    <a style="margin-left: -12px" class="btn btn-link" href="<?php echo Yii::app()->createUrl('preregistration/forgot'); ?>">Forgot password?</a>
     <?php $this->endWidget(); ?>
 </div>

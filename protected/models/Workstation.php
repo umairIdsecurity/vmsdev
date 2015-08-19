@@ -248,6 +248,9 @@ class Workstation extends CActiveRecord {
      * */
     public function getCorporateCardType($workstation_id){
 
+        // Disable if not allowed module
+        $disabled =  $this->getEnableDisabledWorkstations ($workstation_id , 2 );
+            
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>1)
         );
@@ -258,7 +261,7 @@ class Workstation extends CActiveRecord {
             $ws_card = WorkstationCardType::model()->findByPk(
                 array(
                     'workstation' => $workstation_id,
-                    'card_type' => $card->id
+                    'card_type' => $card->id,
                 )
             );
 
@@ -266,14 +269,17 @@ class Workstation extends CActiveRecord {
                 $cardArr .= CHtml::checkBox($card->name,true,array(
                     "value"=>$card->id,
                     "data-workstation" => $workstation_id,
-                    "class"=>"card_type_corporate"
+                    "class"=>"card_type_corporate",
+                     "disabled" => $disabled
                 ));
             }
             else{
                 $cardArr .= CHtml::checkBox($card->name,false,array(
                     "value"=>$card->id,
                     "data-workstation" => $workstation_id,
-                    "class"=>"card_type_corporate"
+                    "class"=>"card_type_corporate",
+                    'disabled' => $disabled
+                   
                 ));
             }
 
@@ -282,8 +288,20 @@ class Workstation extends CActiveRecord {
         return $cardArr;
 
     }
-
+    
+    // Disabled not allowed module to tenant
+    public function getEnableDisabledWorkstations ($workstation_id, $check_module = 3 ) {
+        
+        $module = CHelper::get_module_authorization_by_workstation( $workstation_id );
+        if( $module == $check_module || $module == "3") // IF CVMS or Both
+          return false;
+        else
+          return true;
+    } 
+    
     public function getCorporateVic($workstation_id){
+        
+        $disabled =  $this->getEnableDisabledWorkstations ($workstation_id, 1 );
 
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>2)
@@ -303,14 +321,16 @@ class Workstation extends CActiveRecord {
                 $cardArr .= CHtml::checkBox($card->name,true,array(
                     "value"=>$card->id ,
                     "data-workstation" => $workstation_id,
-                    "class"=>"card_type_vic"
+                    "class"=>"card_type_vic",
+                    "disabled" => $disabled,
                 ));
             }
             else{
                 $cardArr .= CHtml::checkBox($card->name,false,array(
                     "value"=>$card->id ,
                     "data-workstation" => $workstation_id,
-                    "class"=>"card_type_vic"
+                    "class"=>"card_type_vic",
+                    "disabled" => $disabled,
                 ));
             }
 

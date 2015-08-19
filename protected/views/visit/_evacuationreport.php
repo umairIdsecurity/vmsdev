@@ -50,11 +50,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
         array(
-            'name' => 'visitor_type',
-            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
-            'filter' => VisitorType::model()->returnVisitorTypes(),
-        ),
-        array(
             'name' => 'cardnumber',
             'header' => 'Card No.',
             'value'=>  'CardGenerated::model()->getCardCode($data->card)',
@@ -169,6 +164,11 @@ function formatTime($time) {
             $.fn.yiiGridView.export();
         });
         $.fn.yiiGridView.export = function() {
+            gridSettings = $.fn.yiiGridView.settings;
+            gridSettings['view-visitor-records']['ajaxUpdateError'] = function(XHR, textStatus, errorThrown, err) {
+                window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
+            };
+            $.fn.yiiGridView.settings = gridSettings;
             $.fn.yiiGridView.update('view-visitor-records', {
                 success: function() {
                     $('#view-visitor-records').removeClass('grid-view-loading');

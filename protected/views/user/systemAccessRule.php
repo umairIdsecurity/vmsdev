@@ -107,8 +107,12 @@ $this->widget('bootstrap.widgets.TbButton', array(
     }
     
     function resizeIframe(obj) {
-            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        var text = $('#iframe').contents().find('head').html();
+        if (text.indexOf("Visitor Management System  - Login") > -1) {
+            window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
         }
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
     
     
 </script>

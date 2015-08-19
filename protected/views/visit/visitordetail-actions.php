@@ -558,7 +558,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 }
             };
 
-            $.ajax(ajaxOpts);
+            $.ajax(ajaxOpts).fail(function() {
+                window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            });
             return false;
         }
 

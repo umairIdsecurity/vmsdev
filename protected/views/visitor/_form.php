@@ -72,20 +72,14 @@ $form = $this->beginWidget('CActiveForm', array(
     'id' => 'visitor-form',
     'htmlOptions' => array("name" => "registerform"),
     'enableAjaxValidation' => true,
-<<<<<<< HEAD
     'clientOptions'=>array(
-        'validateOnSubmit'=>true, 
-        'validateOnChange'=>true,
-        'validateOnType'=>false,
+        'validateOnSubmit'=>true,
         'afterValidate' => 'js:function(form,data,hasError){ 
             if(!hasError){
                 window.location = "<?php echo Yii::app()->createUrl("site/login");?>";
             };return false;
         }'
-    ),
-=======
-      'clientOptions'=>array('validateOnSubmit'=>true),
->>>>>>> 8c1b6b64ddedd29e54d8642eb4907c59a0e42b04
+        ),
     
  ));
 
@@ -116,7 +110,7 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 
 
     <tr>
-		
+        
         <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
             <table style="width:300px;float:left;min-height:320px;">
                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]" value="<?php echo $model['photo']; ?>">
@@ -490,10 +484,10 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 
                         <tr>
                             <td align="center">
-                            	<?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                                 <div class="row buttons" style="text-align:center;">
                                     <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-									style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                    style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
                                 </div>
                             </td>
                         </tr>

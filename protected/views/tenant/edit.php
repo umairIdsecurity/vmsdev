@@ -1,4 +1,4 @@
-<h1 style="margin-left: 70px">Edit Organization Settings</h1>
+<h1 style="margin-left: 70px">Edit Organisation Settings</h1>
 <?php
 /* @var $this CompanyController */
 /* @var $model Company */

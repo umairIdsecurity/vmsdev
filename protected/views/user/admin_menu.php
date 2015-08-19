@@ -47,9 +47,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
                 <li class='has-sub'>
 
-                    <a href='<?php echo Yii::app()->createUrl('tenant/edit/&id=' . $session['tenant']); ?>'><span>Organization Settings</span></a>
+                    <a href='<?php echo Yii::app()->createUrl('tenant/edit/&id=' . $session['tenant']); ?>'><span>Organisation Settings</span></a>
                     <ul <?php
-                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
+                    if ($this->id == 'company' || $this->id == 'companyLafPreferences' || $this->id == "tenant") {
                         echo "style='display:block ;'";
                     }
                     ?>>

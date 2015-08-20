@@ -45,7 +45,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'host',
-            'value' => 'User::model()->findByPk($data->host)->first_name . " " . User::model()->findByPk($data->host)->last_name',
+            'value' => 'User::model()->findByPk($data->host) != NULL ? User::model()->findByPk($data->host)->first_name . " " . User::model()->findByPk($data->host)->last_name : ""',
             'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
         ),

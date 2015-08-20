@@ -36,12 +36,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
 //            'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
 //        ),
         array(
-            'name' => 'user_email',
-            'filter'=>CHtml::activeTextField($model, 'user_email', array('placeholder'=>'Email Address')),
+            'name' => 'email_address',
+            'filter'=>CHtml::activeTextField($model, 'email_address', array('placeholder'=>'Email Address')),
         ),
         array(
-            'name' => 'user_contact_number',
-            'filter'=>CHtml::activeTextField($model, 'user_contact_number', array('placeholder'=>'Contact Number')),
+            'name' => 'mobile_number',
+            'filter'=>CHtml::activeTextField($model, 'mobile_number', array('placeholder'=>'Contact Number')),
         ),
         /*array(
            'name'=>'isTenant',

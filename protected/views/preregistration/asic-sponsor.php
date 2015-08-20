@@ -210,8 +210,7 @@
             </div>
 
 
-            <div class="form-group">
-                
+            <div class="form-group" id="addCompanyDiv">
                 <?php
                     $this->widget('application.extensions.select2.Select2', array(
                             'model' => $model,
@@ -221,9 +220,8 @@
                             'placeHolder' => 'Please select a company',        
                     ));
                 ?>
-               
-                <?php echo $form->error($model,'company'); ?>
             </div>
+             <?php echo $form->error($model,'company'); ?>
 
             <div class="form-group">
                 <a style="float: left;" href="#addCompanyModal" role="button" data-toggle="modal">Add Company</a>
@@ -285,17 +283,19 @@
                                 <div class="clearfix"></div>
                                 
                                 <?php 
-                                    /*$form=$this->beginWidget('CActiveForm', array(
+                                    $form=$this->beginWidget('CActiveForm', array(
                                         'id'=>'company-form',
+                                        'enableAjaxValidation'=>false,
                                         'enableClientValidation'=>true,
-                                        'action' => array('company/addCompany'),
+                                        //'action' => array('company/addCompany'),
                                         'clientOptions'=>array(
                                             'validateOnSubmit'=>true,
                                         ),
                                         'htmlOptions'=>array(
+                                            'onsubmit'=>"return false;",/* Disable normal form submit */
                                             'class'=>"form-create-login"
                                         )
-                                    ));*/
+                                    ));
                                 ?>
                                     <div class="form-group">
                                         <div class="input-group">
@@ -345,9 +345,9 @@
                                     </div>
 
 
-                                    <?php echo CHtml::submitButton('Add',array('id'=>'addCompany','class'=>'btn btn-block bt-login')); ?>
+                                    <?php echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
                                     
-                                <?php //$this->endWidget(); ?>
+                                <?php $this->endWidget(); ?>
 
                             </div>
                           
@@ -447,30 +447,39 @@
         });
 
 
-        $("#addCompany").click(function(){
+        $("#addCompanyBtn").unbind("click").click(function(event){
+            
+            var data=$("#company-form").serialize();
+            
             $.ajax({
                 type: 'POST',
                 url: "<?php echo Yii::app()->createUrl('company/addCompany');?>",
-                dataType: 'json',
-                //data: email,
-                success: function (r) {
+                data: data,
+                success: function (data) {
                     
-                    console.log(r);
+                    var data = JSON.parse(data);
+                    console.log(data);
 
-                    /*$.each(r.data, function (index, value) {
-                        if (value.isTaken == 1) { //if taken
-                            $("#addCompanyModal").modal({
-                                show : false,
-                                keyboard: false,
-                                backdrop: 'static'
-                            });
-                            $("#login_fail").show();
-                        }
-                    });*/
+                    if (data == 0)
+                    {
+                        console.log("No data: " + data);
+                    }
+                    else
+                    {
+                        $("#Registration_company").append(data.dropDown);
+                        $('.select2-selection__rendered').text(data.compName);
+                        $("#addCompanyModal").modal('hide');
+                    }
+                    
+                },
+                error: function(error){
+                    console.log(error);
                 }
             });
 
         });
+
+
 
 
 

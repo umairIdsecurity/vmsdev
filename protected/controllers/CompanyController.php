@@ -495,65 +495,144 @@ class CompanyController extends Controller
      */
     public function actionAddCompany()
     {
-        
-        $session = new CHttpSession;
-        $company = new Company();
+        //if (Yii::app()->request->isAjaxRequest) {
+            $session = new CHttpSession;
+            $company = new Company();
 
-        $company->scenario = 'preregistrationAddComp';
+            $company->scenario = 'preregistrationAddComp';
 
-        if (isset($_POST['Company'])) 
-        {
-
-            if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
-                
-                $formInfo = $_POST['Company'];
-                
-                $company->name = $formInfo['name'];
-
-                $company->contact = $formInfo['user_first_name'] . ' ' . $formInfo['user_last_name'];
-                $company->email_address = $formInfo['user_email'];
-                $company->mobile_number = $formInfo['user_contact_number'];
-                $company->tenant = $session['tenant'];
-
-                $company->company_type = 3;
-                //todo: update Company Code later
-                $company->code = strtoupper(substr($company->name, 0, 3));
-
-                $companyService = new CompanyServiceImpl();
-                $companyService->save($company, $session['tenant'], $session['role'], 'addCompany');
-
-                // save contact into company
-                if (isset($company->id) && $company->id > 0) {
-                    $contact = new User('add_company_contact');
-                    $contact->company = $company->id;
-                    $contact->first_name = $formInfo['user_first_name'];
-                    $contact->last_name = $formInfo['user_last_name'];
-                    $contact->email = $formInfo['user_email'];
-                    $contact->contact_number = $formInfo['user_contact_number'];
-                    $contact->created_by = Yii::app()->user->id;
-
-                    // Todo: temporary value for saving contact, will be update later
-                    $contact->timezone_id = 1;
-                    $contact->photo = 0;
-
-                    // foreign keys // todo: need to check and change for HARD-CODE
-                    $contact->tenant = $session['tenant'];
-                    $contact->user_type = 1;
-                    $contact->user_status = 1;
-                    $contact->role = 9;
-
-                    if ($contact->save()) {
-                        Yii::app()->user->setFlash('success', 'Company add Successfully');
-                        return true;
-                    } 
-                }
-            }
-            else
+            if (isset($_POST['Company'])) 
             {
-                Yii::app()->user->setFlash('error', 'Company name has already been taken');
-                return false;
+
+                /*if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {*/
+                    
+                    $formInfo = $_POST['Company'];
+                    
+                    $company->attributes=$formInfo;
+
+                    $company->name = $formInfo['name'];
+                    $company->contact = $formInfo['user_first_name'] . ' ' . $formInfo['user_last_name'];
+                    $company->email_address = $formInfo['user_email'];
+                    $company->mobile_number = $formInfo['user_contact_number'];
+
+                    
+                    $company->created_by_user = $session['created_by'];
+                    $company->created_by_visitor  = $session['visitor_id'];
+                    $company->tenant = $session['tenant'];
+
+                    $company->company_type = 3;
+
+                    if ($company->tenant_agent == '') {$company->tenant_agent = NULL;}
+                    if ($company->code == '') {$company->code = strtoupper(substr($company->name, 0, 3));}
+
+                    if($company->validate())
+                    {
+                        if ($company->save()) 
+                        {
+
+                           /* $contact = new User;
+
+                            $contact->company = $company->id;
+
+                            $contact->first_name = $formInfo['user_first_name'];
+                            $contact->last_name = $formInfo['user_last_name'];
+                            $contact->email = $formInfo['user_email'];
+                            $contact->contact_number = $formInfo['user_contact_number'];
+
+                            //Integrity constraint violation
+                            //handled in beforeSave function
+                            //if(!empty($session['created_by'])){$contact->created_by = $session['created_by'];}else{$contact->created_by = NULL;}
+                            
+                            // Todo: temporary value for saving contact, will be update later
+                            $contact->timezone_id = 1;
+                            $contact->photo = NULL;
+
+                            // foreign keys // todo: need to check and change for HARD-CODE
+                            $contact->tenant = $session['tenant'];
+
+                            $contact->user_type = 1;
+                            $contact->user_status = 1;
+                            $contact->role = 9;*/
+
+                            //$contact->created_by = 16;
+
+                            /*echo "<pre>";
+                            print_r($contact->attributes);
+                            Yii::app()->end();*/
+
+                            //integrity constraint violation fix.
+                            //From preregisteration set attribute from session as it was set in session 
+                            //for USER because Yii:app()->user->id in preregistration has Visitor Id and not USER id.
+                            //If wrong handled then it will throws Integrity Constraint Violation as foreign key 
+                            //of created_by in user refers to User table and not visitor table 
+
+                            $command = Yii::app()->db->createCommand();
+
+                            $result=$command->insert('user',array(
+                                                        //'id'=>it is autoincrement,
+                                                        'company'=>$company->id,
+                                                        'first_name'=>$formInfo['user_first_name'],
+                                                        'last_name'=>$formInfo['user_last_name'],
+                                                        'email'=>$formInfo['user_email'],
+                                                        'contact_number'=>$formInfo['user_contact_number'],
+                                                        'timezone_id'=>1,
+                                                        'photo'=>NULL,
+                                                        'tenant'=> empty($session['tenant']) ? NULL : $session['tenant'],
+                                                        'user_type'=>1,
+                                                        'user_status'=>1,
+                                                        'role'=>9,
+                                                        'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
+                                                    ));
+                                                       
+                            
+                            /*if ($contact->save(false))
+                            {
+                                $dropDown = '<option value="' . $company->id . '" >' . $company->name . '</option>'; // seriously why is this here?
+                                $ret = array("id" => $id, "name" => $company->name, "dropDown" => $dropDown);
+                                echo json_encode($ret);
+                                Yii::app()->end();
+                            }
+                            else
+                            {
+                                print_r($contact->errors);
+                                Yii::app()->end();
+                                //die("--DONE--");
+                            }*/
+
+                            if ($result)
+                            {
+                                $dropDown = "<option selected='selected' value='" . $company->id . "' >" . $company->name . "</option>"; // seriously why is this here?
+                                $ret = array("compId" =>  $company->id, "compName" => $company->name, "dropDown" => $dropDown);
+                                echo json_encode($ret);
+                                Yii::app()->end();
+                            }
+                            else
+                            {
+                                //print_r($contact->errors);
+                                echo "0";
+                                Yii::app()->end();
+                                //die("--DONE--");
+                            }
+                        }
+                        else
+                        {
+                            echo "0";
+                            Yii::app()->end();
+                        }    
+                    }
+                    else
+                    {
+                        echo "0";
+                        Yii::app()->end();
+                    }
+                /*}
+                else
+                {
+                    Yii::app()->user->setFlash('error', 'Company name has already been taken');
+                    return false;
+                }*/
             }
-        }
+        //}    
     }
 
     public function actionGetContacts()

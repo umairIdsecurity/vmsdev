@@ -1,16 +1,6 @@
 <?php
-
 $session = new CHttpSession;
-
-/*$dataId = '';
-
-if ($this->action->id == 'update') {
-    $dataId = $_GET['id'];
-}*/
-
 $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
-// set default country is Australia = 13
-
 ?>
 
 <style>
@@ -130,7 +120,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                                     <div class="photoDiv" style="">
                                         <?php   
-                                                if (/*$dataId != '' &&*/$model['photo'] != NULL) 
+                                                if ($model['photo'] != NULL) 
                                                 {
                                                     $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
                                                     $my_image = '';
@@ -157,8 +147,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         <?php
                                                 }
                                         ?>
-
-
 
 
                                     </div>
@@ -414,16 +402,16 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </tr>
 
                             <tr><td>&nbsp;</td></tr>
-                            
+
                             <tr>    
                                 <td id="">
                                     <div style="margin-bottom: 5px;">
-                                        <?php echo $form->textField($companyModel, 'trading_name', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Trading Name', 'style' => '')); ?>
+                                        <?php echo $form->textField($companyModel, 'contact', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Company Contact Name', 'style' => '')); ?>
                                         <span class="required">*</span>
-                                        <?php echo $form->error($companyModel, 'trading_name', array("style" => "margin-top:0px")); ?>
+                                        <?php echo $form->error($companyModel, 'contact', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
-                            </tr>  
+                            </tr>
 
                             <tr><td>&nbsp;</td></tr>  
 
@@ -438,16 +426,18 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </tr>    
 
                             <tr><td>&nbsp;</td></tr>
-                                
+
                             <tr>    
                                 <td id="">
                                     <div style="margin-bottom: 5px;">
-                                        <?php echo $form->textField($companyModel, 'contact', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Contact Number', 'style' => '')); ?>
+                                        <?php echo $form->textField($companyModel, 'mobile_number', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Contact Number', 'style' => '')); ?>
                                         <span class="required">*</span>
-                                        <?php echo $form->error($companyModel, 'contact', array("style" => "margin-top:0px")); ?>
+                                        <?php echo $form->error($companyModel, 'mobile_number', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
-                            </tr>
+                            </tr> 
+                                
+                            
                         </table>
 
                         <div style="float:right;"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
@@ -466,144 +456,3 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) { echo $_GET['id']; } ?>">
 
 
-<script>
-
-/*    $(document).ready(function () {
-
-       $(".workstationRow").show();
-        getWorkstation();
-
-        $('#Visitor_identification_document_expiry').datepicker({
-            minDate: '0',
-            maxDate: '+2y +2m',
-            changeYear: true,
-            changeMonth: true
-        });
-
-        $('#photoCropPreview').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn").show();
-                $("#x1").val(selection.x1);
-                $("#x2").val(selection.x2);
-                $("#y1").val(selection.y1);
-                $("#y2").val(selection.y2);
-                $("#width").val(selection.width);
-                $("#height").val(selection.height);
-            }
-        });
-
-        $("#cropPhotoBtn").click(function (e) {
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
-                data: {
-                    x1: $("#x1").val(),
-                    x2: $("#x2").val(),
-                    y1: $("#y1").val(),
-                    y2: $("#y2").val(),
-                    width: $("#width").val(),
-                    height: $("#height").val(),
-                    //imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
-                    photoId: $('#Visitor_photo').val()
-                },
-                dataType: 'json',
-                success: function (r) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
-                        dataType: 'json',
-                        success: function (r) {
-                            $.each(r.data, function (index, value) {
-                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".ajax-upload-dragdrop").css("background", "url(" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});*/
-
-                                //showing image from DB as saved in DB -- image is not present in folder
-                                /*var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
-
-                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
-                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
-                                $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
-                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
-                            
-                                
-                            });
-
-
-                            $("#closeCropPhoto").click();
-                            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
-                            ias.cancelSelection();
-                        }
-                    });
-                }
-            });
-
-            $("#closeCropPhoto").click(function() {
-                var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
-                ias.cancelSelection();
-            });
-        });
-    });*/
-</script>
-
-
-
-<?php
-
-$this->widget('bootstrap.widgets.TbButton', array(
-    'label'       => 'Click me',
-    'type'        => 'primary',
-    'htmlOptions' => array(
-        'data-toggle' => 'modal',
-        'data-target' => '#addCompanyModal',
-        'id'          => 'modalBtn',
-        'style'       => 'display:none',
-    ),
-));
-
-?>
-
-<div class="modal hide fade" id="addCompanyModal" style="width:600px;">
-    <div class="modal-header">
-        <a data-dismiss="modal" class="close" id="dismissModal">×</a>
-        <br>
-    </div>
-    <div id="modalBody">
-    </div>
-
-</div>
-<!-- PHOTO CROP-->
-<div id="light" class="white_content">
-    <?php if ($this->action->id == 'addvisitor') { ?>
-        <img id="photoCropPreview" src="">
-    <?php } elseif ($this->action->id == 'update') {
-                $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
-                $my_image = '';
-                if(!empty($data['db_image'])){
-                    $my_image = "data:image;base64," . $data['db_image'];
-                }else{
-                    $my_image = $data['relative_path'];
-                }
-     ?>
-
-        <img id="photoCropPreview"
-            src = "<?php echo $my_image ?>" >
-    <?php } ?>
-</div>
-
-<div id="fade" class="black_overlay"></div>
-<div id="crop_button">
-    <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-    <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none';
-                document.getElementById('crop_button').style.display = 'none'" value="x" class="btn btn-danger">
-</div>
-<input type="hidden" id="x1"/>
-<input type="hidden" id="x2"/>
-<input type="hidden" id="y1"/>
-<input type="hidden" id="y2"/>
-<input type="hidden" id="width"/>
-<input type="hidden" id="height"/>

@@ -106,8 +106,9 @@ class PreregistrationController extends Controller
 		{
 			$model->declaration1 = $session['declaration1'];
 			$model->declaration2 = $session['declaration2'];
+
 			//$model->declaration3 = $session['declaration3'];
-			$model->declaration4 = $session['declaration4'];
+			//$model->declaration4 = $session['declaration4'];
 		}
 
 
@@ -120,7 +121,8 @@ class PreregistrationController extends Controller
 				$session['declaration1'] = $model->declaration1;
 				$session['declaration2'] = $model->declaration2;
 				//$session['declaration3'] = $model->declaration3;
-				$session['declaration4'] = $model->declaration4;
+
+				//$session['declaration4'] = $model->declaration4;
 				$this->redirect(array('preregistration/registration'));
 			}
 		}
@@ -853,13 +855,12 @@ class PreregistrationController extends Controller
     /* Help Desk history */
 
     public function actionHelpdesk() {
+
     	$helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup();
 
-    	/*echo "<pre>";
-    	print_r($helpDeskGroupRecords);
-    	die;*/
-
+    	
         $session = new CHttpSession;
+
         $this->render('helpdesk', array(
             'helpDeskGroupRecords' => $helpDeskGroupRecords
         ));

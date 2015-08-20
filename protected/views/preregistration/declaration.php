@@ -54,10 +54,10 @@
 
 
 
-            <label class="checkbox">
-                <?php echo $form->checkBox($model,'declaration4'); ?>
+            <!-- <label class="checkbox">
+                <?php //echo $form->checkBox($model,'declaration4'); ?>
                 <span class="checkbox-style"></span>I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.
-            </label>
+            </label> -->
 
         </div>
 

@@ -135,6 +135,8 @@ class HelpDeskGroup extends CActiveRecord {
      */
 	public function getAllHelpDeskGroup() {
             
+            $session = new CHttpSession;
+
             $criteria = new CDbCriteria();
             $criteria->order = 'order_by ASC';
             $module = CHelper::get_allowed_module();
@@ -144,7 +146,13 @@ class HelpDeskGroup extends CActiveRecord {
             if( $module == "AVMS" )
                $criteria->addCondition ('id IN (2, 5, 7)');
             
-             $criteria->addCondition ('created_by = '.Yii::app()->user->id);
+            if(!empty($session['created_by'])){
+                $criteria->addCondition ('created_by = '.$session['created_by']);
+            }else{
+                $criteria->addCondition ('created_by = '.Yii::app()->user->id);
+            }
+            
+
             $helpDeskGroup = $this->findAll($criteria);
             return $helpDeskGroup;
     }

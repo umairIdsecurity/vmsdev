@@ -6,8 +6,8 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase. '/js/helpdesk.js');
 /* @var $model User */
 $session = new ChttpSession;
 ?>
-<div >
-<h1>Help Desk</h1>
+<div class="page-content">
+<h1 class="text-primary title">Help Desk</h1>
 
 
 

@@ -20,7 +20,7 @@ class Declaration extends CFormModel{
     {
         return array(
 
-            array('declaration1,declaration2,declaration4', 'compare', 'compareValue' => true,
+            array('declaration1,declaration2', 'compare', 'compareValue' => true,
               'message' => 'Mark all Declarations to proceed'),
 
         );

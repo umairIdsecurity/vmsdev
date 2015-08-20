@@ -120,7 +120,7 @@
 <!-- ************************************** -->
 
 <!-- -Login Modal -->
-<?php //if(isset($model)): ?>
+
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -215,7 +215,7 @@
        </div>
     </div>
     <!-- - Login Model Ends Here -->
-<?php //endif; ?>
+
 
 <!-- ************************************** -->
 

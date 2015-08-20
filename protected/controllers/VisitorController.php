@@ -221,10 +221,11 @@ class VisitorController extends Controller {
                 }
 
             }
-              if( $model->profile_type == "CORPORATE" ) {
-                        Yii::app()->user->setFlash('success', 'Corporate Visitor Updated Successfully!');
-                        $this->redirect(array("visitor/update&id=".$id));
-                    }
+            if( $model->profile_type == "CORPORATE" ) {
+                Yii::app()->user->setFlash('success', 'Corporate Visitor Updated Successfully!');
+                // $this->redirect(array("visitor/update&id=".$id));
+                $this->redirect(array('visitor/update', 'id' => $id, 'vms' => Yii::app()->request->getParam('vms')));
+            }
         } else{
             $this->render('update', array(
                 'model' => $model,

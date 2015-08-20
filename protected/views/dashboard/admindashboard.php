@@ -90,6 +90,7 @@ foreach ($workstationList as $workstation) {
     $merge->addCondition("workstation =" . $workstationId . " and (visit_status =" . VisitStatus::ACTIVE . " or visit_status =" . VisitStatus::PREREGISTERED . ")");
 
     ?><div  class="admindashboardDiv"><?php
+        $login_url = $this->createUrl('site/login');
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,
             'dataProvider' => $model->search($merge),
@@ -97,10 +98,13 @@ foreach ($workstationList as $workstation) {
             'hideHeader'=>true,
             'filter' => $model,
             'afterAjaxUpdate' => "
-    function(id, data) {
-        $('th > .asc').append('<div></div>');
-        $('th > .desc').append('<div></div>');
-    }",
+            function(id, data) {
+                $('th > .asc').append('<div></div>');
+                $('th > .desc').append('<div></div>');
+                if (data.indexOf('Visitor Management System  - Login') > -1) {
+                    window.location = '$login_url';
+                }
+            }",
             'columns' =>
             array(
                 array(

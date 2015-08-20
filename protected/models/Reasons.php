@@ -57,6 +57,12 @@ class Reasons extends CActiveRecord
 		);
 	}
 
+	public function behaviors() {
+        return array(
+            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+        );
+    }
+
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *

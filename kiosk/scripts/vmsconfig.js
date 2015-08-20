@@ -9,7 +9,7 @@
 angular.module('kiosk.config', []).constant('VMSConfig',
 {
   baseURL:"http://vmsdev.identitysecurity.com.au/index.php",
-  //baseURL:"http://localhost/vms/index.php",
+  // baseURL:"http://vmslocal.com/index.php",
   authToken: "IzVPOD9PXjz26sSCPkKV",
   adminEmail: "tom@growthapps.net"
 });

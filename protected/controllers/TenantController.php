@@ -46,12 +46,15 @@ class TenantController extends Controller {
     }
 
     public function isUserAllowedToUpdate($user) {
-        if ($user->role == Roles::ROLE_SUPERADMIN) {
-            return true;
-        } else {
-            $currentlyEditedCompanyId = $_GET['id'];
-            return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
+        if(isset($user) && !empty($user->id)) {
+            if ($user->role == Roles::ROLE_SUPERADMIN) {
+                return true;
+            } else {
+                $currentlyEditedCompanyId = $_GET['id'];
+                return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
+            }
         }
+        return false;
     }
 
     public function actionCreate() {
@@ -67,7 +70,7 @@ class TenantController extends Controller {
 
 
         }
-        //print_r($_POST);exit;
+       
         if (isset($_POST['TenantForm'])) {
 
             $transaction = Yii::app()->db->beginTransaction();

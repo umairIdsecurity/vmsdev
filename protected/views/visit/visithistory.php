@@ -40,6 +40,7 @@ $session = new CHttpSession;
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-grid',
             'dataProvider' => $visitData,
+            'ajaxUpdateError' => "function(id, data) {window.location.replace('?r=site/login');}",
             /*'afterAjaxUpdate' => "
                 function(id, data) {
                     $('th > .asc').append('<div></div>');

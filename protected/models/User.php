@@ -631,7 +631,7 @@ class User extends VmsActiveRecord {
                 ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.id as user_id, u.first_name, u.last_name')
                 ->from('user u')
                 ->join('company c', 'u.tenant=c.id')
-                ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role IN (" . Roles::ROLE_ADMIN . ", ".Roles::ROLE_AGENT_ADMIN."   ) and c.is_deleted = 0")
+                ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role IN (" . Roles::ROLE_AGENT_AIRPORT_ADMIN . ", ".Roles::ROLE_AGENT_ADMIN."   ) and c.is_deleted = 0")
                 ->queryAll();
             foreach ($company as $index => $value) {
                 $aArray[] = array(

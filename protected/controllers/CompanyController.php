@@ -54,12 +54,15 @@ class CompanyController extends Controller
 
     public function isUserAllowedToUpdate($user)
     {
-        if ($user->role == Roles::ROLE_SUPERADMIN) {
-            return true;
-        } else {
-            $currentlyEditedCompanyId = $_GET['id'];
-            return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
+        if(isset($user) && !empty($user->id)) {
+            if ($user->role == Roles::ROLE_SUPERADMIN) {
+                return true;
+            } else {
+                $currentlyEditedCompanyId = $_GET['id'];
+                return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
+            }
         }
+        return false;
     }
 
     public function actionLogo()

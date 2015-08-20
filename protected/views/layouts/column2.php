@@ -19,14 +19,13 @@ if (isset($_GET['viewFrom'])) {
             } elseif ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             require_once(Yii::app()->basePath . '/views/visit/dashboardSidebar.php');
 
-            } elseif ($this->id == 'dashboard' || $session['lastPage'] == 'dashboard') {
-            if ($this->id != 'dashboard') {
-            $this->renderPartial("../dashboard/viewdashboardsidebar");
-            } else {
-            $this->renderPartial("viewdashboardsidebar");
+            } elseif ($this->id == 'dashboard' || $session['lastPage'] == 'dashboard' || ($this->id == 'visit' && $this->action->id =='detail')) {
+                if ($this->id != 'dashboard') {
+                    $this->renderPartial("../dashboard/viewdashboardsidebar");
+                } else {
+                    $this->renderPartial("viewdashboardsidebar");
 
-            }
-
+                }
             } elseif ($session['role'] == Roles::ROLE_SUPERADMIN ||
                       $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN ||
                       $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN || $session['role'] == Roles::ROLE_AGENT_AIRPORT_ADMIN

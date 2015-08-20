@@ -1,8 +1,9 @@
-<h1 style="margin-left: 70px">Edit Organisation Settings</h1>
+
 <?php
 /* @var $this CompanyController */
 /* @var $model Company */
 /* @var $form CActiveForm */
+
 
 $session = new CHttpSession;
 $currentRoleinUrl = '';
@@ -30,14 +31,16 @@ $currentLoggedUserId = $session['id'];
 
     <?php
         $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'tenant-edit-form',
+        'id' => 'tenant-form',
             'enableAjaxValidation'=>true,
             'enableClientValidation' => false,
             'clientOptions'=>array(
                 'validateOnSubmit'=>true,
                  )
     ));
+        $module_for = Yii::app()->request->getParam("module", "1"); // 1 = avms, 2=cvms
     ?>
+    <input type="hidden" name="for_module" value="<?php echo $module_for;?>">
     <?php
     foreach (Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
@@ -62,7 +65,7 @@ $currentLoggedUserId = $session['id'];
                         <td style="width:300px;">
                             <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
 
-                            <input type="hidden" id="Host_photo" name="TenantForm[photo]" value="<?php echo $TenantModel->user0[0]['photo']; ?>">
+                            <input type="hidden" id="Host_photo" name="TenantForm[photo]" value="<?php echo $model->photo; ?>">
                             <div class="photoDiv" style='display:none;'>
                                 <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
                             </div>
@@ -79,31 +82,41 @@ $currentLoggedUserId = $session['id'];
                 </table>
             </td>
 
+
             <td style="vertical-align: top; float:left; width:300px;">
 
-                <?php echo $form->hiddenField($model, 'role',array('value'=> $session['role'])); ?>
+               
                 <div class="password-border">
                     <table>
                         <tbody>
                         <tr>
-                            <td><strong>Tenant</strong></td>
+                            <td><strong>Tenant Agent</strong></td>
                         </tr>
                         <tr><td>&nbsp;</td></tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'tenant_name', array('value'=>$TenantModel->id0['name'], 'size' => 50, 'maxlength' => 50,'placeholder'=>'Tenant Name')); ?>
+                            <td><?php 
+            
+                                echo  $form->dropDownList($model, 'tenant_name',  CHtml::listData($allTenant, 'id0.id', 'id0.name'));
+                            ?>
                                 <span class="required">*</span>
 
                                 <?php echo "<br>" . $form->error($model, 'tenant_name'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'tenant_code', array('value'=>$TenantModel->id0['code'], 'size' => 50, 'maxlength' => 3,'placeholder'=>'Tenant code', 'onkeyup' => 'restrict(this)')); ?>
+                            <td><?php echo $form->textField($model, 'tenant_agent_name', array('size' => 50,'placeholder'=>'Tenant Agent Name')); ?>
                                 <span class="required">*</span>
 
-                                <?php echo "<br>" . $form->error($model, 'tenant_code'); ?>
+                                <?php echo "<br>" . $form->error($model, 'tenant_agent_name'); ?>
                             </td>
                         </tr>
-                       
+                        <tr>
+                            <td><?php echo $form->textField($model, 'workstation', array('size' => 50,'placeholder'=>'Workstation')); ?>
+                                <span class="required">*</span>
+
+                                <?php echo "<br>" . $form->error($model, 'workstation'); ?>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -111,32 +124,32 @@ $currentLoggedUserId = $session['id'];
                     <table >
                         <tbody>
                         <tr>
-                            <td><strong>Tenant Admin</strong></td>
+                            <td><strong>Tenant Agent Admin</strong></td>
                         </tr>
                         <tr><td>&nbsp;</td></tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'first_name', array('value'=>$TenantModel->user0[0]['first_name'], 'size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+                            <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
                                 <span class="required">*</span>
 
                                 <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'last_name', array('value'=>$TenantModel->user0[0]['last_name'],'size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+                            <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'email', array('value'=>$TenantModel->user0[0]['email'],'size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?>
+                                <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'email'); ?>
                                 <span class="errorMessageEmail1" style="display:none;color:red;font-size:0.9em;">A profile already exists for this email address</span>
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'contact_number', array('value'=>$TenantModel->user0[0]['contact_number'],'size' => 50, 'placeholder'=>'Contact Number')); ?>
+                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                         </tr>
@@ -147,14 +160,12 @@ $currentLoggedUserId = $session['id'];
                 <div class="password-border t-top20 paddingBottom10px">
                     
                     <strong>Module Access </strong> <br> <br>
-                    <?php if($TenantModel->user0[0]["allowed_module"] == 3)
-                            echo "CVMS & AVMS";
-                        else  
-                            echo User::$allowed_module[ $TenantModel->user0[0]["allowed_module"] ];
+                   
+                    <input type="checkbox" name="module_access_avms" value="1" checked> AVMS <br>
+                     
+                    <input type="checkbox" name="module_access_cvms" value="2">  CVMS <br>
                     
-                    ?>
-                    <br><br>
-               
+                    
                 </div> 
                     
         </td>
@@ -165,38 +176,17 @@ $currentLoggedUserId = $session['id'];
                     <tr>
                         <td>
                             <!-- <select  onchange="populateDynamicFields()"  -->  
-                            <select  <?php
-                            // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
-                            if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
-                                //echo "disabled";
-                            }
-                            ?> id="User_role" name="TenantForm[role]" disabled>
-                                <!-- <option disabled value='' selected>Select Role</option> -->
-                                <?php
+                            <select id="User_role" name="TenantForm[role]">
+                                <?php if( $module_for == 1) { ?>
+                                     <option  value='<?php echo Roles::ROLE_AGENT_AIRPORT_ADMIN;?>' selected>Agent Airport Administrator</option>  
+                                <?php } else { ?>
+                                     <option  value='<?php echo Roles::ROLE_AGENT_ADMIN;?>' selected>Agent Administrator</option>  
+                                <?php } ?>
+                                
 
-                                $assignableRowsArray = getAssignableRoles($session['role'],$model); // roles with access rules from getaccess function
-                                foreach ($assignableRowsArray as $assignableRoles) {
-                                    foreach ($assignableRoles as $key => $value) {
-                                        ?>
-
-                                        <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
-                                        if (isset($_GET['role'])) { //if url with selected role
-                                            if ($currentRoleinUrl == $key) {
-                                                echo "selected ";
-                                            }
-                                        } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
-                                            if ($key == $model->role) {
-                                                echo " selected ";
-                                            }
-                                        }
-                                        ?>>
-                                            <?php echo $value; ?></option>
-                                    <?php
-                                    }
-                                }
-                                ?>
-
-                            </select><?php echo "<br>" . $form->error($model, 'role'); ?>
+                            </select>
+                                
+                                <?php echo "<br>" . $form->error($model, 'role'); ?>
                         </td>
 
                     </tr>
@@ -204,7 +194,7 @@ $currentLoggedUserId = $session['id'];
 
                     <tr>
 
-                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
+                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array(  'options' => array('1'=>array('selected'=>true)))); ?>
                             <!-- <span class="required">*</span> -->
                             <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
@@ -219,7 +209,15 @@ $currentLoggedUserId = $session['id'];
                      <tr>
                          
                         <td>
-                            
+                            <?php /*echo $form->dropDownList(
+                                    $model,
+                                    'timezone_id',
+                                    CHtml::listData(Timezone::model()->findAll(),
+                                            'id',
+                                            'timezone_name'),
+                                            array('empty'=>'Please select a timezone')
+                                    );*/
+                            ?>
 
                             <select id="Workstation_timezone_id" name="TenantForm[timezone_id]">
                                 <?php
@@ -227,9 +225,11 @@ $currentLoggedUserId = $session['id'];
                                     foreach ($timezoneList as $key => $value) {
                                         ?>
                                         <option <?php
-                                        if ($TenantModel->user0[0]['timezone_id'] == $value['id']) {
+                                        if ($model['timezone_id'] == $value['id']) {
                                             echo " selected ";
-                                        } 
+                                        } elseif($model['timezone_id'] == '' && $value['timezone_value'] == $_SESSION["timezone"]) {
+                                            echo " selected ";
+                                        }
                                         ?> value="<?php echo $value['id']; ?>"><?php echo $value['timezone_name']; ?></option>
                                         <?php
                                     }?>
@@ -255,7 +255,7 @@ $currentLoggedUserId = $session['id'];
                 <div class="password-border">
                     <table>
                         <tr>
-                            <td><strong>Change Password</strong></td>
+                            <td><strong>Password Options</strong></td>
 
                         </tr>
 
@@ -272,22 +272,32 @@ $currentLoggedUserId = $session['id'];
                                     <tr id="third_option" class='hiddenElement'>
 
                                     </tr>
- 
+
+                                    <tr>
+                                        <td>
+                                            <?php echo $form->hiddenField($model, 'password_opt'); ?>
+                                            <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
+                                            &nbsp;Create Password
+                                        </td>
+
+                                        <?php echo "<br>". $form->error($model,'password_opt'); ?>
+                                    </tr>
                                     <tr>
 
                                         <td>
                                             <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
-                 
+                                            <span class="required">*</span>
+
+                                            <?php  echo $form->error($model,'password', array("class"=>"hidingMsgPassword")); ?>
 
                                         </td>
                                     </tr>
 
                                     <tr >
-                                        <td>
+                                        <td >
                                             <input placeholder="Repeat Password" type="password" id="TenantForm_cnf_password"  name="TenantForm[cnf_password]">
-                                            
-                                             <?php // echo $form->error($model,'password'); ?>
-                                            <div class="hidingMsgPassword"> Password must be repeated exactly. </div>
+                                            <span class="required">*</span>
+                                            <?php //echo $form->error($model,'cnf_password'); ?>
 
                                         </td>
 
@@ -301,14 +311,17 @@ $currentLoggedUserId = $session['id'];
                                                 <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
 
                                             </div>
- 
+
                                         </td>
                                         
                                     </tr>
 
-                                     
+                                    <tr>
+                                        <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
+                                            &nbsp;Send User Invitation</td>
+                                    </tr>
 
-                                </table> <div style="font-size:11px; color: #ccc"> Don't want to change password? Leave it as empty. </div>
+                                </table>
                             </td>
                         </tr>
 
@@ -359,25 +372,6 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
-    
-     
- $('.hidingMsgPassword').hide();
-    $('#TenantForm_password, #TenantForm_cnf_password').on('keyup', function () {
-        if ($('#TenantForm_password').val() == $('#TenantForm_cnf_password').val()) {    
-
-            $('#TenantForm_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});         
-            $('#TenantForm_cnf_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
-            $('.hidingMsgPassword').hide();
-        } else {
-            $('.hidingMsgPassword').css("color","red");
-            $('.hidingMsgPassword').show();
-            $('#TenantForm_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
-            $('#TenantForm_cnf_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
-       }
-            
-    });
-    
-    
     function generatepassword() {
 
         $("#random_password").val('');
@@ -454,7 +448,7 @@ if (isset($_GET['viewFrom'])) {
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo').val(),
                         dataType: 'json',
                         success: function(r) {
- 
+
                             $.each(r.data, function(index, value) {
                                 
                                 /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
@@ -556,7 +550,6 @@ function getAssignableRoles($user_role, $model) {
 
         }
 
-        //echo '<p><pre>';print_r($user_role);echo '</pre></p>';
 
         return $assignableRolesArray;
     }
@@ -699,6 +692,31 @@ function get_avms_assignable_roles($user_role)
 
 <script type="text/javascript">
     
+    $('.hidingMsgPassword').css("color","red");
+
+    $('#TenantForm_password, #TenantForm_cnf_password').on('keyup', function () {
+        if ($('#TenantForm_password').val() == $('#TenantForm_cnf_password').val()) {    
+
+            $('#TenantForm_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
+            
+            $('#TenantForm_cnf_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
+
+         //   $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+            
+            $('.hidingMsgPassword').hide();
+        } else {
+            $('.hidingMsgPassword').css("color","red");
+            $('.hidingMsgPassword').show();
+
+            $('#TenantForm_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
+            
+            $('#TenantForm_cnf_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
+
+           // $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+            
+        }
+            
+    });
 
     function restrict(ob){
         var invalidChars = /([^A-Z])/g;
@@ -718,7 +736,14 @@ function get_avms_assignable_roles($user_role)
 
 
     var radiochooseval = "";
-     
+    function call_radio1(){
+        radiochooseval = $('#radio1').val();
+        $('#TenantForm_password_opt').val(radiochooseval);
+    }
+    function call_radio2(){
+        radiochooseval = $("#radio2").val();
+        $('#TenantForm_password_opt').val(radiochooseval);
+    }
     /*<![CDATA[*/
     //jQuery(function($) { $('#tenant-form').yiiactiveform({'attributes':[{'inputID':'TenantForm_password','errorID':'TenantForm_password_em_'},{'inputID':'TenantForm_cnf_password','errorID':'TenantForm_cnf_password_em_'}]}); });
     /*]]>*/

@@ -94,7 +94,8 @@ class Company extends CActiveRecord {
 
                     // Senario for Add Tenant
                     array('code, name, contact, email_address, office_number','required', 'on' => 'add_tenant'),
-
+                    array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent'),
+                    
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -133,6 +134,7 @@ class Company extends CActiveRecord {
 
                             // Senario for Add Tenant
                             array('code, name,  email_address, office_number','required', 'on' => 'add_tenant'),
+                            array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent'),
 
                             // The following rule is used by search().
                             // @todo Please remove those attributes that should not be searched.

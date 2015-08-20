@@ -136,6 +136,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 url: linkGetActiveVisit,
                 data: {id: id},
                 success: function(response) {
+                    if (response.indexOf('Visitor Management System  - Login') > -1) {
+                        window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
+                    }
                     container.append(response);
                     $('#activeVisitModal').removeClass('hidden');
                     $('#activeVisitModal').modal('show');
@@ -203,6 +206,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 url: $('#linkReset').val(),
                 data: {reason: reason},
                 success:function(response) {
+                    if (response.indexOf('Visitor Management System  - Login') > -1) {
+                        window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
+                    }
                     $.fn.yiiGridView.update('corporate-total-visit-count');
                 }
             });

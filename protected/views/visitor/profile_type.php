@@ -36,7 +36,7 @@
             <?php if (Yii::app()->controller->action->id == 'addvisitor'): ?>
                 $(location).attr('href', 'index.php?r=visitor/addvisitor&profile_type=' + $(profileTypeSelector).filter(':checked').val());
             <?php else: ?>
-                $(location).attr('href', 'index.php?r=visitor/update&id=<?php echo $_GET["id"]; ?>&profile_type=' + $(profileTypeSelector).filter(':checked').val());
+                $(location).attr('href', 'index.php?r=visitor/update&id=<?php echo $_GET["id"]; ?>&profile_type=' + $(profileTypeSelector).filter(':checked').val() + '&vms=' + '<?php echo Yii::app()->request->getParam('vms'); ?>');
             <?php endif; ?>
        });
     });

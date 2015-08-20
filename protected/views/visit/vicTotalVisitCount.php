@@ -153,6 +153,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 url: linkGetActiveVisit,
                 data: {id: id},
                 success: function(response) {
+                    if (response.indexOf('Visitor Management System  - Login') > -1) {
+                        window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
+                    }
                     container.append(response);
                     $('#activeVisitModal').removeClass('hidden');
                     $('#activeVisitModal').modal('show');
@@ -224,10 +227,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     if(! data || data == '') {
                         $.fn.yiiGridView.update('vic-total-visit-count');
                     } else {
-                        alert(data);
+                        window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
                     }
-
-
                 }
             });
             return false;

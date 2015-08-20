@@ -1156,11 +1156,13 @@ class Visit extends CActiveRecord {
         $dateNow  = new DateTime(date('Y-m-d'));
         $criteria = new CDbCriteria;
 
-        $criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $this->visitor);
+        //$criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $this->visitor);
+        $oldVisitsCount = $this->getOldVisitsCountForThisYear($this->id, $this->visitor);
         
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
-                return (int)$this->count($criteria);
+                //return (int)$this->count($criteria);
+                return $oldVisitsCount;
                 break;
             case CardType::VIC_CARD_SAMEDATE:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
@@ -1168,33 +1170,50 @@ class Visit extends CActiveRecord {
                 }
                 return (int)$this->count($criteria) + 1;
             case CardType::VIC_CARD_24HOURS:
-                return (int)$this->count($criteria);
+                //return (int)$this->count($criteria);
+                return $oldVisitsCount;
                 break;
 
             case CardType::VIC_CARD_MULTIDAY:
-                $isExpired = $dateOut->format("d") - $dateNow->format("d");
-                if( $isExpired > 0 )
-                     $totalCount = $dateNow->diff($dateIn)->days + 1;
+                $isExpired = $dateNow->diff($dateOut)->format("%r%a");
+                if( $isExpired < 0 ) 
+                     $totalCount = $dateOut->diff($dateIn)->days;
                 else
-                     $totalCount = $dateOut->diff($dateIn)->days + 1;
+                     $totalCount = $dateIn->diff($dateNow)->days;
                 
-                if ($this->count($criteria) > 0) {
-                    $totalCount += $this->count($criteria);
+                 // Add Old visits
+                if ($oldVisitsCount > 0) {
+                    $totalCount += $oldVisitsCount;
                 }
+                // Count active date as first visit
+                if( $this->visit_status == VisitStatus::ACTIVE)
+                    $totalCount += 1;
+                
                 return $totalCount;
                 break;
             case CardType::VIC_CARD_EXTENDED:
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
-                        return $dateNow->diff($dateIn)->days;
+                        $totalCount =  $dateOut->diff($dateIn)->days + 1;
                         break;
                     default:
-                        if ($dateNow->diff($dateOut)->days <= 0) {
-                            return $dateOut->diff($dateIn)->days;
-                        }
-                        return $dateNow->diff($dateIn)->days + 1;
+                    
+                       if ($dateNow->diff($dateOut)->format("%r%a") <= 0)  
+                           $totalCount =  $dateIn->diff($dateOut)->days; 
+                        if( $dateNow->diff($dateOut)->format("%r%a") >  0)
+                           $totalCount =  $dateIn->diff($dateNow)->days;                      
                         break;
                 }
+                // Add Old visits
+                if ($oldVisitsCount > 0) {
+                    $totalCount += $oldVisitsCount;
+                }
+                
+                 // Count active date as first visit
+                if( $this->visit_status == VisitStatus::ACTIVE)
+                    $totalCount += 1;
+                
+                return $totalCount;
                 break;
         }
     }
@@ -1218,23 +1237,54 @@ class Visit extends CActiveRecord {
                 return 28 - (int)$this->visitCounts;
                 break;
             case CardType::VIC_CARD_EXTENDED:
-                $totalDays = $dateOut->diff($dateIn)->days;
-                switch ($this->visit_status) {
-                    case VisitStatus::AUTOCLOSED:
-                        return $dateOut->diff($dateNow)->days;
-                        break;
-                    default:
-                        if ($dateNow->diff($dateOut)->days <= 0) {
-                            return $dateOut->diff($dateIn)->days;
-                        }
-                        return $totalDays - $this->visitCounts;
-                        break;
-                }
+                return 28 - (int)$this->visitCounts;
+//                $totalDays = $dateOut->diff($dateIn)->days + 1;
+//                switch ($this->visit_status) {
+//                    case VisitStatus::AUTOCLOSED:
+//                        return $dateOut->diff($dateNow)->days + 1;
+//                        break;
+//                    default:
+//                        if ($dateNow->diff($dateOut)->format("%r%a") <= 0) {
+//                            return $dateOut->diff($dateIn)->days + 1;
+//                        }
+//                        return $totalDays - $this->visitCounts;
+//                        break;
+//                }
                 break;
         }
         
     }
 
+    /**
+     * This method counts a visitors all visits in the current calender year.
+     * Visit counts depends upon the days between the dateIN and DateOut.  
+     * @param int $current_visit_id
+     * @param int $visitor_id
+     * @return int
+     */
+    public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id) {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("id != ".$current_visit_id." AND tenant = ".Yii::app()->user->tenant." AND visit_status != ".VisitStatus::SAVED." AND visitor = " . $this->visitor);
+        $visits = $this->findAll($criteria);
+       if( $visits ) {
+           $visitCount  = 0;
+           foreach( $visits as $key => $v ) {
+               $dateIn  = new DateTime($v["date_check_in"]);
+               $dateOut = new DateTime($v["date_check_out"]);
+               $dateNow = new DateTime("NOW");
+               
+               // For the current Year Only
+               if( $dateNow->format("Y") == $dateIn->format("Y") )
+                  $visitCount += $dateIn->diff($dateOut)->days;
+           }
+           return $visitCount;
+           
+       } else
+       {
+           return 0;
+       }
+       
+    }    
     /**
      * Set status as Closed of the VIC 24Hours visit only if date/time checkout reached current date/time.
      * Below is the flow for the all VIC visit cards:

@@ -558,7 +558,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 }
             };
 
-            $.ajax(ajaxOpts);
+            $.ajax(ajaxOpts).fail(function() {
+                window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            });
             return false;
         }
 
@@ -688,6 +690,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     }
                 });
             }
+        }).fail(function() {
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
     }
 
@@ -716,6 +720,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     }
                 });
             }
+        }).fail(function() {
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
     }
 </script>

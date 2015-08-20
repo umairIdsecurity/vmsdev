@@ -70,7 +70,7 @@ class TenantController extends Controller {
 
 
         }
-        //print_r($_POST);exit;
+       
         if (isset($_POST['TenantForm'])) {
 
             $transaction = Yii::app()->db->beginTransaction();

@@ -24,6 +24,7 @@ class TenantForm extends CFormModel
     public $timezone_id;
     public $allowed_module;
     public $workstation;
+    public $tenant_agent_name;
     
 
     public static $USER_ROLE_LIST = array(
@@ -59,8 +60,8 @@ class TenantForm extends CFormModel
     {
         return array(
             // name, email, subject and message are required
-            array('timezone_id','required','message' =>'Please select a timezone'),
-            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'save'),
+            array('timezone_id','required','message' =>'Please select a timezone'),    
+            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'save'),           
             array('password_opt','required','message' => 'Please select a {attribute}', 'on'=>'save'),  
             array('tenant_name,first_name, last_name, email', 'length', 'max' => 50),
             array('tenant_code', 'length', 'max' => 3),
@@ -75,23 +76,25 @@ class TenantForm extends CFormModel
            array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'edit_form'),
             // End Edit Tenant Rules 
             
+            // Tenant Agent Add
+            array('tenant_name,tenant_agent_name,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'tenant_agent'),
+              array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
+                ':is_deleted'=>0
+                )), 'on'=>'tenant_agent'),
+            
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),
             array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 )), 'on'=>'save'),
+            
           
             array('password,cnf_password', 'required','on'=>'passwordrequire', 'message' => 'Please enter password or Autogenerate password'),
 
             //array('password,cnf_password', 'required','on'=>'passwordrequire'),
             array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'passwordrequire'),
-
-
             array('tenant_code','match', 'pattern' => '[^[A-Za-z]+$]','message' => 'Tenant code not contains the numeric value'),
-            //array('password_opt', 'checkTerm'),
-
-            // verifyCode needs to be entered correctly
-            //array('verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
+            
         );
     }
 
@@ -127,7 +130,8 @@ class TenantForm extends CFormModel
             'photo' => 'Photo',
             'timezone_id' => 'Timezone',
             'allowed_module' => 'Module Access',
-            'password_opt' => 'Password Option'
+            'password_opt' => 'Password Option',
+            'tenant_agent_name' => 'Tenant Agent Name'
         );
     }
     public function is_avms_user()

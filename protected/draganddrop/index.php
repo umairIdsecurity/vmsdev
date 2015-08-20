@@ -250,19 +250,19 @@ if (isset($_GET['viewFrom'])) {
             onSuccess: function(files, data, xhr)
             {
 
-                if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit' || $("#controllerId").val() == 'companyLafPreferences') {
-                    //var logo = document.getElementById('photoPreview');
-                } else {
+                if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit' ) {
+                    var logo = document.getElementById('photoPreview');
+                } else if( $("#controllerId").val() == 'companyLafPreferences') {
                     var logo = document.getElementById('companyLogo');
                 }
 
                 var currentAction = $("#actionUpload").val();
                 
-                if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
+                if (currentAction == 'update' && $("#controllerId").val() != 'visitor' )
                 {
                     /*logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
                     $(".companyLogoDiv").show();*/
-
+alert("update");
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + data,
@@ -290,6 +290,7 @@ if (isset($_GET['viewFrom'])) {
                     if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
 
                         $("#Visitor_photo").val(data);
+                                                
                     } else if ($("#controllerId").val() == 'companyLafPreferences')
                     {
                         $("#CompanyLafPreferences_logo").val(data);
@@ -305,24 +306,20 @@ if (isset($_GET['viewFrom'])) {
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                if (($("#actionUpload").val() == 'update' || $("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') && $("#controllerId").val() == 'visitor')) {
-
-                                    /*$(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/' ?>" + value.relative_path + ") no-repeat center top");
-                                    $(".ajax-upload-dragdrop").css({
-                                        "background-size": "132px 152px"
-                                    });
-                                    logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
-                                    
+                                if (($("#actionUpload").val() == 'update' || $("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') &&  $("#controllerId").val() == 'visitor')   ) {
+                                     
                                     //showing image from DB as saved in DB -- image is not present in folder                                    
                                     var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+                                   // if(  $("#controllerId").val() != 'visit') &&  )
                                     $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
+                                    $(".photo_visitor").src = "data:image;base64,"+ value.db_image;
+                                   
                                     } else {
-
-                                    /*logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
-                                    logo.src = "data:image;base64,"+ value.db_image;
-                                    $(".photoDiv").show();
-                                
+                                      $(".photoDiv").show();
+                                      // Visit Detail Page
+                                      if($("#actionUpload").val() == 'detail')
+                                        $(".photo_visitor").attr("src","data:image;base64,"+ value.db_image);                               
                                 }
 
                                 if ($("#controllerId").val() != 'companyLafPreferences' && $("#controllerId").val() != 'company') {
@@ -331,6 +328,7 @@ if (isset($_GET['viewFrom'])) {
                                     
                                 }
                                 if ($("#controllerId").val() == 'visit') {
+                                   
                                     $("#submitBtnPhoto").click();
                                     if ($("#visitorOriginalValue").val() == '') {
                                         $("#cropImageBtn").show();

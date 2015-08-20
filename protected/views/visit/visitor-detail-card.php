@@ -33,11 +33,12 @@ $photoForm = $this->beginWidget('CActiveForm', [
                     $my_image = $data['relative_path'];
                 }
         ?>
-
-        <img id="photoPreview" src="<?php echo $my_image; ?>">
+ 
+        <img id="photoPreview" src="<?php echo $my_image; ?>" class="photo_visitor">
     <?php } else { ?>
-        <img id="photoPreview" src="" style="display:none;">
+        <img id="photoPreview" src="" style="display:none;" class="photo_visitor">
     <?php } ?>
+        
 </div>
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);

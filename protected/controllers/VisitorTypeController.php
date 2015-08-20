@@ -76,30 +76,25 @@ class VisitorTypeController extends Controller {
 
                 $model->save();
 
-                
+                if(isset($_POST["card_types"])) {
 
-                    if(isset($_POST["card_types"])) {
+                    $card_types = $_POST["card_types"];
 
-                        $card_types = $_POST["card_types"];
+                    // add any new ones
+                    foreach ($card_types as $value) {
 
-                        // add any new ones
-                        foreach ($card_types as $value) {
-
-                            $new_row = new VisitorTypeCardType;
-                            $new_row->card_type = $value;
-                            $new_row->visitor_type = $model->id;
-                            $new_row->tenant = !empty($session['tenant'])?$session['tenant']:NULL;
-                            $new_row->tenant_agent = !empty($session['tenant_agent'])?$session['tenant_agent']:NULL;
-                            $new_row->save();
-                        }
+                        $new_row = new VisitorTypeCardType;
+                        $new_row->card_type = $value;
+                        $new_row->visitor_type = $model->id;
+                        $new_row->tenant = !empty($session['tenant'])?$session['tenant']:NULL;
+                        $new_row->tenant_agent = !empty($session['tenant_agent'])?$session['tenant_agent']:NULL;
+                        $new_row->save();
                     }
-                //}
-
-                    
+                }
                 $transaction->commit();
 
                 Yii::app()->user->setFlash('success', "Visitor Type inserted Successfully");
-                $this->redirect(array('admin',array('vms' => $model->module)));
+                $this->redirect(array('admin', 'vms' => strtolower($model->module)));
 
             } catch (CDbException $e)
             {

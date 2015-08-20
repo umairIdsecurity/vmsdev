@@ -105,6 +105,30 @@ class CHelper
         }
     }
 
+    /**
+     * Highlight Add Submenu Link in Left navigation
+     *
+     * @param controller ID
+     * @param action ID
+     * @param param
+     * @return string CSS for Hightlight.
+     */
+    public static function is_selected_submenu($controller, $action, $param=NULL)
+    {
+        // Role of the newly User
+        if ($controller == Yii::app()->controller->id && $action == Yii::app()->controller->action->id) {
+            $session = new CHttpSession;
+            $company = Company::model()->findByPk($session['company']);
+            if (isset($company) && !empty($company)) {
+                $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+            }
+            if (isset($companyLafPreferences))
+                echo 'style = "color: ' . $companyLafPreferences->sidemenu_font_color . ' !important;"';
+            else
+                echo "";
+        }
+    }
+
     public static function is_avms_visitor()
     {
         $vms = Yii::app()->request->getParam('vms');

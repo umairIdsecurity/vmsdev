@@ -159,6 +159,8 @@ class Company extends CActiveRecord {
             'contacts' => array(self::HAS_MANY, 'Contact', 'company_id'),
             'ph' => array(self::BELONGS_TO, 'Photo', 'logo'),
             'companyPreference' => array(self::BELONGS_TO,'CompanyLafPreferences','company_laf_preferences'),
+            'tenant_agent' => array(self::HAS_MANY, 'TenantAgent', 'id'),
+            'tenant' => array(self::HAS_ONE, 'Tenant', 'id'),
         );
     }
 
@@ -231,7 +233,7 @@ class Company extends CActiveRecord {
         $criteria->compare('created_by_visitor', $this->created_by_visitor);
         $criteria->compare('tenant', $this->tenant);
         $criteria->compare('tenant_agent', $this->tenant_agent);
-        $criteria->compare('is_deleted', $this->is_deleted);
+        $criteria->compare('t.is_deleted', $this->is_deleted);
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
         $criteria->compare('card_count', $this->card_count);

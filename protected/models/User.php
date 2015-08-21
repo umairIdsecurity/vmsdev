@@ -159,7 +159,7 @@ class User extends VmsActiveRecord {
                  array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 ))),
-                array('role, company', 'required', 'message' => 'Please select a {attribute}'),
+                array('role', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent,photo','default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no', 'AvmsFields'),
                 array('asic_expiry_day, asic_expiry_month, asic_expiry_year ', 'AvmsFields'),
@@ -488,7 +488,7 @@ class User extends VmsActiveRecord {
 
     public function beforeFind() {
         $criteria = new CDbCriteria;
-        $criteria->condition = "is_deleted = 0";
+        $criteria->condition = "t.is_deleted = 0";
 
         $this->dbCriteria->mergeWith($criteria);
     }
@@ -633,12 +633,22 @@ class User extends VmsActiveRecord {
                 ->join('company c', 'u.tenant=c.id')
                 ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role IN (" . Roles::ROLE_AGENT_AIRPORT_ADMIN . ", ".Roles::ROLE_AGENT_ADMIN."   ) and c.is_deleted = 0")
                 ->queryAll();
-            foreach ($company as $index => $value) {
+             foreach ($company as $index => $value) {
                 $aArray[] = array(
                     'id' => $value['id'],
                     'name' => $value['first_name'] . ' ' . $value['last_name'],
                     'tenant' => $value['tenant'],
                     'tenant_agent' => $value['user_id'],
+                );
+            }
+            
+            $tenantAgent = TenantAgent::model()->with("id0","user0", "tenant0")->findAll("tenant_id =".$tenantId); 
+            foreach ($tenantAgent as $index => $value) {
+                $aArray[] = array(
+                    'id' => $value['id'],
+                    'name' => $value['id0']['name'],
+                    'tenant' => $value['tenant_id'],
+                    'tenant_agent' => $value['id'],
                 );
             }
         }

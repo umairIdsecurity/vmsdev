@@ -29,14 +29,20 @@ $this->widget('zii.widgets.grid.CGridView', array(
         
          array(
             'name' => 'tenant_name',
-            'filter'=>CHtml::activeTextField($model, 'tenant_name', array('placeholder'=>'Tenant Name')),
-            'value'=>'$data->id0->name',
+            'filter'=>CHtml::activeTextField($model, 'tenant_name', array('placeholder'=>'Tenant')),
+            'value'=>'$data->getTenantName($data->tenant_id)',
         ),
         
         array(
             'name' => 'tenant_agent_name',
-            'filter'=>CHtml::activeTextField($model, 'tenant_agent_name', array('placeholder'=>'Tenant Agent Name')),
+            'filter'=>CHtml::activeTextField($model, 'tenant_agent_name', array('placeholder'=>'Tenant Agent')),
             'value'=>'$data->id0->name',
+        ),
+        
+         array(
+            'name' => 'email_address',
+            'filter'=>CHtml::activeTextField($model, 'email_address', array('placeholder'=>'Contact Email')),
+            'value'=>'$data->id0->email_address',
         ),
         
         array(
@@ -46,9 +52,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         
          array(
-            'name' => 'email_address',
-            'filter'=>CHtml::activeTextField($model, 'email_address', array('placeholder'=>'Contact Email')),
-            'value'=>'$data->id0->email_address',
+            'name' => 'for_module',
+            'filter'=>CHtml::activeTextField($model, 'for_module', array('placeholder'=>'Module')),
+            'value'=>'$data->for_module',
         ),
     
         
@@ -60,13 +66,16 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 'update' => array(//the name {reply} must be same
                     'label' => 'Edit', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                ),
+                     'visible' => '(Yii::app()->user->role == Roles::ROLE_SUPERADMIN)',
+                    'url'=>'Yii::app()->createUrl("tenantAgent/update", array("id"=>$data->id))'
+                    ),
 
                 'delete' => array
                 (
                     'label'=>'Delete',
                     'imageUrl' => false,
-                    'visible' => '(($data->id)!= 1)',
+                    'visible' => '(Yii::app()->user->role == Roles::ROLE_SUPERADMIN)',
+                    'url'=>'Yii::app()->createUrl("tenantAgent/delete", array("id"=>$data->id))'
 
                 ),
 

@@ -81,6 +81,24 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <!-- menu for CVMS Users -->
             <?php if( $module == "CVMS" || $module == "Both")  { ?>
+            
+             <!-- menu for Tenant Agents -->
+            <li class='has-sub'><a  href='<?php echo Yii::app()->createUrl('tenantAgent/cvmsagents'); ?>'><span>CVMS Tenant Agents</span></a>
+                <ul <?php
+                if ($this->action->id == 'cvmsagents') {
+                    echo "style='display:block ;'";
+                }
+                
+               
+                ?>>
+                   <?php  if( Yii::app()->user->role  == Roles::ROLE_SUPERADMIN) { ?>
+                    <li><a href='<?php echo Yii::app()->createUrl('tenantAgent/create&module=cvms'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('tenantAgent', 'create');?>>Add CVMS Tenant Agent</span></a>
+                    </li>
+                <?php } ?>
+                </ul>
+            </li>
+            
+            
             <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',
                     array('vms' => 'cvms')); ?>'><span>CVMS Users</span></a>
 
@@ -227,6 +245,23 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             
             <!-- menu for AVMS Users -->
             <?php if($module == "AVMS" || $module == "Both") { ?>
+            
+             <!-- menu for Avms Tenant Agents -->
+            <li class='has-sub'><a  href='<?php echo Yii::app()->createUrl('tenantAgent/avmsagents'); ?>'><span>AVMS Tenant Agents</span></a>
+                <ul <?php
+                if ($this->action->id == 'avmsagents') {
+                    echo "style='display:block ;'";
+                }
+                
+               
+                ?>>
+                    <?php  if( Yii::app()->user->role  == Roles::ROLE_SUPERADMIN) { ?>
+                    <li><a href='<?php echo Yii::app()->createUrl('tenantAgent/create&module=avms'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('tenantAgent', 'create');?>>Add AVMS Tenant Agent</span></a>
+                    </li>
+                <?php } ?>    
+                </ul>
+            </li>
+            
             <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',
                     array('vms' => 'avms')); ?>'><span>AVMS Users</span></a>
                 <ul <?php

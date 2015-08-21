@@ -45,7 +45,7 @@ if (isset($company) && !empty($company)) {
         margin-right: 0;
         padding-bottom: 0;
         padding-right: 0;
-        width: 124px;
+        width: 140px;
     }
 
     .uploadnotetext {
@@ -242,7 +242,9 @@ $form = $this->beginWidget('CActiveForm', array(
         <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
 </tr>
 
-<?php if (!CHelper::is_accessing_avms_features() || Yii::app()->request->getParam("role") == Roles::ROLE_AGENT_AIRPORT_ADMIN) { ?>
+<?php if (!CHelper::is_accessing_avms_features() || Yii::app()->request->getParam("role") == Roles::ROLE_AGENT_AIRPORT_ADMIN 
+        || Yii::app()->request->getParam("role") == Roles::ROLE_AGENT_ADMIN
+        ) { ?>
     <tr id="tenantRow" class='hiddenElement'>
         <td>
             <select id="User_tenant" name="User[tenant]">
@@ -267,9 +269,9 @@ $form = $this->beginWidget('CActiveForm', array(
 
         <td>
             <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]">
-
+            <option value="">Please select a tenant agent</option>
                 <?php
-                if ($this->action->Id != 'create' || isset($_POST['User'])) {
+                //if ($this->action->Id != 'create' || isset($_POST['User'])) {
 
                     $allAgentAdminNames = User::model()->findAllTenantAgent($model['tenant_agent']);
                     foreach ($allAgentAdminNames as $key => $value) {
@@ -281,9 +283,7 @@ $form = $this->beginWidget('CActiveForm', array(
                         ?> value="<?php echo $value['tenant_agent']; ?>"><?php echo $value['name']; ?></option>
                     <?php
                     }
-                } else {
-                    echo "<option value='' selected>Please select a tenant agent</option>";
-                }
+//               
                 ?>
             </select>
             <span class="required tenantField">*</span>
@@ -310,7 +310,7 @@ $form = $this->beginWidget('CActiveForm', array(
         ) {
             if(Yii::app()->user->role == Roles::ROLE_SUPERADMIN) { 
                 $companyList = CHtml::listData(User::model()->findAllCompanyTenant(), 'id', 'id0.name');
-                $label = 'Please select a Tenant';
+                $label = 'Please select a company';
             }
             else {
                 $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name'); 
@@ -361,13 +361,16 @@ $form = $this->beginWidget('CActiveForm', array(
             }
             ?>
         </select>
-
-        <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; display:none;">Add New Company</a>
-        <?php echo '<br>'.$form->error($model, 'company'); ?>
+       <?php echo '<br>'.$form->error($model, 'company'); ?>
     </td>
     <td></td>
 </tr>
-
+<tr>
+    <td>   <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; display:none;">Add New Tenant Agent</a>
+        <?php echo '<br>'.$form->error($model, 'company'); ?>
+    </td>
+    
+</tr>
 <?php if (!CHelper::is_managing_avms_user()) { ?>
     <tr>
         <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Department')); ?>
@@ -813,11 +816,9 @@ $(document).ready(function () {
     }
 
     if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
-        if (getRole == agentadmin) {
+        if (getRole == agentadmin || getRole == agentairportadmin) {
 
-            document.getElementById('User_tenant_agent').disabled = true;
-            
-            // document.getElementById('User_tenant').disabled = false;
+            document.getElementById('User_tenant_agent').disabled = false;
             //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
             // Very bad programming. :( 
             var elem1 = document.getElementById('User_tenant');
@@ -827,8 +828,10 @@ $(document).ready(function () {
             
             
             $("#tenantRow").show();
+            $("#tenantAgentRow").show();
             $("#addCompanyLink").show();
-            document.getElementById("companyRow").style.paddingBottom = "10px";
+            //document.getElementById("companyRow").style.paddingBottom = "10px";
+           $("#companyRow").hide();
         } else if (getRole == operator) {
             document.getElementById('User_tenant_agent').disabled = true;
             
@@ -844,7 +847,6 @@ $(document).ready(function () {
             $(".workstationRow").show();*/
             $("#tenantRow").show();
         } else if (getRole == agentoperator) {
-            // $("#User_company").empty();
             // document.getElementById('User_tenant').disabled = false;
             //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
             // Very bad programming. :( 
@@ -856,8 +858,6 @@ $(document).ready(function () {
             document.getElementById('User_tenant_agent').disabled = false;
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
-            /*document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();*/
         }
         else {
             // document.getElementById('User_tenant').disabled = false;
@@ -913,6 +913,7 @@ $(document).ready(function () {
             // document.getElementById('User_tenant').disabled = false;
             //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
             // Very bad programming. :( 
+            
             var elem1 = document.getElementById('User_tenant');
             if(typeof elem1 !== 'undefined' && elem1 !== null) {
                 elem1.disabled = false;
@@ -1257,8 +1258,8 @@ function populateDynamicFields() {
             }
             else if (selectedRole == 6) {
                 $("#User_tenant").val('');
-                document.getElementById('User_tenant_agent').disabled = true;
-                $("#tenantAgentRow").hide();
+                document.getElementById('User_tenant_agent').disabled = false;
+                $("#tenantAgentRow").show();
                 document.getElementById('User_company').disabled = true;
                 /*document.getElementById('User_workstation').disabled = true;
                 $(".workstationRow").hide();*/

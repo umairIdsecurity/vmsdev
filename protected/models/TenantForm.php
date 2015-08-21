@@ -69,7 +69,7 @@ class TenantForm extends CFormModel
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
 
             //Edit Tenant 
-             array('tenant_name,tenant_code,, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form"),
+             array('tenant_name,tenant_code, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form"),
              array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id', 'params'=>array(
                 ':is_deleted'=>0, ':id'=>Yii::app()->user->id
                 )), 'on'=>'edit_form'),
@@ -81,6 +81,12 @@ class TenantForm extends CFormModel
               array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 )), 'on'=>'tenant_agent'),
+            
+            // Edit Tenant Agent
+//             array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=', 'params'=>array(
+//                ':is_deleted'=>0
+//                )), 'on'=>'edit_agent_form'),
+              array('tenant_name,tenant_agent_name, first_name, last_name, email, contact_number', 'required', "on"=>"edit_agent_form"),
             
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),

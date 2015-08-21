@@ -160,7 +160,7 @@ $userRole = $session['role'];
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visit History</a>
                             </li>
 
-                            <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view' && $this->action->id != 'detail') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
+                            <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view' && $this->action->id != 'detail') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences" || $this->id == "tenantAgent" )) ? "active" : "" ?>">
                                 <?php if (in_array($session['role'], array(Roles::ROLE_ADMIN,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_SUPERADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) {
                                 ?>
                                 <a href="<?php echo Yii::app()->createUrl("/user/admin&vms=".strtolower(CHelper::get_default_module())); ?>">Administration</a>

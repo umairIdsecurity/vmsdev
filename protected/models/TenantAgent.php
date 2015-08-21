@@ -19,9 +19,9 @@
  */
 class TenantAgent extends CActiveRecord
 {
-    public $name;
- 
-    public $contact;
+    public $tenant_name;
+    public $tenant_agent_name;
+    public $agent_contact;
     public $email_address;
     public $is_deleted;
    
@@ -46,7 +46,7 @@ class TenantAgent extends CActiveRecord
 			array('date_created', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, tenant_id, for_module, is_deleted, created_by, date_created', 'safe', 'on'=>'search'),
+			array('tenant_name, tenant_agent_name, agent_contact, email_address, id, user_id, tenant_id, for_module, is_deleted, created_by, date_created', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,8 +59,9 @@ class TenantAgent extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'id0' => array(self::BELONGS_TO, 'Company', 'id'),
-			'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-			'tenant' => array(self::BELONGS_TO, 'Tenant', 'tenant_id'),
+			'user0' => array(self::BELONGS_TO, 'User', 'user_id'),
+			'tenant0' => array(self::BELONGS_TO, 'Tenant', 'tenant_id'),
+                        'agent_contact' => array(self::HAS_MANY, 'TenantAgentContact', 'tenant_agent_id'),
 		);
 	}
 
@@ -77,6 +78,11 @@ class TenantAgent extends CActiveRecord
 			'is_deleted' => 'Is Deleted',
 			'created_by' => 'Created By',
 			'date_created' => 'Date Created',
+                        'tenant_name' => 'Tenant',
+                        'tenant_agent_name' => 'Tenant Agent',
+                        'agent_contact' => 'Agent Contact',
+                        'email_address' => 'Agent Contact Email',
+                        'for_module' => 'Module',
 		);
 	}
 
@@ -98,17 +104,29 @@ class TenantAgent extends CActiveRecord
 
 		$criteria=new CDbCriteria;
                
-                $criteria->with = array("id0", "user", "tenant");
-                $criteria->together = true;
-                $criteria->compare('t.id',$this->id,true);
+                $criteria->with = array("id0", "user0", "tenant0");
+                $criteria->compare('t.id',$this->id, true);
 		$criteria->compare('t.created_by',$this->created_by,true);
-                $criteria->compare('t.is_deleted',0);
-                            
+                $criteria->compare('t.is_deleted',0);              
+                $criteria->compare('id0.name', $this->tenant_name, true);
+                $criteria->compare('id0.name', $this->tenant_agent_name, true);
+                $criteria->compare('id0.email_address', $this->email_address, true);
+                $criteria->compare('id0.mobile_number', $this->agent_contact, true);
+                $criteria->compare('t.for_module', $this->for_module, true);
+                
+                if(Yii::app()->controller->action->id == "avmsagents")
+                   $criteria->addCondition ("t.for_module = 'avms'");
+                 else if(Yii::app()->controller->action->id == "cvmsagents")
+                   $criteria->addCondition ("t.for_module = 'cvms'");
+                     
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-            'sort' => array(
-                'defaultOrder' => 't.id DESC',
-            ),
+                        'sort' => array(
+                            'defaultOrder' => 't.id DESC',
+                        ),
+                    'pagination' => array(
+                    'pageSize' => 20
+                ),
 		));
 	}
 
@@ -131,4 +149,11 @@ class TenantAgent extends CActiveRecord
             
             return parent::beforeFind();
         }
+        
+       public function getTenantName($tenant_id) {
+           
+           $tenant = Company::model()->find(" id = ".$tenant_id);
+           return $tenant->name;
+       }
+ 
 }

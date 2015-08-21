@@ -109,7 +109,7 @@ if (isset($_GET['viewFrom'])) {
             showStatusAfterSuccess: false,
 			onLoad:function(obj){
                             
-			    if ( ($('#actionUpload2').val() == 'update' || $('#actionUpload2').val() == 'edit') && $('#Host_photo').val() > 0)	
+			    if ( ($('#actionUpload2').val() == 'update' || $('#actionUpload2').val() == 'edit'  ) && $('#Host_photo').val() > 0)	
 				{
 					 $.ajax({
                                     type: 'POST',

@@ -488,7 +488,7 @@ class User extends VmsActiveRecord {
 
     public function beforeFind() {
         $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0";
+        $criteria->condition = "is_deleted = 0";
 
         $this->dbCriteria->mergeWith($criteria);
     }

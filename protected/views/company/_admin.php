@@ -36,12 +36,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
 //            'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
 //        ),
         array(
-            'name' => 'email_address',
-            'filter'=>CHtml::activeTextField($model, 'email_address', array('placeholder'=>'Email Address')),
+            'name' => 'user_email',
+            'value' => 'getUserEmail($data)',
+            'filter'=> false,
         ),
         array(
-            'name' => 'mobile_number',
-            'filter'=>CHtml::activeTextField($model, 'mobile_number', array('placeholder'=>'Contact Number')),
+            'name' => 'user_contact_number',
+            'value' => 'getUserContact($data)',
+            'filter'=> false,
         ),
         /*array(
            'name'=>'isTenant',
@@ -91,4 +93,21 @@ function isCompanyTenant($companyId) {
         return "0";
     }
 }
+
+function getUserEmail($data)
+{
+    if ($data->users)
+        return $data->users[0]->email;
+    else
+        return "";
+}
+
+function getUserContact($data)
+{
+    if ($data->users)
+        return $data->users[0]->contact_number;
+    else
+        return "";
+}
+
 ?>

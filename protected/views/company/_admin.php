@@ -37,12 +37,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
 //        ),
         array(
             'name' => 'user_email',
-            'value' => 'getUserEmail($data)',
+            'value' => 'getUserEmail($data->id)',
             'filter'=> false,
         ),
         array(
             'name' => 'user_contact_number',
-            'value' => 'getUserContact($data)',
+            'value' => 'getUserContact($data->id)',
             'filter'=> false,
         ),
         /*array(
@@ -94,18 +94,20 @@ function isCompanyTenant($companyId) {
     }
 }
 
-function getUserEmail($data)
+function getUserEmail($id)
 {
-    if ($data->users)
-        return $data->users[0]->email;
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->email;
     else
         return "";
 }
 
-function getUserContact($data)
+function getUserContact($id)
 {
-    if ($data->users)
-        return $data->users[0]->contact_number;
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->contact_number;
     else
         return "";
 }

@@ -114,6 +114,8 @@
 
     <?php $this->endWidget(); ?>
 
+</div>
+
 <!-- <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Launch Login Modal Popup</a>
  -->
 
@@ -231,6 +233,7 @@
                 success: function (r) {
                     $.each(r.data, function (index, value) {
                         if (value.isTaken == 1) { //if taken
+                            $("#PreregLogin_username").val(email);
                             $("#loginModal").modal({
                                 show : true,
                                 keyboard: false,
@@ -241,7 +244,6 @@
                     });
                 }
             });
-
         });
     }); 
 </script>
@@ -287,5 +289,15 @@
     margin-top:15px;
     margin-bottom:15px;
 }
+
+body.modal-open .page-content{
+    -webkit-filter: blur(7px);
+    -moz-filter: blur(15px);
+    -o-filter: blur(15px);
+    -ms-filter: blur(15px);
+    filter: blur(15px);
+}
+  
+.modal-backdrop {background: #f7f7f7;}
+
 </style>
-</div>

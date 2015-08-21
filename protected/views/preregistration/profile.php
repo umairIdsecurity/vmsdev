@@ -89,35 +89,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         <tr>
                             <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
                                 <table>
-                                    <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
-                                           value="<?php echo $model['photo']; ?>">
+                                    <input type="hidden" id="Visitor_photo" name="Visitor[photo]" value="<?php echo $model['photo']; ?>">
                                     
-                                    <?php if ($model['photo'] != NULL)
-                                     {
-                                        $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
-                                        $my_image = '';
-                                        if(!empty($data['db_image'])){
-                                            $my_image = "url(data:image;base64," . $data['db_image'] . ")";
-                                        }else{
-                                            $my_image = "url(" .$data['relative_path'] . ")";
-                                        }
-                                        
-                                     ?>
-                                        <style>
-                                            .ajax-upload-dragdrop {
-                                                background: <?php echo $my_image ?> no-repeat center top !important;
-                                                background-size: 137px 190px !important;
-                                            }
-                                        </style>
-                                    <?php 
-                                     }
-                                    ?>
-
-                                    <br>
-                                    
-                                    <?php //require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                                    
-
                                     <div class="photoDiv" style="">
                                         <?php   
                                                 if ($model['photo'] != NULL) 
@@ -133,21 +106,25 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                         $my_image = $data['relative_path'];
                                                     }
                                                  ?>
-                                                    <img id='photoPreview'
-                                                         src = "<?php echo $my_image ?>"
-                                                         style='display:block;height:174px;width:133px;'/>
+                                                    <center><img id='photoPreview' src = "<?php echo $my_image ?>" style='display:block;height:174px;width:133px;'/></center>
                                         <?php 
                                                 }
                                                 elseif($model['photo'] == NULL)
                                                 {
                                         ?>
-                                                    <img id='photoPreview'
-                                                        src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
-                                                        style='display:block;height:174px;width:133px;'/>
+                                                    <center><img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:block;height:174px;width:133px;'/></center>
                                         <?php
                                                 }
                                         ?>
 
+                                        <br>       
+                                        <center><input type="file" name="fileInput" id="fileInputId" /></center>
+
+                                        <br>   
+                                        <center><input type="button" id="uploadPhotoBtn" value="Upload Photo" class='btn btn-primary bt-login'></center>
+
+                                        <br>   
+                                        <center><p id="photoError" style="color:red;display:none;">Please browse a photo first.</p></center>
 
                                     </div>
 
@@ -440,7 +417,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             
                         </table>
 
-                        <div style="float:right;"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
+                        <div style="float:right;"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="btn btn-primary bt-login" style="margin-top: 15px;"/></div>
                 </td>
             </tr>
         </table>
@@ -456,3 +433,62 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) { echo $_GET['id']; } ?>">
 
 
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#uploadPhotoBtn").click(function(event){
+            
+            var file_data = $("#fileInputId")[0].files[0];
+
+            if(file_data == undefined){
+                $("#photoError").show();
+            }
+            else
+            {
+                $("#photoError").hide();
+
+                var form_data = new FormData();                  
+                form_data.append("fileInput", file_data);
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo Yii::app()->createUrl('preregistration/uploadProfilePhoto');?>",
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        var data = JSON.parse(result);
+                        //console.log(data);
+                        $("#photoPreview").attr('src','');
+                        $("#photoPreview").attr('src', "data:image;base64,"+data.db_image);
+                        $("#Visitor_photo").val(data.photoId);
+                        $("#fileInputId").val("");
+
+                        $("#photoError").empty();
+                        $("#photoError").append("Photo uploaded successfully.").css("color","green").show();
+                        
+                        $("#photoError").delay(3000).fadeOut(0,function() {
+                            $("#photoError").empty();
+                            $("#photoError").append("Please browse a photo first.").css("color","red");
+                        });
+
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+            }
+           
+            
+            
+            
+
+        });
+
+
+
+
+
+    });
+
+</script>

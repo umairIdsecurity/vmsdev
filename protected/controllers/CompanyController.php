@@ -530,36 +530,6 @@ class CompanyController extends Controller
                         if ($company->save()) 
                         {
 
-                           /* $contact = new User;
-
-                            $contact->company = $company->id;
-
-                            $contact->first_name = $formInfo['user_first_name'];
-                            $contact->last_name = $formInfo['user_last_name'];
-                            $contact->email = $formInfo['user_email'];
-                            $contact->contact_number = $formInfo['user_contact_number'];
-
-                            //Integrity constraint violation
-                            //handled in beforeSave function
-                            //if(!empty($session['created_by'])){$contact->created_by = $session['created_by'];}else{$contact->created_by = NULL;}
-                            
-                            // Todo: temporary value for saving contact, will be update later
-                            $contact->timezone_id = 1;
-                            $contact->photo = NULL;
-
-                            // foreign keys // todo: need to check and change for HARD-CODE
-                            $contact->tenant = $session['tenant'];
-
-                            $contact->user_type = 1;
-                            $contact->user_status = 1;
-                            $contact->role = 9;*/
-
-                            //$contact->created_by = 16;
-
-                            /*echo "<pre>";
-                            print_r($contact->attributes);
-                            Yii::app()->end();*/
-
                             //integrity constraint violation fix.
                             //From preregisteration set attribute from session as it was set in session 
                             //for USER because Yii:app()->user->id in preregistration has Visitor Id and not USER id.
@@ -583,21 +553,7 @@ class CompanyController extends Controller
                                                         'role'=>9,
                                                         'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
                                                     ));
-                                                       
-                            
-                            /*if ($contact->save(false))
-                            {
-                                $dropDown = '<option value="' . $company->id . '" >' . $company->name . '</option>'; // seriously why is this here?
-                                $ret = array("id" => $id, "name" => $company->name, "dropDown" => $dropDown);
-                                echo json_encode($ret);
-                                Yii::app()->end();
-                            }
-                            else
-                            {
-                                print_r($contact->errors);
-                                Yii::app()->end();
-                                //die("--DONE--");
-                            }*/
+                           
 
                             if ($result)
                             {

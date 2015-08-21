@@ -21,7 +21,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique'),
+				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -752,7 +752,7 @@ class PreregistrationController extends Controller
             $companyModel->attributes = $_POST['Company'];
 
 		    $companyModel->created_by_visitor = $model->id;
-		    $companyModel->mobile_number = $_POST['Company']['contact'];
+		    $companyModel->mobile_number = $_POST['Company']['mobile_number'];
 		    $companyModel->tenant = Yii::app()->user->tenant;
 
 		    /*
@@ -773,17 +773,6 @@ class PreregistrationController extends Controller
             	$companyModel->created_by_user = NULL;             	
             }
 
-
-            /*echo "<pre>";
-            print_r($model);
-            
-
-            echo "<br>";
-
-            echo "<pre>";
-            print_r($companyModel);
-            die;*/
-            
 
 	        if($model->save(false))
 	        {
@@ -893,20 +882,95 @@ class PreregistrationController extends Controller
 		$this->redirect(array('preregistration/login'));
 	}
 
-	public function actionCheckEmailIfUnique($email, $id = 0) {
-        if (Registration::model()->isEmailAddressTaken($email, $id)) {
-            $aArray[] = array(
-                'isTaken' => 1,
-            );
-        } else {
-            $aArray[] = array(
-                'isTaken' => 0,
-            );
-        }
+	public function actionCheckEmailIfUnique($email) 
+	{
+		if(!empty($email))
+		{
+			if(Registration::model()->findByAttributes(array("email"=>$email)))
+			{
+			  	$aArray[] = array(
+	                'isTaken' => 1,
+	            );
+			} 
+			else
+			{
+				$aArray[] = array(
+	                'isTaken' => 0,
+	            );
+			}
 
-        $resultMessage['data'] = $aArray;
-        echo CJavaScript::jsonEncode($resultMessage);
-        Yii::app()->end();
+	        $resultMessage['data'] = $aArray;
+	        echo CJavaScript::jsonEncode($resultMessage);
+	        Yii::app()->end();
+		}
+		else
+		{
+			$aArray[] = array(
+	                'isTaken' => 0,
+	            );
+
+	        $resultMessage['data'] = $aArray;
+	        echo CJavaScript::jsonEncode($resultMessage);
+	        Yii::app()->end();
+		}
+		
+    }
+
+    public function actionUploadProfilePhoto() {
+
+        //if (Yii::app()->request->isAjaxRequest) {
+            $session = new CHttpSession;
+            
+            $folderKey = '/profile/';
+            $output_dir = Yii::getPathOfAlias('webroot') . "/uploads" . $folderKey;
+
+			if (!file_exists($output_dir)) {
+			    mkdir($output_dir, 0777, true);
+			}
+
+			if (isset($_FILES["fileInput"])) 
+			{
+			    
+			    $error = $_FILES["fileInput"]["error"];
+			    if (!is_array($_FILES["fileInput"]["name"])) 
+			    { //single file
+			        $fileName = $_FILES["fileInput"]["name"];
+			        $uniqueFileName = $_FILES["fileInput"]["name"] . '-' . time() . ".jpg";
+
+			        $path = "uploads" . $folderKey . $uniqueFileName;
+
+			        //temporay uploaded -- will be deleted after saving in DB
+			        move_uploaded_file($_FILES["fileInput"]["tmp_name"], $output_dir . $uniqueFileName);
+			        
+			        //save in database
+			        //save image in db as diretced by Geoff
+			        $uploadedFile = $output_dir.$uniqueFileName;
+			        $file=file_get_contents($uploadedFile);
+			        $image = base64_encode($file);
+
+			        $connection = Yii::app()->db;
+			        $command = $connection->createCommand("INSERT INTO photo". "(filename, unique_filename, relative_path, db_image) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "','" . $image . "')");
+			        $command->query();
+
+			        $lastId = Yii::app()->db->lastInsertID;
+
+			        $update = $connection->createCommand("update visitor set photo=" . $lastId . " where id=" . Yii::app()->user->id);
+			        $update->query();
+
+			        $photoModel=Photo::model()->findByPk($lastId);
+
+			        $ret = array("photoId" =>  $lastId, "db_image" => $photoModel->db_image);
+
+                    echo json_encode($ret);
+			        //delete uploaded file from folder as inserted in DB -- directed by Geoff
+			        if (file_exists($uploadedFile)) {
+			            unlink($uploadedFile);
+			        }
+			    }
+
+			}
+			Yii::app()->end();
+        //}
     }
 
 }

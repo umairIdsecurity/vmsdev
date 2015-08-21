@@ -97,8 +97,8 @@ if (isset($_GET['id'])) {
 
             <td style="width:300px;">
                 <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
-<?php echo $form->hiddenField($model,'photo',array('id'=>'Host_photo')); ?>
-<!--                <input type="hidden" id="Host_photo" name="User[photo]">-->
+                <?php echo $form->hiddenField($model,'photo',array('id'=>'Host_photo')); ?>
+                <!-- <input type="hidden" id="Host_photo" name="User[photo]">-->
                 <div class="photoDiv" style='display:none;'>
                     <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
                 </div>

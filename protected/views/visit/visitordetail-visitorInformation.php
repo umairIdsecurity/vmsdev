@@ -195,6 +195,11 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         $company = $visitorModel->getCompany();
         if (!empty($company)) :
             $contact = $newHost->findByPk($visitorModel->staff_id);
+            $users = User::model()->findAll('company=:company', array(':company'=>$company->id));
+            if ($users)
+                $company_user =  $users[0];
+            else
+                $company_user = [];
         ?>
         <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
             <ul>
@@ -227,9 +232,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($company_user, 'contact_number', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($company, 'mobile_number'); ?>
+                                <?php echo $visitorForm->error($company_user, 'contact_number'); ?>
                             </td>
                         </tr>
 
@@ -238,9 +243,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($company_user, 'email', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($company, 'email_address'); ?>
+                                <?php echo $visitorForm->error($company_user, 'email'); ?>
                             </td>
                         </tr>
 

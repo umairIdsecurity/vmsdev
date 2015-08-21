@@ -36,14 +36,16 @@ $this->widget('zii.widgets.grid.CGridView', array(
 //            'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
 //        ),
         array(
+            'header' => 'Email',
             'name' => 'user_email',
-            'value' => 'getUserEmail($data)',
-            'filter'=> false,
+            'value' => 'getUserEmail($data->id)',
+            'filter'=>CHtml::activeTextField($model, 'user_email', array('placeholder'=>'Email', 'disabled' => 'disabled')),
         ),
         array(
+            'header' => 'Contact Number',
             'name' => 'user_contact_number',
-            'value' => 'getUserContact($data)',
-            'filter'=> false,
+            'value' => 'getUserContact($data->id)',
+            'filter'=>CHtml::activeTextField($model, 'user_contact_number', array('placeholder'=>'Contact Number', 'disabled' => 'disabled')),
         ),
         /*array(
            'name'=>'isTenant',
@@ -94,18 +96,20 @@ function isCompanyTenant($companyId) {
     }
 }
 
-function getUserEmail($data)
+function getUserEmail($id)
 {
-    if ($data->users)
-        return $data->users[0]->email;
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->email;
     else
         return "";
 }
 
-function getUserContact($data)
+function getUserContact($id)
 {
-    if ($data->users)
-        return $data->users[0]->contact_number;
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->contact_number;
     else
         return "";
 }

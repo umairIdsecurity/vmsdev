@@ -545,21 +545,6 @@ class Registration extends CActiveRecord {
         $post->save();
     }
 
-    public function isEmailAddressTaken($email,$id = 0) {
-        $Criteria = new CDbCriteria();
-        $Criteria->condition = "email = '" . $email . "' ".($id?" AND id <> $id":"");
-        $visitorEmail = Visitor::model()->findAll($Criteria);
-
-        //$visitorEmail = array_filter($visitorEmail);
-        $visitorEmailCount = count($visitorEmail);
-
-        if ($visitorEmailCount == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public function checkAsicStatusById($id=0) {
         $allow = 1;
         $visitor = Visitor::model()->findByPk($id);

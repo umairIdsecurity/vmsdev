@@ -450,12 +450,26 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ?> >
                      <li>
                         <a href='<?php echo Yii::app()->createUrl('helpDeskGroup/admin'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('helpDeskGroup', 'admin');?>>Help Desk Group</span></a>
+                        <ul <?php
+                            if ($this->id == 'helpDeskGroup') {
+                                echo "style='display:block ;'";
+                            }
+                            ?>>
+                            <li><a href='<?php echo Yii::app()->createUrl('helpDeskGroup/create'); ?>'><span <?php CHelper::is_selected_submenu('helpDeskGroup', 'create');?>>Create Help Desk Group</span></a></li>
+                        </ul>
                     </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('helpDeskGroup/create'); ?>'><span <?php CHelper::is_selected_submenu('helpDeskGroup', 'create');?>>Create Help Desk Group</span></a>
+                    
+                    <li>
+                        <a href='<?php echo Yii::app()->createUrl('helpDesk/admin'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('helpDesk', 'admin');?>>Help Desk</span></a>
+                        <ul <?php
+                            if ($this->id == 'helpDesk') {
+                                echo "style='display:block ;'";
+                            }
+                            ?>>
+                            <li><a href='<?php echo Yii::app()->createUrl('helpDesk/create'); ?>'><span <?php CHelper::is_selected_submenu('helpDesk', 'create');?>>Add Question</span></a></li>
+                        </ul>
                     </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('helpDesk/admin'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('helpDesk', 'admin');?>>Help Desk</span></a></li>
-                    <li><a href='<?php echo Yii::app()->createUrl('helpDesk/create'); ?>'><span <?php CHelper::is_selected_submenu('helpDesk', 'create');?>>Add Question</span></a>
-                    </li>
+                    
                 </ul>
             </li>
             <!-- menu for helpdesk -->

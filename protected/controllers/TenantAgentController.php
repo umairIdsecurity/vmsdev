@@ -78,7 +78,7 @@ class TenantAgentController extends Controller
         }
  
         $this->render('avmsadmin', array(
-            'model' => $model, "module"=>"cvms"
+            'model' => $model, "module"=>"CVMS"
         ), false, true);
         
         

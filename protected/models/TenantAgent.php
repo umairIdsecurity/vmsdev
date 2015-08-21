@@ -118,7 +118,10 @@ class TenantAgent extends CActiveRecord
                    $criteria->addCondition ("t.for_module = 'avms'");
                  else if(Yii::app()->controller->action->id == "cvmsagents")
                    $criteria->addCondition ("t.for_module = 'cvms'");
-                     
+                 
+                  if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
+                    $criteria->addCondition("t.tenant_id = ".Yii::app()->user->tenant);
+                   
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
                         'sort' => array(

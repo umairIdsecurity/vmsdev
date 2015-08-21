@@ -16,7 +16,7 @@ class m150820_092420_create_tenant_agent_table extends CDbMigration
                            for_module VARCHAR(20),
                            is_deleted BIGINT(20),
                            created_by BIGINT(20),
-                           date_created datetime NULL,
+                           date_created DATETIME,
                            PRIMARY KEY (id, user_id, tenant_id),
                            
                             CONSTRAINT fk_tenant_agent_company1

@@ -4,7 +4,7 @@
 
 ?>
 
-<h1>Tenant Agents</h1>
+<h1>Tenant <?php echo $module; ?> Agents</h1>
 
 <?php 
     foreach (Yii::app()->user->getFlashes() as $key => $message) {

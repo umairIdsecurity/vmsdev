@@ -184,6 +184,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 url: linkNegate,
                 data: {reason: reason, ids: ids},
                 success: function(response) {
+                    $('#activeVisitModal').modal('hide');
                     $.fn.yiiGridView.update('vic-total-visit-count');
                     $('#reasonForNegate').val('');
                     document.getElementById('negate_reason').style.display="none";
@@ -194,7 +195,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         data: {id: $('#activeVisitModal #visitorId').val()},
                         success: function(response) {
                             container.append(response);
-                            $('#activeVisitModal').modal('show');
+                            // $('#activeVisitModal').modal('hide');
                         }
                     });
 

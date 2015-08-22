@@ -10,17 +10,17 @@ class m150820_092420_create_tenant_agent_table extends CDbMigration
         $table = Yii::app()->db->schema->getTable('tenant_agent');
         if(!isset($table)) {
             $this->createTable('tenant_agent',array(
-                'id'          => 'pk',
+                'id'          => 'BIGINT NOT NULL',
                 'user_id'     => 'BIGINT NULL',
-                'tenant_id'   => 'BIGINT NULL',
+                'tenant_id'   => 'BIGINT NOT NULL',
                 'for_module'  => 'VARCHAR(20)',
-                'tenant_id'   => 'BIGINT NULL',
+                'tenant_id'   => 'BIGINT NOT NULL',
                 'is_deleted'  => 'BIT',
                 'created_by'  => 'BIGINT',
                 'date_created'=> 'DATETIME'
 
             ));
-
+            $this->addPrimaryKey("PK_tenant_agent",'tenant_agent','id');
             $this->addForeignKey('fk_tenant_agent_company1','tenant_agent','id','company','id');
             $this->addForeignKey('fk_tenant_agent_tenant1','tenant_agent','tenant_id','tenant','id');
 

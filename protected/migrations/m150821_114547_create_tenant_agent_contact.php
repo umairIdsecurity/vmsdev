@@ -11,10 +11,10 @@ class m150821_114547_create_tenant_agent_contact extends CDbMigration
             $table = Yii::app()->db->schema->getTable('tenant_agent_contact');
             if(!isset($table)) {
             $this->execute("CREATE TABLE tenant_agent_contact (
-                           id BIGINT(20) AUTO_INCREMENT NOT NULL,
-                           user_id BIGINT(20) NULL,
-                           tenant_id BIGINT(20) NULL,
-                           tenant_agent_id BIGINT(20) NULL,
+                           id BIGINT AUTO_INCREMENT NOT NULL,
+                           user_id BIGINT NULL,
+                           tenant_id BIGINT NULL,
+                           tenant_agent_id BIGINT NULL,
                            PRIMARY KEY (id),
                                       
                             CONSTRAINT fk_tenant_agent_contact_id

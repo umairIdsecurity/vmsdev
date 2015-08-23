@@ -18,6 +18,7 @@ if( (isset($_SERVER['HTTP_HOST']) && substr($_SERVER['HTTP_HOST'],0,5) =='vmspr'
 
     $config = require(dirname(__FILE__) . '/protected/config/prereg_main.php');
 
+
 }
 else{
 

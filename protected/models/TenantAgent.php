@@ -61,7 +61,7 @@ class TenantAgent extends CActiveRecord
 			'id0' => array(self::BELONGS_TO, 'Company', 'id'),
 			'user0' => array(self::BELONGS_TO, 'User', 'user_id'),
 			'tenant0' => array(self::BELONGS_TO, 'Tenant', 'tenant_id'),
-                        'agent_contact' => array(self::HAS_MANY, 'TenantAgentContact', 'tenant_agent_id'),
+			'agent_contact' => array(self::HAS_MANY, 'TenantAgentContact', 'tenant_agent_id'),
 		);
 	}
 
@@ -106,7 +106,7 @@ class TenantAgent extends CActiveRecord
                
                 $criteria->with = array("id0", "user0", "tenant0");
                 $criteria->compare('t.id',$this->id, true);
-		$criteria->compare('t.created_by',$this->created_by,true);
+				$criteria->compare('t.created_by',$this->created_by,true);
                 $criteria->compare('t.is_deleted',0);              
                 $criteria->compare('id0.name', $this->tenant_name, true);
                 $criteria->compare('id0.name', $this->tenant_agent_name, true);

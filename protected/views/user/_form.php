@@ -242,10 +242,8 @@ $form = $this->beginWidget('CActiveForm', array(
         <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
 </tr>
 
-<?php if (!CHelper::is_accessing_avms_features() || Yii::app()->request->getParam("role") == Roles::ROLE_AGENT_AIRPORT_ADMIN 
-        || Yii::app()->request->getParam("role") == Roles::ROLE_AGENT_ADMIN
-        ) { ?>
-    <tr id="tenantRow" class='hiddenElement'>
+<?php if ($session['role']==Roles::ROLE_SUPERADMIN) { ?>
+    <tr id="tenantRow" > <!-- class='hiddenElement'>-->
         <td>
             <select id="User_tenant" name="User[tenant]">
                 <option value='' selected>Please select a tenant</option>
@@ -264,8 +262,9 @@ $form = $this->beginWidget('CActiveForm', array(
             </select><span class="required">*</span><?php echo "<br>" . $form->error($model, 'tenant'); ?>
         </td>
     </tr>
-
-    <tr id="tenantAgentRow" class='hiddenElement'>
+<?php } ?>
+<?php if (in_array($session['role'],array(Roles::ROLE_SUPERADMIN,Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) { ?>
+    <tr id="tenantAgentRow" > <!-- class='hiddenElement'>-->
 
         <td>
             <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]">
@@ -292,85 +291,7 @@ $form = $this->beginWidget('CActiveForm', array(
     </tr>
 <?php } ?>
 
-<tr id="companyTr">
-    <td id='companyRow'>
-        <?php
-        
-        $label = 'Please select a company';
-        $companyList = array();
-        $selectedItem = array();
 
-        if (isset($_GET['role'])) {
-            $urlRole = $_GET['role'];
-        } else {
-            $urlRole = '';
-        }
-        if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN ||
-            $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN || CHelper::is_accessing_avms_features()
-        ) {
-            if(Yii::app()->user->role == Roles::ROLE_SUPERADMIN) { 
-                $companyList = CHtml::listData(User::model()->findAllCompanyTenant(), 'id', 'id0.name');
-                $label = 'Please select a tenant';
-            }
-            else {
-                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name'); 
-            }
-             if ($this->action->id == 'update') {
-                $companyId = User::model()->getCompany($currentlyEditedUserId);
-            } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                $companyId = User::model()->getCompany($currentLoggedUserId);
-            }
-            if (isset($company) && isset($company->id)) {
-                $selectedItem[] = $company->id;
-            } else {
-                $selectedItem[] = $companyId;
-            }
-
-            if (isset($companyId)) {
-                if (!in_array($companyId, $companyList) && $companyId != Yii::app()->user->tenant) {
-                    $companyList[$companyId] = Company::model()->getCompanyName($companyId);
-                }
-            }
-        }
-
-        $this->widget('application.extensions.select2.Select2', array(
-            'model' => $model,
-            'attribute' => 'company',
-            'items' => $companyList,
-            'selectedItems' => $selectedItem, // Items to be selected as default
-            'placeHolder' => $label,
-
-        ));
-        ?>
-
-        <span class="required">*</span>
-
-        <select id="User_company_base" style="display:none;">
-            <?php
-            $criteria = new CDbCriteria();
-            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                $criteria->addCondition("tenant=" . $session['tenant'] . " and id!= 1 and id!=" . $session['company']);
-            } else {
-                $criteria->addCondition("id!= 1");
-            }
-            $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-            foreach ($companyList as $key => $value) {
-                ?>
-                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-            <?php
-            }
-            ?>
-        </select>
-       <?php echo '<br>'.$form->error($model, 'company'); ?>
-    </td>
-    <td></td>
-</tr>
-<!--<tr>
-    <td>   <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; display:none;">Add New Tenant Agent</a>
-        <?php echo '<br>'.$form->error($model, 'company'); ?>
-    </td    >
-    
-</tr>-->
 <?php if (!CHelper::is_managing_avms_user()) { ?>
     <tr>
         <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Department')); ?>
@@ -771,13 +692,17 @@ $(document).ready(function () {
     var actionId = $("#currentAction").val(); // current action
     var getRole = $("#getRole").val(); // role in url
 
-    var superadmin = 5;
     var admin = 1;
+    var superadmin = 5;
     var agentadmin = 6;
     var agentoperator = 7;
     var operator = 8;
     var staffmember = 9;
     var agentairportadmin = 13;
+    var issuingbodyadmin = 11;
+    var airportoperator = 12;
+    var agentairportoperator = 14;
+
     
     
     $("#addCompanyLink").hide(); //button for adding company
@@ -786,20 +711,20 @@ $(document).ready(function () {
     $(".workstationRow").hide();
 	
 	
-	var elem1 = document.getElementById('User_tenant');
-	if(typeof elem1 !== 'undefined' && elem1 !== null) {
-            elem1.disabled = true;
-	}
-        
-        var elem2 = document.getElementById('User_tenant_agent');
-	if(typeof elem2 !== 'undefined' && elem2 !== null) {
-            elem2.disabled = true;
-	}
-	
-	var elem3 = document.getElementById('User_company');
-	if(typeof elem3 !== 'undefined' && elem3 !== null) {
-            // elem3.disabled = true;
-	}
+//	var elem1 = document.getElementById('User_tenant');
+//	if(typeof elem1 !== 'undefined' && elem1 !== null) {
+//            elem1.disabled = true;
+//	}
+//
+//        var elem2 = document.getElementById('User_tenant_agent');
+//	if(typeof elem2 !== 'undefined' && elem2 !== null) {
+//            elem2.disabled = true;
+//	}
+//
+//	var elem3 = document.getElementById('User_company');
+//	if(typeof elem3 !== 'undefined' && elem3 !== null) {
+//            // elem3.disabled = true;
+//	}
         
        
     if (actionId == 'update') {
@@ -816,36 +741,28 @@ $(document).ready(function () {
     }
 
     if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
-        if (getRole == agentadmin || getRole == agentairportadmin) {
+        if (getRole == agentadmin || getRole == agentairportadmin ) {
 
             document.getElementById('User_tenant_agent').disabled = false;
             //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
-            // Very bad programming. :( 
+            // Very bad programming. :(
             var elem1 = document.getElementById('User_tenant');
             if(typeof elem1 !== 'undefined' && elem1 !== null) {
                 elem1.disabled = false;
             }
-            
-            
+
+
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
-            $("#addCompanyLink").show();
+            $("#User_tenant").show();
+            $("#User_tenant_agent").show();
             //document.getElementById("companyRow").style.paddingBottom = "10px";
            $("#companyRow").hide();
-        } else if (getRole == operator) {
-            document.getElementById('User_tenant_agent').disabled = true;
-            
-            // document.getElementById('User_tenant').disabled = false;
-            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
-            // Very bad programming. :( 
-            var elem1 = document.getElementById('User_tenant');
-            if(typeof elem1 !== 'undefined' && elem1 !== null) {
-                elem1.disabled = false;
-            }
-            
-            /*document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();*/
+        } else if (getRole == operator || getRole == agentairportoperator) {
             $("#tenantRow").show();
+            $("#tenantAgentRow").show();
+            $("#User_tenant").show();
+            $("#User_tenant_agent").show();
         } else if (getRole == agentoperator) {
             // document.getElementById('User_tenant').disabled = false;
             //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
@@ -1382,7 +1299,7 @@ function getCompanyTenantAgent() { /*get tenant agent company*/
                 var selectedVal = '';
                 $.each(r.data, function (index, value) {
                     $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    document.getElementById('User_company').disabled = true;
+                    $('#User_company').disabled = true;
                     if (selectedId == '') {
                         selectedId = value.id;
                         selectedVal = value.name;

@@ -310,7 +310,7 @@ $form = $this->beginWidget('CActiveForm', array(
         ) {
             if(Yii::app()->user->role == Roles::ROLE_SUPERADMIN) { 
                 $companyList = CHtml::listData(User::model()->findAllCompanyTenant(), 'id', 'id0.name');
-                $label = 'Please select a company';
+                $label = 'Please select a tenant';
             }
             else {
                 $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name'); 
@@ -365,12 +365,12 @@ $form = $this->beginWidget('CActiveForm', array(
     </td>
     <td></td>
 </tr>
-<tr>
+<!--<tr>
     <td>   <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; display:none;">Add New Tenant Agent</a>
         <?php echo '<br>'.$form->error($model, 'company'); ?>
-    </td>
+    </td    >
     
-</tr>
+</tr>-->
 <?php if (!CHelper::is_managing_avms_user()) { ?>
     <tr>
         <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Department')); ?>

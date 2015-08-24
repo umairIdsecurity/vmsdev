@@ -194,7 +194,7 @@ if ($this->action->id == 'update') {
                         <td colspan="2"><?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?></td>
                         </tr>
                     </table><!--Company Contact field-->
-                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -230px; max-width:275px !important;">
+                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -370px; max-width:275px !important;">
                         <table style="float:left; width:300px;">
                             <tr>
                                 <td><strong>Password Options</strong></td>

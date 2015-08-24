@@ -228,7 +228,7 @@ class Visit extends CActiveRecord {
       */
      public function beforeFind() {
          
-         $this->updateAll(array("visit_status" => VisitStatus::CLOSED), 
+       $this->updateAll(array("visit_status" => VisitStatus::CLOSED), 
                    " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
                  . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'");
                  
@@ -1303,34 +1303,46 @@ class Visit extends CActiveRecord {
            return 0;
        }
        
-    }    
+    } 
     /**
-     * Set status as Closed of the VIC 24Hours visit only if date/time checkout reached current date/time.
-     * Below is the flow for the all VIC visit cards:
+     * Set Expire Or Close all visits that should be expired today under a tenant
+     * * Set status as Closed of the VIC 24Hours visit only if date/time checkout reached current date/time.
+     *   Below is the flow for the all VIC visit cards:
         * 24 hour* – Saved, Preregister, Active, Auto Closed (Operator can Preregister for future dates)
         * Same day* - Saved, Preregister, Active, Expired, Closed
         * Extended* - Saved, Preregister, Active, Auto Closed (Operator can Preregister for future dates) / Expired, Closed
         * Multiday *- Saved, Preregister, Active, Expired, Closed
         * Manual *- Saved, Preregister, Active, Closed 
+     * 
      */
-    public function afterFind() {
-         $session = new CHttpSession;
-         $timezone = $session["timezone"]; 
+    public function setExpireOrClosedVisits( $tenant_Id, $visit_id = "" ) {
+        //Get All Active Visits of a Tenant
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("tenant = ".$tenant_Id ." AND visit_status = ".VisitStatus::ACTIVE);
+        if( !empty( $visit_id) )
+            $criteria->addCondition("id = ".$visit_id);
+        $visits = $this->findAll($criteria);
+        $session = new CHttpSession;
+        $timezone = $session["timezone"]; 
+        //Has Active visits?? Then
+        if( $visits )
+        foreach( $visits as $key => $visit ) {
+        
         // Set closed visit if time-checkout reached current time.   
-         $dateIn  = new DateTime($this->date_check_in);
-         $dateOut = new DateTime($this->date_check_out);
+         $dateIn  = new DateTime($visit["date_check_in"]);
+         $dateOut = new DateTime($visit["date_check_out"]);
          $dateNow = new DateTime("NOW");
-         $isExpired = $dateNow->diff($dateOut)->format("%r%a");   
+         $isExpired = $dateNow->diff($dateOut)->format("%r%a"); // DateNow - DateOut = -figure if expired   
          
-        if( $isExpired <= 0 && $this->visit_status == VisitStatus::ACTIVE ) {
-            
-            $status = "";
+         if( $isExpired <= 0 )  { //   expired or will expire today 
+              
+             $status = "";
             //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
-            if( $this->card_type == CardType::VIC_CARD_24HOURS ) {
+            if( $visit->card_type == CardType::VIC_CARD_24HOURS ) {
                 $status = VisitStatus::CLOSED;
-            } else if( $this->card_type != CardType::VIC_CARD_24HOURS 
-                    && $this->card_type != CardType::VIC_CARD_MANUAL 
-                    && $this->card_type != CardType::MANUAL_VISITOR ) {
+            } else if( $visit->card_type != CardType::VIC_CARD_24HOURS 
+                    && $visit->card_type != CardType::VIC_CARD_MANUAL 
+                    && $visit->card_type != CardType::MANUAL_VISITOR ) {
                 $status = VisitStatus::EXPIRED;
             } 
              //Get current time to compare with current visit time
@@ -1339,22 +1351,20 @@ class Visit extends CActiveRecord {
              $current_minutes = $current->format("i"); 
              
             // Visit Time
-             $time_checkout = $this->time_check_out != "00:00:00"? $this->time_check_out: $this->finish_time;      
-             $checkoutdatetime = $this->date_check_out." ".$time_checkout;
+             $time_checkout = $visit->time_check_out != "00:00:00"? $visit->time_check_out: $visit->finish_time;      
+             $checkoutdatetime = $visit->date_check_out." ".$time_checkout;
              $checkout = new DateTime($checkoutdatetime);
              $checkout->setTimezone(new DateTimeZone($timezone));
-            //compare Time hours and minutes
+             //compare Time hours and minutes
              if(  $current_hour > $checkout->format("H")  
                      || ( $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
                      //Update
                      if( !empty($status) )
-                     $this->updateByPk($this->id, array("visit_status" => $status));                   
+                     $this->updateByPk($visit->id, array("visit_status" => $status));     
              }
-        } 
-         
-        return parent::afterFind();
+           }
+        }
     }
-
     /**
      * If visit is preregistered and date of entry passes 48 hours after proposed visit date 
      * the record is archived from Dashboard and Visit History 

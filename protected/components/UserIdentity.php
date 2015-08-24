@@ -55,7 +55,6 @@ class UserIdentity extends CUserIdentity {
             //else
             //    $session['module_allowed_to_to_view'] = Company::model()->findByPk($user->module)->
 
-
             $this->errorCode = self::ERROR_NONE;
         }
 

@@ -262,7 +262,7 @@ if (isset($_GET['viewFrom'])) {
                 {
                     /*logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
                     $(".companyLogoDiv").show();*/
-alert("update");
+
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + data,
@@ -342,6 +342,8 @@ alert("update");
                                     $("#cropImageBtn").show();
                                     /*document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
                                     document.getElementById('photoCropPreview').src =  "data:image;base64,"+ value.db_image;
+                                    document.getElementById('photoPreview').src =  "data:image;base64,"+ value.db_image;
+                                    $(".companylogopreview").attr("src", "data:image;base64,"+ value.db_image);
                                 }
                             });
                             if ($("#viewFrom").val() == '1') {

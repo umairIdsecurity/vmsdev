@@ -1161,36 +1161,54 @@ class Visit extends CActiveRecord {
         
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
-                //return (int)$this->count($criteria);
-                return $oldVisitsCount;
+            
+                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
+                if( $isExpired < 0 ) 
+                     $totalCount = $dateOut->diff($dateIn)->days + 1;
+                else
+                     $totalCount = $dateIn->diff($dateNow)->days + 1;
+                 return $totalCount + $oldVisitsCount;
                 break;
+            
             case CardType::VIC_CARD_SAMEDATE:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
-                    return 1;
+                   // return 1;
+                    
                 }
-                return (int)$this->count($criteria) + 1;
-            case CardType::VIC_CARD_24HOURS:
+                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
+                if( $isExpired < 0 ) 
+                     $totalCount = $dateOut->diff($dateIn)->days + 1;
+                else
+                     $totalCount = $dateIn->diff($dateNow)->days + 1;
+                
+                 return $totalCount + $oldVisitsCount;
+                 
+             case CardType::VIC_CARD_24HOURS:
                 //return (int)$this->count($criteria);
-                return $oldVisitsCount;
+                $isExpired = $dateNow->diff($dateOut)->format("%r%a");
+                if( $isExpired < 0 ) 
+                     $totalCount = $dateOut->diff($dateIn)->days;
+                else
+                     $totalCount = $dateIn->diff($dateNow)->days + 1;
+                 return $totalCount + $oldVisitsCount;
+                 
                 break;
 
             case CardType::VIC_CARD_MULTIDAY:
                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
                 if( $isExpired < 0 ) 
-                     $totalCount = $dateOut->diff($dateIn)->days;
+                     $totalCount = $dateOut->diff($dateIn)->days + 1;
                 else
-                     $totalCount = $dateIn->diff($dateNow)->days;
+                     $totalCount = $dateIn->diff($dateNow)->days + 1;
                 
                  // Add Old visits
                 if ($oldVisitsCount > 0) {
                     $totalCount += $oldVisitsCount;
                 }
-                // Count active date as first visit
-                if( $this->visit_status == VisitStatus::ACTIVE)
-                    $totalCount += 1;
-                
+                               
                 return $totalCount;
                 break;
+                
             case CardType::VIC_CARD_EXTENDED:
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
@@ -1210,8 +1228,8 @@ class Visit extends CActiveRecord {
                 }
                 
                  // Count active date as first visit
-                if( $this->visit_status == VisitStatus::ACTIVE)
-                    $totalCount += 1;
+//                if( $this->visit_status == VisitStatus::ACTIVE)
+//                    $totalCount += 1;
                 
                 return $totalCount;
                 break;
@@ -1234,7 +1252,7 @@ class Visit extends CActiveRecord {
                 return 28 - (int)$this->visitCounts;
                 break;
             case CardType::VIC_CARD_MULTIDAY:
-                return 28 - (int)$this->visitCounts;
+                 return 28 - (int)$this->visitCounts;
                 break;
             case CardType::VIC_CARD_EXTENDED:
                 return 28 - (int)$this->visitCounts;
@@ -1264,7 +1282,8 @@ class Visit extends CActiveRecord {
      */
     public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id) {
         $criteria = new CDbCriteria;
-        $criteria->addCondition("id != ".$current_visit_id." AND tenant = ".Yii::app()->user->tenant." AND visit_status != ".VisitStatus::SAVED." AND visitor = " . $this->visitor);
+        $criteria->addCondition(" ( id != ".$current_visit_id." ) AND "
+                . "tenant = ".Yii::app()->user->tenant." AND (visit_status != ".VisitStatus::SAVED."  ) AND visitor = " . $this->visitor);
         $visits = $this->findAll($criteria);
        if( $visits ) {
            $visitCount  = 0;
@@ -1275,7 +1294,7 @@ class Visit extends CActiveRecord {
                
                // For the current Year Only
                if( $dateNow->format("Y") == $dateIn->format("Y") )
-                  $visitCount += $dateIn->diff($dateOut)->days;
+                  $visitCount += $dateIn->diff($dateOut)->days + 1;
            }
            return $visitCount;
            

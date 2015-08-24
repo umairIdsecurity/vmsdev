@@ -112,9 +112,9 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 
     </br>
     <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
-    <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
+    <?php  if ($model->card_type > 4) { ?>
         Remaining Days: <?php echo $remainingDays; ?>
-    <?php } ?>
+    <?php  } ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">

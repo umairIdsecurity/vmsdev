@@ -314,12 +314,14 @@ if (isset($_GET['viewFrom'])) {
                                     $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
                                     $(".photo_visitor").src = "data:image;base64,"+ value.db_image;
-                                   
+                                    
+                                    $("#Visitor_photo").val(data);
                                     } else {
                                       $(".photoDiv").show();
                                       // Visit Detail Page
                                       if($("#actionUpload").val() == 'detail')
-                                        $(".photo_visitor").attr("src","data:image;base64,"+ value.db_image);                               
+                                        $(".photo_visitor").attr("src","data:image;base64,"+ value.db_image); 
+                                        $("#Visitor_photo").val(data);
                                 }
 
                                 if ($("#controllerId").val() != 'companyLafPreferences' && $("#controllerId").val() != 'company') {

@@ -228,7 +228,7 @@ class Visit extends CActiveRecord {
       */
      public function beforeFind() {
          
-         $this->updateAll(array("visit_status" => VisitStatus::EXPIRED), 
+         $this->updateAll(array("visit_status" => VisitStatus::CLOSED), 
                    " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
                  . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'");
                  
@@ -1317,8 +1317,12 @@ class Visit extends CActiveRecord {
          $session = new CHttpSession;
          $timezone = $session["timezone"]; 
         // Set closed visit if time-checkout reached current time.   
-        if( $this->date_check_out <= date("Y-m-d")
-                && $this->visit_status == VisitStatus::ACTIVE ) {
+         $dateIn  = new DateTime($this->date_check_in);
+         $dateOut = new DateTime($this->date_check_out);
+         $dateNow = new DateTime("NOW");
+         $isExpired = $dateNow->diff($dateOut)->format("%r%a");   
+         
+        if( $isExpired <= 0 && $this->visit_status == VisitStatus::ACTIVE ) {
             
             $status = "";
             //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
@@ -1340,7 +1344,7 @@ class Visit extends CActiveRecord {
              $checkout = new DateTime($checkoutdatetime);
              $checkout->setTimezone(new DateTimeZone($timezone));
             //compare Time hours and minutes
-             if( ($current_hour > $checkout->format("H") || $this->date_check_out < date("Y-m-d") )
+             if(  $current_hour > $checkout->format("H")  
                      || ( $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
                      //Update
                      if( !empty($status) )

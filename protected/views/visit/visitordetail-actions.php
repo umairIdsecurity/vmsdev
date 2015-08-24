@@ -408,6 +408,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 imgsrc = this.src;
             });
             var profileImage = '<?php echo $visitorModel->photo;?>';
+            if( profileImage == "")
+                profileImage = $("#Visitor_photo").val();
             var isDefault = imgsrc.search('images/companylogohere1.png');
             var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
 

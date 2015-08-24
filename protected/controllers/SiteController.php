@@ -204,8 +204,8 @@ class SiteController extends Controller {
                                    
                /* Update Visits that set to Expire today for this tenant*/ 
                 if( Yii::app()->user->tenant ) { 
-                    $visits = new Visit;
-                    $visits->setExpireOrClosedVisits( Yii::app()->user->tenant ); 
+                    //$visits = new Visit;
+                   // $visits->setExpireOrClosedVisits( Yii::app()->user->tenant ); 
                 }
                 //**************************************************************
                  

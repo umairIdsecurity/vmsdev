@@ -189,7 +189,10 @@ if ($this->action->id == 'update') {
                                 <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
                             </td>
                         </tr>
-
+                        <tr>
+                        <td> &nbsp; </td>
+                        <td colspan="2"><?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?></td>
+                        </tr>
                     </table><!--Company Contact field-->
                     <div class="password-border" style="float: right; margin-right: 147px; margin-top: -230px; max-width:275px !important;">
                         <table style="float:left; width:300px;">
@@ -273,13 +276,13 @@ if ($this->action->id == 'update') {
                                                 </div>
                                             </td>
                                         </tr>
-                                    </table>
-                                </td>
+                                    </table>                                  
+                                </td>                               
                             </tr>
 
 
                         </table>
-                    </div> <!-- password-border -->
+                    </div> <!-- password-border -->               
                 </td>
             </tr>
     </table>
@@ -290,30 +293,30 @@ if ($this->action->id == 'update') {
         margin-left:173px;
     <?php
     } else {
-        echo "text-align:right;";
+        echo "text-align: right;";
     }
-    ?>">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
+    ?>">        
+        <?php // echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
         <?php if (isset($_GET['viewFrom'])) { ?>
 
         <?php
         } else {
         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             ?>
-            <button class="yiiBtn neutral" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
+<!--            <button class="yiiBtn neutral" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>-->
         <?php } else { ?>
-        <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>
+<!--        <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>-->
         <?php
             }
         }
         ?>
     </div>
-
+ <?php
+    if (isset($contacts) && !empty($contacts)) { ?>
     <div class="page-header">
       <h1>Organisation Contacts</h1>
     </div>
-    <?php
-    if (isset($contacts) && !empty($contacts)) {
+ <?php  
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'contacts-grid',
             'dataProvider' => new CArrayDataProvider($contacts),

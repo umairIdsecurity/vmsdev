@@ -195,11 +195,13 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         $company = $visitorModel->getCompany();
         if (!empty($company)) :
             $contact = $newHost->findByPk($visitorModel->staff_id);
-            $users = User::model()->findAll('company=:company', array(':company'=>$company->id));
-            if ($users)
-                $company_user =  $users[0];
-            else
-                $company_user = [];
+            if ($contact === null) $contact = $newHost;
+            // $users = User::model()->findAll('company=:company', array(':company'=>$company->id));
+            // if ($users) {
+            //     $company_user =  $users[0];
+            // }
+            // else
+            //     $company_user = [];
         ?>
         <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
             <ul>
@@ -221,9 +223,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($contact, 'FullName', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($company, 'contact'); ?>
+                                <?php echo $visitorForm->error($contact, 'FullName'); ?>
                             </td>
                         </tr>
 
@@ -232,9 +234,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company_user, 'contact_number', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($contact, 'contact_number', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($company_user, 'contact_number'); ?>
+                                <?php echo $visitorForm->error($contact, 'contact_number'); ?>
                             </td>
                         </tr>
 
@@ -243,9 +245,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company_user, 'email', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($contact, 'email', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($company_user, 'email'); ?>
+                                <?php echo $visitorForm->error($contact, 'email'); ?>
                             </td>
                         </tr>
 

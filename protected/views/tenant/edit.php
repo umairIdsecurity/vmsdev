@@ -339,8 +339,10 @@ $currentLoggedUserId = $session['id'];
         echo "text-align:right;";
     }
     ?>">
-        <?php echo CHtml::SubmitButton('Save', array('id' => 'createBtn', 'style' => 'height:30px;margin-right:30px;', 'class' => 'complete')); ?>
-        <?php if (isset($_GET['viewFrom'])) { ?>
+        <?php echo CHtml::SubmitButton('Save', array('id' => 'createBtn', 'style' => 'height:30px;margin-right:5px;', 'class' => 'complete')); ?>
+        <?php if(Yii::app()->user->role == Roles::ROLE_SUPERADMIN || Yii::app()->user->role == Roles::ROLE_ADMIN  ) { ?>
+        <button class="yiiBtn neutral" id="modalBtn" style="margin-right:25px;padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
+        <?php } if (isset($_GET['viewFrom'])) { ?>
 
         <?php
         }  
@@ -358,6 +360,24 @@ if (isset($_GET['viewFrom'])) {
     echo "0";
 }
 ?>"/>
+
+<!-- View License modal -->
+<div class="modal hide fade" id="viewLicense" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a data-dismiss="modal" class="close" id="dismissModal">×</a>
+        <br>
+        </div>
+      <div style="padding:20px;" id="modalBody">
+        <?php
+        echo LicenseDetails::model()->getLicenseDetails();
+        ?>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View License ends -->
 <script>
     
      

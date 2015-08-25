@@ -384,7 +384,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <td id="">
                                     <div style="margin-bottom: 5px;">
                                         <?php echo $form->textField($companyModel, 'contact', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Company Contact Name', 'style' => '')); ?>
-                                        <span class="required">*</span>
+                                        <!-- <span class="required">*</span> -->
                                         <?php echo $form->error($companyModel, 'contact', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
@@ -396,7 +396,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <td id="">
                                     <div style="margin-bottom: 5px;">
                                         <?php echo $form->textField($companyModel, 'email_address', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Email address', 'style' => '')); ?>
-                                        <span class="required">*</span>
+                                        <!-- <span class="required">*</span> -->
                                         <?php echo $form->error($companyModel, 'email_address', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
@@ -408,8 +408,56 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <td id="">
                                     <div style="margin-bottom: 5px;">
                                         <?php echo $form->textField($companyModel, 'mobile_number', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Contact Number', 'style' => '')); ?>
-                                        <span class="required">*</span>
+                                        <!-- <span class="required">*</span> -->
                                         <?php echo $form->error($companyModel, 'mobile_number', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr> 
+
+                            <tr><td>&nbsp;</td></tr>
+
+                            <tr>    
+                                <td>
+                                    <span>Reset Password</span>
+                                 </td>
+                            </tr> 
+
+
+                            <tr><td>&nbsp;</td></tr>
+
+                            <tr>    
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->passwordField($model,'old_password', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Old Password', 'style' => '')); ?>
+                                        
+                                        <span style="color:red;margin-top:0px"><?php echo $old_passwordErr; ?></span>
+                                        <?php echo $form->error($model,'old_password', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr> 
+
+                            <tr><td>&nbsp;</td></tr>
+
+                            <tr>    
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->passwordField($model,'new_password', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'New Password', 'style' => '')); ?>
+                                        
+                                        <span style="color:red;margin-top:0px"><?php echo $new_passwordErr; ?></span>
+                                        <?php echo $form->error($model,'new_password', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr> 
+
+                            <tr><td>&nbsp;</td></tr>
+
+                            <tr>    
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->passwordField($model,'repeat_password', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Repeat New Password', 'style' => '')); ?>
+                                        
+                                        <span style="color:red;margin-top:0px"><?php echo $repeat_passwordErr; ?></span>
+                                        <?php echo $form->error($model,'repeat_password', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
                             </tr> 

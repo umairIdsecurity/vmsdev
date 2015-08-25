@@ -97,6 +97,10 @@ class PreregistrationController extends Controller
 
 		$model = new Declaration();
 
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
+
 		if(
 			isset($session['declaration1']) && $session['declaration1'] == 1 &&
 			isset($session['declaration2']) && $session['declaration2'] == 1 &&
@@ -135,6 +139,10 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 		$model = new CreateLogin();
 
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
+
 		if(
 			isset($session['account_type']) && $session['account_type'] !='' &&
 			isset($session['username']) 	&& $session['username']		!='' &&
@@ -170,6 +178,10 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 
 		$model = new Registration();
+
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
 
 		$model->scenario = 'preregistration';
 
@@ -240,8 +252,8 @@ class PreregistrationController extends Controller
 
 		$session = new CHttpSession;
 
-		if($session['visitor_id']=="" or $session['visitor_id']==null){
-			$this->redirect(array('preregistration/registration'));
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
 		}
 
 		$model = new Visit();
@@ -335,6 +347,10 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 
 		$model = new Registration();
+
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
 
 		$model->scenario = 'asic';
 
@@ -510,9 +526,10 @@ class PreregistrationController extends Controller
 	public function actionUploadPhoto(){
 
 		$session = new CHttpSession;
+		
 		//unset(Yii::app()->session['imgName']);
-		if($session['visitor_id']=="" or $session['visitor_id']==null){
-			$this->redirect(array('preregistration/registration'));
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
 		}
 
 		$model = new UploadForm();
@@ -578,8 +595,8 @@ class PreregistrationController extends Controller
 
 		$session = new CHttpSession;
 
-		if($session['visitor_id']=="" or $session['visitor_id']==null){
-			$this->redirect(array('preregistration/registration'));
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
 		}
 
 		$model = Visit::model()->findByAttributes(
@@ -719,74 +736,238 @@ class PreregistrationController extends Controller
 
     public function actionProfile($id)
     {
+    	$session = new CHttpSession;
 
-        $model = $this->loadModel($id);
+    	$model = $this->loadModel($id);
 
         $model->scenario = 'preregistration';
 
-        if (isset($_POST['Visitor'],$_POST['Company'])) {
+    	$new_passwordErr='';$repeat_passwordErr='';$old_passwordErr = '';
 
+        if (isset($_POST['Visitor'],$_POST['Company'])) 
+        {	
         	
-            $companyModel = Company::model()->findByPk($model->company);
+        	$companyModel = Company::model()->findByPk($model->company);
 
-            $model->attributes = $_POST['Visitor'];
-
-            /*
-			* This removes Integrity Constraint Issue
-            */
-            if(!empty($_POST['Visitor']['visitor_type'])){
-				$model->visitor_type = $_POST['Visitor']['visitor_type'];             	
-            }else{
-            	$model->visitor_type = NULL;             	
-            }
-
-            /*
-			* This removes Integrity Constraint Issue
-            */
-            if(!empty($_POST['Visitor']['photo'])){
-				$model->photo = $_POST['Visitor']['photo'];             	
-            }else{
-            	$model->photo = NULL;             	
-            }
+        	$model->attributes = $_POST['Visitor'];
 
             $companyModel->attributes = $_POST['Company'];
 
-		    $companyModel->created_by_visitor = $model->id;
-		    $companyModel->mobile_number = $_POST['Company']['mobile_number'];
-		    $companyModel->tenant = Yii::app()->user->tenant;
+           	
+            if( $_POST['Visitor']['old_password'] =="" && $_POST['Visitor']['new_password'] =="" && $_POST['Visitor']['repeat_password']=="")
+            {	
+            	//**********************************************************************************
+            	//****************************************************************
+					//this is because to pass the validation rules for visitor
+		        	if(empty($model->visitor_card_status) || is_null($model->visitor_card_status)){
+		        		$model->visitor_card_status = 1; //saved
+		        	}
+		            /*
+					* This removes Integrity Constraint Issue
+		            */
+		            if(!empty($_POST['Visitor']['visitor_type'])){
+						$model->visitor_type = $_POST['Visitor']['visitor_type'];             	
+		            }else{
+		            	$model->visitor_type = NULL;             	
+		            }
 
-		    /*
-			* This removes Integrity Constraint Issue
-            */
-		   	if(!empty($_POST['Company']['logo'])){
-				$companyModel->logo = $_POST['Company']['logo'];             	
-            }else{
-            	$companyModel->logo = NULL;             	
+		            /*
+					* This removes Integrity Constraint Issue
+		            */
+		            if(!empty($_POST['Visitor']['photo'])){
+						$model->photo = $_POST['Visitor']['photo'];             	
+		            }else{
+		            	$model->photo = NULL;             	
+		            }
+
+				    $companyModel->created_by_visitor = $model->id;
+				    $companyModel->mobile_number = $_POST['Company']['mobile_number'];
+				    $companyModel->tenant = Yii::app()->user->tenant;
+
+				    /*
+					* This removes Integrity Constraint Issue
+		            */
+				   	if(!empty($_POST['Company']['logo'])){
+						$companyModel->logo = $_POST['Company']['logo'];             	
+		            }else{
+		            	$companyModel->logo = NULL;             	
+		            }
+
+		            /*
+					* This removes Integrity Constraint Issue
+		            */
+		            if(!empty($_POST['Company']['created_by_user'])){
+						$companyModel->created_by_user = $_POST['Company']['created_by_user'];             	
+		            }else{
+		            	$companyModel->created_by_user = NULL;             	
+		            }
+
+		            /*
+					* This removes Integrity Constraint Issue
+		            */
+		            if(!empty($_POST['Company']['code'])){
+						$companyModel->code = $_POST['Company']['code'];             	
+		            }else{
+		            	$companyModel->code = substr($companyModel->name,0,3); //substr(string,start,length)            	
+		            }
+
+		            $model->password_saver = "";
+
+		            if($model->validate())
+		            {
+		            	if($model->save())
+				        {
+				        	if($companyModel->validate())
+				        	{
+				        		if ($companyModel->save()) 
+					            {
+									Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
+								}
+								else
+								{
+									Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+									$msg = print_r($companyModel->getErrors(),1);
+									throw new CHttpException(400,'Data not saved in company because: '.$msg );
+								}
+				        	}
+				        	else
+				        	{
+				        		Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+								$msg = print_r($companyModel->getErrors(),1);
+								throw new CHttpException(400,'Data not saved in company because: '.$msg );
+				        	}
+				        }
+				        else
+				        {
+				        	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+				        	$msg = print_r($model->getErrors(),1);
+							throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
+				        }
+		            }
+		            else
+		            {
+		            	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+				        $msg = print_r($model->getErrors(),1);
+						throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
+		            }
+            	//**********************************************************************************
             }
+            else
+            {
+            	//**********************************************************************************
+            	if( ($model->old_password !="") && ($model->new_password=="" || $model->repeat_password=="") )
+	            {
+	            	if($model->new_password==""){$new_passwordErr = "Please enter new password";}else{$repeat_passwordErr = "Please enter repeat password";}	            
+	            }
+	            else
+	            {
 
-            /*
-			* This removes Integrity Constraint Issue
-            */
-            if(!empty($_POST['Company']['created_by_user'])){
-				$companyModel->created_by_user = $_POST['Company']['created_by_user'];             	
-            }else{
-            	$companyModel->created_by_user = NULL;             	
+	            	if(crypt($model->old_password, $model->password) === $model->password) 
+			        {
+			        	//****************************************************************
+						//this is because to pass the validation rules for visitor
+			        	if(empty($model->visitor_card_status) || is_null($model->visitor_card_status)){
+			        		$model->visitor_card_status = 1; //saved
+			        	}
+
+			        	$model->password = $_POST['Visitor']['new_password'];
+			            /*
+						* This removes Integrity Constraint Issue
+			            */
+			            if(!empty($_POST['Visitor']['visitor_type'])){
+							$model->visitor_type = $_POST['Visitor']['visitor_type'];             	
+			            }else{
+			            	$model->visitor_type = NULL;             	
+			            }
+
+			            /*
+						* This removes Integrity Constraint Issue
+			            */
+			            if(!empty($_POST['Visitor']['photo'])){
+							$model->photo = $_POST['Visitor']['photo'];             	
+			            }else{
+			            	$model->photo = NULL;             	
+			            }
+
+			            $companyModel->created_by_visitor = $model->id;
+					    $companyModel->mobile_number = $_POST['Company']['mobile_number'];
+					    $companyModel->tenant = Yii::app()->user->tenant;
+
+					    /*
+						* This removes Integrity Constraint Issue
+			            */
+					   	if(!empty($_POST['Company']['logo'])){
+							$companyModel->logo = $_POST['Company']['logo'];             	
+			            }else{
+			            	$companyModel->logo = NULL;             	
+			            }
+
+			            /*
+						* This removes Integrity Constraint Issue
+			            */
+			            if(!empty($_POST['Company']['created_by_user'])){
+							$companyModel->created_by_user = $_POST['Company']['created_by_user'];             	
+			            }else{
+			            	$companyModel->created_by_user = NULL;             	
+			            }
+
+			            /*
+						* This removes Integrity Constraint Issue
+			            */
+			            if(!empty($_POST['Company']['code'])){
+							$companyModel->code = $_POST['Company']['code'];             	
+			            }else{
+			            	$companyModel->code = substr($companyModel->name,0,3); //substr(string,start,length)            	
+			            }
+
+			            $model->password_saver = "yes";
+
+				        if($model->validate())
+			            {
+			            	if($model->save())
+					        {
+					        	if($companyModel->validate())
+					        	{
+					        		if ($companyModel->save()) 
+						            {
+										Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
+									}
+									else
+									{
+										Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+										$msg = print_r($companyModel->getErrors(),1);
+										throw new CHttpException(400,'Data not saved in company because: '.$msg );
+									}
+					        	}
+					        	else
+					        	{
+					        		Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+									$msg = print_r($companyModel->getErrors(),1);
+									throw new CHttpException(400,'Data not saved in company because: '.$msg );
+					        	}
+					        }
+					        else
+					        {
+					        	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+					        	$msg = print_r($model->getErrors(),1);
+								throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
+					        }
+			            }
+			            else
+			            {
+			            	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+					        $msg = print_r($model->getErrors(),1);
+							throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
+			            }
+						//****************************************************************
+					} 
+					else
+					{
+						$old_passwordErr = "Please enter correct old password";
+					}
+	            }
+            	//**********************************************************************************
             }
-
-
-	        if($model->save(false))
-	        {
-	            if ($companyModel->save(false)) {
-					Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
-				}else{
-					Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
-				}
-	        }
-	        else{
-	        	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
-	        }
-
-	        
         }
 
         $companyModel = Company::model()->findByPk($model->company);
@@ -794,6 +975,9 @@ class PreregistrationController extends Controller
         $this->render('profile', array(
             'model' => $model,
             'companyModel' => $companyModel,
+            'new_passwordErr' => $new_passwordErr,
+            'repeat_passwordErr' => $repeat_passwordErr,
+            'old_passwordErr' => $old_passwordErr,
         ));
 
     }

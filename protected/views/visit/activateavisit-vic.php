@@ -146,7 +146,8 @@ $asicEscort = new AddAsicEscort();
                         break;
                 }
             }*/
-
+            if($model->visit_status == VisitStatus::CLOSED)
+                $model->date_check_in = date("d-m-Y");
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_in',
@@ -286,7 +287,21 @@ $asicEscort = new AddAsicEscort();
         }
 
         refreshTimeIn();
-
+        
+        // Expected: Today's date should not be to select for Auto Closed visits for 24 hour & EVIC.
+        if( $("#visitStatus").val() == 6) {
+           switch(cardType) {
+               case "6": // 24 Hour VIC
+                    minDate = 1;
+                    break;
+                case "7": // Evic
+                    minDate = 1;
+                    break;
+                default:
+                    minDate = 0;
+                    break;
+            } 
+        }
         $("#Visit_date_check_in").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -296,9 +311,9 @@ $asicEscort = new AddAsicEscort();
             minDate: minDate,
             dateFormat: "dd-mm-yy",
             onClose: function (selectedDate) {
-                var currentDate  = d.getDate() + '-0' + (d.getMonth() + 1) + '-' + d.getFullYear();
+                var currentDate  = d.getDate() + '-0' + (d.getMonth() + 1) + '-' + d.getFullYear(); 
                 var checkInSelectedDate = $("#Visit_date_check_in").datepicker('getDate');
-
+                
                 switch(cardType) {
                     case "<?php echo CardType::VIC_CARD_EXTENDED; ?>":
                     case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":

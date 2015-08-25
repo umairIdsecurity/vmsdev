@@ -159,11 +159,15 @@ class User extends VmsActiveRecord {
                  array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 ))),
-                array('role, company', 'required', 'message' => 'Please select a {attribute}'),
+                array('role', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent,photo','default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no', 'AvmsFields'),
                 array('asic_expiry_day, asic_expiry_month, asic_expiry_year ', 'AvmsFields'),
-
+                
+                array('asic_no, asic_expiry, first_name, last_name, email, contact_number, user_type,is_deleted', 'required', 'on'=>'add_sponsor'),
+                  array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
+                ':is_deleted'=>0
+                )), 'on'=>'add_sponsor'),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
@@ -627,18 +631,28 @@ class User extends VmsActiveRecord {
        $tenantId = trim($tenantId);
         $aArray = array();
         if ($tenantId) {
-            $company = Yii::app()->db->createCommand()
-                ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.id as user_id, u.first_name, u.last_name')
-                ->from('user u')
-                ->join('company c', 'u.tenant=c.id')
-                ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role IN (" . Roles::ROLE_AGENT_AIRPORT_ADMIN . ", ".Roles::ROLE_AGENT_ADMIN."   ) and c.is_deleted = 0")
-                ->queryAll();
-            foreach ($company as $index => $value) {
+//            $company = Yii::app()->db->createCommand()
+//                ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.id as user_id, u.first_name, u.last_name')
+//                ->from('user u')
+//                ->join('company c', 'u.tenant=c.id')
+//                ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role IN (" . Roles::ROLE_AGENT_AIRPORT_ADMIN . ", ".Roles::ROLE_AGENT_ADMIN."   ) and c.is_deleted = 0")
+//                ->queryAll();
+//             foreach ($company as $index => $value) {
+//                $aArray[] = array(
+//                    'id' => $value['id'],
+//                    'name' => $value['first_name'] . ' ' . $value['last_name'],
+//                    'tenant' => $value['tenant'],
+//                    'tenant_agent' => $value['user_id'],
+//                );
+//            }
+            
+            $tenantAgent = TenantAgent::model()->with("id0")->findAll("tenant_id =".$tenantId);
+            foreach ($tenantAgent as $index => $value) {
                 $aArray[] = array(
                     'id' => $value['id'],
-                    'name' => $value['first_name'] . ' ' . $value['last_name'],
-                    'tenant' => $value['tenant'],
-                    'tenant_agent' => $value['user_id'],
+                    'name' => $value['id0']['name'],
+                    'tenant' => $value['tenant_id'],
+                    'tenant_agent' => $value['id'],
                 );
             }
         }

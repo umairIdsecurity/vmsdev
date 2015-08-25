@@ -29,7 +29,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
 //        ),
         array(
             'name' => 'contact',
-            'filter'=>CHtml::activeTextField($model, 'contact', array('placeholder'=>'Company Contact Name')),
+            'value' => 'getContactName($data->id)',
+            'filter'=>CHtml::activeTextField($model, 'contact', array('placeholder'=>'Company Contact Name', 'disabled' => 'disabled')),
         ),
 //        array(
 //            'name' => 'billing_address',
@@ -110,6 +111,15 @@ function getUserContact($id)
     $users = User::model()->findAll('company=:company', array(':company'=>$id));
     if ($users)
         return $users[0]->contact_number;
+    else
+        return "";
+}
+
+function getContactName($id)
+{
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->getFullName();
     else
         return "";
 }

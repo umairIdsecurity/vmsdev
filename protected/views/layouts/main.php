@@ -92,7 +92,7 @@ $userRole = $session['role'];
                             if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
                                 ?><img id='photoPreview' style="height: 65px !important; width:130px !important;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
                             } else {
-                                 ?><img id='photoPreview' style="width: 85px !important; height: auto !important" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                                 ?><img id='photoPreview' style="width: auto !important; height: 65px !important" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
                             }?>
 
                     </div>
@@ -160,7 +160,7 @@ $userRole = $session['role'];
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visit History</a>
                             </li>
 
-                            <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view' && $this->action->id != 'detail') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
+                            <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view' && $this->action->id != 'detail') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences" || $this->id == "tenantAgent" )) ? "active" : "" ?>">
                                 <?php if (in_array($session['role'], array(Roles::ROLE_ADMIN,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_SUPERADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) {
                                 ?>
                                 <a href="<?php echo Yii::app()->createUrl("/user/admin&vms=".strtolower(CHelper::get_default_module())); ?>">Administration</a>

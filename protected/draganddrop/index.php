@@ -262,7 +262,7 @@ if (isset($_GET['viewFrom'])) {
                 {
                     /*logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
                     $(".companyLogoDiv").show();*/
-alert("update");
+
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + data,
@@ -314,12 +314,14 @@ alert("update");
                                     $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
                                     $(".photo_visitor").src = "data:image;base64,"+ value.db_image;
-                                   
+                                    
+                                    $("#Visitor_photo").val(data);
                                     } else {
                                       $(".photoDiv").show();
                                       // Visit Detail Page
                                       if($("#actionUpload").val() == 'detail')
-                                        $(".photo_visitor").attr("src","data:image;base64,"+ value.db_image);                               
+                                        $(".photo_visitor").attr("src","data:image;base64,"+ value.db_image); 
+                                        $("#Visitor_photo").val(data);
                                 }
 
                                 if ($("#controllerId").val() != 'companyLafPreferences' && $("#controllerId").val() != 'company') {
@@ -342,6 +344,8 @@ alert("update");
                                     $("#cropImageBtn").show();
                                     /*document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
                                     document.getElementById('photoCropPreview').src =  "data:image;base64,"+ value.db_image;
+                                    document.getElementById('photoPreview').src =  "data:image;base64,"+ value.db_image;
+                                    $(".companylogopreview").attr("src", "data:image;base64,"+ value.db_image);
                                 }
                             });
                             if ($("#viewFrom").val() == '1') {

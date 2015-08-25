@@ -60,7 +60,7 @@ $company = Company::model()->findByPk($session['company']);
                      <?php
                      if ($company->logo != NULL) {
                          ?>
-                    <img id='photoPreview' src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>"/>
+                    <img id='photoPreview' class="companylogopreview" src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>"/>
                 <?php } else { ?>
                     <img id="photoPreview" >
                 <?php } ?>

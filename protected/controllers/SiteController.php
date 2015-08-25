@@ -202,7 +202,7 @@ class SiteController extends Controller {
                     $session['timezone'] = $browserTimezone;
                 }
                 //**************************************************************
-                
+                 
                 switch ($session['role']) {
                     case Roles::ROLE_AIRPORT_OPERATOR:
                     case Roles::ROLE_AGENT_AIRPORT_ADMIN:

@@ -13,6 +13,9 @@ if (!isset($_GET['profile_type']) || $_GET['profile_type'] == Visitor::PROFILE_T
     $formSuffix = '_' . strtolower($_GET['profile_type']);
     $model->profile_type = $_GET['profile_type'];
 }
-
+// fOR AVMS admin do not show Corporate form
+$module = CHelper::get_allowed_module();
+if($module == "AVMS" && (empty($formSuffix) || $_GET["profile_type"] == "CORPORATE"))
+    $formSuffix = "_VIC";
 $this->renderPartial('_form' . $formSuffix, array('model'=>$model));
 ?>

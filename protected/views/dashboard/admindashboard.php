@@ -31,6 +31,13 @@ switch ($session['role']) {
         $Criteria = new CDbCriteria();
         $Criteria->condition = "user_id  IN (".Yii::app()->user->id.")";
         $workstationList = UserWorkstations::model()->findAll($Criteria);
+        $workstationListTemp = array();
+        foreach ($workstationList as $key => $value) {
+            if (!in_array($value->workstation, $workstationListTemp)) {
+                array_push($workstationListTemp, $value->workstation);
+            }
+        }
+        $workstationList = $workstationListTemp;
         break;
     default:
         $workstationList = array();
@@ -62,10 +69,19 @@ if (isset($session['workstation'])) {
 
     if ($workstation) {
         foreach ($workstationList as $key => $value) {
-            if ($value->id == $workstation->id) {
-                $moveWorkstation = $workstationList[$key];
-                $workstationList[$key] = $workstationList[0];
-                $workstationList[0] = $moveWorkstation;
+            if($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+                if ($value == $workstation->id) {
+                    $moveWorkstation = $workstationList[$key];
+                    $workstationList[$key] = $workstationList[0];
+                    $workstationList[0] = $moveWorkstation;
+                }
+            }
+            else {
+                if ($value->id == $workstation->id) {
+                    $moveWorkstation = $workstationList[$key];
+                    $workstationList[$key] = $workstationList[0];
+                    $workstationList[0] = $moveWorkstation;
+                }
             }
         }
 
@@ -76,20 +92,22 @@ if (isset($session['workstation'])) {
 foreach ($workstationList as $workstation) {
     $x++;
     if($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
-        $workstationName = Workstation::model()->findByPk($workstation->workstation)->name;
+        $workstationName = Workstation::model()->findByPk($workstation)->name;
     } else {
         $workstationName = $workstation->name;
     }
     echo "<h1>" . $workstationName . "</h1>";
     $merge = new CDbCriteria;
     if($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
-        $workstationId = $workstation->workstation;
+        $workstationId = $workstation;
     } else {
         $workstationId = $workstation->id;
     }
     $merge->addCondition("workstation =" . $workstationId . " and (visit_status =" . VisitStatus::ACTIVE . " or visit_status =" . VisitStatus::PREREGISTERED . ")");
 
-    ?><div  class="admindashboardDiv"><?php
+?>
+    <div  class="admindashboardDiv">
+        <?php
         $login_url = $this->createUrl('site/login');
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,
@@ -184,7 +202,10 @@ foreach ($workstationList as $workstation) {
                 ),
             ),
         ));
-        ?></div><br><?php
+        ?>
+    </div>
+    <br>
+<?php
 }
 
 function getVisitorFullName($id) {

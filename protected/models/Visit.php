@@ -1217,9 +1217,9 @@ class Visit extends CActiveRecord {
                     default:
                     
                        if ($dateNow->diff($dateOut)->format("%r%a") <= 0)  
-                           $totalCount =  $dateIn->diff($dateOut)->days; 
+                           $totalCount =  $dateIn->diff($dateOut)->days + 1; 
                         if( $dateNow->diff($dateOut)->format("%r%a") >  0)
-                           $totalCount =  $dateIn->diff($dateNow)->days;                      
+                           $totalCount =  $dateIn->diff($dateNow)->days + 1;                      
                         break;
                 }
                 // Add Old visits
@@ -1380,9 +1380,9 @@ class Visit extends CActiveRecord {
          $dateIn  = new DateTime($this->date_check_in);
          $dateOut = new DateTime($this->date_check_out);
          $dateNow = new DateTime("NOW");
-        $isExpired = $dateNow->diff($dateOut)->format("%r%a");   
+         $isExpired = $dateNow->diff($dateOut)->format("%r%a");   
          
-        if( $isExpired <= 0 && $this->visit_status == VisitStatus::ACTIVE ) {
+        if( $dateNow >=  $dateOut && $this->visit_status == VisitStatus::ACTIVE ) {
             
             $status = "";
             /* 
@@ -1410,7 +1410,7 @@ class Visit extends CActiveRecord {
              $checkout = new DateTime($checkoutdatetime);
              $checkout->setTimezone(new DateTimeZone($timezone));
             //compare Time hours and minutes
-             if(  $current_hour > $checkout->format("H")  || ( $isExpired < 0 ) 
+             if(  $current_hour > $checkout->format("H")  || ( $dateNow > $dateOut ) 
                      || ( $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
                      //Update
                      if( !empty($status) )

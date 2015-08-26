@@ -11,6 +11,8 @@
  * The followings are the available model relations:
  * @property Visitor[] $visitors
  * @property User $createdBy
+ * @property HelpdeskGroupWebPreregistration $helpdeskGroupWebPreregistration
+ * @property HelpdeskGroupUserRole $helpdeskGroupUserRole
  */
 class HelpDeskGroup extends CActiveRecord {
 
@@ -31,11 +33,12 @@ class HelpDeskGroup extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'length', 'max' => 25),
-            array('name', 'required'),
-            array('created_by,order_by', 'length', 'max' => 20),
+            array('name, is_default_value', 'required'),
+            array('created_by, order_by', 'length', 'max' => 20),
+            array('is_default_value', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, is_deleted,name, created_by,order_by', 'safe', 'on' => 'search'),
+            array('id, is_deleted, name, created_by, order_by, is_default_value', 'safe', 'on' => 'search'),
         );
     }
 
@@ -47,6 +50,8 @@ class HelpDeskGroup extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'helpdeskGroupWebPreregistration' => array(self::HAS_MANY,"HelpdeskGroupWebPreregistration", "helpdesk_group"),
+            'helpdeskGroupUserRole' => array(self::HAS_MANY,"HelpdeskGroupUserRole", "helpdesk_group"),
         );
     }
 
@@ -59,7 +64,8 @@ class HelpDeskGroup extends CActiveRecord {
             'name' => 'Name',
             'created_by' => 'Created By',
 			'order_by' => 'Sort Order',
-            'is_deleted' => 'Is Deleted'
+            'is_deleted' => 'Is Deleted',
+            'is_default_value' => 'Set Default'
         );
     }
 
@@ -82,7 +88,8 @@ class HelpDeskGroup extends CActiveRecord {
 
         $criteria->compare('id', $this->id, true);
         $criteria->compare('name', $this->name, true);
-		$criteria->compare('order_by', $this->order_by, true);
+        $criteria->compare('order_by', $this->order_by, true);
+		$criteria->compare('is_default_value', $this->is_default_value, true);
         $criteria->compare('created_by', $this->created_by, true);
         $criteria->addCondition ('created_by = '.Yii::app()->user->id);
         return new CActiveDataProvider($this, array(
@@ -137,14 +144,26 @@ class HelpDeskGroup extends CActiveRecord {
             
             $session = new CHttpSession;
 
+            $role = $session['role'];
+            $roles = HelpdeskGroupUserRole::model()->findAllByAttributes(array('role' => $role));
+            $heldeskGroups = array();
+            foreach ($roles as $role) {
+                if (!in_array($role->helpdesk_group, $heldeskGroups))
+                    array_push($heldeskGroups, $role->helpdesk_group);
+            }
+
+            if(isset($session['account']) && !empty($session['account'])) {
+                $account = $session['account'];
+                $preregistrations = HelpdeskGroupWebPreregistration::model()->findAllByAttributes(array('web_preregistration' => $account));
+                foreach ($preregistrations as $preregistration) {
+                    if (!in_array($preregistration->helpdesk_group, $heldeskGroups))
+                        array_push($heldeskGroups, $preregistration->helpdesk_group);
+                }
+            }
+
             $criteria = new CDbCriteria();
             $criteria->order = 'order_by ASC';
-            $module = CHelper::get_allowed_module();
-            
-            if( $module == "CVMS" )
-                $criteria->addCondition ('id IN (4, 6)');
-            if( $module == "AVMS" )
-               $criteria->addCondition ('id IN (2, 5, 7)');
+            $criteria->addInCondition('id', $heldeskGroups);
             
             if(!empty($session['created_by'])){
                 $criteria->addCondition ('created_by = '.$session['created_by']);
@@ -165,6 +184,32 @@ class HelpDeskGroup extends CActiveRecord {
        $helpDeskGroup = $this->findByPk($id);
 
 		return $helpDeskGroup->name;
+    }
+
+    /**
+     * Retrieves a list of roles id of current help desk group
+     */
+    public function getActiveRoleIds($id)
+    {
+        $result= array();
+        $roles = HelpdeskGroupUserRole::model()->findAllByAttributes(array('helpdesk_group' => $id));
+        foreach ($roles as $role) {
+            array_push($result, $role->role);
+        }
+        return $result;
+    }
+
+    /**
+     * Retrieves a list of web preregistration of current help desk group
+     */
+    public function getActiveWebPreregistrations($id)
+    {
+        $result= array();
+        $preregistrations = HelpdeskGroupWebPreregistration::model()->findAllByAttributes(array('helpdesk_group' => $id));
+        foreach ($preregistrations as $preregistration) {
+            array_push($result, $preregistration->web_preregistration);
+        }
+        return $result;
     }
 
     public function behaviors()

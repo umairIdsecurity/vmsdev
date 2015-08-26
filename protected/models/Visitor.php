@@ -55,6 +55,13 @@ class Visitor extends CActiveRecord {
     public $alternative_identification;
     public $companycode;
 
+    //Define public variable
+    public $old_password;
+    public $new_password;
+    public $repeat_password;
+
+    public $password_saver;
+
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC       = 'VIC';
     const PROFILE_TYPE_ASIC      = 'ASIC';
@@ -196,11 +203,15 @@ class Visitor extends CActiveRecord {
         $rules = array(
             array('first_name, last_name, email, contact_number', 'required'),
             //array('tenant','required','message' =>'Please select a {attribute}'),
+
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),
             array(
+
                 'date_of_birth,
+
+               
                 notes,
                 birthdayYear,
                 birthdayMonth,
@@ -244,9 +255,18 @@ class Visitor extends CActiveRecord {
                 under_18_detail',
                 'safe'
             ),
+            
+            array('old_password,new_password,repeat_password','length','min'=>5,'on' => 'preregistration'),
+            array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistration'),
+            array('old_password,new_password,repeat_password','safe','on' => 'preregistration'),
+
+            /*array('old_password, new_password, repeat_password', 'required', 'on' => 'preregistration'),
+            array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistration'),*/
+
+
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic']),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic','preregistration']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -331,7 +351,6 @@ class Visitor extends CActiveRecord {
 
         return $rules;
     }
-
 
     /**
      * @return array relational rules.
@@ -511,8 +530,24 @@ class Visitor extends CActiveRecord {
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
-        } else {
-            $this->password = User::model()->hashPassword($this->password);
+        } 
+        else
+        {
+            if (Yii::app()->controller->action->id == 'profile') 
+            {
+                if($this->password_saver == ""){
+                    //do not hash password if user doesn't to do such
+                    /*echo $this->password."<br>";
+                        die("before Save else called: ".$this->password);*/
+                }else{
+                    $this->password = User::model()->hashPassword($this->password);
+                }
+            
+            }
+            else
+            {
+                $this->password = User::model()->hashPassword($this->password);
+            }
         }
 
         if(!empty($this->date_of_birth)){
@@ -614,8 +649,6 @@ class Visitor extends CActiveRecord {
             $this->password_option = 1;
 
         }
-
-
        return parent::afterFind();
     }
     protected function afterValidate() {

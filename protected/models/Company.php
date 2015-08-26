@@ -68,10 +68,10 @@ class Company extends CActiveRecord {
 	            array('name', 'required','message'=>'Please enter {attribute}'),
 
                 //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'preregistration'),
-                array('user_first_name','required','on' => 'preregistrationAddComp','message'=>'Please enter First Name'),
-                array('user_last_name','required','on' => 'preregistrationAddComp','message'=>'Please enter Last Name'),
-                array('user_email','required','on' => 'preregistrationAddComp','message'=>'Please enter Email Address'),
-                array('user_contact_number','required','on' => 'preregistrationAddComp','message'=>'Please enter Contact Number'),
+                array('user_first_name','required','on' => 'preregistration','message'=>'Please enter First Name'),
+                array('user_last_name','required','on' => 'preregistration','message'=>'Please enter Last Name'),
+                array('user_email','required','on' => 'preregistration','message'=>'Please enter Email Address'),
+                array('user_contact_number','required','on' => 'preregistration','message'=>'Please enter Contact Number'),
 
 
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
@@ -108,10 +108,10 @@ class Company extends CActiveRecord {
                             array('name', 'required','message'=>'Please enter {attribute}'),
                             
                             //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'preregistration'),
-                            array('user_first_name','required','on' => 'preregistrationAddComp','message'=>'Please enter First Name'),
-                            array('user_last_name','required','on' => 'preregistrationAddComp','message'=>'Please enter Last Name'),
-                            array('user_email','required','on' => 'preregistrationAddComp','message'=>'Please enter Email Address'),
-                            array('user_contact_number','required','on' => 'preregistrationAddComp','message'=>'Please enter Contact Number'),
+                            array('user_first_name','required','on' => 'preregistration','message'=>'Please enter First Name'),
+                            array('user_last_name','required','on' => 'preregistration','message'=>'Please enter Last Name'),
+                            array('user_email','required','on' => 'preregistration','message'=>'Please enter Email Address'),
+                            array('user_contact_number','required','on' => 'preregistration','message'=>'Please enter Contact Number'),
                             array('user_email','email'),
 
                             array('code', 'required', 'except' => 'preregistration'),

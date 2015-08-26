@@ -8,21 +8,25 @@
 
 ?>
 <div class="page-content">
-    <h1 class="text-primary title">PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)</h1>
+    <h1 class="text-primary title">REQUIREMENTS</h1>
     <div class="privacy-info">
-        To proceed with this registration you must:
+        To proceed you will need to provide details of the following:
+        <br><br>
         <ol>
             <li>
-                Have a valid Driver's Licence or Passport with you
+                A valid Driver Licence, Passport or Proof of Age Card
             </li>
+            
+            <br>
+
             <li>
-                Have the name and contact email or mobile number of your escorting ASIC sponsor
+                An Email or Mobile Number of your escorting ASIC Sponsor (if known) 
             </li>
+
+            <br>
+
             <li>
-                Give details of your reason for visiting, including company contact information
-            </li>
-            <li>
-                Approve the declarations by checking the tick boxes
+                Details of your reason for visiting including company contact information
             </li>
         </ol>
     </div>

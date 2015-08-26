@@ -201,12 +201,6 @@ class SiteController extends Controller {
                 if(!empty($browserTimezone)){
                     $session['timezone'] = $browserTimezone;
                 }
-                                   
-               /* Update Visits that set to Expire today for this tenant*/ 
-                if( Yii::app()->user->tenant ) { 
-                    //$visits = new Visit;
-                   // $visits->setExpireOrClosedVisits( Yii::app()->user->tenant ); 
-                }
                 //**************************************************************
                  
                 switch ($session['role']) {

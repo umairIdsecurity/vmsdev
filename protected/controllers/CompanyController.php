@@ -115,6 +115,11 @@ class CompanyController extends Controller
         if (isset($_POST['Company'])) {
 
             $model->attributes = $_POST['Company'];
+            $model->contact = $model->user_first_name .' '.$model->user_last_name;
+            $model->email_address = $model->user_email;
+            $model->office_number = $model->user_contact_number;
+            $model->mobile_number = $model->user_contact_number; 
+            $model->trading_name = $model->name;  
             $model->company_type = 3; // visitor company type -- directed by savita
 
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {

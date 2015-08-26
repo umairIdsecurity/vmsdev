@@ -223,9 +223,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($contact, 'FullName', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($contact, 'FullName'); ?>
+                                <?php echo $visitorForm->error($company, 'contact'); ?>
                             </td>
                         </tr>
 
@@ -234,9 +234,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($contact, 'contact_number', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($contact, 'contact_number'); ?>
+                                <?php echo $visitorForm->error($company, 'mobile_number'); ?>
                             </td>
                         </tr>
 
@@ -245,9 +245,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($contact, 'email', ['disabled' => $disabled]); ?>
+                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled]); ?>
                                 <br />
-                                <?php echo $visitorForm->error($contact, 'email'); ?>
+                                <?php echo $visitorForm->error($company, 'email_address'); ?>
                             </td>
                         </tr>
 

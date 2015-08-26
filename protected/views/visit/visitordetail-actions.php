@@ -136,17 +136,21 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
 
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
-                            
+                        <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : 
+                              $disabled = ''; $dateIn = new DateTime($model->date_check_in); $dateNow = new DateTime("NOW");
+                               if($model->visit_status == VisitStatus::PREREGISTERED &&  $dateIn->format("Y-m-d") > $dateNow->format("Y-m-d") ) {
+                                    $disabled = 'disabled';
+                                }
+                          ?>
                             <!--  issue: CAV-794 onclick="checkIfActiveVisitConflictsWithAnotherVisit()" -->
-                            <button type="button" id='registerNewVisit' class='greenBtn actionForward'>Activate Visit</button>
+                            <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
                             
                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                             </div>
-                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
-                            <?php
+                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED ) : ?>
+                            <?php  
                             $disabled = '';
                             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->finish_date)) {
                                 $disabled = 'disabled';

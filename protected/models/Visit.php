@@ -1149,7 +1149,9 @@ class Visit extends CActiveRecord {
 
         //$criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $this->visitor);
         $oldVisitsCount = $this->getOldVisitsCountForThisYear($this->id, $this->visitor);
-        
+         if($this->visit_status == VisitStatus::PREREGISTERED)
+            return $oldVisitsCount;
+         
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
             
@@ -1207,21 +1209,16 @@ class Visit extends CActiveRecord {
                         break;
                     default:
                     
-                       if ($dateNow->diff($dateOut)->format("%r%a") <= 0)  
-                           $totalCount =  $dateIn->diff($dateOut)->days + 1; 
-                        if( $dateNow->diff($dateOut)->format("%r%a") >  0)
-                           $totalCount =  $dateIn->diff($dateNow)->days + 1;                      
+                       if ($dateOut->diff($dateNow)->format("%r%a") > 0)  
+                           $totalCount =  $dateIn->diff($dateOut)->days + 1;  
+                        if( $dateOut->diff($dateNow)->format("%r%a") <=  0)
+                            $totalCount =  $dateIn->diff($dateNow)->days + 1;                 
                         break;
                 }
-                // Add Old visits
+                 // Add Old visits
                 if ($oldVisitsCount > 0) {
                     $totalCount += $oldVisitsCount;
                 }
-                
-                 // Count active date as first visit
-//                if( $this->visit_status == VisitStatus::ACTIVE)
-//                    $totalCount += 1;
-                
                 return $totalCount;
                 break;
         }
@@ -1274,7 +1271,7 @@ class Visit extends CActiveRecord {
     public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id) {
         $criteria = new CDbCriteria;
         $criteria->addCondition(" ( id != ".$current_visit_id." ) AND "
-                . "tenant = ".Yii::app()->user->tenant." AND (visit_status != ".VisitStatus::SAVED."  ) AND visitor = " . $this->visitor);
+                . "tenant = ".Yii::app()->user->tenant." AND (visit_status != ".VisitStatus::SAVED." && visit_status != ".VisitStatus::PREREGISTERED."  ) AND visitor = " . $this->visitor);
         $visits = $this->findAll($criteria);
        if( $visits ) {
            $visitCount  = 0;

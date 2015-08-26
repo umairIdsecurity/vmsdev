@@ -187,6 +187,8 @@ class DashboardController extends Controller {
         $session['lastPage'] = 'dashboard';
         //Archive Expired 48 Old Pre-registered Visits
         Visit::model()->archivePregisteredOldVisits();
+        // Closed/Expired Visits that will expire today or already Expired
+        Visit::model()->setExpireOrClosedVisits(Yii::app()->user->tenant);
         $model = new Visit('search');
 
         $model->unsetAttributes();  // clear any default values

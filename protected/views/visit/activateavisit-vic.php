@@ -344,7 +344,7 @@ $asicEscort = new AddAsicEscort();
                 }
 
                 if (selectedDate >= currentDate) {
-                    if (cardType == <?php echo CardType::VIC_CARD_MANUAL; ?> || selectedDate == currentDate) {
+                    if (selectedDate == currentDate) {
                         updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
                     } else {
                         updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");

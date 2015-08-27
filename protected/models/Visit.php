@@ -217,7 +217,7 @@ class Visit extends CActiveRecord {
       * @param type $value
       */
      public function beforeFind() {
-       
+       //1. Set CLOSED all AUTOClosed VIC 24 hour and EVIC visits
        $this->updateAll(array("visit_status" => VisitStatus::CLOSED), 
                    " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
                  . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'"
@@ -1271,7 +1271,9 @@ class Visit extends CActiveRecord {
     public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id) {
         $criteria = new CDbCriteria;
         $criteria->addCondition(" ( id != ".$current_visit_id." ) AND "
-                . "tenant = ".Yii::app()->user->tenant." AND (visit_status != ".VisitStatus::SAVED." AND visit_status != ".VisitStatus::PREREGISTERED."  ) AND visitor = " . $this->visitor);
+                . " tenant = ".Yii::app()->user->tenant." "
+                . " AND (visit_status != ".VisitStatus::SAVED." AND visit_status != ".VisitStatus::PREREGISTERED."  ) "
+                . " AND visitor = " . $this->visitor. " AND is_deleted = 0");
         $visits = $this->findAll($criteria);
        if( $visits ) {
            $visitCount  = 0;
@@ -1408,21 +1410,33 @@ class Visit extends CActiveRecord {
 
     
     /**
-     * If visit is preregistered and date of entry passes 48 hours after proposed visit date 
+     * 1. If visit is SAVED and date of entry passes 48 hours after proposed visit date 
      * the record is archived from Dashboard and Visit History 
-     * 
+     * 2. Change Preregistered Visit to SAVED after Current date Exceeds Check-In Date 
+     * For the current tenant.
      */
-    public function archivePregisteredOldVisits() {
+    public function archivePregisteredOldVisits() {      
         // Find and Update Status
-       /* $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
+        $crieteria = "( visit_status = ".VisitStatus::SAVED." || visit_status = ".VisitStatus::PREREGISTERED.") "
+                . " AND ( date_check_in < '" . date('Y-m-d') . "') "
+                . " AND tenant = ".Yii::app()->user->tenant;
+        
         $preRegistered = $this->findAll($crieteria);
-
+        
+        $dateNow = new DateTime("NOW");
         if ($preRegistered)
             foreach ($preRegistered as $key => $visit) {
-                $this->updateByPk($visit->id, array('is_deleted' => '1'));
+                $dateIn  = new DateTime($visit->date_check_in);
+                // 1. Archive Saved Visits after 2 days (48 Hours)
+                if( $dateIn->diff($dateNow)->days >= 2 && $visit->visit_status == VisitStatus::SAVED) {
+                    $this->updateByPk($visit->id, array('is_deleted' => '1'));
+                } // 2. SAVED all Preregisterd visits if checkin date pass current date. 
+                elseif( $dateIn->diff($dateNow)->days >= 1 && $visit->visit_status == VisitStatus::PREREGISTERED ) {
+                    $this->updateByPk($visit->id, array('visit_status' =>  VisitStatus::SAVED));
+                }
             }
 
-        return;*/
+        return;
     }
 
     /**

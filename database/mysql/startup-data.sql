@@ -1147,10 +1147,11 @@ VALUES (1, 'ids-logo2.jpg', '1411087524.jpg', 'uploads/company_logo/1411087524.j
 
 
 INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `user_type`, `user_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`)
-VALUES(1, 'SuperAdmin', 'IDS', 'superadmin@test.com', '9998798', '1993-01-01', 1, '', '', '', '', '$2a$13$wv.A6T0CCHXczYv/tlJP6./6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66', 5, 1, 1, 1, 0, 1, 1);
+VALUES(1, 'SuperAdmin', 'IDS', 'superadmin@test.com', '9998798', '1993-01-01', 1, '', '', '', '', '$2a$13$wv.A6T0CCHXczYv/tlJP6./6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66', 5, 1, 1, 1, 0, 1, NULL);
 
 INSERT INTO `tenant` (`id`,`created_by`,`is_deleted`)
 VALUES (1,1,0);
+
 
 INSERT INTO license_details (id, description)
 VALUES (1, 'This is a sample license detail.');

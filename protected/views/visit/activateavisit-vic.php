@@ -660,9 +660,10 @@ $asicEscort = new AddAsicEscort();
     function activeVisit() {
         var photoReview = $('#photoPreview').attr('src');
         var isDefault = photoReview.search('images/companylogohere1.png');
+        var VisitorPhotoID =  $("#Visitor_photo").val(); 
         // Stop active visit if image is not uploaded
         if (
-            (photoReview == '' || isDefault > 0) &&
+            ( (photoReview == '' || isDefault > 0) && VisitorPhotoID == "") &&
             $("#Visit_card_type").val() != <?php echo CardType::SAME_DAY_VISITOR; ?> &&
             $("#Visit_card_type").val() != <?php echo CardType::MANUAL_VISITOR; ?> &&
             $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_SAMEDATE ?> &&

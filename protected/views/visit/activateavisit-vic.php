@@ -668,7 +668,7 @@ $asicEscort = new AddAsicEscort();
             $("#Visit_card_type").val() != <?php echo CardType::MANUAL_VISITOR; ?> &&
             $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_SAMEDATE ?> &&
             $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
-        ) {
+        ) {  
             <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
                 <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');

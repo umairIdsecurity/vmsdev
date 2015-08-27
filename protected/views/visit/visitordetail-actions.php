@@ -421,8 +421,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 profileImage = $("#Visitor_photo").val();
             var isDefault = imgsrc.search('images/companylogohere1.png');
             var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
-
-            if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
+            var VisitorPhotoID =  $("#Visitor_photo").val(); 
+            if( (isDefault > 0 || (profileImage == '' && isChanged > 0))  &&  VisitorPhotoID == "") {
+                
                 <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
                     <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
                         $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');

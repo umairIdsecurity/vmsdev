@@ -136,17 +136,21 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
 
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
-                            
+                        <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : 
+                              $disabled = ''; $dateIn = new DateTime($model->date_check_in); $dateNow = new DateTime("NOW");
+                               if($model->visit_status == VisitStatus::PREREGISTERED &&  $dateIn->format("Y-m-d") > $dateNow->format("Y-m-d") ) {
+                                    $disabled = 'disabled';
+                                }
+                          ?>
                             <!--  issue: CAV-794 onclick="checkIfActiveVisitConflictsWithAnotherVisit()" -->
-                            <button type="button" id='registerNewVisit' class='greenBtn actionForward'>Activate Visit</button>
+                            <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
                             
                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                             </div>
-                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
-                            <?php
+                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED ) : ?>
+                            <?php  
                             $disabled = '';
                             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->finish_date)) {
                                 $disabled = 'disabled';
@@ -154,7 +158,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             ?>
                             <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn actionForward">Preregister Visit</button>
                         <?php else:
-                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) : ?>
+                            if ( ( $model->card_type == CardType::MANUAL_VISITOR) && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) : ?>
                                 <input type="submit" value="Back Date Visit" class="complete"/>
                             <?php else: ?>
                                 <button type="button" id="registerNewVisit" class="greenBtn actionForward">Activate Visit</button>
@@ -390,9 +394,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
+            
+            /** If already has an active visit then dont activate this one */
+            var existsVisit = checkForAlreadyActiveVisit();
+            if( !existsVisit ) {
+                return false;
+            }   
             e.preventDefault();
             $this = $(this);
-
             var pre_issued_card_no = $("#pre_issued_card_no").val();
             if (typeof pre_issued_card_no != "undefined") {
                 if (pre_issued_card_no == "") {
@@ -412,8 +421,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 profileImage = $("#Visitor_photo").val();
             var isDefault = imgsrc.search('images/companylogohere1.png');
             var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
-
-            if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
+            var VisitorPhotoID =  $("#Visitor_photo").val(); 
+            if( (isDefault > 0 || (profileImage == '' && isChanged > 0))  &&  VisitorPhotoID == "") {
+                
                 <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
                     <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
                         $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
@@ -725,6 +735,29 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         }).fail(function() {
             window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
+    }
+    
+     function checkForAlreadyActiveVisit () {
+       var flag = true;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_check_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
+            dataType: 'json',
+            success: function (r) {
+                $.each(r.data, function (index, value) {
+                    if (value.isConflicting == 1) {
+                        flag = false;
+                        alert("Visit cannot be activated. Please close previous active visit.");
+                        //location.reload(); 
+                        $("#vicHolderModal").hide();
+                        $(".modal-backdrop").hide();
+                    }  
+                   }); 
+            } 
+        }).fail(function() {
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+        });
+        return flag;
     }
 </script>
 

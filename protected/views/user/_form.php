@@ -251,8 +251,9 @@ $form = $this->beginWidget('CActiveForm', array(
                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                 foreach ($allTenantCompanyNames as $key => $value) {
                     ?>
+
                     <option <?php
-                    if (($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) && $session['tenant'] == $value['id']) {
+                    if ($model->tenant == $value['id']) {
                         echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
                     }
                     ?> value="<?php echo $value['id']; ?>"><?php echo $value["id0"]['name']; ?></option>
@@ -267,16 +268,16 @@ $form = $this->beginWidget('CActiveForm', array(
     <tr id="tenantAgentRow" > <!-- class='hiddenElement'>-->
 
         <td>
-            <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]">
+            <select id="User_tenant_agent"  name="User[tenant_agent]">
             <option value="">Please select a tenant agent</option>
                 <?php
                 //if ($this->action->Id != 'create' || isset($_POST['User'])) {
 
-                    $allAgentAdminNames = User::model()->findAllTenantAgent($model['tenant_agent']);
+                    $allAgentAdminNames = User::model()->findAllTenantAgent($model['tenant']);
                     foreach ($allAgentAdminNames as $key => $value) {
                         ?>
                         <option <?php
-                        if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant_agent'] == $value['id']) {
+                        if ($model->tenant_agent == $value['id']) {
                             echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
                         }
                         ?> value="<?php echo $value['tenant_agent']; ?>"><?php echo $value['name']; ?></option>
@@ -285,7 +286,9 @@ $form = $this->beginWidget('CActiveForm', array(
 //               
                 ?>
             </select>
+            <?php if($session['role']!=Roles::ROLE_SUPERADMIN){ ?>
             <span class="required tenantField">*</span>
+            <?php } ?>
             <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
         </td>
     </tr>
@@ -391,13 +394,6 @@ $form = $this->beginWidget('CActiveForm', array(
         <tr>
             <td>
                 <select onchange="populateDynamicFields()" <?php
-                // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
-                /*if ($this->action->Id == 'create' && !CHelper::is_add_avms_user()) { //if action create with user roles selected in url
-                    echo "disabled";
-                }
-                ---> chang for https://ids-jira.atlassian.net/browse/CAVMS-437
-                */
-
                 ?> id="User_role" name="User[role]">
                     <option disabled value='' selected>Select Role</option>
                     <?php
@@ -711,20 +707,7 @@ $(document).ready(function () {
     $(".workstationRow").hide();
 	
 	
-//	var elem1 = document.getElementById('User_tenant');
-//	if(typeof elem1 !== 'undefined' && elem1 !== null) {
-//            elem1.disabled = true;
-//	}
-//
-//        var elem2 = document.getElementById('User_tenant_agent');
-//	if(typeof elem2 !== 'undefined' && elem2 !== null) {
-//            elem2.disabled = true;
-//	}
-//
-//	var elem3 = document.getElementById('User_company');
-//	if(typeof elem3 !== 'undefined' && elem3 !== null) {
-//            // elem3.disabled = true;
-//	}
+
         
        
     if (actionId == 'update') {
@@ -744,8 +727,6 @@ $(document).ready(function () {
         if (getRole == agentadmin || getRole == agentairportadmin ) {
 
             document.getElementById('User_tenant_agent').disabled = false;
-            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
-            // Very bad programming. :(
             var elem1 = document.getElementById('User_tenant');
             if(typeof elem1 !== 'undefined' && elem1 !== null) {
                 elem1.disabled = false;
@@ -764,9 +745,6 @@ $(document).ready(function () {
             $("#User_tenant").show();
             $("#User_tenant_agent").show();
         } else if (getRole == agentoperator) {
-            // document.getElementById('User_tenant').disabled = false;
-            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
-            // Very bad programming. :( 
             var elem1 = document.getElementById('User_tenant');
             if(typeof elem1 !== 'undefined' && elem1 !== null) {
                 elem1.disabled = false;
@@ -777,15 +755,11 @@ $(document).ready(function () {
             $("#tenantAgentRow").show();
         }
         else {
-            // document.getElementById('User_tenant').disabled = false;
-            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
-            // Very bad programming. :( 
             var elem1 = document.getElementById('User_tenant');
             if(typeof elem1 !== 'undefined' && elem1 !== null) {
                 elem1.disabled = false;
             }
             
-            // document.getElementById('User_tenant_agent').disabled = false;
             var elem2 = document.getElementById('User_tenant_agent');
             if(typeof elem2 !== 'undefined' && elem1 !== null) {
                 elem2.disabled = false;
@@ -795,42 +769,19 @@ $(document).ready(function () {
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
         }
-    } else if (getRole == admin && sessionRole == superadmin) {
-        $("#addCompanyLink").show();
-        document.getElementById('User_company').disabled = false;
-        document.getElementById("companyRow").style.paddingBottom = "10px";
-    }
+
     else if (sessionRole == admin) {
-        if (getRole == admin) {
-            $("#User_company").val($("#sessionCompany").val());
-            document.getElementById('User_company').disabled = true;
-        }
-        else if (getRole == operator) {
-            /*document.getElementById('User_workstation').disabled = false;*/
+        if (getRole == operator) {
             $(".workstationRow").show();
-            /*getWorkstation();*/
-        }
-        else if (getRole == agentadmin) {
-            $("#addCompanyLink").show();
-            document.getElementById("companyRow").style.paddingBottom = "10px";
-            document.getElementById('User_company').disabled = false;
-            $('#User_company').find('option[value=<?php echo $session['company']; ?>]').hide();
         }
     }
     else if (sessionRole == agentadmin) {
         if (getRole == agentoperator) {
-            /*document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();*/
             getWorkstationAgentOperator();
         }
     } else if (sessionRole == agentairportadmin) {
         if (getRole == agentairportadmin) {
             document.getElementById('User_tenant_agent').disabled = true;
-            
-            // document.getElementById('User_tenant').disabled = false;
-            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
-            // Very bad programming. :( 
-            
             var elem1 = document.getElementById('User_tenant');
             if(typeof elem1 !== 'undefined' && elem1 !== null) {
                 elem1.disabled = false;
@@ -843,7 +794,6 @@ $(document).ready(function () {
 
     $('form').bind('submit', function () {
         $(this).find('#User_role').removeAttr('disabled');
-        $(this).find('#User_company').removeAttr('disabled');
         if (sessionRole == 6) {
             $(this).find('#User_tenant_agent').removeAttr('disabled');
         }
@@ -868,7 +818,6 @@ $(document).ready(function () {
 
     function populateTenantAgentField(tenant) {
         $("#User_tenant_agent").empty();
-        //$("#User_company").empty();
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + tenant,
@@ -890,37 +839,14 @@ $(document).ready(function () {
         e.preventDefault();
 
         var tenant = $(this).val();
-        $("#User_company").empty();
         $("#User_workstation").empty();
 
-        if ($("#User_role").val() == agentadmin) {
-            populateCompanyofTenant(tenant);
-        }
+
         if ($("#User_role").val() == operator || $("#User_role").val() == staffmember || $("#User_role").val() == agentoperator) {
+
             if (sessionRole == superadmin) {
                 var tenant = $("#User_tenant").val();
-                $.ajax({
-                    type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('user/getCompanyOfTenant&id='); ?>' + tenant,
-                    dataType: 'json',
-                    data: tenant,
-                    success: function (r) {
-                        $('#User_company option[value!=""]').remove();
 
-                        var selectedId = '';
-                        var selectedVal = '';
-                        $.each(r.data, function (index, value) {
-                            $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                            if (selectedId == '') {
-                                selectedId = value.id;
-                                selectedVal = value.name;
-                            }
-                        });
-
-                        $('#User_company').val(selectedId);
-                        $('#select2-User_company-container').html(selectedVal);
-                    }
-                });
             } else {
                 var tenant = '<?php echo $session['tenant'] ?>';
             }
@@ -1019,40 +945,7 @@ function checkHostEmailIfUnique() {
         });
     }
 }
-function populateCompanyofTenant(tenant, newcompanyId) {
-    $.ajax({
-        type: 'POST',
-        url: '<?php echo Yii::app()->createUrl('user/GetTenantOrTenantAgentCompany&id='); ?>' + tenant,
-        dataType: 'json',
-        data: tenant,
-        success: function (r) {
-            $('#User_company option[value!=""]').remove();
-            $('#User_company').append('<option></option>');
-            $('#select2-User_company-container').html('Please select a company');
-            var selectedId = '';
-            var selectedVal = '';
-            $.each(r.data, function (index, value) {
-                $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                if (selectedId == '') {
-                    selectedId = value.id;
-                    selectedVal = value.name;
-                }
-            });
-            if ($("#User_role").val() == 6) {
-                document.getElementById('User_company').disabled = false;
-                newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
 
-                if (newcompanyId != 'defaultValue') {
-                    $("#User_company").val(newcompanyId);
-                }
-            } else {
-                $('#User_company').val(selectedId);
-                $('#select2-User_company-container').html(selectedVal);
-            }
-
-        }
-    });
-}
 function populateDynamicFields() {
     
     var issuing_body_admin = <?php echo Roles::ROLE_ISSUING_BODY_ADMIN; ?>;
@@ -1091,32 +984,13 @@ function populateDynamicFields() {
         $(".tenantField").show();
     }
     if (sessionRole == admin) {
-        if (selectedRole == admin) {
-            document.getElementById('User_company').disabled = true;
-            /*document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();*/
-            $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
-            $("#User_company").val("<?php echo $session['company']; ?>");
-        }
-        else if (selectedRole == operator) {
-            $("#User_company").val($("#sessionCompany").val());
-            document.getElementById('User_company').disabled = true;
-            /*document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();*/
-            $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
-            $("#User_company").val("<?php echo $session['company']; ?>");
+        if (selectedRole == operator) {
+
             getWorkstation();
         }
         else if (selectedRole == staffmember) {
 
-
-            $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
-            $("#User_company").val("<?php echo $session['company']; ?>");
-            /*document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();*/
-            $("#User_company").val($("#sessionCompany").val());
             document.getElementById('User_tenant').disabled = true;
-            document.getElementById('User_company').disabled = true;
             var selectedUserId = $("#selectedUserId").val();
             $.ajax({
                 type: 'POST',
@@ -1134,29 +1008,17 @@ function populateDynamicFields() {
                 }
             });
         }
-        else {
-            /*document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();*/
-            //$('#User_company option[value=""]').remove;
-            $('#User_company').find('option[value=<?php echo $session['company']; ?>]').hide();
-            $("#User_company").val("");
-            document.getElementById('User_company').disabled = false;
 
-        }
     }
     else if (sessionRole == superadmin) {
-        $("#User_company_em_").hide();
+        //$("#User_company_em_").hide();
         if (selectedRole != admin) { // if selected is not equal to admin enable tenant
             if (selectedRole == operator) {
                 document.getElementById('User_tenant_agent').disabled = true;
-                /*document.getElementById('User_workstation').disabled = false;*/
                 $("#tenantAgentRow").hide();
                 $("#tenantRow").show();
-               /* $(".workstationRow").show();*/
                 document.getElementById('User_tenant').disabled = false;
-                document.getElementById('User_company').disabled = true;
                 $("#User_tenant").val('');
-
 
             }
             else if (selectedRole == 9) {
@@ -1167,8 +1029,6 @@ function populateDynamicFields() {
                 $("#tenantRow").show();
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_company').disabled = true;
-               /* document.getElementById('User_workstation').disabled = true;
-                $(".workstationRow").hide();*/
                 $("#User_tenant").val('');
                 $("#User_tenant_agent").empty();
 
@@ -1177,9 +1037,6 @@ function populateDynamicFields() {
                 $("#User_tenant").val('');
                 document.getElementById('User_tenant_agent').disabled = false;
                 $("#tenantAgentRow").show();
-                document.getElementById('User_company').disabled = true;
-                /*document.getElementById('User_workstation').disabled = true;
-                $(".workstationRow").hide();*/
                 $("#tenantRow").show();
                 document.getElementById('User_tenant').disabled = false;
 
@@ -1187,11 +1044,8 @@ function populateDynamicFields() {
             else if (selectedRole == 7) {
 
                 $("#tenantAgentRow").show();
-                document.getElementById('User_company').disabled = true;
                 $("#tenantRow").show();
                 document.getElementById('User_tenant').disabled = false;
-               /* document.getElementById('User_workstation').disabled = false;
-                $(".workstationRow").show();*/
                 $("#User_tenant").val('');
                 $("#User_tenant_agent").empty();
 
@@ -1204,14 +1058,14 @@ function populateDynamicFields() {
         else {
             document.getElementById('User_tenant').disabled = true;
             document.getElementById('User_tenant_agent').disabled = true;
-            document.getElementById('User_company').disabled = false;
+            //document.getElementById('User_company').disabled = false;
 
             //reset company list
             /*Taking an array of all companybase and kind of embedding it on the company*/
-            $("#User_company").data('options', $('#User_company_base option').clone());
-            var id = $("#User_company").val();
-            var options = $("#User_company").data('options');
-            $('#User_company').html(options);
+            //$("#User_company").data('options', $('#User_company_base option').clone());
+            //var id = $("#User_company").val();
+            //var options = $("#User_company").data('options');
+            //$('#User_company').html(options);
             /*document.getElementById('User_workstation').disabled = true;
             $(".workstationRow").hide();*/
             $("#tenantRow").hide();
@@ -1275,79 +1129,7 @@ function populateOperatorWorkstations(tenant, value) {
         }
     });
 }
-function getCompanyTenantAgent() { /*get tenant agent company*/
-    var tenantAgent = $("#User_tenant_agent").val();
-    var staffmember = 9;
-    var agentadmin = 6;
-    var agentoperator = 7;
-    var superadmin = 5;
 
-    var airport_agent_admin = <?php echo Roles::ROLE_AGENT_AIRPORT_ADMIN; ?>;
-    var airport_agent_operator = <?php echo Roles::ROLE_AGENT_AIRPORT_OPERATOR; ?>;
-    var issuing_body_admin = <?php echo Roles::ROLE_ISSUING_BODY_ADMIN; ?>;
-
-    if ($("#User_role").val() != staffmember && $("#User_role").val() != agentadmin && $("#User_role").val() != agentoperator) {
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/GetTenantOrTenantAgentCompany&id='); ?>' + tenantAgent,
-            dataType: 'json',
-            data: tenantAgent,
-            success: function (r) {
-                $('#User_company option[value!=""]').remove();
-
-                var selectedId = '';
-                var selectedVal = '';
-                $.each(r.data, function (index, value) {
-                    $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    $('#User_company').disabled = true;
-                    if (selectedId == '') {
-                        selectedId = value.id;
-                        selectedVal = value.name;
-                    }
-                });
-                $("#User_company").val(selectedId);
-                $("#select2-User_company-container").html(selectedVal);
-            }
-        });
-    }
-    if ($("#User_role").val() == agentoperator || $("#User_role").val() == staffmember || $("#User_role").val() == airport_agent_operator || $("#User_role").val() == airport_agent_admin) {
-        if ($("#currentRole").val() == superadmin) {
-            var sessionRole = '<?php echo $session['role']; ?>';
-            var tenantAgent = $("#User_tenant_agent").val();
-            var tenant = $("#User_tenant").val();
-            if (sessionRole == 5) {
-                $.ajax({
-                    type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('user/getCompanyOfTenant&id='); ?>' + tenant + '&tenantAgentId=' + tenantAgent,
-                    dataType: 'json',
-                    data: tenant,
-                    success: function (r) {
-                        $('#User_company option[value!=""]').remove();
-
-                        var selectedId = '';
-                        var selectedVal = '';
-                        $.each(r.data, function (index, value) {
-                            $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-
-                            if (selectedId == '') {
-                                selectedId = value.id;
-                                selectedVal = value.name;
-                            }
-                        });
-
-                        $("#User_company").val(selectedId);
-                        $("#select2-User_company-container").html(selectedVal);
-                    }
-                });
-            }
-        }
-        else {
-            var tenant = '<?php echo $session['tenant'] ?>';
-            var tenantAgent = '<?php echo $session['tenant_agent'] ?>';
-        }
-        populateAgentOperatorWorkstations(tenant, tenantAgent);
-    }
-}
 
 function getWorkstation() { /*get workstations for operator*/
     var sessionRole = '<?php echo $session['role']; ?>';
@@ -1587,7 +1369,7 @@ function get_avms_assignable_roles($user_role)
                 </tr>
 
                 <tr>
-                    <td colspan="2" style="padding-left:10px; font:italic">Note: Please copy and save this password
+                    <td colspan="2" style="padding-left:10px; font-style:italic">Note: Please copy and save this password
                         somewhere safe.
                     </td>
                 </tr>
@@ -1664,13 +1446,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
                             $.each(r.data, function (index, value) {
                                 
-                                /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop2").css({
-                                    "background-size": "132px 152px"
-                                });*/
-
                                 //showing image from DB as saved in DB -- image is not present in folder
                                 var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
 
@@ -1734,52 +1509,9 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
         $("#gen_pass").click();
     }
-    function addCompany() {
-        if ($("#User_tenant").val() == '' && $("#currentRole").val() != 5) {
-            $("#User_company_em_").show();
-            $("#User_company_em_").html('Please select a tenant');
-        } else {
-            var url = '<?php echo $this->createUrl('company/create&viewFrom=1') ?>';
-            var sessionRole = $("#currentRole").val();
-            var selectedRole = $("#User_role").val();
-            var tenant = $("#User_tenant").val();
-            var superadmin = 5;
-            var agentadmin = 6;
-            if (sessionRole == superadmin) {
-                if (selectedRole == agentadmin) {
-                    url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
-                }
-            }
-
-            $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="98%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
-            $("#modalBtn").click();
-        }
-    }
 
     function dismissModal(id) {
         $("#dismissModal").click();
-        if ($("#User_role").val() == "6") {
-            populateCompanyofTenant($("#User_tenant").val(), id);
-        } else if ($("#User_role" == 1 && $("#currentRole").val() == 5)) {
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('company/GetCompanyList&lastId='); ?>',
-                dataType: 'json',
-                success: function (r) {
-                    $('#User_company option[value!=""]').remove();
-                    $('#User_company_base option[value!=""]').remove();
-
-                    $.each(r.data, function (index, value) {
-                        $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        $('#User_company_base').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        document.getElementById('User_company').disabled = false;
-                        $("#User_company").val(value.id);
-                    });
-
-                }
-            });
-        }
-
 
     }
 </script>

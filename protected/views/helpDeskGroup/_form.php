@@ -28,6 +28,107 @@
                 <td><?php echo $form->labelEx($model,'order_by'); ?></td>
                 <td><?php echo $form->textField($model,'order_by',array('size'=>5,'maxlength'=>5)); ?></td>
             </tr>
+			<tr>
+                <td>
+                    <?php echo $form->labelEx($model,'is_default_value'); ?>
+                </td>
+                <td>
+                    <?php echo $form->checkBox($model,'is_default_value'); ?>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="vertical-align: top">
+                    <label>Related User Roles</label>
+                </td>
+                <td style="vertical-align: top">
+                    <table style="vertical-align: top" >
+                    <?php
+                        if(CHelper::get_allowed_module() == "Both") {
+                            $role_list = HelpdeskGroupUserRole::$AVMS_ROLES;
+                            echo '<tr><td colspan="2"><h6>AVMS Module</h6></td></tr>';
+                            $selected_role_list = HelpDeskGroup::model()->getActiveRoleIds($model->id);
+
+                        	if(!is_array($selected_role_list))
+                        		$selected_role_list= array();
+
+	                        echo CHtml::checkBoxList('roles',$selected_role_list,$role_list,array(
+	                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+	                            'container' => 'tbody',
+	                            'separator' => '',
+	                        ));
+
+	                        echo '<tr><td colspan="2"><h6>AVMS Web Preregistration</h6></td></tr>';
+	                        $preregistration_list = HelpdeskGroupUserRole::$AVMS_WEB_PREREGISTRATION_ROLES;
+	                        $selected_preregistration_list = HelpDeskGroup::model()->getActiveWebPreregistrations($model->id);
+
+                        	if(!is_array($selected_preregistration_list))
+                        		$selected_preregistration_list= array();
+	                        echo CHtml::checkBoxList('preregistrations',$selected_preregistration_list,$preregistration_list,array(
+	                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+	                            'container' => 'tbody',
+	                            'separator' => '',
+	                        ));
+
+	                        $crole_list = HelpdeskGroupUserRole::$CVMS_ROLES;
+                            echo '<tr><td colspan="2"><h6>CVMS Module</h6></td></tr>';
+                            $selected_crole_list = HelpDeskGroup::model()->getActiveRoleIds($model->id);
+
+                        	if(!is_array($selected_crole_list))
+                        		$selected_crole_list= array();
+
+	                        echo CHtml::checkBoxList('roles',$selected_crole_list,$crole_list,array(
+	                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+	                            'container' => 'tbody',
+	                            'separator' => '',
+	                        ));
+
+                        }
+                        else if(CHelper::get_allowed_module() == "AVMS") {
+                            $role_list = HelpdeskGroupUserRole::$AVMS_ROLES;
+                            echo '<tr><td colspan="2"><h6>AVMS Module</h6></td></tr>';
+                            $selected_role_list = HelpDeskGroup::model()->getActiveRoleIds($model->id);
+
+                        	if(!is_array($selected_role_list))
+                        		$selected_role_list= array();
+
+	                        echo CHtml::checkBoxList('roles',$selected_role_list,$role_list,array(
+	                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+	                            'container' => 'tbody',
+	                            'separator' => '',
+	                        ));
+
+	                        echo '<tr><td colspan="2"><h6>AVMS Web Preregistration</h6></td></tr>';
+	                        $preregistration_list = HelpdeskGroupUserRole::$AVMS_WEB_PREREGISTRATION_ROLES;
+	                        $selected_preregistration_list = HelpDeskGroup::model()->getActiveWebPreregistrations($model->id);
+
+                        	if(!is_array($selected_preregistration_list))
+                        		$selected_preregistration_list= array();
+	                        echo CHtml::checkBoxList('preregistrations',$selected_preregistration_list,$preregistration_list,array(
+	                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+	                            'container' => 'tbody',
+	                            'separator' => '',
+	                        ));
+
+                        }
+                        else {
+                            $role_list = HelpdeskGroupUserRole::$CVMS_ROLES;
+                            echo '<tr><td colspan="2"><h6>CVMS Module</h6></td></tr>';
+                            $selected_role_list = HelpDeskGroup::model()->getActiveRoleIds($model->id);
+
+                        	if(!is_array($selected_role_list))
+                        		$selected_role_list= array();
+
+	                        echo CHtml::checkBoxList('roles',$selected_role_list,$role_list,array(
+	                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+	                            'container' => 'tbody',
+	                            'separator' => '',
+	                        ));
+                        }
+                    ?>
+                    </table>
+                </td>
+            </tr>
         </table>
 
 	<div class="row buttons buttonsAlignToRight">

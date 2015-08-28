@@ -21,27 +21,32 @@ class UserServiceImpl implements UserService {
         //$user->asic_expiry = strtotime($user->asic_expiry_year.'-'.$user->asic_expiry_month.'-'.$user->asic_expiry_day);
 
 		if($user['password']==''){
-			
-		$user->password	=	(NULL);
+			$user->password	=	(NULL);
 		}
 
         if ($user->isNewRecord) {
-			
             $user->created_by = $userLoggedIn->id;
-            $user->tenant = Yii::app()->user->tenant;
-			
-        } else {
-            if (Yii::app()->user->role == Roles::ROLE_SUPERADMIN) {
+        }
 
-                $userdetails = User::model()->findByPK($user->id);
-                $company = Company::model()->findByPK($userdetails->company);
-                if ($userdetails->role == Roles::ROLE_ADMIN) {
-                    if ($userdetails->id == $company->tenant) {
-                        Company::model()->updateByPk($userdetails->company, array('tenant' => NULL));
-                    }
-                }
+        // just make sure that the record is being updated honestly
+        // if not superadmin then use must be in the same tenant as the logged in user
+        if($userLoggedIn->role!=Roles::ROLE_SUPERADMIN){
+
+            $user->tenant = $userLoggedIn->tenant;
+
+            // if not a administrator then must be within the same tenant agent
+            if(!in_array($userLoggedIn->role, array(Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))){
+                $user->tenant_agent = $userLoggedIn->tenant_agent;
             }
         }
+
+        // set the company for the user
+        if($user->tenant_agent) {
+            $user->company = $user->tenant_agent;
+        } else {
+            $user->company = $user->tenant;
+        }
+
 
         if (!($user->save())) {
             return false;
@@ -55,58 +60,54 @@ class UserServiceImpl implements UserService {
 			
 		}
 
-        /** set tenant id if superadmin and user created is admin.. tenant id = admin_id 
-         * set tenant_agent if superadmin and user created is agentadmin.. tenant id = admin_id ,tenant_agent
-         * if not superadmin inherit tenant id from currently logged in user
-         * if superadmin and user created != admin .. tenant id = choose admin_id
-         * if agent admin logged in , all created 
-         * * */
-        $company = Company::model()->findByPk($user->company);
-        $company->id = Yii::app()->user->tenant;
-        if (Yii::app()->controller->action->id == 'create') {
 
-            switch ($userLoggedIn->role) {
-				
-                case Roles::ROLE_SUPERADMIN:
-                    // dx-sadaf... dont know the reason for the line of code below..
-                    // commenting it out as it is causing issue while saving user....
-					//echo $user->role; exit;
-                    if ($user->role == Roles::ROLE_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
-                    }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
-                    } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->id, $company->tenant_agent);
-                    } elseif ($user->role == Roles::ROLE_STAFFMEMBER) {
-                        $this->removeTenantAgentofUserIfTenantIsSetForRoleStaffMember($user);
-                    }
 
-                    break;
-
-                default:
-                    if ($user->role == Roles::ROLE_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
-                    }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
-                    }
-                    else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->id, $company->tenant_agent, $userLoggedIn);
-                    } else if ($user->role == Roles::ROLE_AGENT_OPERATOR) {
-                        /* if user role is agent operator, set tenant agent = tenant agent of current logged user */
-                        User::model()->updateByPk($user->id, array('tenant_agent' => $userLoggedIn->tenant_agent, 'tenant' => $company->id));
-                    } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignSessionTenantAgentForRoleStaffMember($user,$userLoggedIn);
-                    } else {
-                        $session = new CHttpSession;
-                        User::model()->updateByPk($user->id, array('tenant' => $company->id));
-                        User::model()->updateByPk($user->id, array('tenant_agent' => $session['tenant_agent']));
-                    }
-            }
-        } else { //else if update
-            if ($user->role == Roles::ROLE_ADMIN) {
-                $this->updateTenantForRoleAdmin($user, $company->id);
-            }
-        }
+        //$company = Company::model()->findByPk($user->company);
+        //$company->id = Yii::app()->user->tenant;
+//        if (Yii::app()->controller->action->id == 'create') {
+//
+//            switch ($userLoggedIn->role) {
+//
+//                case Roles::ROLE_SUPERADMIN:
+//                    // dx-sadaf... dont know the reason for the line of code below..
+//                    // commenting it out as it is causing issue while saving user....
+//					//echo $user->role; exit;
+//                    if ($user->role == Roles::ROLE_ADMIN) {
+//                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
+//                    }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
+//                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
+//                    } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+//                        $this->assignTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->id, $company->tenant_agent);
+//                    } elseif ($user->role == Roles::ROLE_STAFFMEMBER) {
+//                        $this->removeTenantAgentofUserIfTenantIsSetForRoleStaffMember($user);
+//                    }
+//
+//                    break;
+//
+//                default:
+//                    if ($user->role == Roles::ROLE_ADMIN) {
+//                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
+//                    }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
+//                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
+//                    }
+//                    else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+//                        $this->assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->id, $company->tenant_agent, $userLoggedIn);
+//                    } else if ($user->role == Roles::ROLE_AGENT_OPERATOR) {
+//                        /* if user role is agent operator, set tenant agent = tenant agent of current logged user */
+//                        User::model()->updateByPk($user->id, array('tenant_agent' => $userLoggedIn->tenant_agent, 'tenant' => $company->id));
+//                    } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+//                        $this->assignSessionTenantAgentForRoleStaffMember($user,$userLoggedIn);
+//                    } else {
+//                        $session = new CHttpSession;
+//                        User::model()->updateByPk($user->id, array('tenant' => $company->id));
+//                        User::model()->updateByPk($user->id, array('tenant_agent' => $session['tenant_agent']));
+//                    }
+//            }
+//        } else { //else if update
+//            if ($user->role == Roles::ROLE_ADMIN) {
+//                $this->updateTenantForRoleAdmin($user, $company->id);
+//            }
+//        }
 
         if ($user->role == Roles::ROLE_OPERATOR || $user->role == Roles::ROLE_AGENT_OPERATOR) {
             User::model()->saveWorkstation($user->id, $workstation, $userLoggedIn->id);

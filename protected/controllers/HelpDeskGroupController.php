@@ -46,10 +46,45 @@ class HelpDeskGroupController extends Controller {
         $model = new HelpDeskGroup;
         if(isset($_POST['HelpDeskGroup']))
 		{
-			$model->attributes=$_POST['HelpDeskGroup'];
-			$model->created_by = $session['id'];
-			if($model->save())
-				$this->redirect(array('admin','id'=>$model->id));
+
+            $transaction = Yii::app()->db->beginTransaction();
+
+            try {
+                $model->attributes=$_POST['HelpDeskGroup'];
+                $model->created_by = $session['id'];
+                $model->save();
+
+                if(isset($_POST["roles"])) {
+                    $roles = $_POST["roles"];
+                    // add any new ones
+                    foreach ($roles as $value) {
+                        $new_row = new HelpdeskGroupUserRole;
+                        $new_row->role = $value;
+                        $new_row->helpdesk_group = $model->id;
+                        $new_row->save();
+                    }
+                }
+                if(isset($_POST["preregistrations"])) {
+                    $roles = $_POST["preregistrations"];
+                    // add any new ones
+                    foreach ($roles as $value) {
+                        $new_row = new HelpdeskGroupWebPreregistration;
+                        $new_row->web_preregistration = $value;
+                        $new_row->helpdesk_group = $model->id;
+                        $new_row->save();
+                    }
+                }
+                $transaction->commit();
+
+                Yii::app()->user->setFlash('success', "Help Desk Group inserted Successfully");
+                $this->redirect(array('admin','id'=>$model->id));
+
+            } catch (CDbException $e)
+            {
+                $transaction->rollback();
+                Yii::app()->user->setFlash('error', $e->getMessage());
+
+            }
 		}
 
         $this->render('create', array(
@@ -70,8 +105,85 @@ class HelpDeskGroupController extends Controller {
 
         if (isset($_POST['HelpDeskGroup'])) {
             $model->attributes = $_POST['HelpDeskGroup'];
-            if ($model->save())
+            $transaction = Yii::app()->db->beginTransaction();
+
+            try {
+                if ($model->save()) {
+                    // roles
+                    if(isset($_POST["roles"]))
+                        $roles = $_POST["roles"];
+                    else
+                        $roles = array();
+
+                    $found = array();
+                    $existing = HelpdeskGroupUserRole::model()->findAllByAttributes(array('helpdesk_group' => $id));
+
+                    if (is_array($existing)) {
+                        // delete roles not in the array
+                        foreach ($existing as $key => $value) {
+                            if (!in_array($value->role, $roles))
+                                $value->delete();
+                            else
+                                array_push($found, $value->role);
+                        }
+                    }
+
+                    // add any new ones
+                    if (is_array($roles)) {
+                        foreach ($roles as $value) {
+                            if (!in_array($value, $found))
+                            {
+                                $new_row = new HelpdeskGroupUserRole;
+                                $new_row->role = $value;
+                                $new_row->helpdesk_group = $model->id;
+                                $new_row->save();
+                            }
+                        }
+                    }
+
+                    // web preregistration
+                    if(isset($_POST["preregistrations"]))
+                        $preregistrations = $_POST["preregistrations"];
+                    else
+                        $preregistrations = array();
+
+                    $found_preregistrations = array();
+                    $existing_preregistrations = HelpdeskGroupWebPreregistration::model()->findAllByAttributes(array('helpdesk_group' => $id));
+
+                    if (is_array($existing_preregistrations)) {
+                        // delete preregistrations not in the array
+                        foreach ($existing_preregistrations as $key => $value) {
+                            if (!in_array($value->web_preregistration, $preregistrations))
+                                $value->delete();
+                            else
+                                array_push($found_preregistrations, $value->web_preregistration);
+                        }
+                    }
+
+                    // add any new ones
+                    if (is_array($preregistrations)) {
+                        foreach ($preregistrations as $value) {
+                            if (!in_array($value, $found_preregistrations))
+                            {
+                                $new_row = new HelpdeskGroupWebPreregistration;
+                                $new_row->web_preregistration = $value;
+                                $new_row->helpdesk_group = $model->id;
+                                $new_row->save();
+                            }
+                        }
+                    }
+                }
+
+                $transaction->commit();
+
                 $this->redirect(array('admin'));
+
+            } catch (CDbException $e)
+            {
+                $transaction->rollback();
+                Yii::app()->user->setFlash('error', $e->getMessage());
+                throw $e;
+            }
         }
 
         $this->render('update', array(
@@ -85,8 +197,18 @@ class HelpDeskGroupController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
+        $roles = HelpdeskGroupUserRole::model()->findAllByAttributes(array('helpdesk_group' => $id));
+        foreach ($roles as $role) {
+            $role->delete();
+        }
+
+        $preregistrations = HelpdeskGroupWebPreregistration::model()->findAllByAttributes(array('helpdesk_group' => $id));
+
+        foreach ($preregistrations as $preregistration) {
+            $preregistration->delete();
+        }
 		
-		 HelpDeskGroup::model()->deleteByPK($id);
+        HelpDeskGroup::model()->deleteByPK($id);
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))

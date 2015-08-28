@@ -167,7 +167,6 @@ $defaultKey = key($asicCardTypes);
                     ?>
                     <?php /*echo $form->errorSummary($userModel); */?>
                     <input type="text" id="hostEmailIsUnique" value="0"/>
-
                     <div>
 
                         <table style="width:300px;float:left;" class="host-first-column">

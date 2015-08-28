@@ -274,8 +274,8 @@ class Visitor extends CActiveRecord {
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'EmailCustom'),
-            array('email', 'unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
-                ':is_deleted'=>0
+            array('email', 'unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant_id', 'params'=>array(
+                ':is_deleted'=>0, ':tenant_id'=>Yii::app()->user->tenant
                 ))),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
@@ -729,9 +729,10 @@ class Visitor extends CActiveRecord {
         $post->save();
     }
 
+    // Expected: Visitors should belong to the tenant hence we can have same email address for different tenant. 
     public function isEmailAddressTaken($email,$id = 0) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "email = '" . $email . "' ".($id?" AND id <> $id":"");
+        $Criteria->condition = "email = '" . $email . "' ".($id?" AND id <> $id":"") ." AND tenant = ".Yii::app()->user->tenant;
         $visitorEmail = Visitor::model()->findAll($Criteria);
 
         //$visitorEmail = array_filter($visitorEmail);

@@ -114,7 +114,7 @@ $imagePadTop  = 03.5;
 $footerHeight = 08.0;
 
 $labelHeightPx = 415;
-$labelWidthPx = 258;
+$labelWidthPx = 256;
 
 $imageWidthPx   = ($imageWidth/$labelWidth) * $labelWidthPx;
 $imageHeightPx  = ($imageHeight/$labelHeight) * $labelHeightPx;
@@ -167,12 +167,12 @@ $fontScale = 2;
         margin-left: 5px;
         line-height: 32px;
         margin-top: 3px;*/
-        font-size: <?php echo 20*$fontScale ?>px;
+        font-size: <?php echo 15*$fontScale ?>px;
         font-weight: bold;
         text-align: left;
         margin-bottom: 0px;
         margin-left: 5px;
-        line-height: <?php echo 20*$fontScale ?>px;
+        line-height: <?php echo 11*$fontScale ?>px;
         margin-top: 0px;
     }
 
@@ -181,7 +181,7 @@ $fontScale = 2;
         font-size: 60px;
         vertical-align: top;*/
         margin-top:0px;
-        font-size: <?php echo 40*$fontScale ?>px;
+        font-size: <?php echo 30*$fontScale ?>px;
         vertical-align: top;
     }
 
@@ -197,11 +197,11 @@ $fontScale = 2;
         line-height:24px;
         margin:5px 0 3px 0;
         text-transform: capitalize;*/
-        font-size:<?php echo 12*$fontScale ?>px;
+        font-size:<?php echo 10*$fontScale ?>px;
         width:205px;
         float:left;
         font-weight:bold;
-        line-height:<?php echo 12*$fontScale ?>px;
+        line-height:<?php echo 11*$fontScale ?>px;
         margin:2px 0 1px 0;
         text-transform: capitalize;
     }
@@ -213,7 +213,7 @@ $fontScale = 2;
         /*font-size:25px;
         font-weight:bold;
         margin:0 0 10px 0;*/
-        font-size:<?php echo 12*$fontScale ?>px;
+        font-size:<?php echo 10*$fontScale ?>px;
         font-weight:bold;
         margin:0;
     }
@@ -230,7 +230,7 @@ $fontScale = 2;
         border-bottom-left-radius: 20px;
         width:<?php echo $labelWidthPx; ?>px;
         height:<?php echo $footerHeightPx; ?>px;
-        padding-top: 8px;
+        padding-top: 6px;
         position: absolute;
         bottom: 1px; left: 1px;
     }
@@ -362,6 +362,7 @@ $fontScale = 2;
                 <p class="text-cmp"><?= $companyCode; ?></p>
                 <p class="card-date-text">
                     <span><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
+                     <br><span style="font-size:16px; margin-left:53px; margin-top: 4px"> <?php if($model->card_type == CardType::VIC_CARD_24HOURS && $model->time_check_in != "00:00:00") echo substr($model->time_check_in, 0, 5); ?></span>
                 </p>
                 <p class="card-visit-info">
                     <span class="first-name"><?=$first_name ?></span><br/>

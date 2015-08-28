@@ -84,6 +84,12 @@ if (!$cardTypeWorkstationModel) {
                 e.stopImmediatePropagation();
                 return false;
             }
+            // Remove to avoid validation
+            if(card_type_value < 5 ) { 
+                $("#User_asic_no").remove();
+                $("#User_asic_expiry").remove(); 
+            }
+            
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('VisitorType/getFromCardType&cardtype='); ?>' + card_type_value,

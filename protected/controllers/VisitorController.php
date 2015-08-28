@@ -54,8 +54,8 @@ class VisitorController extends Controller {
         $visitModel   = new Visit;
 
         $visitorService = new VisitorServiceImpl();
-        
-        $userModel->scenario = "add_sponsor";
+                            
+       $userModel->scenario = "add_sponsor";
         if (isset($_POST['Visitor'])) {
             
             $model->attributes = $_POST['Visitor'];

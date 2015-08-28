@@ -266,7 +266,7 @@ class CardGeneratedController extends Controller {
         }
 
 
-        $html2pdf->Output();
+       $html2pdf->Output();
 
     }
 

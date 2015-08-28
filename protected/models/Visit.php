@@ -1417,7 +1417,7 @@ class Visit extends CActiveRecord {
      */
     public function archivePregisteredOldVisits() {      
         // Find and Update Status
-        $crieteria = "( visit_status = ".VisitStatus::SAVED." || visit_status = ".VisitStatus::PREREGISTERED.") "
+        $crieteria = "( visit_status = ".VisitStatus::SAVED." OR visit_status = ".VisitStatus::PREREGISTERED.") "
                 . " AND ( date_check_in < '" . date('Y-m-d') . "') "
                 . " AND tenant = ".Yii::app()->user->tenant;
         

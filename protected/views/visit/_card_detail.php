@@ -45,6 +45,10 @@ if ($card) {
             <strong style="font-size: 40px; text-align: left; width: 100%; float: left; margin-bottom: 3px; margin-left: 5px; line-height: 32px; margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 10px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small>
             <?php
                 if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+                    // Time in On Vic 24 Hour cards is required. 
+                    //$time =  $model->time_check_in != "00:00:00" ? $model->time_check_in: $model->time_in; 
+                   // if($time != "00:00:00") echo '<p style="font-size:15px">'.substr($time, 0, 5).'</p>';
+                    
                     echo date('dMy', strtotime($model->date_check_in . '+ 1 DAY'));
                 } else {
                         echo date('dMy', strtotime($model->date_check_out));

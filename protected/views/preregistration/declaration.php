@@ -43,13 +43,14 @@
         <div class="form-group">
 
             <label class="checkbox">
-            <?php echo $form->checkBox($model,'declaration1'); ?>
-                <span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).
+                <?php echo $form->checkBox($model,'declaration2'); ?>
+                <span class="checkbox-style"></span>I have not previously been either refused an ASIC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).
             </label>
 
+
             <label class="checkbox">
-                <?php echo $form->checkBox($model,'declaration2'); ?>
-                <span class="checkbox-style"></span>I have not previously been refused an ASIC or had one suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).
+                <?php echo $form->checkBox($model,'declaration1'); ?>
+                <span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).
             </label>
 
 

@@ -16,7 +16,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 ?>
 
 <div class="page-content">
-    <h1 class="text-primary title">CONFIRM DETAILS</h1>
+    <h1 class="text-primary title" style="margin-left: -23px">VIC Holder Personal Information</h1>
     <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
     <?php
     $form=$this->beginWidget('CActiveForm', array(
@@ -36,19 +36,39 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
     ?>
 
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
+                
+                <div class="row form-group">
+                    
+                    <div class="col-xs-8 col-md-8 col-sm-8">
+                    
+                    </div>
+
+                    <div class="col-xs-4 col-md-4 col-sm-4">
+                    
+                    </div>
+                    
+                </div>        
+
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>
+                    <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'first_name'); ?>
                 </div>
+
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-lg')); ?>
+                    <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Surname' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'last_name'); ?>
                 </div>
 
+
+                <div class="form-group">
+                    <?php echo $form->textField($model,'email',array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->error($model,'email'); ?>
+                </div>
+
                 <div class="row form-group">
-                    <span class="text-primary col-xs-12">DATE OF BIRTH</span>
-                    <div class="col-md-6">
+                        <div class="col-xs-12 col-md-12 col-sm-12">
+                        <span class="">Date of Birth</span>
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model'       => $model,
@@ -61,11 +81,10 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 'yearRange' => '-100:+0', // last hundred years
                             ),
                             'htmlOptions' => array(
-                                'size'        => '0',
                                 'maxlength'   => '10',
                                 'placeholder' => 'Date of birth',
                                 /*'style'       => 'width: 80px;',*/
-                                'class' => 'form-control input-lg'
+                                'class' => 'form-control input-sm'
                             ),
                         ));
                         ?>
@@ -73,25 +92,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type' , 'class'=>'form-control input-lg')); ?>
+                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'identification_type'); ?>
 
                 </div>
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'class'=>'form-control input-lg')); ?>
+                    <?php echo $form->textField($model, 'identification_document_no', array('maxlength' => 50, 'placeholder' => 'Document No.', 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'identification_document_no'); ?>
                 </div>
                 <div class="form-group">
                     <?php
-                    echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Country of Issue', 'class'=>'form-control input-lg' , 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                    echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Select Country of Issue', 'class'=>'form-control input-sm' , 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                     ?>
                     <?php echo $form->error($model, 'identification_country_issued'); ?>
 
                 </div>
 
                 <div class="row form-group">
-                    <span class="text-primary col-xs-12">EXPIRY</span>
-                    <div class="col-md-6">
+                    <div class="col-xs-12 col-md-12 col-sm-12">
+                        <span class="">Expiry</span>
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model'       => $model,
@@ -100,11 +119,10 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 'dateFormat' => 'dd-mm-yy',
                             ),
                             'htmlOptions' => array(
-                                'size'        => '0',
                                 'maxlength'   => '10',
                                 'placeholder' => 'Expiry',
                                 /*'style'       => 'width: 80px;',*/
-                                'class' => 'form-control input-lg'
+                                'class' => 'form-control input-sm'
                             ),
                         ));
                         ?>
@@ -113,55 +131,54 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 </div>
 
             </div>
-            <div class="col-sm-6">
+
+            <div class="col-sm-3"></div>
+
+            <div class="col-sm-4">
                 <div class="row form-group">
                     <div class="col-xs-5">
-                        <?php echo $form->textField($model, 'contact_unit', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Unit / flat no.', 'class'=>'form-control input-lg')); ?>
+                        <?php echo $form->textField($model, 'contact_unit', array('maxlength' => 50, 'placeholder' => 'Unit / flat no.', 'class'=>'form-control input-sm')); ?>
                         <?php echo $form->error($model, 'contact_unit'); ?>
 
                     </div>
                     <div class="col-xs-7">
-                        <?php echo $form->textField($model, 'contact_street_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street No.', 'class'=>'form-control input-lg')); ?>
+                        <?php echo $form->textField($model, 'contact_street_no', array('maxlength' => 50, 'placeholder' => 'Street No.', 'class'=>'form-control input-sm')); ?>
                         <?php echo $form->error($model, 'contact_street_no'); ?>
                     </div>
-
                 </div>
                 <div class="row form-group form-group-custom">
-                    <div class="col-xs-7">
-                        <?php echo $form->textField($model, 'contact_street_name', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street Name', 'class'=>'form-control input-lg')); ?>
+                    <div class="col-xs-6">
+                        <?php echo $form->textField($model, 'contact_street_name', array('maxlength' => 50, 'placeholder' => 'Street Name', 'class'=>'form-control input-sm')); ?>
                         <?php echo $form->error($model, 'contact_street_name'); ?>
                     </div>
-                    <div class="col-xs-5">
-                        <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('empty' => 'Type', 'class'=>'form-control input-lg')); ?>
+                    <div class="col-xs-6">
+                        <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('empty' => 'Type', 'class'=>'form-control input-sm')); ?>
                         <?php echo $form->error($model, 'contact_street_type'); ?>
                     </div>
                 </div>
                 <div class="form-group form-group-custom">
-                    <?php echo $form->textField($model, 'contact_suburb', array('size' => 15, 'maxlength' => 50, 'placeholder' => 'Suburb' , 'class'=>'form-control input-lg')); ?>
+                    <?php echo $form->textField($model, 'contact_suburb', array('maxlength' => 50, 'placeholder' => 'Suburb' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'contact_suburb'); ?>
                 </div>
-                <div class="form-group">
-                    <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'class'=>'form-control input-lg')); ?>
-                    <?php echo $form->error($model, 'contact_postcode'); ?>
-                </div>
-                
+
+
                 <div class="form-group form-group-custom">
                     <?php
                     echo $form->dropDownList($model, 'contact_country', $countryList,
-                        array('prompt' => 'Country', 'class'=>'form-control input-lg',
+                        array('prompt' => 'Select Country', 'class'=>'form-control input-sm',
                             'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                     ?>
                     <?php echo $form->error($model, 'contact_country'); ?>
                 </div>
 
-                <div class="form-group form-group-custom">
+                <div class="row form-group form-group-custom">
 
-                    <div id="stateDropdown">
-                        <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'class'=>'form-control input-lg')); ?>
+                    <div id="stateDropdown" class="col-xs-6">
+                        <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'Select State', 'class'=>'form-control input-sm')); ?>
                     </div>
                     
-                    <div style="display:none;" id="stateTextbox">
-                        <?php echo $form->textField($model, 'contact_state', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'State', 'class'=>'form-control input-lg','disabled'=>'disabled')); ?>
+                    <div style="display:none;" id="stateTextbox" class="col-xs-6">
+                        <?php echo $form->textField($model, 'contact_state', array('maxlength' => 50, 'placeholder' => 'Enter State', 'class'=>'form-control input-sm','disabled'=>'disabled')); ?>
                     </div> 
 
                     <?php 
@@ -170,126 +187,147 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         }
                     ?>
                     <?php //echo $form->error($model, 'contact_state'); ?>
+
+                    <div class="col-xs-6">
+                        <?php echo $form->textField($model, 'contact_postcode', array('maxlength' => 50, 'placeholder' => 'Postcode', 'class'=>'form-control input-sm')); ?>
+                        <?php echo $form->error($model, 'contact_postcode'); ?>
+                    </div>
                     
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
+                    <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Phone No.', 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'contact_number'); ?>
-
                 </div>
             </div>
         </div>
-
-    <div class="row next-prev-btns">
-        <div class="col-md-1 col-sm-1 col-xs-1">
-            <a href="<?=Yii::app()->createUrl("preregistration/registration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+        <br><br><br>
+        <div class="row next-prev-btns">
+            <div class="col-md-1 col-sm-1 col-xs-1">
+                <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+            </div>
+            <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
+                <?php
+                echo CHtml::tag('button', array(
+                    'type'=>'submit',
+                    'id' => 'btnSubmit',
+                    'class' => 'btn btn-primary btn-next'
+                ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                ?>
+            </div>
         </div>
 
-        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
-            <?php
-            echo CHtml::tag('button', array(
-                'type'=>'submit',
-                'class' => 'btn btn-primary btn-next'
-            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-            ?>
-
-        </div>
     </div>
     <?php $this->endWidget(); ?>
-</div>
+
+
+
+<!-- ************************************** -->
+
+<!-- -Login Modal -->
+
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content login-modal">
+            <div class="modal-header login-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="loginModalLabel">AVMS LOGIN</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div role="tabpanel" class="login-tab">
+                        <!-- Nav tabs -->
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active text-center" id="home">
+                                &nbsp;&nbsp;
+                                <span id="login_fail" class="response_error" style="color:red;display: none;"></span>
+                                
+                                <br>
+                                
+                                <div class="clearfix"></div>
+                                
+                                <?php $form=$this->beginWidget('CActiveForm', array(
+                                    'id'=>'prereg-login-form',
+                                    'enableClientValidation'=>true,
+                                    'action' => array('preregistration/login'),
+                                    'clientOptions'=>array(
+                                        'validateOnSubmit'=>true,
+                                    ),
+                                    'htmlOptions'=>array(
+                                        'class'=>"form-create-login"
+                                    )
+                                )); ?>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                            <!-- <input type="text" class="form-control" id="login_username" placeholder="Username"> -->
+                                             <?php echo $form->textField($preModel,'username',
+                                                array(
+                                                    'placeholder' => 'Username or Email',
+                                                    'class'=>'form-control input-lg',
+                                                    //'id'=>'login_username',
+                                                    'data-validate-input'
+                                                )); ?>
+                                        </div>
+                                        <?php echo $form->error($preModel,'username',array('style' =>'float:left')); ?>
+                                        <!-- <span class="help-block has-error" id="email-error"></span> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <!-- <input type="password" class="form-control" id="password" placeholder="Password"> -->
+                                            <?php echo $form->passwordField($preModel,'password',
+                                                array(
+                                                    'placeholder' => 'Password',
+                                                    'class'=>'form-control input-lg',
+                                                    'data-validate-input'
+                                                )); ?>
+                                        </div>
+                                        <?php echo $form->error($preModel,'password',array('style' =>'float:left')); ?>
+                                        <!-- <span class="help-block has-error" id="password-error"></span> -->
+                                    </div>
+
+                                    <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-block bt-login')); ?>
+                                    <!-- <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In....">Login</button> -->
+                                    
+                                    <div class="clearfix"></div>
+                                    <div class="login-modal-footer">
+                                        <div class="row">
+                                            <div class="col-xs-8 col-sm-8 col-md-8">
+                                                <i class="fa fa-lock"></i>
+                                                <a style="float:left" href="<?php echo Yii::app()->createUrl('preregistration/forgot'); ?>" class="forgetpass-tab">Forgot password? </a>
+                                            </div>
+                                            
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <i class="fa fa-check"></i>
+                                                <!-- <a href="<?php //echo Yii::app()->createUrl('preregistration'); ?>" class="signup-tab">Create AVMS Login</a> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php $this->endWidget(); ?>
+
+                            </div>
+                          
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+       </div>
+    </div>
+    <!-- - Login Model Ends Here -->
+
+
+<!-- ************************************** -->
 
 
 
 <script>
-
-/*    function afterValidate(form, data, hasError) {
-        var dt = new Date();
-        if(dt.getFullYear()< $("#fromYear").val()) {
-            $("#Registration_date_of_birth_em_").show();
-            $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-            $("#Registration_date_of_birth_em_").show();
-            $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-            $("#Registration_date_of_birth_em_").show();
-            $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }else{
-            return true;
-        }
-
-    }*/
-
     $(document).ready(function () {
-
-        /*$('#fromDay').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Registration_date_of_birth_em_").hide();
-            }
-        });
-
-        $('#fromMonth').on('change', function () {
-
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Registration_date_of_birth_em_").hide();
-            }
-
-        });
-
-
-        $('#fromYear').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Registration_date_of_birth_em_").show();
-                $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Registration_date_of_birth_em_").hide();
-            }
-        });*/
-
-
-
         $('#Registration_contact_country').on('change', function () {
             var countryId = parseInt($(this).val());
             //Dropdown: id=13,value=Australia
@@ -307,9 +345,159 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
         });
 
+        //lose focus from email and check the already entered email
+        $("#Registration_email").blur(function(){
+            var email = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo Yii::app()->createUrl('preregistration/checkEmailIfUnique');?>",
+                dataType: 'json',
+                data: {"email":email},
+                success: function (r) {
+                    $.each(r.data, function (index, value) {
+                        if (value.isTaken == 1) { //if taken
+                            $("#PreregLogin_username").val(email);
+                            $("#loginModal").modal({
+                                show : true,
+                                keyboard: false,
+                                backdrop: 'static'
+                            });
+                            $("#login_fail").empty();
+                            $("#login_fail").append('A User Profile already exists for this email address. Please Login to AVMS or use another email address.');
+                            $("#login_fail").show();
+                        }
+                    });
+                }
+            });
+        });
 
+        //when submit button is clicked check for already registered email
+        $("#btnSubmit").submit(function(e){
+
+            var email = $("#Registration_email").val();
+
+            if(email != ""){
+
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo Yii::app()->createUrl('preregistration/checkEmailIfUnique');?>",
+                    dataType: 'json',
+                    data: {"email":email},
+                    success: function (r) {
+                        $.each(r.data, function (index, value) {
+                            if (value.isTaken == 1) { //if taken
+                                $("#PreregLogin_username").val(email);
+                                $("#loginModal").modal({
+                                    show : true,
+                                    keyboard: false,
+                                    backdrop: 'static'
+                                });
+                                $("#login_fail").empty();
+                                $("#login_fail").append('A User Profile already exists for this email address. Please Login to AVMS or use another email address.');
+                                $("#login_fail").show();
+                            }
+                        });
+                        //prevent form from submitting as email already registered
+                        e.preventDefault();
+                    }
+                });
+
+            }
+            else
+            {
+                var fName = $("#Registration_first_name").val();
+                var lName = $("#Registration_last_name").val();
+                var dob = $("#Registration_date_of_birth").val();
+
+                if(fName != "" && lName != "" && dob !="")
+                {
+                    var newdob = dob.split("-").reverse().join("-");
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo Yii::app()->createUrl('preregistration/checkUserProfile');?>",
+                        dataType: 'json',
+                        data: {"firstname": fName, "lastname": lName, "dob": newdob},
+                        success: function (r) {
+
+                            $.each(r.data, function (index, value) {
+                                if (value.isTaken == 1) { //if taken
+                                    $("#PreregLogin_username").val(email);
+                                    $("#loginModal").modal({
+                                        show : true,
+                                        keyboard: false,
+                                        backdrop: 'static'
+                                    });
+                                    $("#login_fail").empty();
+                                    $("#login_fail").append('A User Profile already exists for these credentials. Please Login to AVMS.');
+                                    $("#login_fail").show();
+                                }
+                            });
+                            //prevent form from submitting as email already registered
+                            e.preventDefault();
+                        },
+                        error: function(err){
+                            console.log('get error');
+                            console.log(err);
+                        }
+                    });
+                }
+            }
+        });
     });
-
-
-
 </script>
+
+
+<style type="text/css">
+.bt-login,.bt-login:hover, .bt-login:active, .bt-login:focus {
+    background-color: #3276B1;
+    color: #ffffff;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    transition: background-color 300ms linear 0s;
+}
+.login-tab {
+    margin: 0 auto;
+    max-width: 380px;
+}
+
+.login-modal-header {
+    background: #27ae60;
+    color: #fff;
+}
+
+.login-modal-header .modal-title {
+    color: #fff;
+}
+
+.login-modal-header .close {
+    color: #fff;
+}
+
+.login-modal i {
+    color: #000;
+}
+
+.login-modal form {
+    max-width: 340px;
+}
+
+.tab-pane form {
+    margin: 0 auto;
+}
+.login-modal-footer{
+    margin-top:15px;
+    margin-bottom:15px;
+}
+
+body.modal-open .page-content{
+    -webkit-filter: blur(7px);
+    -moz-filter: blur(15px);
+    -o-filter: blur(15px);
+    -ms-filter: blur(15px);
+    filter: blur(15px);
+}
+  
+.modal-backdrop {background: #f7f7f7;}
+
+</style>

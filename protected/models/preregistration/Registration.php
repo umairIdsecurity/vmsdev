@@ -265,7 +265,7 @@ class Registration extends CActiveRecord {
             'middle_name'                               => 'Middle Name',
             'last_name'                                 => 'Last Name',
             'email'                                     => 'Email Address',
-            'contact_number'                            => 'Mobile Number',
+            'contact_number'                            => 'Phone No.',
             'date_of_birth'                             => 'Date Of Birth',
             'company'                                   => 'Company',
             'visit_count'                               => 'Total Visits',

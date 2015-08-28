@@ -21,7 +21,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique'),
+				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -127,53 +127,14 @@ class PreregistrationController extends Controller
 				//$session['declaration3'] = $model->declaration3;
 
 				//$session['declaration4'] = $model->declaration4;
-				$this->redirect(array('preregistration/registration'));
+				$this->redirect(array('preregistration/personalDetails'));
 			}
 		}
 		$this->render('declaration' , array('model'=>$model) );
 
 	}
 
-	public function actionRegistration(){
-
-		$session = new CHttpSession;
-		$model = new CreateLogin();
-
-		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
-			$this->redirect(array('preregistration/index'));
-		}
-
-		if(
-			isset($session['account_type']) && $session['account_type'] !='' &&
-			isset($session['username']) 	&& $session['username']		!='' &&
-			isset($session['password']) 	&& $session['password']		!=''
-		){
-			$model->account_type = $session['account_type'];
-			$model->username     = $session['username'];
-			$model->password     = $session['password'];
-		}
-
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'preregistration-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-
-		if (isset($_POST['CreateLogin'])) {
-			$model->attributes = $_POST['CreateLogin'];
-
-			$session['account_type'] = $model->account_type;
-			$session['username'] 	 = $model->username;
-			$session['password']     = $model->password;
-
-			$this->redirect(array('preregistration/confirmDetails'));
-
-		}
-
-		$preModel = new PreregLogin();
-		$this->render('registration', array('model' => $model,'preModel' => $preModel));
-	}
-
-	public function actionConfirmDetails(){
+	public function actionPersonalDetails(){
 
 		$session = new CHttpSession;
 
@@ -243,8 +204,9 @@ class PreregistrationController extends Controller
                 $error_message = "Please select state";
             }
 		}
-		
-		$this->render('confirm-details' , array('model' => $model,'error_message' => $error_message));
+
+		$preModel = new PreregLogin();
+		$this->render('confirm-details' , array('model' => $model,'preModel' => $preModel,'error_message' => $error_message));
 	}
 
 	public function actionVisitReason()
@@ -341,6 +303,128 @@ class PreregistrationController extends Controller
 		);
 
 	}
+
+	public function actionRegistration()
+	{
+		$session = new CHttpSession;
+
+		$model = new CreateLogin();
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'preregistration-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+		if (isset($_POST['CreateLogin'])) 
+		{
+			$model->attributes = $_POST['CreateLogin'];
+
+			$session['account_type'] = $model->account_type; $session['username'] = $model->username; $session['password'] = $model->password;
+
+			if($model->account_type == "VIC")
+			{
+				$userModel = new User();
+
+				$userModel->email = $model->username;
+				$userModel->password = User::model()->hashPassword($model->password);
+				$userModel->role = 10; //role is 10: Visitor/Kiosik
+
+				if ($userModel->save(false)) 
+				{
+					//**********************************************
+					$loginModel = new PreregLogin();
+
+					$loginModel->username = $userModel->email;
+					$loginModel->password = $model->password;
+
+					if ($loginModel->validate() && $loginModel->login())
+					{
+						$this->redirect(array('preregistration/dashboard'));
+					}
+					else
+					{
+						$msg = print_r($loginModel->getErrors(),1);
+						throw new CHttpException(400,'Data not saved because: '.$msg );
+					}
+					//***********************************************
+				}
+				else{
+					$msg = print_r($model->getErrors(),1);
+					throw new CHttpException(400,'Data not saved because: '.$msg );
+				}
+
+			}
+			elseif ($model->account_type == "ASIC") 
+			{
+				$this->redirect(array('preregistration/asicPrivacyPolicy'));
+			}
+			else
+			{
+				$this->redirect(array('preregistration/companyAdminRegistration'));
+
+			}
+
+
+			$this->redirect(array('preregistration/personalDetails'));
+
+		}
+
+		$preModel = new PreregLogin();
+		$this->render('registration', array('model' => $model,'preModel' => $preModel));
+	}
+
+	public function actionAsicRegistration()
+	{
+		$session = new CHttpSession;
+
+		$model = new Registration();
+
+		$model->scenario = 'asic';
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+		if (isset($_POST['Registration'])) {
+
+			$model->attributes = $_POST['Registration'];
+
+		}
+
+		$companyModel = new Company();
+		$companyModel->scenario = 'preregistrationAddComp';
+
+		$this->render('asic-create-login' , array('model'=>$model,'companyModel'=>$companyModel) );
+
+	}
+
+	public function actionCompanyAdminRegistration()
+	{
+		$session = new CHttpSession;
+
+		$companyModel = new Company();
+		$companyModel->scenario = 'preregistrationAddComp';
+
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-companyAdmin-form') {
+			echo CActiveForm::validate($companyModel);
+			Yii::app()->end();
+		}
+
+		if (isset($_POST['Company'])) 
+		{
+
+			$companyModel->attributes = $_POST['Company'];
+
+		}
+
+		$this->render('companyadmin-create-login' , array('companyModel'=>$companyModel) );
+
+	}
+
+	
+
 
 	public function actionAddAsic(){
 
@@ -1055,6 +1139,10 @@ class PreregistrationController extends Controller
 		$this->render('dashboard');
 	}
 
+	public function actionAsicPrivacyPolicy(){
+		$this->render('asic-privacy-policy');
+	}
+
 	public function actionDetails(){
 		echo "welcome";
 		echo Yii::app()->user->id;
@@ -1066,11 +1154,14 @@ class PreregistrationController extends Controller
 		$this->redirect(array('preregistration/login'));
 	}
 
-	public function actionCheckEmailIfUnique($email) 
+	public function actionCheckEmailIfUnique() 
 	{
+		$email = '';
+		if(isset($_POST['email'])){$email = $_POST['email'];}
+
 		if(!empty($email))
 		{
-			if(Registration::model()->findByAttributes(array("email"=>$email)))
+			if(User::model()->findByAttributes(array("email"=>$email)))
 			{
 			  	$aArray[] = array(
 	                'isTaken' => 1,
@@ -1099,6 +1190,50 @@ class PreregistrationController extends Controller
 		}
 		
     }
+
+
+    public function actionCheckUserProfile() 
+	{
+		$firstname = '';$lastname='';$dob='';
+		if(isset($_POST['firstname'])){$firstname = $_POST['firstname'];}
+		if(isset($_POST['lastname'])){$lastname = $_POST['lastname'];}
+		if(isset($_POST['dob'])){$dob = $_POST['dob'];}
+
+		if(!empty($firstname) && !empty($lastname) && !empty($dob))
+		{
+			if(Registration::model()->findByAttributes(array("first_name"=>$firstname,"last_name"=>$lastname,"date_of_birth"=>$dob)))
+			{
+			  	$aArray[] = array(
+	                'isTaken' => 1,
+	            );
+			} 
+			else
+			{
+				$aArray[] = array(
+	                'isTaken' => 0,
+	            );
+			}
+
+	        $resultMessage['data'] = $aArray;
+	        echo CJavaScript::jsonEncode($resultMessage);
+	        Yii::app()->end();
+		}
+		else
+		{
+			$aArray[] = array(
+	                'isTaken' => 0,
+	            );
+
+	        $resultMessage['data'] = $aArray;
+	        echo CJavaScript::jsonEncode($resultMessage);
+	        Yii::app()->end();
+		}
+		
+    }
+
+
+
+
 
     public function actionUploadProfilePhoto() {
 

@@ -464,7 +464,6 @@ class User extends VmsActiveRecord {
         }else{
 			$this->induction_expiry = NULL;
 		}
-		
         return parent::beforeSave();
     }
 

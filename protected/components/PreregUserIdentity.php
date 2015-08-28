@@ -17,7 +17,7 @@ class PreregUserIdentity extends CUserIdentity {
 
     public function authenticate() {
         
-        $user = Registration::model()->find('LOWER(email)=?', array(strtolower($this->username)));
+        $user = User::model()->find('LOWER(email)=?', array(strtolower($this->username)));
 
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;
@@ -31,10 +31,7 @@ class PreregUserIdentity extends CUserIdentity {
 
             $this->setState('role', $user->role);
 
-
-            //$this->setState('role', ( isset($user->role) && !is_null($user->role) ) ? $user->role:'');
-
-            $this->setState('account', $user->profile_type);
+            //$this->setState('account', $user->profile_type);
 
             $this->setState('tenant', (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id );
             
@@ -43,9 +40,10 @@ class PreregUserIdentity extends CUserIdentity {
 
             $session['id'] = $user->id;
             $session['role'] = $user->role;
-            $session['account'] = $user->profile_type;
 
-            $session['tenant'] = ( isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id;
+            //$session['account'] = $user->profile_type;
+
+            $session['tenant'] = (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id;
 
             $this->errorCode = self::ERROR_NONE;
         }

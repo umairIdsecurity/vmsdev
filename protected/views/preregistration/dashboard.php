@@ -1,7 +1,7 @@
 <?php
 
 $session = new CHttpSession;
-
+$account='';
 if(Yii::app()->user->hasState('account')){
     $account=Yii::app()->user->getState('account');
 }

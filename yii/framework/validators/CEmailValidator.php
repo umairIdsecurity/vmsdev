@@ -21,13 +21,13 @@ class CEmailValidator extends CValidator
 	 * @var string the regular expression used to validate the attribute value.
 	 * @see http://www.regular-expressions.info/email.html
 	 */
-	public $pattern='/^[ ]*[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?[ ]*$/';
+	public $pattern='/^[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/';
 	/**
 	 * @var string the regular expression used to validate email addresses with the name part.
 	 * This property is used only when {@link allowName} is true.
 	 * @see allowName
 	 */
-	public $fullPattern='/^[^@]*<[ ]*[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>[ ]*$/';
+	public $fullPattern='/^[^@]*<[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/';
 	/**
 	 * @var boolean whether to allow name in the email address (e.g. "Qiang Xue <qiang.xue@gmail.com>"). Defaults to false.
 	 * @see fullPattern
@@ -68,11 +68,10 @@ class CEmailValidator extends CValidator
 	protected function validateAttribute($object,$attribute)
 	{
 		$value=$object->$attribute;
-		if($this->allowEmpty && $this->isEmpty($value))
-			return;
+
 		if(!$this->validateValue($value))
 		{
-			$message=$this->message!==null?$this->message:Yii::t('yii','{attribute} is not in a recognised format. <span style="text-transform:capitalize;">Please</span> revise.');
+			$message=$this->message!==null?$this->message:Yii::t('yii','{attribute} is not a valid email address.');
 			$this->addError($object,$attribute,$message);
 		}
 	}
@@ -87,6 +86,9 @@ class CEmailValidator extends CValidator
 	 */
 	public function validateValue($value)
 	{
+		if($this->allowEmpty && $this->isEmpty($value))
+			return true;
+
 		if(is_string($value) && $this->validateIDN)
 			$value=$this->encodeIDN($value);
 		// make sure string length is limited to avoid DOS attacks
@@ -123,7 +125,7 @@ if (info)
 		else
 			$validateIDN='';
 
-		$message=$this->message!==null ? $this->message : Yii::t('yii','{attribute} is not in a recognised format. <span style="text-transform:capitalize;">Please </span>revise.');
+		$message=$this->message!==null ? $this->message : Yii::t('yii','{attribute} is not a valid email address.');
 		$message=strtr($message, array(
 			'{attribute}'=>$object->getAttributeLabel($attribute),
 		));
@@ -175,9 +177,7 @@ if(".($this->allowEmpty ? "jQuery.trim(value)!='' && " : '').$condition.") {
 	 */
 	protected function mxSort($a, $b)
 	{
-		if($a['pri']==$b['pri'])
-			return 0;
-		return ($a['pri']<$b['pri'])?-1:1;
+		return $a['pri']-$b['pri'];
 	}
 
 	/**

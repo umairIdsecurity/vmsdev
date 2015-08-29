@@ -94,6 +94,8 @@ class UserController extends Controller
 		
         if (isset($_POST['User'])) {
 
+
+
             $model->attributes = $_POST['User'];
 
             if (isset($_POST['User']['password_option'])) {

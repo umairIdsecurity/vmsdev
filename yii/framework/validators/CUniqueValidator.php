@@ -130,7 +130,7 @@ class CUniqueValidator extends CValidator
 
 		if($exists)
 		{
-			$message=$this->message!==null?$this->message:Yii::t('yii','A profile already exists for this {attribute} "{value}".');
+			$message=$this->message!==null?$this->message:Yii::t('yii','{attribute} "{value}" has already been taken.');
 			$this->addError($object,$attribute,$message,array('{value}'=>CHtml::encode($value)));
 		}
 	}

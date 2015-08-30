@@ -10,9 +10,11 @@ class ForeignKeyHelper
 {
     public static function getForeignKeyName($table,$column,$refTable,$refColumn){
 
-        // it turns out that both mysql and mssql conform to a standard which makes it easy to find foriegn keys
         $driverName = Yii::app()->db->driverName;
+        $sql = null;
+
         switch($driverName) {
+
             case 'mysql':
                 $sql = "SELECT constraint_name as name "
                         ."FROM information_schema.key_column_usage "
@@ -21,6 +23,7 @@ class ForeignKeyHelper
                         ."AND   table_name = '$table' "
                         ."AND   column_name = '$column' ";
                 break;
+
             case 'mssql':
                 $sql = "SELECT C.CONSTRAINT_NAME as name"
                     ."FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS C "

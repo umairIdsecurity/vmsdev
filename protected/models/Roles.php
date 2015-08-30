@@ -225,6 +225,148 @@ class Roles extends CActiveRecord {
 		}
 	}
 
+	public static function getAssignableRoles($user_role, $model)
+	{
+
+		$session = new CHttpSession;
+		if (isset($_GET['id'])) { //if update
+			$userIdOnUpdate = $_GET['id'];
+		} else {
+			$userIdOnUpdate = '';
+		}
+
+		if (CHelper::is_managing_avms_user() || $model->is_avms_user()) {
+			return Roles::getAssignableAvmsRoles($user_role);
+		} else {
+
+			$assignableRolesArray = array();
+			switch ($user_role) {
+
+				case Roles::ROLE_AGENT_ADMIN: //agentadmin
+					//if session id = id editing ->add role of logged in
+					if ($session['id'] == $userIdOnUpdate) {
+						$assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER
+						); //keys
+					} else {
+						$assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+					}
+					foreach ($assignableRoles as $roles) {
+						if (isset(User::$USER_ROLE_LIST[$roles])) {
+							$assignableRolesArray[] = array(
+								$roles => User::$USER_ROLE_LIST[$roles],
+							);
+						}
+					}
+					break;
+
+				case Roles::ROLE_SUPERADMIN: //superadmin
+
+					if ($session['id'] == $userIdOnUpdate) {
+						$assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+					} else {
+						$assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER);
+					} //keys
+					foreach ($assignableRoles as $roles) {
+						if (isset(User::$USER_ROLE_LIST[$roles])) {
+							$assignableRolesArray[] = array(
+								$roles => User::$USER_ROLE_LIST[$roles],
+							);
+						}
+					}
+					break;
+
+				case Roles::ROLE_ADMIN: //admin
+
+					$assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+
+					foreach ($assignableRoles as $roles) {
+						if (isset(User::$USER_ROLE_LIST[$roles])) {
+							$assignableRolesArray[] = array(
+								$roles => User::$USER_ROLE_LIST[$roles],
+							);
+						}
+					}
+					break;
+				case Roles::ROLE_AGENT_AIRPORT_ADMIN: //admin
+
+					$assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+
+					foreach ($assignableRoles as $roles) {
+						if (isset(User::$USER_ROLE_LIST[$roles])) {
+							$assignableRolesArray[] = array(
+								$roles => User::$USER_ROLE_LIST[$roles]=='Staff Member'?'Host': User::$USER_ROLE_LIST[$roles],
+							);
+						}
+					}
+					break;
+
+			}
+
+			//echo '<p><pre>';print_r($user_role);echo '</pre></p>';
+
+			return $assignableRolesArray;
+		}
+	}
+
+	public static function getAssignableAvmsRoles($user_role)
+	{
+		$assignableRolesArray = array();
+		switch ($user_role) {
+
+			case Roles::ROLE_ISSUING_BODY_ADMIN:
+			case Roles::ROLE_ADMIN:
+
+				$assignableRoles = array(
+					Roles::ROLE_ISSUING_BODY_ADMIN,
+					Roles::ROLE_AGENT_AIRPORT_ADMIN,
+					Roles::ROLE_AIRPORT_OPERATOR,
+					//Roles::ROLE_AGENT_AIRPORT_OPERATOR
+				);
+				foreach ($assignableRoles as $roles) {
+					if (isset(User::$USER_ROLE_LIST[$roles])) {
+						$assignableRolesArray[] = array(
+							$roles => User::$USER_ROLE_LIST[$roles],
+						);
+					}
+				}
+				break;
+
+			case Roles::ROLE_SUPERADMIN:
+				$assignableRoles = array(
+					Roles::ROLE_ISSUING_BODY_ADMIN,
+					Roles::ROLE_AGENT_AIRPORT_ADMIN,
+					Roles::ROLE_AIRPORT_OPERATOR,
+					Roles::ROLE_AGENT_AIRPORT_OPERATOR
+				);
+				foreach ($assignableRoles as $roles) {
+					if (isset(User::$USER_ROLE_LIST[$roles])) {
+						$assignableRolesArray[] = array(
+							$roles => User::$USER_ROLE_LIST[$roles],
+						);
+					}
+				}
+				break;
+
+			case Roles::ROLE_AGENT_ADMIN:
+			case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+				$assignableRoles = array(
+					Roles::ROLE_AGENT_AIRPORT_ADMIN,
+					Roles::ROLE_AGENT_AIRPORT_OPERATOR
+				);
+
+				foreach ($assignableRoles as $roles) {
+					if (isset(User::$USER_ROLE_LIST[$roles])) {
+						$assignableRolesArray[] = array(
+							$roles => User::$USER_ROLE_LIST[$roles],
+						);
+					}
+				}
+				break;
+		}
+
+		return $assignableRolesArray;
+	}
+
 	/*public static function get_agent_operator_allowed_roles($should_filter){
 	if($should_filter){
 

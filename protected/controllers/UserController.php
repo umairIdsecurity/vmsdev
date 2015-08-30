@@ -94,8 +94,6 @@ class UserController extends Controller
 		
         if (isset($_POST['User'])) {
 
-
-
             $model->attributes = $_POST['User'];
 
             if (isset($_POST['User']['password_option'])) {
@@ -143,11 +141,13 @@ class UserController extends Controller
                 $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
             }
             $model->attributes = $_POST['User'];
+
             // User Allowed Module
             $model->allowed_module = Yii::app()->user->allowed_module;
             
             if ($userService->save($model, Yii::app()->user, null)) {
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
+
             }
         }
         
@@ -207,8 +207,6 @@ class UserController extends Controller
         if (isset($_GET['User'])) {
             $model->attributes = $_GET['User'];
         }
-
-
 
         if (CHelper::is_avms_users_requested()) {
             //Check whether a login user/tenant allowed to view 

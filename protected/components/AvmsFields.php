@@ -17,17 +17,13 @@ class AvmsFields extends CValidator
             switch ($attribute) {
                 case 'asic_no':
                     if(empty($object->$attribute) ){
-                        $object->addError($attribute, 'Please enter your ASIC number');
+                        $object->addError($attribute, 'Please enter an ASIC number');
                     }
                     break;
 
-                case 'asic_expiry_day':
-                case 'asic_expiry_month':
-                case 'asic_expiry_year':
+                case 'asic_expiry':
                     if(empty($object->$attribute) ){
-                        $object->addError($attribute, 'Please enter your ASIC number');
-                    }else{
-                        $this->check_expiry_date($object);
+                        $object->addError($attribute, 'Please enter an ASIC expiry date');
                     }
                     break;
 
@@ -40,30 +36,18 @@ class AvmsFields extends CValidator
     {
         if( CHelper::is_accessing_avms_features() || $object->is_avms_user() ) {
 
-            $emptyCondition1 = "value==''";
-            $str =  "
-if({$emptyCondition1}) {
-	messages.push('Please enter your ASIC number');}
-";
-            $emptyCondition2 = "value=='' || !isValidExpiryDate()";
-            $str .= "
-if({$emptyCondition2}) {
-	messages.push('Please enter valid ASIC expiration date');}
-";
+            $str =  "if(value=='') {\n"
+                    ."  if(attribute='asic_no') {\n"
+                    ."      messages.push('Please enter an ASIC number');\n"
+                    ."  }\n"
+                    ."  if(atribute='asic_expiry'){\n"
+                    ."      messages.push('Please enter an ASIC expiry date');\n"
+                    ."  }\n"
+                    ."}\n";
+
             return $str;
 
-
         }
     }
 
-    protected function check_expiry_date($object)
-    {
-        $nmonth = date("m", strtotime($object->asic_expiry_month));
-        if(!checkdate($nmonth, $object->asic_expiry_day, $object->asic_expiry_year)){
-            $flag = $object->getError('asic_expiry');
-            if(!$flag) {
-                $object->addError('asic_expiry', 'Please enter valid ASIC expiry date');
-            }
-        }
-    }
 }

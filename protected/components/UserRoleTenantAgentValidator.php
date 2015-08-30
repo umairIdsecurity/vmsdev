@@ -28,9 +28,9 @@ class UserRoleTenantAgentValidator extends CValidator
                     .Roles::ROLE_AGENT_ADMIN ."','"
                     .Roles::ROLE_AGENT_OPERATOR ."','"
                     .Roles::ROLE_AGENT_AIRPORT_ADMIN ."']"
-                    .".indexOf($('#user_role').val()!=-1 &&  $('#user_role').val()){\n"
-                        ."messages.push('Please select a tenant agent')\n"
-                ."}\n";
+                    .".indexOf($('#User_role').val())!=-1 &&  $('#User_tenant_agent').val()==''){\n"
+                        ."messages.push('Please select a tenant agent');\n"
+                ."};\n";
 
         return $str;
 

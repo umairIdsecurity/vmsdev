@@ -46,9 +46,6 @@ class User extends VmsActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     public $password_requirement;
-    public $asic_expiry_day;
-    public $asic_expiry_month;
-    public $asic_expiry_year;
     public $helpdesk_group;
 
     public $is_required_induction;
@@ -126,7 +123,7 @@ class User extends VmsActiveRecord {
 
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-                array('first_name, last_name, email, contact_number, user_type, is_deleted, tenant', 'required'),
+                array('first_name, last_name, email, contact_number, user_type, is_deleted, tenant, date_of_birth', 'required'),
                 array('tenant_agent','UserRoleTenantAgentValidator'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
@@ -138,8 +135,7 @@ class User extends VmsActiveRecord {
                 ))),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent, photo', 'default', 'setOnEmpty' => true, 'value' => null),
-                array('asic_no', 'AvmsFields'),
-                array('asic_expiry_day, asic_expiry_month, asic_expiry_year ', 'AvmsFields'),
+                array('asic_no, asic_expiry', 'AvmsFields'),
 
 
                 // The following rule is used by search().
@@ -167,8 +163,7 @@ class User extends VmsActiveRecord {
                 ))),
                 array('role', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent, photo','default', 'setOnEmpty' => true, 'value' => null),
-                array('asic_no', 'AvmsFields'),
-                array('asic_expiry_day, asic_expiry_month, asic_expiry_year ', 'AvmsFields'),
+                array('asic_no, asic_expiry', 'AvmsFields'),
                 array('tenant_agent','UserRoleTenantAgentValidator'),
 
                 array('asic_no, asic_expiry, first_name, last_name, email, contact_number, user_type,is_deleted', 'required', 'on'=>'add_sponsor'),
@@ -484,12 +479,6 @@ class User extends VmsActiveRecord {
             return false;
         } else {
             $this->is_deleted = 1;
-            if ($this->asic_expiry || $this->asic_expiry == 0) {
-                $this->asic_expiry_day = date('d', strtotime($this->asic_expiry));
-                $this->asic_expiry_month = date('m', strtotime($this->asic_expiry));
-                $this->asic_expiry_year = date('Y', strtotime($this->asic_expiry));
-            }
-
             $this->save();
             echo "true";
             return false;
@@ -719,11 +708,6 @@ class User extends VmsActiveRecord {
         $this->birthdayDay = date('d', strtotime($date_of_birth));
         $this->birthdayMonth = date('n', strtotime($date_of_birth));
         $this->birthdayYear = date('o', strtotime($date_of_birth));
-
-        // todo: after run migration on server, please remove the comment
-        //$this->asic_expiry_day =  date('d',$this->asic_expiry);
-        //$this->asic_expiry_month =  date('M',$this->asic_expiry);
-        //$this->asic_expiry_year =  date('y',$this->asic_expiry);
 
         return parent::afterFind();
     }

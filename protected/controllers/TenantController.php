@@ -137,10 +137,10 @@ class TenantController extends Controller {
                     $userModel->notes = $_POST['TenantForm']['notes'];
                     $userModel->photo = $photolastId;//$_POST['TenantForm']['photo'];
 
-                    $userModel->asic_no = 10;
-                    $userModel->asic_expiry_day = 10;
-                    $userModel->asic_expiry_month = 10;
-                    $userModel->asic_expiry_year = 15;
+                    //$userModel->asic_no = 10;
+                    //$userModel->asic_expiry_day = 10;
+                    //$userModel->asic_expiry_month = 10;
+                    //$userModel->asic_expiry_year = 15;
                     /**
                      * Module Access
                      */ 

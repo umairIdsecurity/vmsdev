@@ -22,7 +22,7 @@ class ForeignKeyHelper
                         ."AND   referenced_column_name = '$refColumn' "
                         ."AND   table_name = '$table' "
                         ."AND   column_name = '$column' "
-                        ."AND   constraint_catalog = DATABASE()";
+                        ."AND   constraint_catalog = (SELECT DATABASE())";
                 break;
 
             case 'mssql';

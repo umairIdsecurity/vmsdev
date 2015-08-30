@@ -21,7 +21,8 @@ class ForeignKeyHelper
                         ."WHERE referenced_table_name = '$refTable' "
                         ."AND   referenced_column_name = '$refColumn' "
                         ."AND   table_name = '$table' "
-                        ."AND   column_name = '$column' ";
+                        ."AND   column_name = '$column' "
+                        ."AND   constraint_catalog = DATABASE()";
                 break;
 
             case 'mssql';

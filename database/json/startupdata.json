@@ -1,0 +1,205 @@
+[
+  {
+    "table": "tenant",
+    "columns": [
+      "id",
+      "created_by",
+      "is_deleted"
+    ],
+    "rows": [
+      {
+        "id": "1",
+        "created_by": "1",
+        "is_deleted": "0"
+      }
+    ]
+  },
+  {
+    "table": "company_laf_preferences",
+    "columns": [
+      "id",
+      "action_forward_bg_color",
+      "action_forward_bg_color2",
+      "action_forward_font_color",
+      "action_forward_hover_color",
+      "action_forward_hover_color2",
+      "action_forward_hover_font_color",
+      "complete_bg_color",
+      "complete_bg_color2",
+      "complete_hover_color",
+      "complete_hover_color2",
+      "complete_font_color",
+      "complete_hover_font_color",
+      "neutral_bg_color",
+      "neutral_bg_color2",
+      "neutral_hover_color",
+      "neutral_hover_color2",
+      "neutral_font_color",
+      "neutral_hover_font_color",
+      "nav_bg_color",
+      "nav_hover_color",
+      "nav_font_color",
+      "nav_hover_font_color",
+      "sidemenu_bg_color",
+      "sidemenu_hover_color",
+      "sidemenu_font_color",
+      "sidemenu_hover_font_color",
+      "css_file_path"
+    ],
+    "rows": [
+      {
+        "id": "1",
+        "action_forward_bg_color": "#9ED92F",
+        "action_forward_bg_color2": "#9ED92F",
+        "action_forward_font_color": "#ffffff",
+        "action_forward_hover_color": "#9ED92F",
+        "action_forward_hover_color2": "#9ED92F",
+        "action_forward_hover_font_color": "#ffffff",
+        "complete_bg_color": "#0d0d0c",
+        "complete_bg_color2": "#a1999a",
+        "complete_hover_color": "#998e8e",
+        "complete_hover_color2": "#b0a9a9",
+        "complete_font_color": "#ffffff",
+        "complete_hover_font_color": "#ffffff",
+        "neutral_bg_color": "#33bcdb",
+        "neutral_bg_color2": "#33bcdb",
+        "neutral_hover_color": "#33bcdb",
+        "neutral_hover_color2": "#33bcdb",
+        "neutral_font_color": "#ffffff",
+        "neutral_hover_font_color": "#ffffff",
+        "nav_bg_color": "#E7E7E7",
+        "nav_hover_color": "#30c5d9",
+        "nav_font_color": "#637280",
+        "nav_hover_font_color": "#ffffff",
+        "sidemenu_bg_color": "#E7E7E7",
+        "sidemenu_hover_color": "#E7E7E7",
+        "sidemenu_font_color": "#1670c4",
+        "sidemenu_hover_font_color": "#157cdb",
+        "css_file_path": "\/company_css\/IDS-1424944653.css"
+      }
+    ]
+  },
+  {
+    "table": "company",
+    "columns": [
+      "id",
+      "code",
+      "name",
+      "trading_name",
+      "logo",
+      "contact",
+      "billing_address",
+      "email_address",
+      "office_number",
+      "mobile_number",
+      "website",
+      "company_laf_preferences",
+      "created_by_user",
+      "created_by_visitor",
+      "tenant",
+      "tenant_agent",
+      "is_deleted",
+      "card_count",
+      "company_type"
+    ],
+    "rows": [
+      {
+        "id": "1",
+        "code": "IDS",
+        "name": "Identity Security",
+        "trading_name": "Identity Security",
+        "logo": "1",
+        "contact": "Julie Stewart Rose",
+        "billing_address": "PO BOX 710 Port Melbourne VIC 3207",
+        "email_address": "julie.stewart@idsecurity.com.au",
+        "office_number": "396453450",
+        "mobile_number": "2147483647",
+        "website": "http:\/\/idsecurity.com.au",
+        "company_laf_preferences": "1",
+        "created_by_user": null,
+        "created_by_visitor": null,
+        "tenant": "1",
+        "tenant_agent": "1",
+        "is_deleted": "0",
+        "card_count": null,
+        "company_type": null
+      }
+    ]
+  },
+  {
+    "table": "user",
+    "columns": [
+      "id",
+      "first_name",
+      "last_name",
+      "email",
+      "contact_number",
+      "date_of_birth",
+      "company",
+      "department",
+      "position",
+      "staff_id",
+      "notes",
+      "password",
+      "role",
+      "user_type",
+      "user_status",
+      "created_by",
+      "is_deleted",
+      "tenant",
+      "tenant_agent",
+      "photo",
+      "asic_no",
+      "asic_expiry",
+      "is_required_induction",
+      "is_completed_induction",
+      "induction_expiry",
+      "timezone_id",
+      "allowed_module"
+    ],
+    "rows": [
+      {
+        "id": "1",
+        "first_name": "SuperAdmin",
+        "last_name": "IDS",
+        "email": "superadmin@test.com",
+        "contact_number": "9998798",
+        "date_of_birth": "1993-01-01",
+        "company": "1",
+        "department": "",
+        "position": "",
+        "staff_id": "",
+        "notes": "",
+        "password": "$2a$13$wv.A6T0CCHXczYv\/tlJP6.\/6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66",
+        "role": "5",
+        "user_type": "1",
+        "user_status": "1",
+        "created_by": "1",
+        "is_deleted": "0",
+        "tenant": "1",
+        "tenant_agent": null,
+        "photo": null,
+        "asic_no": null,
+        "asic_expiry": null,
+        "is_required_induction": null,
+        "is_completed_induction": null,
+        "induction_expiry": null,
+        "timezone_id": null,
+        "allowed_module": null
+      }
+    ]
+  },
+  {
+    "table": "license_details",
+    "columns": [
+      "id",
+      "description"
+    ],
+    "rows": [
+      {
+        "id": "1",
+        "description": "This is a sample license detail."
+      }
+    ]
+  }
+]

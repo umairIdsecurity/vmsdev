@@ -15,13 +15,19 @@ class m150825_085642_change_help_desk_group_table extends CDbMigration
 		//));
 		//$this->addForeignKey('helpdesk_group_web_preregistration_helpdesk_group_fk', 'helpdesk_group_web_preregistration', 'helpdesk_group', 'helpdesk_group', 'id');
 
-		$this->createTable('helpdesk_group_user_role', array(
-			'helpdesk_group' => 'BIGINT NOT NULL',
-			'role' => 'BIGINT NOT NULL',
-		));
+		$table = $this->dbConnection->schema->tables['helpdesk_group_user_role'];
+		if(!isset($table)) {
+			$this->createTable('helpdesk_group_user_role', array(
+				'helpdesk_group' => 'BIGINT NOT NULL',
+				'role' => 'BIGINT NOT NULL',
+			));
+		}
 
 		//$this->addForeignKey('helpdesk_group_user_role_helpdesk_group_fk', 'helpdesk_group_user_role', 'helpdesk_group', 'helpdesk_group', 'id');
-		$this->addForeignKey('helpdesk_group_user_role_role_fk',  'helpdesk_group_user_role', 'role', 'roles', 'id');
+		$key = ForeignKeyHelper::getForeignKeyName('helpdesk_group_user_role','role','roles','id');
+		if(!isset($key)) {
+			$this->addForeignKey('helpdesk_group_user_role_role_fk', 'helpdesk_group_user_role', 'role', 'roles', 'id');
+		}
 	}
 
 	public function safeDown()

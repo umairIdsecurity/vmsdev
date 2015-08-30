@@ -12,7 +12,8 @@ class m150824_202000_drop_tenant_agent_user_constraint extends CDbMigration
 		if(isset($fkName) && $fkName!='') {
 			$this->dropForeignKey($fkName, 'user');
 		}
-		$this->execute('update "user" set tenant_agent = NULL where id = 1');
+		$tableName = Yii::app()->db->quoteTableName('user');
+		$this->execute("update $tableName set tenant_agent = NULL where id = 1");
         $this->addForeignKey('user_tenant_agent_fk','user','tenant_agent','tenant_agent','id');
 
 	}

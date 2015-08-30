@@ -6,7 +6,7 @@
  * Date: 30/08/15
  * Time: 7:49 AM
  */
-class ForeignKeyHelper
+class DatabaseIndexHelper
 {
     public static function getForeignKeyName($table,$column,$refTable,$refColumn){
 

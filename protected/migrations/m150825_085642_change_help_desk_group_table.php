@@ -4,7 +4,7 @@ class m150825_085642_change_help_desk_group_table extends CDbMigration
 {
 	public function safeUp()
 	{
-		$col = $this->dbConnection->schema->getTable('helpdesk_group')->columns['is_default_value'];
+		$col = $this->dbConnection->schema->getTable('helpdesk_group')->getColumn('is_default_value');
 		if(!isset($col)) {
 			$this->addColumn('helpdesk_group', 'is_default_value', 'BIT');
 		}
@@ -15,7 +15,7 @@ class m150825_085642_change_help_desk_group_table extends CDbMigration
 		//));
 		//$this->addForeignKey('helpdesk_group_web_preregistration_helpdesk_group_fk', 'helpdesk_group_web_preregistration', 'helpdesk_group', 'helpdesk_group', 'id');
 
-		$table = $this->dbConnection->schema->tables['helpdesk_group_user_role'];
+		$table = $this->dbConnection->schema->getTable('helpdesk_group_user_role');
 		if(!isset($table)) {
 			$this->createTable('helpdesk_group_user_role', array(
 				'helpdesk_group' => 'BIGINT NOT NULL',

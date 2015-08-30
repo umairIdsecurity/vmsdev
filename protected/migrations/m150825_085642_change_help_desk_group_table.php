@@ -4,7 +4,10 @@ class m150825_085642_change_help_desk_group_table extends CDbMigration
 {
 	public function safeUp()
 	{
-		$this->addColumn('helpdesk_group', 'is_default_value','BIT');
+		$col = $this->dbConnection->schema->getTable('helpdesk_group')->columns['is_default_value'];
+		if(!isset($col)) {
+			$this->addColumn('helpdesk_group', 'is_default_value', 'BIT');
+		}
 
 		//$this->createTable('helpdesk_group_web_preregistration', array(
 		//	'helpdesk_group' => 'BIGINT NOT NULL',

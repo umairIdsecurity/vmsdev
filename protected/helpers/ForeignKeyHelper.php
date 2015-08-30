@@ -15,7 +15,7 @@ class ForeignKeyHelper
 
         switch($driverName) {
 
-            case 'mysql':
+            case 'mysql';
                 $sql = "SELECT constraint_name as name "
                         ."FROM information_schema.key_column_usage "
                         ."WHERE referenced_table_name = '$refTable' "
@@ -24,7 +24,8 @@ class ForeignKeyHelper
                         ."AND   column_name = '$column' ";
                 break;
 
-            case 'mssql':
+            case 'mssql';
+            case 'sqlsrv';
                 $sql = "SELECT C.CONSTRAINT_NAME as name"
                     ."FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS C "
                     ."	INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS FK "
@@ -46,6 +47,10 @@ class ForeignKeyHelper
                     ."AND PK.TABLE_NAME = '$refTable' "
                     ."AND PT.COLUMN_NAME = '$refColumn' ";
                 break;
+            
+            default;
+                throw new CDbException($driverName." is not supported");
+
         }
 
         $command = Yii::app()->db->createCommand($sql);

@@ -1,16 +1,12 @@
 <?php
-$cs = Yii::app()->clientScript;
-//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
-//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.js');
-
-$cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
-
 /* @var $this UserController */
 /* @var $model User */
 /* @var $form CActiveForm */
 
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+$cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
 $session = new CHttpSession;
 
 $currentRoleinUrl = '';
@@ -24,7 +20,6 @@ if (isset($_GET['id'])) {
     if (isset(User::model()->findByPk($currentlyEditedUserId)->password)) {
         $password = User::model()->findByPk($currentlyEditedUserId)->password;
     }
-
 }
 
 $currentLoggedUserId = $session['id'];

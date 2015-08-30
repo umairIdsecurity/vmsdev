@@ -26,7 +26,7 @@ class ForeignKeyHelper
 
             case 'mssql';
             case 'sqlsrv';
-                $sql = "SELECT C.CONSTRAINT_NAME as name"
+                $sql = "SELECT C.CONSTRAINT_NAME as name "
                     ."FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS C "
                     ."	INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS FK "
                     ."		ON C.CONSTRAINT_NAME = FK.CONSTRAINT_NAME "
@@ -47,7 +47,7 @@ class ForeignKeyHelper
                     ."AND PK.TABLE_NAME = '$refTable' "
                     ."AND PT.COLUMN_NAME = '$refColumn' ";
                 break;
-            
+
             default;
                 throw new CDbException($driverName." is not supported");
 

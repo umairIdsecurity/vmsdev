@@ -9,7 +9,9 @@ class m150824_202000_drop_tenant_agent_user_constraint extends CDbMigration
 	public function safeUp()
 	{
 		$fkName = ForeignKeyHelper::getForeignKeyName('user','tenant_agent','user','id');
-		$this->dropForeignKey($fkName,'user');
+		if($fkName) {
+			$this->dropForeignKey($fkName, 'user');
+		}
 		$this->execute("update user set tenant_agent = NULL where id = 1");
         $this->addForeignKey('user_tenant_agent_fk','user','tenant_agent','tenant_agent','id');
 

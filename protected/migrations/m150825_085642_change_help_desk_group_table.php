@@ -24,16 +24,16 @@ class m150825_085642_change_help_desk_group_table extends CDbMigration
 		}
 
 		//$this->addForeignKey('helpdesk_group_user_role_helpdesk_group_fk', 'helpdesk_group_user_role', 'helpdesk_group', 'helpdesk_group', 'id');
-		$key = ForeignKeyHelper::getForeignKeyName('helpdesk_group_user_role','role','roles','id');
-		if(!isset($key)) {
-			$this->addForeignKey('helpdesk_group_user_role_role_fk', 'helpdesk_group_user_role', 'role', 'roles', 'id');
-		}
+		//$key = ForeignKeyHelper::getForeignKeyName('helpdesk_group_user_role','role','roles','id');
+		//if(!isset($key)) {
+		//	$this->addForeignKey('helpdesk_group_user_role_role_fk', 'helpdesk_group_user_role', 'role', 'roles', 'id');
+		//}
 	}
 
 	public function safeDown()
 	{
-		$this->dropForeignKey('helpdesk_group_user_role_helpdesk_group_fk', 'helpdesk_group_user_role');
-		$this->dropForeignKey('helpdesk_group_user_role_role_fk', 'helpdesk_group_user_role');
+		//$this->dropForeignKey('helpdesk_group_user_role_helpdesk_group_fk', 'helpdesk_group_user_role');
+		//$this->dropForeignKey('helpdesk_group_user_role_role_fk', 'helpdesk_group_user_role');
 		$this->dropTable('helpdesk_group_user_role');
 		//$this->dropForeignKey('helpdesk_group_web_preregistration_helpdesk_group_fk', 'helpdesk_group_web_preregistration');
 		//$this->dropTable('helpdesk_group_web_preregistration');

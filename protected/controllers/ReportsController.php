@@ -622,7 +622,8 @@ class ReportsController extends Controller
      */
     public function actionNotReturnedVic() {
         $criteria = new CDbCriteria;
-        $criteria->addCondition("(visit_status = ".VisitStatus::EXPIRED ." OR visit_status = ".VisitStatus::CLOSED." ) AND card_type > 4 AND card_type != ".CardType::VIC_CARD_24HOURS);
+        $criteria->addCondition("(visit_status = ".VisitStatus::EXPIRED ." OR visit_status = ".VisitStatus::CLOSED." ) AND card_type > 4 AND card_type != ".CardType::VIC_CARD_24HOURS 
+                ." AND card_option != 'Returned'");
         
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values

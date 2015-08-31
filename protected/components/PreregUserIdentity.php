@@ -15,15 +15,23 @@ class PreregUserIdentity extends CUserIdentity {
      * @return boolean whether authentication succeeds.
      */
 
-    public function authenticate() {
-        
+    public function authenticate() 
+    {
+
         $user = User::model()->find('LOWER(email)=?', array(strtolower($this->username)));
+
+        if($user === null){
+            $user = Registration::model()->find('LOWER(email)=?', array(strtolower($this->username)));
+        }
+        
 
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;
         } else if (!$user->validatePassword($this->password, $user->password)) {
             $this->errorCode = self::ERROR_PASSWORD_INVALID;
         } else {
+
+            $session = new CHttpSession;
             
             $this->_id = $user->id;
 
@@ -31,7 +39,7 @@ class PreregUserIdentity extends CUserIdentity {
 
             $this->setState('role', $user->role);
 
-            //$this->setState('account', $user->profile_type);
+            $this->setState('account_type', $session['account_type']);
 
             $this->setState('tenant', (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id );
             

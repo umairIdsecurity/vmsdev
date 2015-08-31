@@ -26,8 +26,9 @@
 
     </div>
 
-
-    <div class="declarations" style="padding: 10px 0 0 20px;">
+    <br>
+    
+    <div class="declarations" style="">
         <div class="form-group" id="privacy_notice">
 
 

@@ -29,15 +29,15 @@
                     <div class="row form-group" id="addCompanyDiv">
                          <div class="col-md-8">
                             <?php
-                                /*$this->widget('application.extensions.select2.Select2', array(
+                                $this->widget('application.extensions.select2.Select2', array(
                                         'model' => $model,
                                         'attribute' => 'company',
-                                        'items' => CHtml::listData(Company::model()->find('is_deleted=0','id', 'name')),
+                                        'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'),
                                         'selectedItems' => array(), // Items to be selected as default
-                                        'placeHolder' => 'Please select a company',        
-                                ));*/
+                                        'placeHolder' => 'Please select a company',
+                                ));
                             ?>
-                            <?php //echo $form->error($model,'company'); ?>
+                            <?php echo $form->error($model,'company'); ?>
                         </div>
                     </div>
 
@@ -47,29 +47,29 @@
 
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($companyModel, 'user_first_name', array('maxlength' => 50, 'placeholder' => 'First Name', 'class'=>'form-control input-sm')); ?>
-                            <?php echo $form->error($companyModel, 'user_first_name'); ?>
+                            <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->error($model, 'first_name'); ?>
                         </div>    
                     </div>
 
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($companyModel, 'user_last_name', array('maxlength' => 50, 'placeholder' => 'Last Name', 'class'=>'form-control input-sm')); ?>
-                            <?php echo $form->error($companyModel, 'user_last_name'); ?>
+                            <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Last Name', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->error($model, 'last_name'); ?>
                         </div>    
                     </div>
 
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($companyModel, 'user_email', array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm')); ?>
-                            <?php echo $form->error($companyModel, 'user_email'); ?>
+                            <?php echo $form->textField($model, 'email', array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->error($model, 'email'); ?>
                         </div>    
                     </div>
 
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($companyModel, 'user_contact_number', array('maxlength' => 50, 'placeholder' => 'Contact Number', 'class'=>'form-control input-sm')); ?>
-                            <?php echo $form->error($companyModel, 'user_contact_number'); ?>
+                            <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Contact Number', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->error($model, 'contact_number'); ?>
                         </div>    
                     </div>
 
@@ -121,11 +121,11 @@
                                 <?php 
                                     $form=$this->beginWidget('CActiveForm', array(
                                         'id'=>'company-form',
-                                        'enableAjaxValidation'=>false,
-                                        'enableClientValidation'=>true,
                                         //'action' => array('company/addCompany'),
+                                        'enableAjaxValidation' => true,
+                                        'enableClientValidation'=>true,
                                         'clientOptions'=>array(
-                                            'validateOnSubmit'=>true,
+                                            'validateOnSubmit'=>true
                                         ),
                                         'htmlOptions'=>array(
                                             'onsubmit'=>"return false;",/* Disable normal form submit */
@@ -181,7 +181,17 @@
                                     </div>
 
 
-                                    <?php echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
+                                    <?php //echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
+
+                                    <?php echo CHtml::submitButton('Add Company',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
+
+                                    <?php
+                                        /*echo CHtml::tag('button', array(
+                                            'id'=>'addCompanyBtn',
+                                            'type'=>'submit',
+                                            'class'=>'btn btn-block bt-login'
+                                        ), 'Add Company');*/
+                                    ?>
                                     
                                 <?php $this->endWidget(); ?>
 

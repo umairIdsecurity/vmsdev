@@ -323,10 +323,11 @@ class PreregistrationController extends Controller
 
 			if($model->account_type == "VIC")
 			{
-				$userModel = new User();
+				$userModel = new Registration();
 
 				$userModel->email = $model->username;
-				$userModel->password = User::model()->hashPassword($model->password);
+				$userModel->password = $model->password;
+				$userModel->profile_type = "VIC";
 				$userModel->role = 10; //role is 10: Visitor/Kiosik
 
 				if ($userModel->save(false)) 
@@ -344,7 +345,7 @@ class PreregistrationController extends Controller
 					else
 					{
 						$msg = print_r($loginModel->getErrors(),1);
-						throw new CHttpException(400,'Data not saved because: '.$msg );
+						throw new CHttpException(400,'Not redirected because: '.$msg );
 					}
 					//***********************************************
 				}
@@ -377,23 +378,53 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 
-		$model = new Registration();
+		$model = new User();
 
-		$model->scenario = 'asic';
+		$model->scenario = 'preregistration';
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 
-		if (isset($_POST['Registration'])) {
+		if (isset($_POST['User'])) 
+		{
+			$model->attributes = $_POST['User'];
 
-			$model->attributes = $_POST['Registration'];
+			$model->email = $session['username'];
+			$model->password = User::model()->hashPassword($session['password']);
+			$model->company =$_POST['User']['company'];
+			$model->role = 9; //role is 9: Staff member/Intranet
+
+			if ($model->save(false)) 
+			{
+				//**********************************************
+				$loginModel = new PreregLogin();
+
+				$loginModel->username = $model->email;
+				$loginModel->password = $session['password'];
+
+				if ($loginModel->validate() && $loginModel->login())
+				{
+					$this->redirect(array('preregistration/dashboard'));
+				}
+				else
+				{
+					$msg = print_r($loginModel->getErrors(),1);
+					throw new CHttpException(400,'Not redirected because: '.$msg );
+				}
+				//***********************************************
+			}
+			else
+			{
+				$msg = print_r($model->getErrors(),1);
+				throw new CHttpException(400,'Data not saved because: '.$msg );
+			}
 
 		}
 
 		$companyModel = new Company();
-		$companyModel->scenario = 'preregistrationAddComp';
+		$companyModel->scenario = 'preregistration';
 
 		$this->render('asic-create-login' , array('model'=>$model,'companyModel'=>$companyModel) );
 
@@ -403,23 +434,58 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 
-		$companyModel = new Company();
-		$companyModel->scenario = 'preregistrationAddComp';
+		$model = new User();
 
+		$model->scenario = 'add_company_contact';
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-companyAdmin-form') {
-			echo CActiveForm::validate($companyModel);
+			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 
-		if (isset($_POST['Company'])) 
+		if (isset($_POST['User'])) 
 		{
+			$model->attributes = $_POST['User'];
+			
+			$model->first_name = $_POST['User']['first_name'];
+			$model->last_name = $_POST['User']['last_name'];
+			$model->contact_number = $_POST['User']['contact_number'];
+			$model->email = $session['username'];
+			$model->password = User::model()->hashPassword($session['password']);
+			$model->company = ( ($_POST['User']['company'] != null) && ( !empty($_POST['User']['company']) ) ) ? $_POST['User']['company'] : null ;
+			$model->role = 1; //role is 1: Administrator
 
-			$companyModel->attributes = $_POST['Company'];
+			if ($model->save(false)) 
+			{
+				//**********************************************
+				$loginModel = new PreregLogin();
+
+				$loginModel->username = $model->email;
+				$loginModel->password = $session['password'];
+
+				if ($loginModel->validate() && $loginModel->login())
+				{
+					$this->redirect(array('preregistration/dashboard'));
+				}
+				else
+				{
+					$msg = print_r($loginModel->getErrors(),1);
+					throw new CHttpException(400,'Not redirected because: '.$msg );
+				}
+				//***********************************************
+			}
+			else
+			{
+				$msg = print_r($model->getErrors(),1);
+				throw new CHttpException(400,'Data not saved because: '.$msg );
+			}
 
 		}
 
-		$this->render('companyadmin-create-login' , array('companyModel'=>$companyModel) );
+		$companyModel = new Company();
+		$companyModel->scenario = 'preregistration';
+
+		$this->render('companyadmin-create-login' , array('model'=>$model,'companyModel'=>$companyModel) );
 
 	}
 
@@ -1161,18 +1227,41 @@ class PreregistrationController extends Controller
 
 		if(!empty($email))
 		{
-			if(User::model()->findByAttributes(array("email"=>$email)))
+			$user = User::model()->findByAttributes(array("email"=>$email));
+
+			if($user === null)
 			{
-			  	$aArray[] = array(
-	                'isTaken' => 1,
-	            );
-			} 
+				if(Visitor::model()->findByAttributes(array("email"=>$email)))
+				{
+				  	$aArray[] = array(
+		                'isTaken' => 1,
+		            );
+				} 
+				else
+				{
+					$aArray[] = array(
+		                'isTaken' => 0,
+		            );
+				}
+
+			}
 			else
 			{
-				$aArray[] = array(
-	                'isTaken' => 0,
-	            );
+				if(User::model()->findByAttributes(array("email"=>$email)))
+				{
+				  	$aArray[] = array(
+		                'isTaken' => 1,
+		            );
+				} 
+				else
+				{
+					$aArray[] = array(
+		                'isTaken' => 0,
+		            );
+				}
 			}
+
+			
 
 	        $resultMessage['data'] = $aArray;
 	        echo CJavaScript::jsonEncode($resultMessage);

@@ -117,6 +117,9 @@ class User extends VmsActiveRecord {
                         ':is_deleted'=>0
                     ))),
                     array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+
+                    array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration'),
+                
             );
 			
         }
@@ -145,6 +148,8 @@ class User extends VmsActiveRecord {
                         , 'safe', 'on' => 'search'),
 				
 		        array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
+
+                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration'),
                 
             );
         } else {
@@ -175,6 +180,8 @@ class User extends VmsActiveRecord {
                         .'user_status_id, created_by', 'safe', 'on' => 'search'),
 				
 		        array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
+
+                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration'),
                
             );
         }

@@ -59,28 +59,17 @@
                     </div>
 
                     <div class="row form-group" id="addCompanyDiv">
-                        <!-- <div class="col-md-2">
-
-                        </div>
-                        <div class="col-md-1"></div>
-                        <div class="col-md-2">
-
-                        </div>
-                        <div class="col-md-1"></div>
-                        <div class="col-md-2">
-
-                        </div> -->
                          <div class="col-md-8">
                             <?php
-                                /*$this->widget('application.extensions.select2.Select2', array(
+                                $this->widget('application.extensions.select2.Select2', array(
                                         'model' => $model,
                                         'attribute' => 'company',
-                                        'items' => CHtml::listData(Company::model()->find('is_deleted=0','id', 'name')),
+                                        'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'),
                                         'selectedItems' => array(), // Items to be selected as default
                                         'placeHolder' => 'Please select a company',        
-                                ));*/
+                                ));
                             ?>
-                            <?php //echo $form->error($model,'company'); ?>
+                            <?php echo $form->error($model,'company'); ?>
                         </div>
                     </div>
                      
@@ -136,7 +125,7 @@
                                 <?php 
                                     $form=$this->beginWidget('CActiveForm', array(
                                         'id'=>'company-form',
-                                        'enableAjaxValidation'=>false,
+                                        'enableAjaxValidation'=>true,
                                         'enableClientValidation'=>true,
                                         //'action' => array('company/addCompany'),
                                         'clientOptions'=>array(
@@ -196,8 +185,11 @@
                                     </div>
 
 
-                                    <?php echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
+                                    <?php //echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
                                     
+                                    <?php echo CHtml::submitButton('Add Company',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
+
+
                                 <?php $this->endWidget(); ?>
 
                             </div>

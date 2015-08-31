@@ -301,11 +301,12 @@ $fontScale = 2;
                                 <p class="text-cmp"><?= $companyCode; ?></p>
                                 <p class="card-date-text">
                                     <span><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
+                                <br><span style="font-size:16px; margin-left:53px; margin-top: 4px"> <?php if($model->card_type == CardType::VIC_CARD_24HOURS && $model->time_check_in != "00:00:00") echo substr($model->time_check_in, 0, 5); ?></span>
                                 </p>
                                 <p class="card-visit-info">
                                     <span class="first-name"><?=$first_name ?></span><br/>
                                     <span class="last-name"><?=$last_name ?></span><br/>
-                                    <span class="card-code"><?= $cardCode.XXX ?></span>
+                                    <span class="card-code"><?= $cardCode ?></span>
                                 </p>
                             </div>
                             <div class="card-footer">

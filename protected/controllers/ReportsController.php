@@ -29,7 +29,7 @@ class ReportsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType','conversionVicToAsic'),
+				'actions'=>array('notReturnedVic', 'visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType','conversionVicToAsic'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
 			array('deny',  // deny all users
@@ -613,6 +613,24 @@ class ReportsController extends Controller
             ->where($dateCondition)
             ->queryAll();
         return $data;
+    }
+    
+    /**
+     * Not Returned and Lost/stolen VICs Reports
+     * Depends upons the Expired Visits having Card Option Not Returned or Lost/Stolen Report
+     * 
+     */
+    public function actionNotReturnedVic() {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("(visit_status = ".VisitStatus::EXPIRED ." OR visit_status = ".VisitStatus::CLOSED." ) AND card_type > 4 AND card_type != ".CardType::VIC_CARD_24HOURS);
+        
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+                $model->attributes = $_GET['Visit'];
+            }
+        
+        $this->render("notReturnedVic", array("model"=>$model, "criteria"=>$criteria));
     }
 
 }

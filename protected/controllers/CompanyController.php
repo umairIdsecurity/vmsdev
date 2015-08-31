@@ -22,7 +22,7 @@ class CompanyController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact','addCompany', 'getContacts', 'addContact', 'getContact','checkNameUnique'),
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact','getContacts', 'addContact', 'getContact','checkNameUnique'),
                 'users' => array('@'),
                 //'expression' => 'CHelper::check_module_authorization("CVMS")'
             ),
@@ -43,7 +43,7 @@ class CompanyController extends Controller
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('logo'),
+                'actions' => array('logo','addCompany'),
                 'users' => array('*'),
             ),
             array('deny', // deny all users
@@ -502,9 +502,15 @@ class CompanyController extends Controller
     {
         //if (Yii::app()->request->isAjaxRequest) {
             $session = new CHttpSession;
+
             $company = new Company();
 
-            $company->scenario = 'preregistrationAddComp';
+            $company->scenario = 'preregistration';
+
+            if (isset($_POST['ajax']) && $_POST['ajax'] === 'company-form') {
+                echo CActiveForm::validate($model);
+                Yii::app()->end();
+            }
 
             if (isset($_POST['Company'])) 
             {
@@ -519,11 +525,12 @@ class CompanyController extends Controller
                     $company->contact = $formInfo['user_first_name'] . ' ' . $formInfo['user_last_name'];
                     $company->email_address = $formInfo['user_email'];
                     $company->mobile_number = $formInfo['user_contact_number'];
+                    $company->office_number = $formInfo['user_contact_number'];
 
                     
-                    $company->created_by_user = $session['created_by'];
+                    /*$company->created_by_user = $session['created_by'];
                     $company->created_by_visitor  = $session['visitor_id'];
-                    $company->tenant = $session['tenant'];
+                    $company->tenant = $session['tenant'];*/
 
                     $company->company_type = 3;
 
@@ -577,14 +584,18 @@ class CompanyController extends Controller
                         }
                         else
                         {
-                            echo "0";
+                            $msg = print_r($company->getErrors(),1);
+                            throw new CHttpException(400,'Not saved because: '.$msg );
+                            //echo "0";
                             Yii::app()->end();
                         }    
                     }
                     else
                     {
-                        echo "0";
-                        Yii::app()->end();
+                        $msg = print_r($company->getErrors(),1);
+                        throw new CHttpException(400,'Not validated because: '.$msg );
+                        //echo "0";
+                        //Yii::app()->end();
                     }
                 /*}
                 else

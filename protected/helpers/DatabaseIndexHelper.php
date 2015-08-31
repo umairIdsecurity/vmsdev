@@ -66,40 +66,59 @@ class DatabaseIndexHelper
 
     public function getTableIndexes($tableName, $excludePrimaryKey = true)
     {
-        $keyValue = $excludePrimaryKey?0:1;
+        $pkExclude = $excludePrimaryKey?",'PRIMARY KEY'":"";
+        $driverName = Yii::app()->db->driverName;
+        $sql = null;
 
-        $sql = "SELECT  t.[name] AS [table_name],
-                        ind.[name] AS [index_name],
-                        ic.column_id AS [column_id],
-                        col.[name] AS [column_name],
-                        ind.[type_desc] AS [type_desc],
-                        col.is_identity AS [is_identity],
-                        ind.[is_unique] AS [is_unique],
-                        ind.[is_primary_key] AS [is_primary_key]
-                    FROM sys.indexes ind
-                        INNER JOIN sys.index_columns ic
-                            ON ind.object_id = ic.object_id AND ind.index_id = ic.index_id
-                        INNER JOIN sys.columns col
-                            ON ic.object_id = col.object_id and ic.column_id = col.column_id
-                        INNER JOIN sys.tables t
-                            ON ind.object_id = t.object_id
-                    WHERE t.[name] = '$tableName'
-                        AND t.is_ms_shipped = 0
-                        AND ind.is_primary_key = $keyValue
-                        AND OBJECT_SCHEMA_NAME(t.[object_id],DB_ID()) = (SELECT DATABASE())
-                    ORDER BY 1,2,3,4";
+        switch($driverName) {
+
+            case 'mssql';
+            case 'sqlsrv';
+                $sql = "SELECT TC.TABLE_NAME AS 'table_name',
+                              TC.CONSTRAIN_NAME AS 'constraint_name',
+                              KCU.ORDINAL_POSITION AS 'ordinal_position',
+                              KCU.COLUMN_NAME AS 'column_name',
+                              TC.CONSTRAINT_TYPE AS 'constraint_type'
+                        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
+                          JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
+                          ON TC.CONSTRAINT_NAME = KCU.CONSTRAINT_NAME
+                            AND CONSTRAINT_TYPE NOT IN ('FOREIGN KEY'$pkExclude)
+                        WHERE TC.TABLE_NAME = '$tableName'
+                        AND TC.TABLE_CATALOG = (SELECT DATABASE())
+                        ORDER BY 1,2,3,4";
+                break;
+
+            case 'mysql';
+                $sql="TABLE_NAME as 'table_name',
+                             CONSTRAINT_NAME as 'constraint_name',
+                             ORDINAL_POSITION as 'ordinal_position',
+                             COLUMN_NAME as 'column_name'
+                       FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                       WHERE REFERENCED_TABLE_NAME IS NULL
+                       AND CONSTRAINT_NAME != 'PRIMARY'
+                       AND TABLE_SCHEMA = (SELECT DATABASE())
+                       ORDER BY 1,2,3,4";
+                break;
+        }
 
         $command = Yii::app()->db->createCommand($sql);
         $command->execute();
         $reader = $command->query();
+
         $result = [];
         $data = [];
         foreach($reader as $row){
-           // if($data[])
-            $data['table_name']=$row['TableName'];
-        }
-        return null;
 
+            if($data['table_name'] != $row['table_name'] || $data['constraint_name'] != $row['constraint_name']){
+                $data = $row;
+                $result[] = $row;
+                $data['columns'] = [];
+            }
+
+            $data['columns'][] = $row['column_name'];
+        }
+
+        return $result;
     }
 
 

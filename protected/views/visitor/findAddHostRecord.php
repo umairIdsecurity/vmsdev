@@ -176,7 +176,9 @@ $defaultKey = key($asicCardTypes);
                                     <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
 
                                     <input type="hidden" id="Host_photo" name="User[photo]">
-
+                                    <?php if(Yii::app()->user->role != ROles::ROLE_SUPERADMIN) { ?>
+                                    <input type="hidden" id="User_tenant" name="User[tenant]" value="<?php echo Yii::app()->user->tenant?>">
+                                    <?php } ?>
                                     <div class="photoDiv" style='display:none;'>
                                         <img id='photoPreview2'
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"

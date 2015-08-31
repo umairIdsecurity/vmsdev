@@ -285,4 +285,28 @@ class CHelper
             return 3;
          
     }
+    
+    public static function changeStatusColor($visitStatus) {
+	// return "red";
+	switch ($visitStatus) {
+		case VisitStatus::ACTIVE:
+			return "green";
+			break;
+
+		case VisitStatus::PREREGISTERED:
+			return "blue";
+			break;
+
+		case VisitStatus::CLOSED:
+			return "red";
+			break;
+
+		case VisitStatus::SAVED:
+			return "grey";
+			break;
+
+		default:
+			break;
+	}
+    }
 }

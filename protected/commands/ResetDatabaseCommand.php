@@ -37,7 +37,12 @@ class ResetDatabaseCommand extends CConsoleCommand
     public function actionIndex()
     {
         $this->actionExportSchema();
-        //$this->actionImportSchema();
+        $this->actionImportSchema();
+    }
+
+    public function actionClearDatabase(){
+        $this->actionDropAllForeignKeys();
+        $this->actionDropAllTables();
     }
 
     public function actionRestoreToMinimalDatabase()
@@ -57,6 +62,7 @@ class ResetDatabaseCommand extends CConsoleCommand
         $this->actionExportSchema();
         $this->actionExportReferenceData();
         $this->actionExportStartupData();
+
 
     }
 
@@ -83,7 +89,7 @@ class ResetDatabaseCommand extends CConsoleCommand
         $schema = CJSON::decode(file_get_contents($fileName),true);
 
         // create tables and keys
-        foreach($schema as $table){
+        foreach($schema['tables'] as $table){
 
             // get column definitions
             $columnDefs = [];
@@ -92,19 +98,26 @@ class ResetDatabaseCommand extends CConsoleCommand
             }
 
             // create the table
-            Yii::app()->db->schema->createTable('name',$columnDefs);
+            $this->runSql(Yii::app()->db->schema->createTable('name',$columnDefs));
 
             // create primary key if we haven't already
-            if(strpos($columnDefs['id'],'pk' )==-1 && isset($table['primaryKey'])){
-                Yii::app()->db->schema->addPrimaryKey($table['name']."_pk",$table['name'],$table['primaryKey']);
+            if((!isset($columnDefs['id']) || strpos($columnDefs['id'],'pk' )==-1) && isset($table['primaryKey'])){
+                $this->runSql(Yii::app()->db->schema->addPrimaryKey($table['name']."_pk",$table['name'],$table['primaryKey']));
             }
 
-            foreach($table['indexes'] as $table){
 
-            }
+        }
+
+        foreach($schema['indexes'] as $index){
+            $this->runSql(Yii::app()->db-$schema->createIndex($index['table_name']."_".implode('_',$index['columns']),$index['table_name'],$index['columns'],true));
         }
 
 
+    }
+
+    public function runSql($sql){
+
+        echo $sql."\n\n";
     }
 
     public function getColumnDef($column){
@@ -114,7 +127,7 @@ class ResetDatabaseCommand extends CConsoleCommand
 
         // use the pk auto increment
         if($column['isPrimaryKey'] && $column['autoIncrement']){
-            if($column['type']==bigint){
+            if($column['type']=='bigint'){
                 $dbType='bigpk';
             } else{
                 $dbType='pk';
@@ -128,10 +141,9 @@ class ResetDatabaseCommand extends CConsoleCommand
 
         // build the output
         $result = $dbType." "
-                . ($column['allowNull']?" NULL":" NOT NULL")
-                . (isset($column['defaultValue'])?"DEFAULT ".Yii::app()->db-quoteValue($column['defaultValue']):"");
+                . ($column['allowNull']?" NULL":" NOT NULL");
+                //. (isset($column['defaultValue'])?"DEFAULT ".Yii::app()->db-quoteValue($column['defaultValue']):"");
 
-        echo $column['name']." $result \n";
         return $result;
 
     }
@@ -169,8 +181,9 @@ class ResetDatabaseCommand extends CConsoleCommand
         $driverName = Yii::app()->db->driverName;
         $fileName = realpath($yii=dirname(__FILE__)."/../../database")."/json/schema.json";
         echo "writing schema to $fileName";
-        $schema = Yii::app()->db->schema;
-        file_put_contents($fileName, CJSON::encode($schema->tables));
+        $schema['tables'] = CJSON::decode(CJSON::encode(Yii::app()->db->schema->tables));
+        $schema['indexes'] = DatabaseIndexHelper::getTableIndexes();
+        file_put_contents($fileName, CJSON::encode($schema));
     }
 
     public function actionExportReferenceData(){

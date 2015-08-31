@@ -64,16 +64,18 @@ class DatabaseIndexHelper
 
     }
 
-    public function getTableIndexes($tableName, $excludePrimaryKey = true)
+    public static function getTableIndexes($excludePrimaryKeys = true)
     {
-        $pkExclude = $excludePrimaryKey?",'PRIMARY KEY'":"";
+        $pkExclude = $excludePrimaryKeys?",'PRIMARY KEY'":"";
         $driverName = Yii::app()->db->driverName;
         $sql = null;
+
 
         switch($driverName) {
 
             case 'mssql';
             case 'sqlsrv';
+                $pkExclude = $excludePrimaryKeys?",'PRIMARY KEY'":"";
                 $sql = "SELECT TC.TABLE_NAME AS 'table_name',
                               TC.CONSTRAIN_NAME AS 'constraint_name',
                               KCU.ORDINAL_POSITION AS 'ordinal_position',
@@ -83,19 +85,19 @@ class DatabaseIndexHelper
                           JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU
                           ON TC.CONSTRAINT_NAME = KCU.CONSTRAINT_NAME
                             AND CONSTRAINT_TYPE NOT IN ('FOREIGN KEY'$pkExclude)
-                        WHERE TC.TABLE_NAME = '$tableName'
-                        AND TC.TABLE_CATALOG = (SELECT DATABASE())
+                        WHERE TC.TABLE_CATALOG = (SELECT DATABASE())
                         ORDER BY 1,2,3,4";
                 break;
 
             case 'mysql';
-                $sql="TABLE_NAME as 'table_name',
+                $pkExclude = $excludePrimaryKeys?"AND CONSTRAINT_NAME != 'PRIMARY'":"";
+                $sql="SELECT TABLE_NAME as 'table_name',
                              CONSTRAINT_NAME as 'constraint_name',
                              ORDINAL_POSITION as 'ordinal_position',
                              COLUMN_NAME as 'column_name'
                        FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
                        WHERE REFERENCED_TABLE_NAME IS NULL
-                       AND CONSTRAINT_NAME != 'PRIMARY'
+                       $pkExclude
                        AND TABLE_SCHEMA = (SELECT DATABASE())
                        ORDER BY 1,2,3,4";
                 break;
@@ -106,17 +108,21 @@ class DatabaseIndexHelper
         $reader = $command->query();
 
         $result = [];
-        $data = [];
+        $data = null;
         foreach($reader as $row){
 
-            if($data['table_name'] != $row['table_name'] || $data['constraint_name'] != $row['constraint_name']){
+            if($data == null || $data['table_name'] != $row['table_name'] || $data['constraint_name'] != $row['constraint_name']){
+                if($data!=null){
+                    $result[] = $data;
+                }
                 $data = $row;
-                $result[] = $row;
                 $data['columns'] = [];
             }
 
             $data['columns'][] = $row['column_name'];
         }
+        $data['column_name']=null;
+        $result[] = $data;
 
         return $result;
     }

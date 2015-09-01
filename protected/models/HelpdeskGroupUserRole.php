@@ -31,7 +31,7 @@ class HelpdeskGroupUserRole extends CActiveRecord
     );
 
     public static $AVMS_WEB_PREREGISTRATION_ROLES = array(
-        self::PROFILE_TYPE_VIC          => 'Vic Holder',
+        self::PROFILE_TYPE_VIC          => 'VIC Holder',
         self::PROFILE_TYPE_ASIC         => 'ASIC Sponsor',
         self::PROFILE_TYPE_CORPORATE    => 'Company',
     );

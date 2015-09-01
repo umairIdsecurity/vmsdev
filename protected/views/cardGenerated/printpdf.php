@@ -254,9 +254,8 @@ $fontScale = 2;
     }
     .card-text {
         /*width:256px;*/
-        width:205px;
-        /*height:405px;*/
-        height:325px;
+        width:240px;
+        height:<?php echo $labelHeightPx; ?>px;
         border:1px solid #000;
         border-radius:20px;
         background:#fff;
@@ -265,10 +264,25 @@ $fontScale = 2;
 
     .card-text-content {
         font-size: 20px;
-        padding: 10px;
+        padding: 10px !important;
         text-align: center;
     }
 
+      .card-text2 {
+        /*width:256px;*/
+        width:225px;
+        height:<?php echo $labelHeightPx; ?>px;
+        border:1px solid #000;
+        border-radius:20px;
+        background:#fff;
+        float: left;
+    }
+
+    .card-text-content2 {
+        font-size: 20px;
+        padding: 15px !important;
+        text-align: center;
+    }
     .card-style-3  .card-print {
         background-color: #FFFFFF;
     }
@@ -395,8 +409,8 @@ $fontScale = 2;
         </div>
         <?php if($backText != ''){ ?>
         <!--Box 2-->
-        <div class="card-text">
-            <div class="card-text-content"><?= $backText ?></div>
+        <div class="card-text2">
+            <div class="card-text-content2"><?= $backText ?></div>
         </div>
         <?php } ?>
     <?php

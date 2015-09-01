@@ -61,12 +61,9 @@ class VisitorController extends Controller {
             $model->attributes = $_POST['Visitor'];
 
             if (isset($_POST['VisitCardType']) && $_POST['VisitCardType'] > CardType::CONTRACTOR_VISITOR) {
-                if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != Visitor::ASIC_ISSUED) {
-                    $model->profile_type = Visitor::PROFILE_TYPE_VIC;
-                } else {
-                    $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                }
-            }
+                $model->profile_type = Visitor::PROFILE_TYPE_VIC;
+            } else
+                  $model->profile_type = Visitor::PROFILE_TYPE_CORPORATE;
 
             //check validate for LOG VISIT PROCESS
             if (isset($_REQUEST['view']) && $_REQUEST['view'] == 1) {

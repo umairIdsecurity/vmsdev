@@ -516,29 +516,25 @@ class VisitController extends Controller {
             
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
-                
-
+                // Date  visit CLOSED by operator
+                $model->visit_closed_date = date("Y-m-d");
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $model->visit_status = VisitStatus::AUTOCLOSED;
 
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
-                            #change datetime check in and out for vic 24h.
+                            #change datetime check in and out for vic 24h. Why we are changing this
 
-                            $model->date_check_in  = $model->date_check_out;
-                            $model->date_check_out = date('Y-m-d', strtotime('+5 day', strtotime($model->date_check_out)));
-                            $model->time_check_in  = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
-                            $model->time_check_out = $model->time_check_in;
+//                            $model->date_check_in  = $model->date_check_out;
+//                            $model->date_check_out = date('Y-m-d', strtotime('+5 day', strtotime($model->date_check_out)));
+//                            $model->time_check_in  = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
+//                            $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
                             if ($visitParams['finish_date'] != NULL) {
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
-                                $model->date_check_in = $model->date_check_in;
-                                $model->date_check_out = $model->date_check_out;
                             } else { 
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['date_check_out']));
-                                $model->date_check_in = $model->date_check_in;
-                                $model->date_check_out = $model->date_check_out;
                             }
                             break;
                         case CardType::VIC_CARD_MULTIDAY: // VIC Multiday

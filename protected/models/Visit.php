@@ -128,7 +128,7 @@ class Visit extends CActiveRecord {
 
             array('reason,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
+            array('visit_closed_date, date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             array('filterProperties', 'length', 'max' => 70),
 
@@ -1178,12 +1178,19 @@ class Visit extends CActiveRecord {
                  return $totalCount + $oldVisitsCount;
                  
              case CardType::VIC_CARD_24HOURS:
-                //return (int)$this->count($criteria);
+              
                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
                 if( $isExpired < 0 ) 
                      $totalCount = $dateOut->diff($dateIn)->days;
                 else
                      $totalCount = $dateIn->diff($dateNow)->days + 1;
+            
+                    // Auto Closed visits
+                  if( !is_null($this->visit_closed_date) && $this->visit_status == VisitStatus::AUTOCLOSED ) {
+                               $dateClosed = new DateTime( $this->visit_closed_date );
+                               $totalCount = $dateIn->diff($dateClosed)->days + 1;  
+                    }
+                 
                  return $totalCount + $oldVisitsCount;
                  
                 break;
@@ -1206,10 +1213,14 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_EXTENDED:
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
-                        $totalCount =  $dateOut->diff($dateIn)->days + 1;
+                        $totalCount =  $dateIn->diff($dateOut)->days + 1;  
+                        if( !is_null($this->visit_closed_date) ) {
+                            $dateClosed = new DateTime( $this->visit_closed_date );
+                            $totalCount = $dateIn->diff($dateClosed)->days + 1;  
+                        }
                         break;
+                        
                     default:
-                    
                        if ($dateOut->diff($dateNow)->format("%r%a") > 0)  
                            $totalCount =  $dateIn->diff($dateOut)->days + 1;  
                         if( $dateOut->diff($dateNow)->format("%r%a") <=  0)
@@ -1286,6 +1297,9 @@ class Visit extends CActiveRecord {
                // For the current Year Only
                if( $dateNow->format("Y") == $dateIn->format("Y") )
                   $visitCount += $dateIn->diff($dateOut)->days + 1;
+               
+               if($v["card_type"] == CardType::VIC_CARD_24HOURS)
+                    $visitCount =  $visitCount - 1;
            }
            return $visitCount;
            
@@ -1324,15 +1338,13 @@ class Visit extends CActiveRecord {
          $dateOut = new DateTime($visit["date_check_out"]);
          $dateNow = new DateTime("NOW", new DateTimeZone($timezone));
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
-         if( $isExpired > 0 )  { //   expired or will expire today 
+         if( $isExpired >= 0 )  { //   expired or will expire today 
               
              $status = "";
             //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
             if( $visit->card_type == CardType::VIC_CARD_24HOURS ) {
                 $status = VisitStatus::CLOSED;
-            } else if( $visit->card_type != CardType::VIC_CARD_24HOURS 
-                    && $visit->card_type != CardType::VIC_CARD_MANUAL 
-                    && $visit->card_type != CardType::MANUAL_VISITOR ) {
+            } else if( $visit->card_type != CardType::VIC_CARD_24HOURS  ) {
                 $status = VisitStatus::EXPIRED;
             } 
              //Get current time to compare with current visit time
@@ -1351,10 +1363,6 @@ class Visit extends CActiveRecord {
                      //Update
                         $insertArr = array();
                         $insertArr["visit_status"] = $status;
-                        
-                        // Card Option = Not returned for EVIC Expired. 
-                        if( $visit->card_type == CardType::VIC_CARD_EXTENDED && $status == VisitStatus::EXPIRED)
-                            $insertArr["card_option"] = "Not Returned";
                             //update
                             if( !empty($status) )
                                 $this->updateByPk( $visit->id, $insertArr ); 
@@ -1379,7 +1387,7 @@ class Visit extends CActiveRecord {
          $dateNow = new DateTime("NOW" , new DateTimeZone($timezone)); 
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
          
-        if( $isExpired > 0 && $this->visit_status == VisitStatus::ACTIVE ) {
+        if( $isExpired >= 0 && $this->visit_status == VisitStatus::ACTIVE ) {
             
             $status = "";
             /* 
@@ -1389,9 +1397,7 @@ class Visit extends CActiveRecord {
             if( ($this->card_type == CardType::VIC_CARD_24HOURS || $this->card_type == CardType::VIC_CARD_EXTENDED) && 
                     $this->visit_status == VisitStatus::AUTOCLOSED ) {
                 $status = VisitStatus::CLOSED;
-            } else if( $this->card_type != CardType::VIC_CARD_24HOURS 
-                    && $this->card_type != CardType::VIC_CARD_MANUAL 
-                    && $this->card_type != CardType::MANUAL_VISITOR ) {
+            } else if( $this->card_type != CardType::VIC_CARD_24HOURS ) {
                 $status = VisitStatus::EXPIRED;
             }  
              //Get current time to compare with current visit time
@@ -1411,11 +1417,8 @@ class Visit extends CActiveRecord {
                      if( !empty($status) ) {
                         $insertArr = array();
                         $insertArr["visit_status"] = $status;
-                        // Card Option = Not returned 
-                        if( $this->card_type == CardType::VIC_CARD_EXTENDED && $status == VisitStatus::EXPIRED)
-                            $insertArr["card_option"] = "Not Returned";
                         
-                            $this->updateByPk( $this->id, $insertArr );           
+                        $this->updateByPk( $this->id, $insertArr );           
                      }
              }
         } 

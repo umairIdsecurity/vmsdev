@@ -57,12 +57,6 @@ class Reasons extends CActiveRecord
 		);
 	}
 
-	public function behaviors() {
-        return array(
-            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
-        );
-    }
-
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
@@ -102,18 +96,17 @@ class Reasons extends CActiveRecord
 		return parent::model($className);
 	}
         
-         /*
-         * this function is used to get label 
-         * in notifications creation dropdownlist
-         */
-        public function getNameFuncForReasons()
-        {
-            
-                return $this->reason_name;
-            
-        }
+	 /*
+	 * this function is used to get label 
+	 * in notifications creation dropdownlist
+	 */
+	public function getNameFuncForReasons()
+	{
+		return $this->reason_name;
+	}
         
-        public function afterFind() {
+	public function afterFind() 
+	{
 		$this->date_created = date("d-m-Y", strtotime($this->date_created) );
 		parent::afterFind();
 	}

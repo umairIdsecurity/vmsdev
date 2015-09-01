@@ -63,11 +63,16 @@ class ContactPerson extends CActiveRecord
 		);
 	}
 
-	public function behaviors() {
-        return array(
-            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
-        );
-    }
+	/**
+	* Change date Formate 
+	*/
+	protected function afterFind ()
+	{
+		// convert to display format
+		$this->date_created = date("d-m-Y", strtotime($this->date_created));
+		parent::afterFind();
+	}
+
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

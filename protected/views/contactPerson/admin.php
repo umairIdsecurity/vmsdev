@@ -42,7 +42,6 @@ $('.search-form form').submit(function(){
 		'id',
 		'contact_person_name',
 		'contact_person_email',
-		//'contact_person_message',
 		'date_created',
 		array(
                     'header' => 'Actions',

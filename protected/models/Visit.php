@@ -1183,8 +1183,8 @@ class Visit extends CActiveRecord {
                 if( $isExpired < 0 ) 
                      $totalCount = $dateOut->diff($dateIn)->days;
                 else
-                     $totalCount = $dateIn->diff($dateNow)->days;
-                
+                     $totalCount = $dateIn->diff($dateNow)->days + 1;
+            
                     // Auto Closed visits
                   if( !is_null($this->visit_closed_date) && $this->visit_status == VisitStatus::AUTOCLOSED ) {
                                $dateClosed = new DateTime( $this->visit_closed_date );
@@ -1297,6 +1297,9 @@ class Visit extends CActiveRecord {
                // For the current Year Only
                if( $dateNow->format("Y") == $dateIn->format("Y") )
                   $visitCount += $dateIn->diff($dateOut)->days + 1;
+               
+               if($v["card_type"] == CardType::VIC_CARD_24HOURS)
+                    $visitCount =  $visitCount - 1;
            }
            return $visitCount;
            

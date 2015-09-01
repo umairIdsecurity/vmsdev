@@ -204,13 +204,18 @@ class Registration extends CActiveRecord {
             array('contact_street_name', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Street name'),
             array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Postcode'),
 
-
+            //array('company', 'required' ,'on' => 'preregistrationCompanyAdmin', 'message'=>'Please select a Comapny'),
+            
 
             //array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),
             array('password', 'required' , 'on' => 'asic-pass'),
             array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match"),
 
             //array('is_asic_verification', 'required' ,'message'=>'Please check to request for ASIC Sponsor verification.' ,'on' => 'asic'),
+
+            array('asic_no', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please enter Asic no.'),
+            array('asic_expiry', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please select Asic Expiry'),
+            array('company', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please select a company'),
 
 
 			array('is_deleted, identification_country_issued, contact_country, verifiable_signature', 'numerical', 'integerOnly'=>true),

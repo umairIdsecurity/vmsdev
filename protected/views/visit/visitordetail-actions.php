@@ -133,8 +133,22 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 </td>
                             </tr>
                         </table>
-
-
+                        <?php 
+                                // 'Deposit paid' for EVIC visit for saved and preregistered
+                                if( in_array( $model->visit_status, array(VisitStatus::SAVED, VisitStatus::PREREGISTERED) ) && $model->card_type == CardType::VIC_CARD_EXTENDED ) {
+                         ?>
+                        <div id="deposit_paid_evic" style="margin-bottom:15px">        
+                            
+                                    <strong> Deposit Paid? 
+                                        <input type="radio" id="deposit_paid_radio_yes" name="deposit_paid_radio" value="1" style="margin-left:15px"> Yes  
+                                    <input type="radio" id="deposit_paid_radio_no" name="deposit_paid_radio" value="0" style="margin-left:15px"> No
+                                    </strong>
+                           
+                                </div>   
+                          <?php
+                                }
+                          ?>
+                        
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : 
                               $disabled = ''; $dateIn = new DateTime($model->date_check_in); $dateNow = new DateTime("NOW");
@@ -167,7 +181,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                                 </div>
                             <?php endif; ?>
-                        <?php endif; ?>
+                        <?php endif;?>
+                              
                         <?php $this->endWidget();
                         ?>
 
@@ -399,7 +414,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var existsVisit = checkForAlreadyActiveVisit();
             if( !existsVisit ) {
                 return false;
-            }   
+            } 
+            
+           // Check Deposit Paid for EVIC only
+            if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
+                   alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
+                   return false;
+            }
+            
             e.preventDefault();
             $this = $(this);
             var pre_issued_card_no = $("#pre_issued_card_no").val();

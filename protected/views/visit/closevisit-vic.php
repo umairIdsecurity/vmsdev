@@ -82,7 +82,7 @@
     </tr>
     <tr>
         <td>
-            <?php echo $closeVisitForm->dropDownList($model, 'card_option', array('Returned' => 'Returned', 'Not Returned'=>'Not Returned',  'Lost/Stolen' => 'Lost/Stolen'))?>
+            <?php echo $closeVisitForm->dropDownList($model, 'card_option', array('Returned' => 'Returned and Refunded', 'Not Returned'=>'Not Returned',  'Lost/Stolen' => 'Lost/Stolen'))?>
         </td>
     </tr>
         <tr class="lost_stolen_fields">

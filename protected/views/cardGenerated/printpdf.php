@@ -270,7 +270,7 @@ $fontScale = 2;
 
       .card-text2 {
         /*width:256px;*/
-        width:240px;
+        width:230px;
         height:<?php echo $labelHeightPx; ?>px;
         border:1px solid #000;
         border-radius:20px;

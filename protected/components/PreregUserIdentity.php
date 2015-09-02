@@ -18,12 +18,7 @@ class PreregUserIdentity extends CUserIdentity {
     public function authenticate() 
     {
 
-        $user = User::model()->find('LOWER(email)=?', array(strtolower($this->username)));
-
-        if($user === null){
-            $user = Registration::model()->find('LOWER(email)=?', array(strtolower($this->username)));
-        }
-        
+        $user = Registration::model()->find('LOWER(email)=?', array(strtolower($this->username)));
 
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;

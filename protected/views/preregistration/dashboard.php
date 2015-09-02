@@ -21,8 +21,8 @@ if(Yii::app()->user->hasState('account')){
 
 <ul class="user-function">
 
-    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">My profile</a></li>
-    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/preregisterVIC'); ?>">Preregister for a VIC</a></li>
+    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">My Profile</a></li>
+    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">Preregister for a VIC</a></li>
     <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>">Notifications</a></li>
     
     <?php if($account==='CORPORATE'): ?>

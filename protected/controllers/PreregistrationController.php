@@ -378,23 +378,28 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 
-		$model = new User();
+		$model = new Registration();
 
-		$model->scenario = 'preregistration';
+		$model->scenario = "preregistrationAsic";
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 
-		if (isset($_POST['User'])) 
-		{
-			$model->attributes = $_POST['User'];
+		if (isset($_POST['Registration'])) 
+		{	
+			$model->attributes = $_POST['Registration'];
 
 			$model->email = $session['username'];
-			$model->password = User::model()->hashPassword($session['password']);
-			$model->company =$_POST['User']['company'];
-			$model->role = 9; //role is 9: Staff member/Intranet
+			$model->password = $session['password'];
+
+			$model->asic_no = $_POST['Registration']['asic_no'];
+			$model->asic_expiry = $_POST['Registration']['asic_expiry'];
+
+			$model->company = $_POST['Registration']['company'];
+			$model->profile_type = "ASIC";
+			$model->role = 10; //role is 10: Visitor/Kiosik
 
 			if ($model->save(false)) 
 			{
@@ -434,29 +439,71 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 
-		$model = new User();
+		$model = new Registration();
 
-		$model->scenario = 'add_company_contact';
+		$model->scenario = 'preregistrationCompanyAdmin';
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-companyAdmin-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 
-		if (isset($_POST['User'])) 
+		if (isset($_POST['Registration'])) 
 		{
-			$model->attributes = $_POST['User'];
+			$model->attributes = $_POST['Registration'];
 			
-			$model->first_name = $_POST['User']['first_name'];
-			$model->last_name = $_POST['User']['last_name'];
-			$model->contact_number = $_POST['User']['contact_number'];
+			$model->first_name = $_POST['Registration']['first_name'];
+			$model->last_name = $_POST['Registration']['last_name'];
+			$model->contact_number = $_POST['Registration']['contact_number'];
 			$model->email = $session['username'];
-			$model->password = User::model()->hashPassword($session['password']);
-			$model->company = ( ($_POST['User']['company'] != null) && ( !empty($_POST['User']['company']) ) ) ? $_POST['User']['company'] : null ;
-			$model->role = 1; //role is 1: Administrator
+			$model->password = $session['password'];
+			$model->company = ( ($_POST['Registration']['company'] != null) && ( !empty($_POST['Registration']['company']) ) ) ? $_POST['Registration']['company'] : null ;
+			$model->profile_type = "CORPORATE";
+			$model->role = 10; //role is 10: Visitor/Kiosik
 
 			if ($model->save(false)) 
 			{
+				//**********************************************
+				$company = new Company();
+				$company->name = $_POST['Registration']['first_name'];
+                $company->contact = $_POST['Registration']['first_name'] . ' ' . $_POST['Registration']['last_name'];
+                $company->email_address = $_POST['Registration']['email'];
+                $company->mobile_number = $_POST['Registration']['contact_number'];
+                $company->office_number = $_POST['Registration']['contact_number'];                
+                /*$company->created_by_user = $session['created_by'];
+                $company->tenant = $session['tenant'];*/
+               	$company->created_by_visitor  = $model->id;
+                $company->company_type = 3;
+                if ($company->tenant_agent == '') {$company->tenant_agent = NULL;}
+                if ($company->code == '') {$company->code = strtoupper(substr($company->name, 0, 3));}
+				//************6****************************************************************************************************************
+                if ($company->save(false)) 
+                {
+                	//integrity constraint violation fix.
+                    //From preregisteration set attribute from session as it was set in session 
+                    //for USER because Yii:app()->user->id in preregistration has Visitor Id and not USER id.
+                    //If wrong handled then it will throws Integrity Constraint Violation as foreign key 
+                    //of created_by in user refers to User table and not visitor table 
+                	$command = Yii::app()->db->createCommand();
+					$result=$command->insert('user',array(
+                    							//'id'=>it is autoincrement,
+                                                'company'=>$company->id,
+                                                'first_name'=>$_POST['Registration']['first_name'],
+                                                'last_name'=>$_POST['Registration']['first_name'],
+                                                'email'=>$_POST['Registration']['email'],
+                                                'contact_number'=>$_POST['Registration']['contact_number'],
+                                                'timezone_id'=>1,
+                                                'photo'=>NULL,
+                                                'tenant'=> empty($session['tenant']) ? NULL : $session['tenant'],
+                                                'user_type'=>1,
+                                                'user_status'=>1,
+                                                'role'=>9,
+                                                //'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
+                                            ));
+                }
+				//****************************************************************************************************************************
+				//**********************************************
+
 				//**********************************************
 				$loginModel = new PreregLogin();
 
@@ -894,6 +941,8 @@ class PreregistrationController extends Controller
 
     	$new_passwordErr='';$repeat_passwordErr='';$old_passwordErr = '';
 
+
+
         if (isset($_POST['Visitor'],$_POST['Company'])) 
         {	
         	
@@ -931,8 +980,8 @@ class PreregistrationController extends Controller
 		            }
 
 				    $companyModel->created_by_visitor = $model->id;
-				    $companyModel->mobile_number = $_POST['Company']['mobile_number'];
-				    $companyModel->tenant = Yii::app()->user->tenant;
+				    //$companyModel->mobile_number = $_POST['Company']['mobile_number'];
+				    //$companyModel->tenant = Yii::app()->user->tenant;
 
 				    /*
 					* This removes Integrity Constraint Issue
@@ -1040,7 +1089,7 @@ class PreregistrationController extends Controller
 			            }
 
 			            $companyModel->created_by_visitor = $model->id;
-					    $companyModel->mobile_number = $_POST['Company']['mobile_number'];
+					    //$companyModel->mobile_number = $_POST['Company']['mobile_number'];
 					    $companyModel->tenant = Yii::app()->user->tenant;
 
 					    /*
@@ -1227,57 +1276,33 @@ class PreregistrationController extends Controller
 
 		if(!empty($email))
 		{
-			$user = User::model()->findByAttributes(array("email"=>$email));
-
-			if($user === null)
+			if(Visitor::model()->findByAttributes(array("email"=>$email)))
 			{
-				if(Visitor::model()->findByAttributes(array("email"=>$email)))
-				{
-				  	$aArray[] = array(
-		                'isTaken' => 1,
-		            );
-				} 
-				else
-				{
-					$aArray[] = array(
-		                'isTaken' => 0,
-		            );
-				}
-
-			}
+				$aArray[] = array(
+		        	'isTaken' => 1,
+		        );
+			} 
 			else
 			{
-				if(User::model()->findByAttributes(array("email"=>$email)))
-				{
-				  	$aArray[] = array(
-		                'isTaken' => 1,
-		            );
-				} 
-				else
-				{
-					$aArray[] = array(
-		                'isTaken' => 0,
-		            );
-				}
+				$aArray[] = array(
+		        	'isTaken' => 0,
+		        );
 			}
 
-			
-
-	        $resultMessage['data'] = $aArray;
+			$resultMessage['data'] = $aArray;
 	        echo CJavaScript::jsonEncode($resultMessage);
 	        Yii::app()->end();
 		}
 		else
 		{
 			$aArray[] = array(
-	                'isTaken' => 0,
-	            );
+	        	'isTaken' => 0,
+	        );
 
 	        $resultMessage['data'] = $aArray;
 	        echo CJavaScript::jsonEncode($resultMessage);
 	        Yii::app()->end();
 		}
-		
     }
 
 

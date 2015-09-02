@@ -455,7 +455,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ));
                 ?>
                 <ul <?php
-                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister' || $this->action->id == 'totalVicsByWorkstation' || $this->action->id == 'profilesAvmsVisitors' || $this->action->id == 'visitorsVicByType' || $this->action->id == 'visitorsVicByCardType' || $this->action->id == 'conversionVicToAsic' || $this->action->id == 'avms' || $this->action->id == "notReturnedVic") {
+                if ( in_array($this->action->id, array('vicTotalVisitCount', 'vicRegister', 'totalVicsByWorkstation', 'profilesAvmsVisitors', 'visitorsVicByType', 'visitorsVicByCardType', 'conversionVicToAsic', 'avms', "notReturnedVic", 'evicDepositsRecord', 'evicDepositsReport') )) {
                     echo "style='display:block ;'";
                 }
                 ?>>
@@ -471,6 +471,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <li><a href='<?php echo Yii::app()->createUrl('reports/conversionVicToAsic'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'conversionVicToAsic');?>>Conversion of VIC to ASIC</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('auditTrail/avms'); ?>'><span <?php CHelper::is_selected_submenu('auditTrail', 'avms');?>>Audit Trail</span></a></li>
                      <li><a href='<?php echo Yii::app()->createUrl('reports/notReturnedVic'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'notReturnedVic');?>>Lost VICs Report</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsRecord'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsRecord');?>>EVIC Deposits Record </span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsReport'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsReport');?>>EVIC Deposits Report </span></a></li>
+                
                 </ul>
             </li>
             <!-- menu for AVMS Reports -->

@@ -109,8 +109,11 @@ class UserWorkstations extends CActiveRecord {
 
         $workstations = Workstation::model()->findAll($criteria);
         if ($workstations) {
-            foreach ($workstations as $value) {
-                echo CHtml::encode($value['name']) . "<br>";
+            foreach ($workstations as $key=>$value) {
+                if($key > 0 && $key != count($workstations) - 1)
+                    echo CHtml::encode($value['name']) . "<br>";
+                else
+                    echo CHtml::encode($value['name']);
             }
         } else {
             return $result = '-';

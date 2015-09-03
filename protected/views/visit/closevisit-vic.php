@@ -82,7 +82,11 @@
     </tr>
     <tr>
         <td>
-            <?php echo $closeVisitForm->dropDownList($model, 'card_option', array('Returned' => 'Returned and Refunded', 'Not Returned'=>'Not Returned',  'Lost/Stolen' => 'Lost/Stolen'))?>
+            <?php 
+            $cardOptions = array('Returned' => 'Returned', 'Not Returned'=>'Not Returned',  'Lost/Stolen' => 'Lost/Stolen');
+            if( $model->card_type == CardType::VIC_CARD_EXTENDED )
+                $cardOptions = array('Returned' => 'Returned and Refunded', 'Not Returned'=>'Not Returned',  'Lost/Stolen' => 'Lost/Stolen');
+                echo $closeVisitForm->dropDownList($model, 'card_option',$cardOptions)?>
         </td>
     </tr>
         <tr class="lost_stolen_fields">
@@ -158,7 +162,7 @@
 </table>
 
 <script type="text/javascript">
-    if ($('#Visit_card_option').val() == 'Returned') {
+    if ( $('#Visit_card_option').val() == 'Returned' || $('#Visit_card_option').val() == 'Not Returned' || $('#Visit_card_option').val() == 'Returned and Refunded' ) {
         $('.lost_stolen_fields').hide();
     } else {
         $('.lost_stolen_fields').show();

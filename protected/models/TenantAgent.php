@@ -41,12 +41,12 @@ class TenantAgent extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, user_id, tenant_id, for_module', 'required'),
-			array('id, user_id, tenant_id, for_module, is_deleted, created_by', 'length', 'max'=>20),
+			array('id, tenant_id, for_module', 'required'),
+			array('id, tenant_id, for_module, is_deleted, created_by', 'length', 'max'=>20),
 			array('date_created', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('tenant_name, tenant_agent_name, agent_contact, email_address, id, user_id, tenant_id, for_module, is_deleted, created_by, date_created', 'safe', 'on'=>'search'),
+			array('tenant_name, tenant_agent_name, agent_contact, email_address, id, tenant_id, for_module, is_deleted, created_by, date_created', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,7 +59,6 @@ class TenantAgent extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'id0' => array(self::BELONGS_TO, 'Company', 'id'),
-			'user0' => array(self::BELONGS_TO, 'User', 'user_id'),
 			'tenant0' => array(self::BELONGS_TO, 'Tenant', 'tenant_id'),
 			'agent_contact' => array(self::HAS_MANY, 'TenantAgentContact', 'tenant_agent_id'),
 		);
@@ -72,17 +71,16 @@ class TenantAgent extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'user_id' => 'User',
 			'tenant_id' => 'Tenant',
 			'for_module' => 'For Module',
 			'is_deleted' => 'Is Deleted',
 			'created_by' => 'Created By',
 			'date_created' => 'Date Created',
-                        'tenant_name' => 'Tenant',
-                        'tenant_agent_name' => 'Tenant Agent',
-                        'agent_contact' => 'Agent Contact',
-                        'email_address' => 'Agent Contact Email',
-                        'for_module' => 'Module',
+			'tenant_name' => 'Tenant',
+			'tenant_agent_name' => 'Tenant Agent',
+			'agent_contact' => 'Agent Contact',
+			'email_address' => 'Agent Contact Email',
+			 'for_module' => 'Module',
 		);
 	}
 
@@ -104,7 +102,7 @@ class TenantAgent extends CActiveRecord
 
 		$criteria=new CDbCriteria;
                
-                $criteria->with = array("id0", "user0", "tenant0");
+                $criteria->with = array("id0", "tenant0");
                 $criteria->compare('t.id',$this->id, true);
 				$criteria->compare('t.created_by',$this->created_by,true);
                 $criteria->compare('t.is_deleted',0);              

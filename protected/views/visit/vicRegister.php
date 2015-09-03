@@ -120,8 +120,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name'   => 'contactperson',
-            'value'  => 'isset($data->company0->contact) ? $data->company0->contact : ""',
-            'filter' => CHtml::activeTextField($model, 'contactperson', array('placeholder' => 'Contact Person', 'class' => 'header-form')),
+            'value'  => 'getContactName($data->company0->id)',
+            'filter' => CHtml::activeTextField($model, 'contactperson', array('placeholder' => 'Contact Person', 'class' => 'header-form', 'disabled' => 'disabled')),
         ),
         array(
             'name'   => 'contactphone',
@@ -130,8 +130,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name'   => 'contactemail',
-            'value'  => 'isset($data->company0->email_address) ? $data->company0->email_address : ""',
-            'filter' => CHtml::activeTextField($model, 'contactemail', array('placeholder' => 'Contact Email', 'class' => 'header-form')),
+            'value'  => 'getUserEmail($data->company0->id)',
+            'filter' => CHtml::activeTextField($model, 'contactemail', array('placeholder' => 'Contact Email', 'class' => 'header-form', 'disabled' => 'disabled')),
         ),
         array(
             'name'   => 'finish_date',
@@ -191,6 +191,33 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
 	),
 ));
+
+function getUserEmail($id)
+{
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->email;
+    else
+        return "";
+}
+
+function getUserContact($id)
+{
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->contact_number;
+    else
+        return "";
+}
+
+function getContactName($id)
+{
+    $users = User::model()->findAll('company=:company', array(':company'=>$id));
+    if ($users)
+        return $users[0]->getFullName();
+    else
+        return "";
+}
 
 ?>
 

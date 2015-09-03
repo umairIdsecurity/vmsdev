@@ -29,7 +29,7 @@ class ReportsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('notReturnedVic', 'visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType','conversionVicToAsic'),
+				'actions'=>array('evicDepositsReport', 'evicDepositsRecord', 'notReturnedVic', 'visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType','conversionVicToAsic'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
 			array('deny',  // deny all users
@@ -632,6 +632,69 @@ class ReportsController extends Controller
             }
         
         $this->render("notReturnedVic", array("model"=>$model, "criteria"=>$criteria));
+    }
+    
+    /**
+     *  CAVMS- 803: 'EVIC Deposits Record'
+     */
+    public function actionEvicDepositsRecord() {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("visit_status IN (".VisitStatus::ACTIVE.", ".VisitStatus::CLOSED.", ".VisitStatus::EXPIRED.")");
+        $criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED);
+        $model = new Visit("search");
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+                $model->attributes = $_GET['Visit'];
+            }
+        $this->render("depositsRecord", array("criteria"=>$criteria, "model"=>$model) );    
+        
+    }
+    /**
+     *  CAVMS- 802: 'EVIC Deposits Report'
+     *  1. Deposit Paid [EVIC’s activated with Deposit Paid]
+        2. Expired [EVIC’s Expired (Inactive)]
+        3. Not Returned [EVIC’s Not Returned (Not refunded)]
+        4. Closed and Refunded [EVIC’s Closed and Deposit Refunded]
+     */
+    public function actionEvicDepositsReport() {
+
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("visit_status IN (".VisitStatus::ACTIVE.", ".VisitStatus::CLOSED.", ".VisitStatus::EXPIRED.")");
+        $criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED." AND tenant = ".Yii::app()->user->tenant );
+        $dateFrom = Yii::app()->request->getParam("date_from_filter", date("Y-m-d", strtotime("-1 month")));
+        $dateTo = Yii::app()->request->getParam("date_to_filter", date("Y-m-d"));
+        $criteria->addCondition("date_check_in >= '".date("Y-m-d", strtotime($dateFrom))."' AND date_check_in <= '".date("Y-m-d", strtotime($dateTo))."'");
+        
+        $visits = Visit::model()->findAll($criteria);
+        $deposit_paid = 0; $expired = 0; $not_returned = 0; $closed_returned = 0;
+        if( $visits )
+         foreach($visits as $v ) {
+            // all EVIC are must Deposit Paid therefore 
+            $deposit_paid++;
+            
+            switch($v["visit_status"]) {
+                case VisitStatus::EXPIRED:
+                    $expired++;
+                    break;
+                case VisitStatus::CLOSED:
+                    if($v->card_option != "Returned")
+                        $not_returned++;
+                    else
+                        $closed_returned++;
+                    break;
+                default :
+                    break;
+            }
+            
+        }
+        $this->render("evicDepositsReport", array(
+            "deposit_paid" => $deposit_paid,
+            "expired" => $expired,
+            "not_returned" => $not_returned,
+            "closed_returned" => $closed_returned,
+            "dateFrom" => $dateFrom, "dateTo" => $dateTo
+                )
+        );
     }
 
 }

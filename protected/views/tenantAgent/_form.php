@@ -56,6 +56,7 @@ $currentLoggedUserId = $session['id'];
 
     <?php echo $form->errorSummary($model); ?>
     <table>
+
         <tr>
             <td style="vertical-align: top; float:left; width:300px">
 
@@ -67,9 +68,9 @@ $currentLoggedUserId = $session['id'];
 
                             <input type="hidden" id="Host_photo" name="TenantForm[photo]" value="<?php echo $model->photo; ?>">
                             <div class="photoDiv" style='display:none;'>
-                                <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
+                                <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/company.png" style='display:none;'/>
                             </div>
-                            
+
                             <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
 
                             <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
@@ -120,6 +121,7 @@ $currentLoggedUserId = $session['id'];
                         </tbody>
                     </table>
                 </div>
+
                 <div class="password-border" style="margin-top:20px;">
                     <table >
                         <tbody>
@@ -156,7 +158,8 @@ $currentLoggedUserId = $session['id'];
                         </tbody>
                     </table>
                 </div>
-                
+
+
                 <div class="password-border t-top20 paddingBottom10px">
                     
                     <strong>Module Access </strong> <br> <br>
@@ -164,13 +167,15 @@ $currentLoggedUserId = $session['id'];
                     <input type="checkbox" name="module_access_avms" value="1" checked> AVMS <br>
                      
                     <input type="checkbox" name="module_access_cvms" value="2">  CVMS <br>
-                    
-                    
-                </div> 
-                    
+
+                </div>
+
+
         </td>
 
             <td style="vertical-align: top; float:left; width:300px">
+
+
 
                 <table>
                     <tr>
@@ -249,9 +254,9 @@ $currentLoggedUserId = $session['id'];
                             <?php echo $form->textfield($model, 'notes', array('placeholder'=>'Notes','style'=>'width:205px;')); ?>
                             <?php echo "<br>" . $form->error($model, 'notes'); ?>
                         </td>
-
-                    </tr>
+                  </tr>
                 </table>
+
                 <div class="password-border">
                     <table>
                         <tr>
@@ -333,6 +338,8 @@ $currentLoggedUserId = $session['id'];
 
                     </table>
                 </div> <!-- password-border -->
+
+
 
             </td>
              

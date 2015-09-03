@@ -551,7 +551,7 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
 
-            }
+            } 
 
             // save visit model
             if ($model->save()) {
@@ -1008,7 +1008,7 @@ class VisitController extends Controller {
 
         // update data from $_POST
         $model->attributes     = Yii::app()->request->getPost('Visit');
-
+        $model->card_option = "Returned";
         // set status to pre-registered
         if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
             $model->visit_status = VisitStatus::PREREGISTERED;
@@ -1063,7 +1063,7 @@ class VisitController extends Controller {
         if(isset($_POST['selectedAsicEscort'])){
             $model->asic_escort = Yii::app()->request->getPost('selectedAsicEscort');
         }
-
+        
         if ($visitService->save($model, $session['id'])) {
             echo $model->id;
         }

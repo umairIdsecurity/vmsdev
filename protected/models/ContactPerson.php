@@ -60,6 +60,7 @@ class ContactPerson extends CActiveRecord
 			'contact_person_email' => 'Contact Person Email',
 			'contact_person_message' => 'Contact Person Message',
 			'date_created' => 'Date Created',
+			'Formatdate' => 'Date Created',
 		);
 	}
 
@@ -71,6 +72,13 @@ class ContactPerson extends CActiveRecord
 		// convert to display format
 		$this->date_created = date("d-m-Y", strtotime($this->date_created));
 		parent::afterFind();
+	}
+
+	public function behaviors() 
+	{
+		return array(
+			'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+		);
 	}
 
 
@@ -114,5 +122,10 @@ class ContactPerson extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public function getFormatdate()
+	{
+		return date("d-m-Y", strtotime($this->date_created) );
 	}
 }

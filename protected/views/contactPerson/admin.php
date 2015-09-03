@@ -42,7 +42,10 @@ $('.search-form form').submit(function(){
 		'id',
 		'contact_person_name',
 		'contact_person_email',
-		'date_created',
+		array(
+            'name'=>'Formatdate',
+            'filter'=>false,
+        ),
 		array(
                     'header' => 'Actions',
                     'class' => 'CButtonColumn',

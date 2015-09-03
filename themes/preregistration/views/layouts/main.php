@@ -37,7 +37,7 @@ $session = new CHttpSession;
                     </a>
                 </div>
                 <ul class="icons">
-                    <?php if(is_null(Yii::app()->user->id) && empty(Yii::app()->user->id)) {?>
+                    <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
                             <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
                             <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
                     <?php } ?> 
@@ -54,16 +54,13 @@ $session = new CHttpSession;
                 </ul>
             </div>
         </div>
-        <?php
-        if(Yii::app()->user->isGuest){
-        ?>
+        
         <div class="header-bottom">
             <div class="container"></div>
         </div>
-        <?php
-        }
-        ?>
-
+        
+       
+        <br>
 
         <div id="container">
             <div class="container">

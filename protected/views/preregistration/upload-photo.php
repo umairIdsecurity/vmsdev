@@ -20,9 +20,8 @@ else{
 
 ?>
 <div class="page-content">
-    <h1 class="text-primary title">PHOTO</h1>
-    <div class="bg-gray-lighter form-info">Please upload a photo or take a head and shoulders picture with no glasses or hat, on a white background.</div>
-
+    <span>Please upload a photo head and shoulders picture with no glasses or hat, on a white background.</span>
+    <br><br>
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id' => 'upload-form',
         'enableAjaxValidation'   => false,
@@ -40,7 +39,7 @@ else{
 
 
 
-    <div class="text-center image-user">
+    <div class="image-user">
         <img src="<?=$preImg ?>" alt="image user" id="preview" width="220" height="253">
     </div>
 
@@ -49,12 +48,12 @@ else{
             <?php echo $form->fileField($model,'image'); ?>
 
         </div>
-        <p class="title text-center"><?php echo $form->error($model,'image'); ?></p>
+        <p class="title"><?php echo $form->error($model,'image'); ?></p>
     </div>
 
 
-    <h3 class="title text-center">UPLOAD/ TAKE PHOTO </h3>
-    <p class="title text-center text-danger">'Allowed Max size: 2.00 MB'</p>
+    <h3 class="title">UPLOAD/ TAKE PHOTO </h3>
+    <p class="title text-danger">'Allowed Max size: 2.00 MB'</p>
 
 
 

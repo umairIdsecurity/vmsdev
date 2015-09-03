@@ -1,5 +1,18 @@
+
 <div class="page-content">
-    <h1 class="text-primary title">VISIT HISTORY</h1>
+    
+    <div id="menu">
+        <div class="row items">
+            <div class="col-xs-4 text-center"><a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>"><span class="glyphicon glyphicon-home"></span></a></div>
+            <div class="col-xs-4 text-center"><a href="<?php echo Yii::app()->createUrl('preregistration/visitHistory'); ?>">Visit History</a></div>
+        </div>
+    </div>
+
+    <br><br>
+    
+    <div class="row">
+        <div class="col-lg-8">
+
     <table class="table table-striped" border="0">
         <thead>
             <tr class="active">
@@ -14,7 +27,7 @@
         	<?php foreach($query1 as $q){ ?>
         			<tr class="status-">
         				<td><?php echo date("j-n-Y",strtotime($q['date_in'])); ?></td>
-		                <td><?php echo $q['first_name']; ?></td>
+		                <td><?php echo $q['first_name']." ".$q['last_name']; ?></td>
 		                <td><?php echo $q['name']; ?></td>
 		                <td><?php echo date("j-n-Y",strtotime($q['date_out'])); ?></td>
 		                <td><?php echo $q['status'] == "Pre-registered" ? "Preregistered":$q['status']; ?></td>
@@ -62,6 +75,10 @@
             </tr>
         </tfoot>
     </table>
+
+        </div>
+    </div>
+
 </div>
 
 

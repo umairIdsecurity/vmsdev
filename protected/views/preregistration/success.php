@@ -1,25 +1,8 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 7/23/15
- * Time: 6:39 PM
- */
-?>
+
 
 <div class="page-content">
-    <h1 class="text-primary title">Confirmation</h1>
+    <h1 class="text-primary title">Create Login</h1>
 
-    <p>Please go to the gate to collect your VIC with your Identification for verification.</p>
+    <p>Click here to <a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a> for you next visit.</p>
 
 </div>
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        window.setTimeout(function () {
-            location.href = '<?=Yii::app()->getBaseUrl(true)?>/index.php/preregistration/dashboard';
-        }, 5000);
-    });
-
-</script>

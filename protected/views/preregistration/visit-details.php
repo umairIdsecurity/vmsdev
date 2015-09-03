@@ -13,8 +13,8 @@ if ($model->time_in != '') {
 </style>
 
 <div class="page-content">
-    <h1 class="text-primary title">LOG VISIT DETAILS</h1>
-    <div class="bg-gray-lighter form-info">Please select the time of your visit.</div>
+    
+    <span>Please select the time of your visit.</span>
 
 
     <?php $form=$this->beginWidget('CActiveForm', array(
@@ -39,25 +39,26 @@ if ($model->time_in != '') {
         <div class="col-sm-8">
 
             <div class="form-group">
-                <label class="col-sm-4 text-primary control-label middleLabels">DATE OF VISIT</label>
+                <label class="col-sm-4 text-primary control-label middleLabels">Date of Visit</label>
                 <div class="col-sm-7">
-                    <span class="glyphicon glyphicon-calendar"></span>
+                    <span class="glyphicon glyphicon-calendar" style="margin-top:-11px"></span>
                     <?php echo $form->textField($model,'date_in',
                         array(
                             'placeholder' => 'DD-MM-YYYY',
-                            'class'=>'form-control input-lg from_date',
+                            'class'=>'form-control input-sm from_date',
                             //'data-date-picker-start'=>"",
                             'data-date-format'=>'dd-mm-yyyy',
                             'value'=>''
                         )); ?>
                 </div>
             </div>
-            <div class="form-group">
+
+            <!-- <div class="form-group">
                 <label class="col-sm-4 text-primary control-label middleLabels">END DATE OF VISIT</label>
                 <div class="col-sm-7">
                     <span class="glyphicon glyphicon-calendar"></span>
                     <?php
-                    echo $form->textField($model,'date_out',
+                    /*echo $form->textField($model,'date_out',
                         array(
                             'placeholder' => 'DD-MM-YYYY',
                             'class'=>'form-control input-lg to_date',
@@ -65,10 +66,10 @@ if ($model->time_in != '') {
                             'data-date-format'=>'dd-mm-yyyy',
                             'value'=>'',
                             'disabled'=>'disabled'
-                        ));
+                        ));*/
                     ?>
                 </div>
-            </div>
+            </div> -->
 
 
             <!-- <div class="form-group">
@@ -90,12 +91,12 @@ if ($model->time_in != '') {
             </div> -->
 
             <div class="form-group">
-                <label class="col-sm-4 text-primary control-label middleLabels">TIME IN</label>
+                <label class="col-sm-4 text-primary control-label middleLabels">Time In</label>
                 <div class="row col-sm-7">
 
                     <div class="col-xs-6">
                     
-                        <select class="form-control input-lg" name='Visit[time_in_hours]' id='Visit_time_in_hours' >
+                        <select class="form-control input-sm" name='Visit[time_in_hours]' id='Visit_time_in_hours' >
                             <?php for ($i = 1; $i <= 24; $i++): ?>
                                 <option 
                                 <?php
@@ -109,7 +110,7 @@ if ($model->time_in != '') {
                     </div>
                     
                     <div class="col-xs-4">
-                        <select class='form-control input-lg' name='Visit[time_in_minutes]' id='Visit_time_in_minutes'>
+                        <select class='form-control input-sm' name='Visit[time_in_minutes]' id='Visit_time_in_minutes'>
                             <?php for ($i = 0; $i <= 59; $i++): ?>
                                 <option 
                                 <?php

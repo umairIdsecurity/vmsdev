@@ -54,6 +54,7 @@ class Reasons extends CActiveRecord
 			'id' => 'ID',
 			'reason_name' => 'Reason Name',
 			'date_created' => 'Date Created',
+			'Formatdate' => 'Date Created',
 		);
 	}
 
@@ -109,5 +110,17 @@ class Reasons extends CActiveRecord
 	{
 		$this->date_created = date("d-m-Y", strtotime($this->date_created) );
 		parent::afterFind();
+	}
+
+	public function getFormatdate()
+	{
+		return date("d-m-Y", strtotime($this->date_created) );
+	}
+
+	public function behaviors() 
+	{
+		return array(
+			'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+		);
 	}
 }

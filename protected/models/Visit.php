@@ -1362,8 +1362,8 @@ class Visit extends CActiveRecord {
              $checkout = new DateTime($checkoutdatetime);
              $checkout->setTimezone(new DateTimeZone($timezone));
              //compare Time hours and minutes
-             if(  $current_hour > $checkout->format("H") || $isExpired > 0
-                     || ( $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
+             if( $isExpired > 0 || ( $current_hour > $checkout->format("H") && $isExpired == 0 )  
+                     || ( $isExpired == 0 && $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
                      //Update
                         $insertArr = array();
                         $insertArr["visit_status"] = $status;
@@ -1415,8 +1415,8 @@ class Visit extends CActiveRecord {
              $checkout = new DateTime($checkoutdatetime);
              $checkout->setTimezone(new DateTimeZone($timezone));
             //compare Time hours and minutes
-             if(  $current_hour > $checkout->format("H")  || ( $isExpired > 0 ) 
-                     || ( $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
+             if(  ( $isExpired > 0 )  || ( $isExpired == 0  && $current_hour > $checkout->format("H") ) 
+                     || ( $isExpired == 0  && $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
                      //Update
                      if( !empty($status) ) {
                         $insertArr = array();

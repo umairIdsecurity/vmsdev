@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/14/15
- * Time: 9:34 PM
- */
-
+$session = new CHttpSession;
 ?>
 
 <div class="page-content">
@@ -231,7 +225,19 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $("#CreateLogin_username").blur(function(){
+
+        
+        <?php 
+            //if he has not created a login, but email is present serve this page as reset password 
+            //and donot ask for login as he has no password
+            $model = Visitor::model()->findByPk($session['visitor_id']);
+            if(!isset($model->password) || ($model->password =="") || ($model->password == null))
+        {?>
+            return;
+
+        <?php } ?>
+
+        $("#CreateLogin_username").blur(function(e){
             var email = $(this).val();
             $.ajax({
                 type: 'POST',
@@ -250,6 +256,7 @@
                             $("#login_fail").show();
                         }
                     });
+                    e.prevenDefault();
                 }
             });
         });

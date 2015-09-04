@@ -47,6 +47,9 @@ class User extends VmsActiveRecord {
     public $birthdayDay;
     public $password_requirement;
     public $helpdesk_group;
+    public $asic_expiry_day;
+    public $asic_expiry_month;
+    public $asic_expiry_year;
 
     public $is_required_induction;
     public $is_completed_induction;

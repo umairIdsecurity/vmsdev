@@ -37,18 +37,24 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
         <div class="row">
             <div class="col-sm-4">
+
+                <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
                 
-                <div class="row form-group">
-                    
-                    <div class="col-xs-8 col-md-8 col-sm-8">
-                    
+                    <div class="form-group">
+                            <?php  echo CHtml::textField('search_asic_box' , '',
+                                array(
+                                    'class'=>'form-control input-sm',
+                                    'placeholder'=>'First Name, Last Name or email'
+                                )
+                            );
+                            ?>
+                            <div id="search_asic_error" class="errorMessage">Please type something on search box</div>
+                            <?php
+                            echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
+                            ?>
                     </div>
 
-                    <div class="col-xs-4 col-md-4 col-sm-4">
-                    
-                    </div>
-                    
-                </div>        
+                <?php } ?>        
 
                 <div class="form-group">
                     <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm')); ?>
@@ -132,7 +138,19 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
             </div>
 
-            <div class="col-sm-3"></div>
+            <div class="col-sm-3">
+                <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
+                
+                <?php
+                    echo CHtml::tag('button', array(
+                        'id'=>'search_asic_btn',
+                        'type'=>'button',
+                        'class' => 'btn btn-primary btn-next btn-sm'
+                    ), 'Find VIC holder');
+                ?>
+
+                <?php } ?>
+            </div>
 
             <div class="col-sm-4">
                 <div class="row form-group">
@@ -181,18 +199,22 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         <?php echo $form->textField($model, 'contact_state', array('maxlength' => 50, 'placeholder' => 'Enter State', 'class'=>'form-control input-sm','disabled'=>'disabled')); ?>
                     </div> 
 
-                    <?php 
-                        if(isset($error_message) && !empty($error_message)){
-                            echo '<span style="color:red">'.$error_message.'</span>';
-                        }
-                    ?>
-                    <?php //echo $form->error($model, 'contact_state'); ?>
-
                     <div class="col-xs-6">
                         <?php echo $form->textField($model, 'contact_postcode', array('maxlength' => 50, 'placeholder' => 'Postcode', 'class'=>'form-control input-sm')); ?>
                         <?php echo $form->error($model, 'contact_postcode'); ?>
                     </div>
                     
+                </div>
+
+                <div class="row form-group form-group-custom">
+                    <div class="col-xs-6">
+                        <?php 
+                            if(isset($error_message) && !empty($error_message)){
+                                echo '<span style="color:red">'.$error_message.'</span>';
+                            }
+                        ?>
+                        <?php //echo $form->error($model, 'contact_state'); ?>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -347,6 +369,14 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
         //lose focus from email and check the already entered email
         $("#Registration_email").blur(function(){
+
+            //If it is already logged in, don't want to check and ask for to be logged in again
+            <?php if ( isset(Yii::app()->user->id) ) { ?>
+
+                return;
+
+            <?php } ?>
+
             var email = $(this).val();
             $.ajax({
                 type: 'POST',
@@ -373,6 +403,13 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
         //when submit button is clicked check for already registered email
         $("#btnSubmit").submit(function(e){
+
+            //If it is already logged in, don't want to check and ask for to be logged in again
+            <?php if ( isset(Yii::app()->user->id) ) {?>
+
+                return;
+
+            <?php } ?>
 
             var email = $("#Registration_email").val();
 

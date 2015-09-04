@@ -411,10 +411,17 @@ class Registration extends CActiveRecord {
 
         //$this->contact_country = self::AUSTRALIA_ID;
 
-        if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
+        /*if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
         } else {
             $this->password = User::model()->hashPassword($this->password);
+        }*/
+
+        if(($this->password != null) && ($this->password != "")) {
+            $this->password = User::model()->hashPassword($this->password);
+        }
+        else{
+            $this->password = NULL;   
         }
 
         if(!empty($this->date_of_birth)){
@@ -443,6 +450,26 @@ class Registration extends CActiveRecord {
 
         $Criteria = new CDbCriteria();
         $Criteria->condition = "is_deleted=0";
+
+        if(!empty($this->date_of_birth)){
+            $this->date_of_birth = date("d-m-Y",strtotime($this->date_of_birth));
+        }else{
+            $this->date_of_birth = NULL;
+        }
+
+        if(!empty($this->identification_document_expiry)){
+            $this->identification_document_expiry = date("d-m-Y",strtotime($this->identification_document_expiry));
+        }else{
+            $this->identification_document_expiry = NULL;
+        }
+
+        if(!empty($this->asic_expiry)){
+            $this->asic_expiry = date("d-m-Y",strtotime($this->asic_expiry));
+        }else{
+            $this->asic_expiry = NULL;
+        }
+
+
         return parent::beforeFind();
     }
 

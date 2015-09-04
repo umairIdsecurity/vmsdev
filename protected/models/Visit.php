@@ -218,11 +218,18 @@ class Visit extends CActiveRecord {
       * @param type $value
       */
      public function beforeFind() {
+
+        $cond = '';
+
+        if(isset(Yii::app()->user->tenant)){
+            $cond = " AND tenant = ".Yii::app()->user->tenant;
+        }
+
        //1. Set CLOSED all AUTOClosed VIC 24 hour and EVIC visits
        $this->updateAll(array("visit_status" => VisitStatus::CLOSED), 
                    " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
                  . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'"
-               . " AND tenant = ".Yii::app()->user->tenant );
+               . $cond );
                      
          return parent::beforeFind();
      }
@@ -1383,7 +1390,15 @@ class Visit extends CActiveRecord {
     public function afterFind() {
         
          $session = new CHttpSession;
-         $timezone = $session["timezone"]; 
+
+         /*this is the hack to prevent from stopping/breaking the script */
+         if(isset($session["timezone"]) && !empty($session["timezone"])){
+            $timezone = $session["timezone"]; 
+         }else{
+            $timezone = 'Australia/Perth';
+         }
+
+         
          
         // Set closed visit if time-checkout reached current time.   
          $dateIn  = new DateTime($this->date_check_in);

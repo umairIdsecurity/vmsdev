@@ -89,8 +89,11 @@
 
 </style>
 <div class="page-content">
-    <a href="<?php echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1></a>
+    <!-- <a href="<?php //echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1></a> -->
 
+    <span>Please provide details of the ASIC Sponsor who will be escorting the VIC holder</span>
+
+    <br> <br> 
 
     <?php
         foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -99,32 +102,28 @@
     ?>
 
     <!--  searching ASIC -->
-    <div class="form-create-login">
-        <div class="row form-group">
-
-            <div class="col-md-8">
-                <?php  echo CHtml::textField('search_asic_box' , '',
-                    array(
-                        'class'=>'form-control input-lg',
-                        'placeholder'=>'First Name, Last Name or email'
-                    )
-                );
-                ?>
-                <div id="search_asic_error" class="errorMessage">Please type something on search box</div>
-                <?php
-                echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
-                ?>
-            </div>
-            <div class="col-md-4">
-                <?php
-                echo CHtml::tag('button', array(
-                    'id'=>'search_asic_btn',
-                    'type'=>'button',
-                    'class' => 'btn btn-primary btn-next btn-lg'
-                ), 'Search ASIC');
-                ?>
-            </div>
-
+    <div class="row">
+        <div class="col-md-3">
+            <?php  echo CHtml::textField('search_asic_box' , '',
+                array(
+                    'class'=>'form-control input-sm',
+                    'placeholder'=>'First Name, Last Name or Email'
+                )
+            );
+            ?>
+            <div id="search_asic_error" class="errorMessage">Please type something on search box</div>
+            <?php
+            echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
+            ?>
+        </div>
+        <div class="col-md-4">
+            <?php
+            echo CHtml::tag('button', array(
+                'id'=>'search_asic_btn',
+                'type'=>'button',
+                'class' => 'btn btn-primary btn-sm'
+            ), 'Find ASIC Sponsor');
+            ?>
         </div>
 
         <div id="asic_holder"></div>
@@ -151,96 +150,101 @@
     ));
     ?>
 
-    <div class="form-create-login">
+    <div class="row">
 
-        <div class="form-group">
-            <?php echo $form->hiddenField($model, 'selected_asic_id' ,
-                array('value'=>'')
-            ); ?>
-        </div>
-
-        <!--  new asic -->
-        <div id="new_asic_area">
-            <div class="form-group">
-                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>
-                <?php echo $form->error($model, 'first_name'); ?>
-            </div>
+        <div class="col-lg-3">
 
             <div class="form-group">
-                <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-lg')); ?>
-                <?php echo $form->error($model, 'last_name'); ?>
+                <?php echo $form->hiddenField($model, 'selected_asic_id' ,
+                    array('value'=>'')
+                ); ?>
             </div>
 
-            <div class="form-group">
-                <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC no.', 'class'=>'form-control input-lg')); ?>
-                <?php echo $form->error($model, 'asic_no'); ?>
-            </div>
-
-            <div class="row form-group">
-                <div class="col-md-6">
-                    <?php
-                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                        'model'       => $model,
-                        'attribute'   => 'asic_expiry',
-                        'options'     => array(
-                            'minDate' => '0',
-                            'dateFormat' => 'dd-mm-yy',
-                        ),
-                        'htmlOptions' => array(
-                            'size'        => '0',
-                            'maxlength'   => '10',
-                            'placeholder' => 'Expiry',
-                            'class' => 'form-control input-lg'
-                        ),
-                    ));
-                    ?>
-                    <?php echo $form->error($model, 'asic_expiry'); ?>
+            <!--  new asic -->
+            <div id="new_asic_area">
+                <div class="form-group">
+                    <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->error($model, 'first_name'); ?>
                 </div>
-            </div>
 
+                <div class="form-group">
+                    <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->error($model, 'last_name'); ?>
+                </div>
+
+                <div class="form-group">
+                    <?php echo $form->textField($model, 'asic_no', array('maxlength' => 50, 'placeholder' => 'ASIC no.', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->error($model, 'asic_no'); ?>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'       => $model,
+                            'attribute'   => 'asic_expiry',
+                            'options'     => array(
+                                'minDate' => '0',
+                                'dateFormat' => 'dd-mm-yy',
+                            ),
+                            'htmlOptions' => array(
+                                'maxlength'   => '10',
+                                'placeholder' => 'Expiry',
+                                'class' => 'form-control input-sm'
+                            ),
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'asic_expiry'); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->error($model, 'contact_number'); ?>
+
+                </div>
+
+                <div class="form-group">
+                    <?php echo $form->textField($model, 'email', array('maxlength' => 50, 'placeholder' => 'Email', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->error($model, 'email'); ?>
+                </div>
+
+
+                <div class="form-group" id="addCompanyDiv">
+                    <?php
+                        $this->widget('application.extensions.select2.Select2', array(
+                                'model' => $model,
+                                'attribute' => 'company',
+                                'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'),
+                                'selectedItems' => array(), // Items to be selected as default
+                                'placeHolder' => 'Please select a company',        
+                        ));
+                    ?>
+                </div>
+                 <?php echo $form->error($model,'company'); ?>
+
+                <div class="form-group">
+                    <a class="btn btn-primary" style="float: left;" href="#addCompanyModal" role="button" data-toggle="modal">Add Company</a>
+                </div>
+
+            </div>
+            <!--  new asic -->
             <div class="form-group">
-                <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
-                <?php echo $form->error($model, 'contact_number'); ?>
-
+                <label class="checkbox">
+                    <?php echo $form->checkBox($model,'is_asic_verification'); ?>
+                    <span class="checkbox-style"></span>
+                    <p class="text-success">
+                        Request ASIC Sponsor Verification
+                    </p>
+                </label>
+                <?php echo $form->error($model,'is_asic_verification'); ?>
             </div>
 
-            <div class="form-group">
-                <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email', 'class'=>'form-control input-lg')); ?>
-                <?php echo $form->error($model, 'email'); ?>
-            </div>
-
-
-            <div class="form-group" id="addCompanyDiv">
-                <?php
-                    $this->widget('application.extensions.select2.Select2', array(
-                            'model' => $model,
-                            'attribute' => 'company',
-                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant(Yii::app()->user->tenant),'id', 'name'),
-                            'selectedItems' => array(), // Items to be selected as default
-                            'placeHolder' => 'Please select a company',        
-                    ));
-                ?>
-            </div>
-             <?php echo $form->error($model,'company'); ?>
-
-            <div class="form-group">
-                <a style="float: left;" href="#addCompanyModal" role="button" data-toggle="modal">Add Company</a>
-            </div>
-
-        </div>
-        <!--  new asic -->
-        <div class="form-group">
-            <label class="checkbox">
-                <?php echo $form->checkBox($model,'is_asic_verification'); ?>
-                <span class="checkbox-style"></span>
-                <p class="text-success">
-                    Request ASIC Sponsor Verification
-                </p>
-            </label>
-            <?php echo $form->error($model,'is_asic_verification'); ?>
         </div>
 
     </div>
+
+    <br><br>
 
     <div class="row next-prev-btns">
         <div class="col-md-1 col-sm-1 col-xs-1">
@@ -256,10 +260,12 @@
             ?>
 
         </div>
-
     </div>
 
+</div>
  <?php $this->endWidget(); ?>
+
+
 
     <!-- ************************************************ -->
 
@@ -366,9 +372,6 @@
 <!-- ************************************** -->
     <!-- ************************************************ -->
 
-
-   
-</div>
 
 
 <script type="text/javascript">

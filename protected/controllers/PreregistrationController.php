@@ -61,9 +61,12 @@ class PreregistrationController extends Controller
 
 		$model = new EntryPoint();
 
-		if(isset($session['workstation']) && $session['workstation']!=""){
+		/*if(isset($session['workstation']) && $session['workstation']!=""){
 			$model->entrypoint = $session['workstation'];
-		}
+		}*/
+
+		unset($session['workstation']);
+
 
 		if(isset($_POST['EntryPoint'])){
 
@@ -115,30 +118,44 @@ class PreregistrationController extends Controller
 			//$model->declaration4 = $session['declaration4'];
 		}
 
-
-
-		if(isset($_POST['Declaration'])){
+		if(isset($_POST['Declaration']))
+		{
 
 			$model->attributes=$_POST['Declaration'];
 			if($model->validate())
 			{
 				$session['declaration1'] = $model->declaration1;
 				$session['declaration2'] = $model->declaration2;
-				//$session['declaration3'] = $model->declaration3;
 
-				//$session['declaration4'] = $model->declaration4;
-				$this->redirect(array('preregistration/personalDetails'));
+            	/*if ( isset(Yii::app()->user->id) ) {
+            		$this->redirect(array('preregistration/visitReason'));
+            	}
+            	else
+            	{*/
+            		$this->redirect(array('preregistration/personalDetails'));
+            	/*}*/
+
+				
 			}
 		}
 		$this->render('declaration' , array('model'=>$model) );
 
 	}
 
-	public function actionPersonalDetails(){
+	public function actionPersonalDetails()
+	{
 
 		$session = new CHttpSession;
 
-		$model = new Registration();
+		$model = '';
+
+		//if he is logged in, update its data rather than create new visitor
+		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
+			$model = Registration::model()->findByPk(Yii::app()->user->id);
+		}else{
+			$model = new Registration();	
+		}
+		
 
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
@@ -149,54 +166,33 @@ class PreregistrationController extends Controller
 		$error_message = '';
 
 		if (isset($_POST['Registration'])) {
+
+			$model->attributes = $_POST['Registration'];
 			
-			$model->profile_type = $session['account_type'];
-			$model->email 		 = $session['username'];
-			$model->password 	 = $session['password'];
-			$model->password_repeat = $session['password'];
+			//$model->profile_type = $session['account_type'];
+			//$model->email 		 = $session['username'];
+			//$model->password 	 = $session['password'];
+			//$model->password_repeat = $session['password'];
 
 
 			$model->tenant = $session['tenant'];
 			$model->created_by = $session['created_by'];
 			$model->visitor_workstation = $session['workstation'];
 
-			$model->attributes = $_POST['Registration'];
-
+			$model->identification_country_issued = $_POST['Registration']['identification_country_issued'];
 			
-			
-			/*
-			* This removes Integrity Constraint Issue
-            */
-            if(!empty($_POST['Registration']['visitor_type']))
-            {
-				$model->visitor_type = $_POST['Registration']['visitor_type'];             	
-            }
-            else
-            {
-            	$model->visitor_type = NULL;             	
-            }
-
-
 			if (!empty($_POST['Registration']['contact_state']))
 			{
-				if ($model->save()) 
+				if ($model->save(false)) 
 				{
 					//**********************************************
-					$loginModel = new PreregLogin();
-
-					$loginModel->username = $model->email;
-					$loginModel->password = $session['password'];
-
-					if ($loginModel->validate() && $loginModel->login()) {
-						$session = new CHttpSession;
-						$session['visitor_id'] = $model->id;
-						$this->redirect(array('preregistration/visitReason'));
-					}
+					$session['visitor_id'] = $model->id;
+					$this->redirect(array('preregistration/visitReason'));
 					//***********************************************
 				}
 				else{
 					$msg = print_r($model->getErrors(),1);
-					throw new CHttpException(400,'Data not saved because: '.$msg );
+					throw new CHttpException(400,'Please refresh, data not saved because: '.$msg );
 				}
             } 
             else {
@@ -226,20 +222,19 @@ class PreregistrationController extends Controller
 		
 		$model->scenario = 'preregistration';
 
-		if (isset($_POST['Visit']) && isset($_POST['Company']) ) {
+		if (isset($_POST['Visit'])) 
+		{
+
+			$model->attributes    = $_POST['Visit'];
 
 			$reasonModel = new VisitReason();
-
 			$reasonModel->reason    = $_POST['Visit']['other_reason'];
 			if($reasonModel->validate())
 			{
 				$reasonModel->save();
 			}
 
-
-			$model->attributes    = $_POST['Visit'];
-
-			if( empty($model->visitor_type) OR empty($model->reason) ){
+			if( empty($model->visitor_type) || empty($model->reason) ){
 				$model->visitor_type = null;
 				$model->reason 		 = null;
 			}
@@ -249,7 +244,6 @@ class PreregistrationController extends Controller
 			}
 
 			$model->visitor  = $session['visitor_id'];
-			
 			
 			$model->card_type = 6; //VIC 24 hour Card
 			$model->created_by = $session['created_by'];
@@ -264,32 +258,13 @@ class PreregistrationController extends Controller
 				$session['visit_id'] = $model->id;
 			}
 
-			$companyModel->mobile_number    = $_POST['Company']['mobile_number'];
+			$registrationModel = Registration::model()->findByPk($session['visitor_id']);
+			$registrationModel->company = $_POST['Company']['name'];;
+			$registrationModel->visitor_type = $_POST['Visit']['visitor_type'];
 
-			$companyModel->company_type = 3; // company_type is 3 which means VISITOR in company_type table
-			$companyModel->created_by_user = $session['created_by'];
-			$companyModel->created_by_visitor  = $session['visitor_id'];
-			$companyModel->tenant = $session['tenant'];
+			if($registrationModel->save(true,array('company','visitor_type'))){
 
-			$companyModel->attributes    = $_POST['Company'];
-
-			if($companyModel->validate())
-			{
-				$companyModel->save();
-
-				$registrationModel =
-					Registration::model()->findByPk(
-						$session['visitor_id']
-					);
-
-				$registrationModel->company = $companyModel->id;
-				$registrationModel->visitor_type = $_POST['Visit']['visitor_type'];
-
-				if($registrationModel->save(true,array('company','visitor_type'))){
-
-					$this->redirect(array('preregistration/addAsic'));
-				}
-
+				$this->redirect(array('preregistration/addAsic'));
 			}
 
 		}
@@ -322,8 +297,17 @@ class PreregistrationController extends Controller
 			$session['account_type'] = $model->account_type; $session['username'] = $model->username; $session['password'] = $model->password;
 
 			if($model->account_type == "VIC")
-			{
-				$userModel = new Registration();
+			{	
+				$userModel = '';
+				if(isset($session['visitor_id']) && $session['visitor_id'] != "")
+				{
+					$userModel = Registration::model()->findByPk($session['visitor_id']);
+				}
+				else
+				{
+					$userModel = new Registration();
+				}
+
 
 				$userModel->email = $model->username;
 				$userModel->password = $model->password;
@@ -378,7 +362,15 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 
-		$model = new Registration();
+		$model = '';
+		if(isset($session['visitor_id']) && $session['visitor_id'] != "")
+		{
+			$model = Registration::model()->findByPk($session['visitor_id']);
+		}
+		else
+		{
+			$model = new Registration();
+		}
 
 		$model->scenario = "preregistrationAsic";
 
@@ -439,7 +431,15 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 
-		$model = new Registration();
+		$model = '';
+		if(isset($session['visitor_id']) && $session['visitor_id'] != "")
+		{
+			$model = Registration::model()->findByPk($session['visitor_id']);
+		}
+		else
+		{
+			$model = new Registration();
+		}
 
 		$model->scenario = 'preregistrationCompanyAdmin';
 
@@ -543,6 +543,7 @@ class PreregistrationController extends Controller
 
 		$session = new CHttpSession;
 
+
 		$model = new Registration();
 
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
@@ -593,7 +594,7 @@ class PreregistrationController extends Controller
 						$model->profile_type = 'ASIC';
 						$model->key_string = hash('ripemd160', uniqid());
 
-						$model->tenant = Yii::app()->user->tenant;
+						$model->tenant = isset(Yii::app()->user->tenant) ? Yii::app()->user->tenant : null ;
 						$model->visitor_workstation = $session['workstation'];
 						$model->created_by = $session['created_by'];
 
@@ -724,7 +725,7 @@ class PreregistrationController extends Controller
 
 		$session = new CHttpSession;
 		
-		//unset(Yii::app()->session['imgName']);
+		unset(Yii::app()->session['imgName']);
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
@@ -796,9 +797,8 @@ class PreregistrationController extends Controller
 			$this->redirect(array('preregistration/index'));
 		}
 
-		$model = Visit::model()->findByAttributes(
-			array('visitor'=>$session['visitor_id'])
-		);
+		$model = Visit::model()->findByPk($session['visit_id']);
+		//$model = Visit::model()->findByAttributes(array('visitor'=>$session['visitor_id']));
 
 		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
 
@@ -837,8 +837,29 @@ class PreregistrationController extends Controller
 		$this->render('visit-details' , array('model'=>$model) );
 	}
 
-	public function actionSuccess(){
-		$this->render('success');
+	public function actionSuccess()
+	{	
+
+		$session = new CHttpSession;
+
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
+
+		$model = Registration::model()->findByPk($session['visitor_id']);
+
+		//if he has not created a login, redirect to create login
+		if(!isset($model->password) || ($model->password =="") || ($model->password == null))
+		{
+			$this->render('success');
+		}
+
+		//if they are logged in, redirect to visit history page
+		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
+			$this->redirect(array('preregistration/visitHistory'));
+		}
+
+		
 	}
 
 
@@ -1192,21 +1213,21 @@ class PreregistrationController extends Controller
     	$condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".Yii::app()->user->id." AND v.tenant=".Yii::app()->user->tenant.")";
         
         $rawData = Yii::app()->db->createCommand()
-                        ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 
+                        ->select("t.date_in,t.date_out,v.first_name,v.last_name,c.name,vs.name as status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->join("visit_status vs","vs.id = t.visit_status")
-                        ->join("company c","c.id = v.company")
+                        ->leftJoin("company c","c.id = v.company")
                         ->where($condition)
                         ->queryAll();
         $item_count = count($rawData);
 
         $query1 = Yii::app()->db->createCommand()
-                        ->select("t.date_in,t.date_out,v.first_name,c.name,vs.name as status") 
+                        ->select("t.date_in,t.date_out,v.first_name,v.last_name,c.name,vs.name as status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->join("visit_status vs","vs.id = t.visit_status")
-                        ->join("company c","c.id = v.company")
+                        ->leftJoin("company c","c.id = v.company")
                         ->where($condition)
                         ->limit($per_page,$page-1) // the trick is here!
                         ->queryAll();   

@@ -172,16 +172,27 @@ $session = new CHttpSession;
 
                         <tr><td>&nbsp;</td></tr>
 
-                        <tr>
-                            <td id="">
-                                <div style="margin-bottom: 5px;">
-                                    <?php echo $form->textField($companyModel, 'name', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Company Name', 'style' => '')); ?>
-                                    <span class="required">*</span>
-                                    <?php echo $form->error($companyModel, 'name', array("style" => "margin-top:0px")); ?>
-                                </div>
-                            </td>
-                        </tr>
-
+                        <?php if(isset($companyModel)): ?>
+                            <tr>
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->textField($companyModel, 'name', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Company Name', 'style' => '')); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($companyModel, 'name', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <tr>
+                                <td id="">
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->dropDownList($model, 'company', CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'), array('prompt' => 'Select Company' , 'class'=>'form-control input-sm')); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($model,'company'); ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
 
                         <tr><td>&nbsp;</td></tr>
                         
@@ -413,17 +424,7 @@ $session = new CHttpSession;
                     }
                 });
             }
-           
-            
-            
-            
-
         });
-
-
-
-
-
     });
 
 </script>

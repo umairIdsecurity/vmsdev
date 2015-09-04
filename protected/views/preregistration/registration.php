@@ -230,12 +230,17 @@ $session = new CHttpSession;
         <?php 
             //if he has not created a login, but email is present serve this page as reset password 
             //and donot ask for login as he has no password
-            $model = Visitor::model()->findByPk($session['visitor_id']);
-            if(!isset($model->password) || ($model->password =="") || ($model->password == null))
+            if(isset($session['visitor_id']) && $session['visitor_id'] != ""){
+                $model = Visitor::model()->findByPk($session['visitor_id']);
+                if(!isset($model->password) || ($model->password =="") || ($model->password == null))
         {?>
-            return;
+                    $("#CreateLogin_username").val("<?php echo $model->email; ?>");
+                    return;
 
-        <?php } ?>
+        <?php
+               }
+            }
+        ?>
 
         $("#CreateLogin_username").blur(function(e){
             var email = $(this).val();
@@ -256,7 +261,7 @@ $session = new CHttpSession;
                             $("#login_fail").show();
                         }
                     });
-                    e.prevenDefault();
+                    //e.prevenDefault();
                 }
             });
         });

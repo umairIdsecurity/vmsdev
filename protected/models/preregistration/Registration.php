@@ -417,13 +417,10 @@ class Registration extends CActiveRecord {
             $this->password = User::model()->hashPassword($this->password);
         }*/
 
-        if(($this->password != null) && ($this->password != "")) {
+        /*if(($this->password != null) && ($this->password != "")) {
             $this->password = User::model()->hashPassword($this->password);
-        }
-        else{
-            $this->password = NULL;   
-        }
-
+        }*/
+        
         if(!empty($this->date_of_birth)){
             $this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));
         }else{

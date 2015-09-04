@@ -159,12 +159,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name'   => 'asic_no',
-            'value'  => '$data->visitor0->asic_no',
+            'value'  => 'isset($data->getAsicSponsor()->asic_no) ? $data->getAsicSponsor()->asic_no : ""',
             'filter' => CHtml::activeTextField($model, 'asic_no', array('placeholder' => 'ASIC ID Number', 'class' => 'header-form')),
         ),
         array(
             'name'   => 'asic_expiry',
-            'value'  => '$data->visitor0->asic_expiry ? date("d-m-Y", strtotime($data->visitor0->asic_expiry)): $data->visitor0->asic_expiry',
+            'value'  => 'isset($data->getAsicSponsor()->asic_expiry) ? date("d-m-Y", strtotime($data->getAsicSponsor()->asic_expiry)) : ""',
             'filter' => CHtml::activeTextField($model, 'asic_expiry', array('placeholder' => 'ASIC Expiry', 'class' => 'header-form')),
         ),
         array(

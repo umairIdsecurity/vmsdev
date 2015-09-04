@@ -66,6 +66,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	'dataProvider'    => $model->search_history(),
 	'enableSorting'   => false,
 	'hideHeader'      => true,
+	'pager'           => array('class' => 'CLinkPager', 'header' => ''),
 	'filter'          => $model,
 	'afterAjaxUpdate' => "
     function(id, data) {

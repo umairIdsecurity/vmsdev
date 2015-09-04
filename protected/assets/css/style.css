@@ -666,6 +666,7 @@ ul.yiiPager .hidden a {
 .grid-view .pager {
     text-align: left !important;
     margin-left:10px !important;
+    font-size: 0;
 }
 
 .pager .next > a, .pager .next > span {

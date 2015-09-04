@@ -740,16 +740,18 @@ $asicEscort = new AddAsicEscort();
             if ($('#asicEscortRbtn').is(':checked')) {
                 checkEscortEmailUnique();
             } else {
-                if (asicCheck()) {
-                    if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
-                        $('#identificationModal').modal('show');
-                    } else if ($('#VicHolderDecalarations').is(':checked')) {
-                        activeVisit();
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
+                $("#asicSponsorModal").modal('hide');
+                $('#AsicSponsorDecalarations').prop('checked', true);
+                // if (asicCheck()) {
+                //     if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                //         $('#identificationModal').modal('show');
+                //     } else if ($('#VicHolderDecalarations').is(':checked')) {
+                //         activeVisit();
+                //         return false;
+                //     }
+                // } else {
+                //     return false;
+                // }
             }
         });
 

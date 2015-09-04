@@ -508,14 +508,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     });
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
-                    $btnASIC.on('click', function(e) {
-                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
-                            $('#identificationModal').modal('show');
-                        } else {
-                            activeVisit();
-                            return false;
-                        }
-                    });
+                    // $btnASIC.on('click', function(e) {
+                    //     if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                    //         $('#identificationModal').modal('show');
+                    //     } else {
+                    //         activeVisit();
+                    //         return false;
+                    //     }
+                    // });
                 } else {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
@@ -558,10 +558,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             if ($('#identificationChkBoxYes').is(':checked')) {
                 $('#identificationModal').modal('hide');
                 $('input[name="identificationActiveVisit"]').prop('checked', true);
-                if ($('#VicHolderDecalarations').is(':checked') && $('#asicSponsorActiveVisitLink').is(':checked')) {
-                    activeVisit();
-                    return false;
-                }
+                // if ($('#VicHolderDecalarations').is(':checked') && $('#asicSponsorActiveVisitLink').is(':checked')) {
+                //     activeVisit();
+                //     return false;
+                // }
             } else {
                 updateIdentificationDetails();
             }

@@ -84,6 +84,13 @@ $session = new CHttpSession;
                     'type' => 'html',
                     'value' => 'User::model()->findByPk($data->created_by)->first_name." ".User::model()->findByPk($data->created_by)->last_name',
                 ),
+                 array(
+                    'header' => 'Date Closed',
+                    'name' => 'visit_closed_date',
+                    'type' => 'html',
+                     'value' => '!is_null($data->visit_closed_date)?date("d-m-Y", strtotime($data->visit_closed_date)):""',
+                ),
+                
                 array(
                     'header' => 'Actions',
                     'class' => 'CButtonColumn',

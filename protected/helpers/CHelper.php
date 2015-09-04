@@ -309,4 +309,14 @@ class CHelper
 			break;
 	}
     }
+    
+    /**
+     * Get Next date from the given date
+     */
+    public static function getNextDate($date) {
+                
+        $givenDate = new DateTime($date);
+        return $givenDate->modify("+1 day")->format("d-m-Y");
+                
+    }
 }

@@ -146,8 +146,11 @@ $asicEscort = new AddAsicEscort();
                         break;
                 }
             }*/
-            if($model->visit_status == VisitStatus::CLOSED)
-                $model->date_check_in = date("d-m-Y");
+            
+             // Checkin date for Closed and Auto Closed should be Next day from the checkOut date
+            if($model->visit_status == VisitStatus::CLOSED || $model->visit_status == VisitStatus::AUTOCLOSED) {
+                $model->date_check_in = CHelper::getNextDate($model->date_check_out);
+            }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_in',
@@ -330,6 +333,7 @@ $asicEscort = new AddAsicEscort();
                         var checkOutDate = new Date(checkInSelectedDate);
                         checkOutDate.setDate(checkOutDate.getDate() + 1);
                         $("#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkOutDate);
+                        $("#registerNewVisit").removeAttr("disabled"); /* Can be preregistered */
                         break;
                     default:
                         $("#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", checkInSelectedDate);

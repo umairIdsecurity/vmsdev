@@ -320,25 +320,25 @@ class TenantAgentController extends Controller
 
     public function actionDelete($id)
     {
-        $model = TenantAgent::model()->with("id0", "user0", "tenant0")->find("t.id = " . $id);
+        $model = TenantAgent::model()->with("id0", "tenant0")->find("t.id = " . $id);
         $module = $model->for_module;
         //1. Disable Tenant Agent Relation
         $model->is_deleted = 1;
         $model->save(false);
 
         //2. Tenant Agent
-        $company = Company::model()->findByPk($model->id);
-        $company->is_deleted = 1;
-        $company->save(false);
+        //$company = Company::model()->findByPk($model->id);
+        //$company->is_deleted = 1;
+        //$company->save(false);
 
         //3. Disable Agent Admin
-        $user = User::model()->findByPk($model->user_id);
-        $user->is_deleted = 1;
-        $user->save(false);
+        //$user = User::model()->findByPk($model->user_id);
+        //$user->is_deleted = 1;
+        //$user->save(false);
 
         //4. Disable Workstation
-        $workstation = UserWorkstations::model()->find("user_id = " . $model->user_id);
-        $workstation->delete();
+        //$workstation = UserWorkstations::model()->find("user_id = " . $model->user_id);
+        //$workstation->delete();
         if ($module == "avms")
             $this->redirect(array("tenantAgent/avmsagents"));
         else

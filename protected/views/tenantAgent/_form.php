@@ -38,7 +38,7 @@ $currentLoggedUserId = $session['id'];
                 'validateOnSubmit'=>true,
                  )
     ));
-        $module_for = Yii::app()->request->getParam("module", "1"); // 1 = avms, 2=cvms
+        $module_for = Yii::app()->request->getParam("module"); // 1 = avms, 2=cvms
     ?>
     <input type="hidden" name="for_module" value="<?php echo $module_for;?>">
     <?php
@@ -163,11 +163,17 @@ $currentLoggedUserId = $session['id'];
                 <div class="password-border t-top20 paddingBottom10px">
                     
                     <strong>Module Access </strong> <br> <br>
-                   
-                    <input type="checkbox" name="module_access_avms" value="1" checked> AVMS <br>
-                     
-                    <input type="checkbox" name="module_access_cvms" value="2">  CVMS <br>
+                    <?php
+                        $canCVMS = (CHelper::get_allowed_module()=='CVMS' || CHelper::get_allowed_module()=='Both');
+                        $canAVMS = (CHelper::get_allowed_module()=='AVMS' || CHelper::get_allowed_module()=='Both');
 
+                    ?>
+                    <?php if($canAVMS) { ?>
+                    <input type="checkbox" name="module_access_avms" value="1" <?php echo $module_for=='avms'?'checked':''; ?>> AVMS <br>
+                    <?php } ?>
+                    <?php if($canCVMS) { ?>
+                    <input type="checkbox" name="module_access_cvms" value="2" <?php echo $module_for=='cvms'?'checked':'' ?>> CVMS<br>
+                    <?php } ?>
                 </div>
 
 
@@ -182,7 +188,7 @@ $currentLoggedUserId = $session['id'];
                         <td>
                             <!-- <select  onchange="populateDynamicFields()"  -->  
                             <select id="User_role" name="TenantForm[role]">
-                                <?php if( $module_for == 1) { ?>
+                                <?php if( $module_for == 'AVMS') { ?>
                                      <option  value='<?php echo Roles::ROLE_AGENT_AIRPORT_ADMIN;?>' selected>Agent Airport Administrator</option>  
                                 <?php } else { ?>
                                      <option  value='<?php echo Roles::ROLE_AGENT_ADMIN;?>' selected>Agent Administrator</option>  

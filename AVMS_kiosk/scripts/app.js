@@ -35,6 +35,22 @@ angular
         templateUrl: 'views/preregistration.html',
         controller: 'PreregistrationCtrl'
       })
+      .when('/scandriver', {
+        templateUrl: 'views/scandriver.html',
+        controller: 'ScandriverCtrl'
+      })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
+      .when('/confirmDetails', {
+        templateUrl: 'views/confirmdetails.html',
+        controller: 'ConfirmdetailsCtrl'
+      })
+      .when('/createAccount', {
+        templateUrl: 'views/createaccount.html',
+        controller: 'CreateaccountCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

@@ -51,6 +51,14 @@ angular
         templateUrl: 'views/createaccount.html',
         controller: 'CreateaccountCtrl'
       })
+      .when('/reason', {
+        templateUrl: 'views/reason.html',
+        controller: 'ReasonCtrl'
+      })
+      .when('/vicType', {
+        templateUrl: 'views/victype.html',
+        controller: 'VictypeCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

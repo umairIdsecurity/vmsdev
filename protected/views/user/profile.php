@@ -89,7 +89,6 @@ if (isset($_GET['id'])) {
         // See class documentation of CActiveForm for details on this.
         'enableAjaxValidation' => false,
     ));
-      echo $form->hiddenField($model,'date_of_birth'); 
       echo $form->hiddenField($model,'tenant'); 
     ?>
     <?php echo $form->errorSummary($model); ?>

@@ -129,7 +129,7 @@ class User extends VmsActiveRecord {
 
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-                array('first_name, last_name, email, contact_number, user_type, tenant, date_of_birth', 'required'),
+                array('first_name, last_name, email, contact_number, user_type, tenant', 'required'),
                 array('tenant_agent','UserRoleTenantAgentValidator'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),

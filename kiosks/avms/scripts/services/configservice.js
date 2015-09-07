@@ -9,7 +9,7 @@
  */
 angular.module('avmsKioskApp.ConfigService', [])
   .factory('ConfigService', ['$rootScope', '$location', '$localStorage', 'DataService', function ($rootScope, $location, $localStorage, DataService) {
-    var initialConfig = {companyTagLine: '', pickupLocation: 'Reception', brandInfo: {companyLogoURL: '/AVMS_kiosk/images/avms_logo.png', actionForwardButton: {}, completeButton: {}, neutralButton: {}, navigationMenu: {}, sideMenueAndHeaderText: {}}};
+    var initialConfig = {companyTagLine: '', pickupLocation: 'Reception', brandInfo: {companyLogoURL: '/kiosks/avms/images/avms_logo.png', actionForwardButton: {}, completeButton: {}, neutralButton: {}, navigationMenu: {}, sideMenueAndHeaderText: {}}};
 
     function setBrandingInfo(info) {
 		initialConfig.brandInfo.companyLogoURL = "data:image;base64," + info.companyLogoURL;

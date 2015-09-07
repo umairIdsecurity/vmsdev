@@ -129,7 +129,7 @@ class User extends VmsActiveRecord {
 
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-                array('first_name, last_name, email, contact_number, user_type, is_deleted, tenant, date_of_birth', 'required'),
+                array('first_name, last_name, email, contact_number, user_type, tenant, date_of_birth', 'required'),
                 array('tenant_agent','UserRoleTenantAgentValidator'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
@@ -678,7 +678,7 @@ class User extends VmsActiveRecord {
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
             $criteria->condition = "tenant = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
         } else {
-            $criteria->condition = "tenant = " . $session['tenant'] . " and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent IS NULL) AND is_deleted = 0";
+            $criteria->condition = "tenant = " . $session['tenant'] . "  AND is_deleted = 0";
         }
 
         if ($user->role == Roles::ROLE_SUPERADMIN) {

@@ -706,15 +706,15 @@ function populateTenantAgentAndCompanyField(isSearch) {
             $("#workstation").val("<?php echo $session['workstation']; ?>");
             $("#workstation_search").val("<?php echo $session['workstation']; ?>");
         } else {
-            $('#workstation option[value!=""]').remove();
+           
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#Visitor_tenant").val(),
                 dataType: 'json',
                 data: tenant,
                 success: function (r) {
+                    $('#workstation option[value!=""]').remove();
                     $('#workstation').append('<option value="">Select Workstation</option>');
-
                     $.each(r.data, function (index, value) {
                         var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;
                         var workstation = $('#userWorkstation').val();

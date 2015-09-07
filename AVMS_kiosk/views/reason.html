@@ -1,0 +1,49 @@
+<div class="col-xs-12">
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1">
+			<h2 class="text-primary text-uppercase page-title">reason for visit</h2>
+		</div>
+	</div>
+	<hr/>
+</div>
+
+<div class="col-xs-10 col-xs-offset-1">
+	<div class="alert alert-default">Please provide reason for this visit.</div>
+</div>
+
+<div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 content text-center no-margin-top">
+	<div class="form-group">
+		<select class="form-control">
+			<option>Select Visitor Type</option>
+			<option>US</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<select class="form-control">
+			<option>Select Reason</option>
+			<option>US</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<input type="text" name="company" id="company" class="form-control" ng-model="company" required placeholder="Company Name"/>
+	</div>
+	<div class="form-group">
+		<input type="text" name="contact_name" id="contact_name" class="form-control" ng-model="contact_name" required placeholder="Company Contact Name"/>
+	</div>
+	<div class="form-group">
+		<input type="text" name="contact_email" id="contact_email" class="form-control" ng-model="contact_email" required placeholder="Company Contact Email"/>
+	</div>
+	<div class="form-group">
+		<input type="text" name="contact_number" id="contact_number" class="form-control" ng-model="contact_number" required placeholder="Company Contact Number"/>
+	</div>
+</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-xs-12">
+		<a class="btn btn-primary sticky-pull-left" ng-style="backButtonStyle" href="#/createAccount"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
+		<a class="btn btn-primary sticky-pull-right" ng-style="forwardButtonStyle" href="#/vicType">Next<span class="glyphicon glyphicon-chevron-right"></span></a>
+	</div>
+</div>
+<br>
+

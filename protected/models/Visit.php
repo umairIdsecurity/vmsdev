@@ -1366,7 +1366,7 @@ class Visit extends CActiveRecord {
             // Visit Time
              $time_checkout = $visit->time_check_out != "00:00:00"? $visit->time_check_out: $visit->finish_time;      
              $checkoutdatetime = $visit->date_check_out." ".$time_checkout;
-             $checkout = new DateTime($checkoutdatetime); // Already converted in users timezone
+             $checkout = new DateTime($checkoutdatetime); // checkout is Already converted in users timezone
              //compare Time hours and minutes
              if( $isExpired > 0 || ( $current_hour > $checkout->format("H") && $isExpired == 0 )  
                      || ( $isExpired == 0 && $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
@@ -1425,7 +1425,7 @@ class Visit extends CActiveRecord {
             // Visit Time
              $time_checkout = $this->time_check_out != "00:00:00"? $this->time_check_out: $this->finish_time;      
              $checkoutdatetime = $this->date_check_out." ".$time_checkout;
-             $checkout = new DateTime($checkoutdatetime); // Already in users timezone
+             $checkout = new DateTime($checkoutdatetime); // checkout is Already in users timezone
             //compare Time hours and minutes
              if(  ( $isExpired > 0 )  || ( $isExpired == 0  && $current_hour > $checkout->format("H") ) 
                      || ( $isExpired == 0  && $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {

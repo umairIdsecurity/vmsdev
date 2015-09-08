@@ -84,14 +84,14 @@ $last_name = $visitorModel->last_name != "" ? $visitorModel->last_name : "N/A";
 //if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
 //$dateExpiry.="<br>" . substr($model->time_check_out, 0, -3);
 //}
+/**
+ * Card Background color based on the visit type
+ */
+if($model->card_type > CardType::CONTRACTOR_VISITOR )
+   $bgcolor = CardGenerated::VIC_CARD_COLOR;
+else  
+   $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
 
-if ($visitorModel->profile_type === 'CORPORATE') {
-    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
-} elseif ($visitorModel->profile_type === "VIC") {
-    $bgcolor = CardGenerated::VIC_CARD_COLOR;
-} elseif ($visitorModel->profile_type === "ASIC") {
-    $bgcolor = CardGenerated::ASIC_CARD_COLOR;
-}
 $backText = NULL;
 if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     $cardtext = CardType::model()->findByPk($model->card_type);

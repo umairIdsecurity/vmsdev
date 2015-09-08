@@ -26,7 +26,7 @@ $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/boot
             if(value == '<?php echo System::ON ?>'){
                 ConfirmDialog('Are you sure you want to enable emergency shut down',value);
             }else{
-                setStatus('<?php echo System::$EMERGENCY_SHUTDOWN; ?>', value);
+                setStatus('<?php echo System::$EMERGENCY_SHUTDOWN.":".$_SESSION['tenant']; ?>', value);
             }
         });
     });
@@ -40,7 +40,7 @@ $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/boot
                 buttons: {
                     Yes: function () {
                         $(this).dialog("close");
-                        setStatus('<?php echo System::$EMERGENCY_SHUTDOWN; ?>', value);
+                        setStatus('<?php echo System::$EMERGENCY_SHUTDOWN.":".$_SESSION['tenant']; ?>', value);
                     },
                     No: function () {
                         $(this).dialog("close");

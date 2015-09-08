@@ -665,7 +665,11 @@ $("#submitForm").click(function(e){
 		}
 	}
 });
-	
+
+
+function is_accessing_avms_features(){
+    return <?php echo CHelper::is_accessing_avms_features()?'true':'false' ?>;
+}
 
 $(document).ready(function () {
     var sessionRole = $("#currentRole").val(); //session role of currently logged in user

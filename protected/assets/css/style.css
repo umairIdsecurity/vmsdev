@@ -1225,7 +1225,7 @@ dt.tabs dt{
     height: 16px;
     text-decoration: none;
 }
-.addcompanymenu{  background:url('../images/company.png') 3px 5px no-repeat;
+.addcompanymenu{  background:url('../images/add-company.png') 3px 5px no-repeat;
      background-position: 3px 5px !important;
     padding-left:35px !important;
     display: block;

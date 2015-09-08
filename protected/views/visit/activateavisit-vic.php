@@ -346,9 +346,12 @@ $asicEscort = new AddAsicEscort();
                 function updateTextVisitButton(text, id, val) {
                     $("#registerNewVisit").text(text).val(val);
                 }
-
-                if (selectedDate >= currentDate) {
-                    if (selectedDate == currentDate) {
+                
+                var currentDate2  =   new Date(d.getFullYear() + '-0' + (d.getMonth() + 1) + '-' +d.getDate()); 
+                var sD= selectedDate.split("-");
+                var dSelected     =   new Date(sD[2] + '-' + sD[1] + '-' + sD[0]);
+                if (dSelected >= currentDate2) {
+                    if (sD[2] == d.getFullYear() && sD[1] == (d.getMonth() + 1) && sD[0] == d.getDate()) {
                         updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
                     } else {
                         updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");

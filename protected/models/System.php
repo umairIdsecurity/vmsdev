@@ -40,10 +40,13 @@ class System extends CActiveRecord
      */
     public function isSystemShutdown()
     {
-        $model = $this->model()->find("key_name = '" . System::$EMERGENCY_SHUTDOWN . "'");
-        if ($model) {
-            if ($model->key_value == System::ON) return true;
+        if(isset($_SESSION['tenant'])) {
+            $model = $this->model()->find("key_name = '" . System::$EMERGENCY_SHUTDOWN . ":" . $_SESSION['tenant'] . "'");
+            if ($model) {
+                if ($model->key_value == System::ON) return true;
+            }
         }
+
         return false;
     }
 

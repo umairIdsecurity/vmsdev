@@ -391,7 +391,7 @@ $model->identification_country_issued = 13;
                                         if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                                             echo '';
                                         } else {
-                                            echo '<option value="">Select Workstation</option>';
+                                           // echo '<option value="">Select Workstation</option>';
                                         }
                                         ?>
 

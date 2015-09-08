@@ -45,8 +45,8 @@ class SystemController extends Controller
 
     public function actionShutdown(){
 
-        $shutdown = System::model()->find("key_name = '" . System::$EMERGENCY_SHUTDOWN ."'");
-        if (!$shutdown) $shutdown = System::model()->createNewKey(System::$EMERGENCY_SHUTDOWN, System::OFF);
+        $shutdown = System::model()->find("key_name = '" . System::$EMERGENCY_SHUTDOWN.":".$_SESSION['tenant'] ."'");
+        if (!$shutdown) $shutdown = System::model()->createNewKey(System::$EMERGENCY_SHUTDOWN.":".$_SESSION['tenant'], System::OFF);
 
         if($_POST){
             $key_name = $_POST['key_name'];

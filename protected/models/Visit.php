@@ -129,14 +129,14 @@ class Visit extends CActiveRecord {
 
             array('reason,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('visit_closed_date, date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
+            array('closed_by, visit_closed_date, date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             array('filterProperties', 'length', 'max' => 70),
 
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,datecheckin1,cardnumber,company,firstname,lastname,email, contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date, police_report_number, card_option', 'safe', 'on' => 'search'),
-            array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search_history'),
+            array('id,datecheckin1,cardnumber,company,firstname,lastname,email, contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date, police_report_number, card_option, closed_by', 'safe', 'on' => 'search'),
+            array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date, closed_by', 'safe', 'on' => 'search_history'),
             array('card_lost_declaration_file', 'file', 'types' => 'pdf,doc,docx,jpg,jpeg,gif,png', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * 10, 'wrongType'=>'Please upload file with these extensions pdf, doc, docx, jpg, jpeg, gif, png.'),
             
         );
@@ -418,7 +418,8 @@ class Visit extends CActiveRecord {
             'visit_status' => 'Visit Status',
             'workstation' => 'Workstation',
             'firstname' => 'First Name',
-            'deposit_paid' => 'Deposit Paid'
+            'deposit_paid' => 'Deposit Paid',
+            'closed_by' => 'Closed By'
         );
     }
 
@@ -461,6 +462,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('host', $this->host, true);
         $criteria->compare('patient', $this->patient, true);
         $criteria->compare('created_by', $this->created_by, true);
+        $criteria->compare('closed_by', $this->closed_by, true);
         $criteria->compare('police_report_number', $this->police_report_number, true);
 
         $criteria->compare('date_in', $this->date_in, true);

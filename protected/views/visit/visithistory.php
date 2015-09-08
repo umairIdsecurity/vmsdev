@@ -80,9 +80,9 @@ $session = new CHttpSession;
                 ),
                 array(
                     'header' => 'Closed by',
-                    'name' => 'created_by',
+                    'name' => 'closed_by',
                     'type' => 'html',
-                    'value' => 'User::model()->findByPk($data->created_by)->first_name." ".User::model()->findByPk($data->created_by)->last_name',
+                    'value' => '!is_null($data->closed_by) ?  User::model()->findByPk($data->closed_by)->first_name." ".User::model()->findByPk($data->closed_by)->last_name:""',
                 ),
                  array(
                     'header' => 'Date Closed',

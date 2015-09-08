@@ -31,7 +31,11 @@ h2 {
 	font-weight: 700;
 	height: 50px;
 	border-radius: 6px;
-	padding: 0 13px 0 22px;
+	padding: 0 23px 0 22px;
+}
+.btn-large .glyphicon {
+	top: 3px;
+	left: 7px;
 }
 .h1, .h2, .h3, h1, h2, h3 {
     margin-top: 10px;
@@ -176,8 +180,25 @@ a.btn {
 	font-size: 14px;
 }
 
+.form-horizontal .text-label {
+	line-height: 38px;
+	font-size: 11px;
+}
+
+.datepicker .btn-primary {
+	padding: 6px 12px;
+	font-size: 14px;
+	border-radius: 4px;
+	font-weight: 400;
+	height: 32px;
+}
+
 .content input {
 	margin: 5px 0;
+}
+
+.content .form-horizontal input {
+	margin: 0;
 }
 
 @media (min-width: 768px) {

@@ -1,8 +1,8 @@
 <div class="intro default">
   <div class="centered-child">
-    <div ng-show="success" class="alert alert-success">{{success}}</div>
+    <!-- <div ng-show="success" class="alert alert-success">{{success}}</div> -->
     <h1 class="title">
-      <img ng-src="{{imgSrc}}" width="600" class="logo">
+      <img ng-src="{{imgSrc}}" width="200" class="logo">
     </h1>
     <h3 class="text-primary">VISITOR IDENTIFICATION CARD (VIC) KIOSK</h3>
     <p class="text-primary ">
@@ -25,6 +25,6 @@
     </div>
   </div>
 </div>
-<a class="btn btn-primary sticky-pull-right" href="#/preregistration">
+<a class="btn btn-primary sticky-pull-right" href="#/preregistration" ng-style="forwardButtonStyle">
   Next<span class="glyphicon glyphicon-chevron-right"></span>
 </a>

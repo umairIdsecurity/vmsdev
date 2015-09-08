@@ -38,7 +38,7 @@ angular.module('avmsKioskApp.ConfigService', [])
 			},
 			function(data, responseCode) {
 				if(responseCode == 401 && data.errorCode == 'UNAUTHORIZED'){/* If not Authorised send back to Login screen */
-					delete $localStorage.globals;
+					delete $localStorage.avmsGlobals;
 					DataService.authToken = '';
 					DataService.kiosk = '';
 					DataService.workstation = '';

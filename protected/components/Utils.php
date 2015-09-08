@@ -15,6 +15,7 @@ class Utils
 
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
+            case Roles::ROLE_AIRPORT_OPERATOR:    
                 $Criteria = new CDbCriteria();
                 $Criteria->condition = "id =" . $session['workstation'] . " AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);

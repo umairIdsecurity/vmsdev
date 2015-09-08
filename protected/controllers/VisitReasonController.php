@@ -214,7 +214,7 @@ class VisitReasonController extends Controller {
             $module = "CVMS";
         
         $criteria = new CDbCriteria;
-        $criteria->condition = 'module = "'.$module.'" AND tenant = '.Yii::app()->user->tenant;
+        $criteria->condition = '(t.module = "'.$module.'" OR t.module = "'.strtolower($module).'" ) AND t.tenant = '.Yii::app()->user->tenant;
         $criteria->select = 'id,reason';
 
        $list =  VisitReason::model()->findAll($criteria);

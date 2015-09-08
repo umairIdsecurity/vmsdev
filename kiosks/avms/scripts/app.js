@@ -17,7 +17,6 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ngStorage',
     'angular-spinkit',
     'avmsKioskApp.VisitorService',
     'avmsKioskApp.CameraService',

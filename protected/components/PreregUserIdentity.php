@@ -34,7 +34,7 @@ class PreregUserIdentity extends CUserIdentity {
 
             $this->setState('role', $user->role);
 
-            $this->setState('account_type', $session['account_type']);
+            $this->setState('account_type',$user->profile_type);
 
             $this->setState('tenant', (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id );
             
@@ -44,7 +44,7 @@ class PreregUserIdentity extends CUserIdentity {
             $session['id'] = $user->id;
             $session['role'] = $user->role;
 
-            //$session['account'] = $user->profile_type;
+            $session['account_type'] = $user->profile_type;
 
             $session['tenant'] = (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id;
 

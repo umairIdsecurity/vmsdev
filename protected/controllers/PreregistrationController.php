@@ -31,7 +31,7 @@ class PreregistrationController extends Controller
 			),
 			array(
                 'allow',
-                'actions' => array('profile','visitHistory','helpdesk'),
+                'actions' => array('assignAsicholder','declineVicholder','verifyVicholder','profile','visitHistory','helpdesk','notifications','verifications','verificationDeclarations'),
                 //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
                 'users' => array('@')
             ),
@@ -1161,8 +1161,113 @@ class PreregistrationController extends Controller
 
     }
 
-        /* Visitor Visits history */
+    /* notifications */
+    public function actionNotifications()
+    {
+    	 $this->render('notifications');	
+    }
 
+    /* asic sponsor verifications */
+    public function actionVerifications()
+    {
+
+    	$per_page = 10;
+    	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
+        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND v.id=".Yii::app()->user->id.")";
+        $rawData = Yii::app()->db->createCommand()
+                        ->select("t.id,t.date_in,t.host,v.first_name,v.last_name") 
+                        ->from("visit t")
+                        ->join("visitor v","v.id = t.visitor")
+                        ->where($condition)
+                        ->queryAll();
+        $item_count = count($rawData);
+
+        $query1 = Yii::app()->db->createCommand()
+                        ->select("t.id,t.date_in,t.host,v.first_name,v.last_name") 
+                        ->from("visit t")
+                        ->join("visitor v","v.id = t.visitor")
+                        ->where($condition)
+                        ->limit($per_page,$page-1) // the trick is here!
+                        ->queryAll();   
+
+		// the pagination itself
+        $pages = new CPagination($item_count);
+        $pages->setPageSize($per_page);
+
+		// render
+        $this->render('visit-history-verifications',array(
+            'query1'=>$query1,
+            'item_count'=>$item_count,
+            'page_size'=>$per_page,
+            'pages'=>$pages,
+        ));
+    }
+
+    public function actionVerifyVicholder($id)
+    {
+    	$visit = Visit::model()->findByPk($id);
+    	$visitor = Registration::model()->findByPk($visit->visitor);
+    	$company = Company::model()->findByPk($visitor->company);
+    	$this->render('verify-vic-holder',array('visit'=>$visit,'visitor'=>$visitor,'company'=>$company));
+
+    }	
+
+    /* asic sponsor verifications */
+    public function actionVerificationDeclarations()
+    {
+    	$model = new Declarationverification();
+
+		if(isset($_POST['Declarationverification']))
+		{
+
+			$model->attributes=$_POST['Declarationverification'];
+			if($model->validate())
+			{
+				
+			}
+		}
+		
+		$this->render('verification-declarations' , array('model'=>$model) );
+    }
+
+
+    public function actionDeclineVicholder(){
+    	$this->render('decline-vic' /*, array('model'=>$model) */);
+    }
+
+    public function actionAssignAsicholder()
+    {
+    	
+    	/*$session = new CHttpSession;*/
+
+		$model = new Registration();
+		$model->scenario = 'preregistrationAsic';
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+
+		if (isset($_POST['Registration'])) {
+
+			$model->attributes = $_POST['Registration'];
+
+			echo "<pre>";
+			print_r($model->attributes);
+			die;
+
+			
+
+		}
+		
+    	$this->render('reassign-asic',array('model'=>$model));
+    }
+
+
+
+
+    /* Visitor Visits history */
     public function actionVisitHistory() {
     	
     	$per_page = 10;

@@ -1,16 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/6/15
- * Time: 3:21 PM
- */
-
 class Declaration extends CFormModel{
 
     public $declaration1;
     public $declaration2;
-    //public $declaration3;
+    public $declaration3;
     public $declaration4;
 
     /**

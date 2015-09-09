@@ -26,14 +26,14 @@
             <?php foreach($query1 as $q){ ?>
                     <tr class="status-">
                         <?php if(Yii::app()->user->account_type ==  "ASIC"): ?>
-                            <td><a href="<?php echo Yii::app()->createUrl('preregistration/verifyVicholder?id=' . $q['id']); ?>"><?php echo date("j-n-Y",strtotime($q['date_in'])); ?></a></td>
+                            <td><a href="<?php echo Yii::app()->createUrl('preregistration/verifyVicholder?id=' . $q['id']); ?>"><?php echo date("j-n-Y",strtotime($q['date_check_in'])); ?></a></td>
                         <?php else: ?>
-                            <td><?php echo date("j-n-Y",strtotime($q['date_in'])); ?></td>
+                            <td><?php echo date("j-n-Y",strtotime($q['date_check_in'])); ?></td>
                         <?php endif; ?>
                             
                         <td><?php echo $q["first_name"]." ".$q["last_name"]; ?></td>
                         <td><?php echo returnAsicName($q['host']); ?></td>
-                        <td><?php //echo $q['status'] == "Pre-registered" ? "Preregistered":$q['status']; ?></td>
+                        <td><?php echo $q['visit_prereg_status']; ?></td>
                     </tr>   
             <?php } ?> 
         </tbody>

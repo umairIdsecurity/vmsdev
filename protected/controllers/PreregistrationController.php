@@ -31,7 +31,7 @@ class PreregistrationController extends Controller
 			),
 			array(
                 'allow',
-                'actions' => array('assignAsicholder','declineVicholder','verifyVicholder','profile','visitHistory','helpdesk','notifications','verifications','verificationDeclarations'),
+                'actions' => array('assignAsicholder','vicholderDeclined','declineVicholder','verifyVicholder','profile','visitHistory','helpdesk','notifications','verifications','verificationDeclarations'),
                 //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
                 'users' => array('@')
             ),
@@ -1175,7 +1175,7 @@ class PreregistrationController extends Controller
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
         $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND v.id=".Yii::app()->user->id.")";
         $rawData = Yii::app()->db->createCommand()
-                        ->select("t.id,t.date_in,t.host,v.first_name,v.last_name") 
+                        ->select("t.id,t.date_check_in,t.host,v.first_name,v.last_name,t.visit_prereg_status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->where($condition)
@@ -1183,7 +1183,7 @@ class PreregistrationController extends Controller
         $item_count = count($rawData);
 
         $query1 = Yii::app()->db->createCommand()
-                        ->select("t.id,t.date_in,t.host,v.first_name,v.last_name") 
+                        ->select("t.id,t.date_check_in,t.host,v.first_name,v.last_name,t.visit_prereg_status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->where($condition)
@@ -1205,6 +1205,9 @@ class PreregistrationController extends Controller
 
     public function actionVerifyVicholder($id)
     {
+    	$session = new CHttpSession;
+    	$session['verify_visit_id'] = $id;
+
     	$visit = Visit::model()->findByPk($id);
     	$visitor = Registration::model()->findByPk($visit->visitor);
     	$company = Company::model()->findByPk($visitor->company);
@@ -1215,15 +1218,23 @@ class PreregistrationController extends Controller
     /* asic sponsor verifications */
     public function actionVerificationDeclarations()
     {
+    	$session = new CHttpSession;
     	$model = new Declarationverification();
 
 		if(isset($_POST['Declarationverification']))
 		{
-
 			$model->attributes=$_POST['Declarationverification'];
 			if($model->validate())
-			{
+			{				
+				$visit = Visit::model()->findByPk($session['verify_visit_id']);
+				$visit->visit_prereg_status = "Verified";
+				$visit->asic_declaration = 1;
+				$visit->asic_verification = 1;
 				
+				if($visit->save(false))
+				{
+					$this->redirect(array('preregistration/verifications'));
+				}
 			}
 		}
 		
@@ -1232,13 +1243,26 @@ class PreregistrationController extends Controller
 
 
     public function actionDeclineVicholder(){
-    	$this->render('decline-vic' /*, array('model'=>$model) */);
+    	$this->render('decline-vic');
+    }
+
+    public function actionVicholderDeclined(){
+    	$session = new CHttpSession;
+    	$visit = Visit::model()->findByPk($session['verify_visit_id']);
+		$visit->visit_prereg_status = "Rejected";
+		$visit->asic_declaration = 0;
+		$visit->asic_verification = 0;
+		
+		if($visit->save(false))
+		{
+			$this->redirect(array('preregistration/verifications'));
+		}
     }
 
     public function actionAssignAsicholder()
     {
     	
-    	/*$session = new CHttpSession;*/
+    	$session = new CHttpSession;
 
 		$model = new Registration();
 		$model->scenario = 'preregistrationAsic';
@@ -1253,9 +1277,30 @@ class PreregistrationController extends Controller
 
 			$model->attributes = $_POST['Registration'];
 
+			$visitor = Registration::model()->findByPk(Yii::app()->user->id);
+
+			$model->profile_type = 'ASIC';
+			$model->key_string = hash('ripemd160', uniqid());
+
+			$model->tenant = $visitor->tenant;
+
+			$model->visitor_workstation = $visitor->visitor_workstation; 
+			$model->created_by = $visitor->created_by;
+
+			$model->role = 9; //Staff Member/Intranet
+
 			echo "<pre>";
 			print_r($model->attributes);
 			die;
+
+			/*$visit = Visit::model()->findByPk($session['verify_visit_id']);
+			$visit->visit_prereg_status = "Reassigned";
+			$visit->asic_declaration = 1;
+			$visit->asic_verification = 1;
+			if($visit->save(false))
+			{
+				$this->redirect(array('preregistration/verifications'));
+			}*/
 
 			
 
@@ -1279,7 +1324,7 @@ class PreregistrationController extends Controller
         
 
         $rawData = Yii::app()->db->createCommand()
-                        ->select("t.date_in,t.date_out,v.first_name,v.last_name,c.name,vs.name as status") 
+                        ->select("t.date_check_in,t.date_check_out,v.first_name,v.last_name,c.name,vs.name as status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->join("visit_status vs","vs.id = t.visit_status")
@@ -1289,7 +1334,7 @@ class PreregistrationController extends Controller
         $item_count = count($rawData);
 
         $query1 = Yii::app()->db->createCommand()
-                        ->select("t.date_in,t.date_out,v.first_name,v.last_name,c.name,vs.name as status") 
+                        ->select("t.date_check_in,t.date_check_out,v.first_name,v.last_name,c.name,vs.name as status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->join("visit_status vs","vs.id = t.visit_status")

@@ -1349,7 +1349,7 @@ class Visit extends CActiveRecord {
          $dateOut = new DateTime($visit["date_check_out"]);
          $dateNow = new DateTime("NOW", new DateTimeZone($timezone));
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
-         if( $isExpired >= 0 )  { //   expired or will expire today 
+         if( $isExpired > 0 )  { //   expired or will expire today 
               
              $status = "";
             //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
@@ -1404,7 +1404,7 @@ class Visit extends CActiveRecord {
          $dateNow = new DateTime("NOW" , new DateTimeZone($timezone)); 
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
          
-        if( $isExpired >= 0 && $this->visit_status == VisitStatus::ACTIVE ) {
+        if( $isExpired > 0 && $this->visit_status == VisitStatus::ACTIVE ) {
             
             $status = "";
             /* 

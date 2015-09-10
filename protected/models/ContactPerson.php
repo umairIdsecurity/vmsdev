@@ -126,6 +126,9 @@ class ContactPerson extends CActiveRecord
 
 	public function getFormatdate()
 	{
-		return date("d-m-Y", strtotime($this->date_created) );
+		if (date("Y-m-d", strtotime($this->date_created)) != "1970-01-01" && date("Y-m-d", strtotime($this->date_created)) != "1969-12-31")
+			return date("d-m-Y", strtotime($this->date_created) );
+		else
+			return "";
 	}
 }

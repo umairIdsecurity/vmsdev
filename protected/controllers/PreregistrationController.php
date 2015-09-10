@@ -21,7 +21,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration'),
+				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -207,7 +207,6 @@ class PreregistrationController extends Controller
 
 	public function actionVisitReason()
 	{
-
 		$session = new CHttpSession;
 
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
@@ -259,11 +258,18 @@ class PreregistrationController extends Controller
 			}
 
 			$registrationModel = Registration::model()->findByPk($session['visitor_id']);
-			$registrationModel->company = $_POST['Company']['name'];;
-			$registrationModel->visitor_type = $_POST['Visit']['visitor_type'];
+
+			if($registrationModel->company == null || $registrationModel->company == ""){
+				$registrationModel->company = $_POST['Company']['name'];
+			}
+
+			if($registrationModel->visitor_type == null || $registrationModel->visitor_type == ""){
+				$registrationModel->visitor_type = $_POST['Visit']['visitor_type'];
+			}
 
 			if($registrationModel->save(true,array('company','visitor_type'))){
-
+				$this->redirect(array('preregistration/addAsic'));
+			}else{
 				$this->redirect(array('preregistration/addAsic'));
 			}
 
@@ -313,6 +319,7 @@ class PreregistrationController extends Controller
 				$userModel->password = User::model()->hashPassword($model->password);
 				$userModel->profile_type = "VIC";
 				$userModel->role = 10; //role is 10: Visitor/Kiosik
+				$userModel->visitor_card_status = 2; //visitor card status is 2: VIC holder
 
 				if ($userModel->save(false)) 
 				{
@@ -392,6 +399,7 @@ class PreregistrationController extends Controller
 			$model->company = $_POST['Registration']['company'];
 			$model->profile_type = "ASIC";
 			$model->role = 10; //role is 10: Visitor/Kiosik
+			$model->visitor_card_status = 2; //visitor card status is 2: VIC holder
 
 			if ($model->save(false)) 
 			{
@@ -460,6 +468,7 @@ class PreregistrationController extends Controller
 			$model->company = ( ($_POST['Registration']['company'] != null) && ( !empty($_POST['Registration']['company']) ) ) ? $_POST['Registration']['company'] : null ;
 			$model->profile_type = "CORPORATE";
 			$model->role = 10; //role is 10: Visitor/Kiosik
+			$model->visitor_card_status = 2; //visitor card status is 2: VIC holder
 
 			if ($model->save(false)) 
 			{
@@ -602,8 +611,8 @@ class PreregistrationController extends Controller
 
 						$model->visitor_workstation = $session['workstation'];
 						$model->created_by = $session['created_by'];
-
 						$model->role = 9; //Staff Member/Intranet
+						$model->visitor_card_status = 6; //6: Asic Issued
 
 						if ($model->save(false)) {
 
@@ -1173,7 +1182,7 @@ class PreregistrationController extends Controller
 
     	$per_page = 10;
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
-        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND v.id=".Yii::app()->user->id.")";
+        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND t.host=".Yii::app()->user->id." AND v.id=".Yii::app()->user->id.")";
         $rawData = Yii::app()->db->createCommand()
                         ->select("t.id,t.date_check_in,t.host,v.first_name,v.last_name,t.visit_prereg_status") 
                         ->from("visit t")
@@ -1261,7 +1270,6 @@ class PreregistrationController extends Controller
 
     public function actionAssignAsicholder()
     {
-    	
     	$session = new CHttpSession;
 
 		$model = new Registration();
@@ -1272,37 +1280,47 @@ class PreregistrationController extends Controller
 			Yii::app()->end();
 		}
 
-
-		if (isset($_POST['Registration'])) {
-
+		if (isset($_POST['Registration'])) 
+		{
 			$model->attributes = $_POST['Registration'];
 
-			$visitor = Registration::model()->findByPk(Yii::app()->user->id);
-
-			$model->profile_type = 'ASIC';
-			$model->key_string = hash('ripemd160', uniqid());
-
-			$model->tenant = $visitor->tenant;
-
-			$model->visitor_workstation = $visitor->visitor_workstation; 
-			$model->created_by = $visitor->created_by;
-
-			$model->role = 9; //Staff Member/Intranet
-
-			echo "<pre>";
-			print_r($model->attributes);
-			die;
-
-			/*$visit = Visit::model()->findByPk($session['verify_visit_id']);
-			$visit->visit_prereg_status = "Reassigned";
-			$visit->asic_declaration = 1;
-			$visit->asic_verification = 1;
-			if($visit->save(false))
+			if(!empty($model->selected_asic_id))
 			{
-				$this->redirect(array('preregistration/verifications'));
-			}*/
+				$visit = Visit::model()->findByPk($session['verify_visit_id']);
+				$visit->visit_prereg_status = "Reassigned";
 
-			
+				$visit->host = $model->selected_asic_id;
+
+				if($visit->save(false))
+				{
+					$this->redirect(array('preregistration/verifications'));
+				}
+			}
+			else
+			{
+				$visitor = Registration::model()->findByPk(Yii::app()->user->id);
+
+				$model->profile_type = 'ASIC';
+				$model->key_string = hash('ripemd160', uniqid());
+				$model->tenant = $visitor->tenant;
+				$model->visitor_workstation = $visitor->visitor_workstation; 
+				$model->created_by = $visitor->created_by;
+				$model->role = 9; //Staff Member/Intranet
+				$model->visitor_card_status = 6; //Asic Issued
+
+				if($model->save(false))
+				{
+					$visit = Visit::model()->findByPk($session['verify_visit_id']);
+					$visit->visit_prereg_status = "Reassigned";
+					
+					$visit->host = $model->id;
+
+					if($visit->save(false))
+					{
+						$this->redirect(array('preregistration/verifications'));
+					}
+				}
+			}
 
 		}
 		
@@ -1477,9 +1495,16 @@ class PreregistrationController extends Controller
 		
     }
 
-
-
-
+    public function actionFindAllCompanyContactsByCompany() {
+    	if(isset($_POST['compId'])){$compId = $_POST['compId'];}
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "company = ".$compId." and is_deleted = 0";
+        $user = User::model()->findAll($Criteria);
+        
+        $resultMessage['data'] = $user;
+	    echo CJavaScript::jsonEncode($resultMessage);
+	    Yii::app()->end();
+    }
 
     public function actionUploadProfilePhoto() {
 

@@ -36,7 +36,7 @@ class PreregUserIdentity extends CUserIdentity {
 
             $this->setState('account_type',$user->profile_type);
 
-            $this->setState('tenant', (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id );
+            $this->setState('tenant', (isset($user->tenant) && !is_null($user->tenant) ) ? $user->tenant:null );
             
             $session = new CHttpSession;
             $session->open();
@@ -46,7 +46,7 @@ class PreregUserIdentity extends CUserIdentity {
 
             $session['account_type'] = $user->profile_type;
 
-            $session['tenant'] = (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:$user->id;
+            $session['tenant'] = (isset($user->tenant) && !is_null($user->tenant) )?$user->tenant:null;
 
             $this->errorCode = self::ERROR_NONE;
         }

@@ -542,9 +542,9 @@ class Registration extends CActiveRecord {
     }
 
     public function findAllCompanyByTenant($tenantId) {
-        $tenant = User::model()->findByPk($tenantId);
+        //$tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = ".$tenantId." and (id!=1 and id !=".$tenant->company.")";
+        $Criteria->condition = "tenant = ".$tenantId." and is_deleted = 0";//." and (id!=1 and id !=".$tenant->company.")";
         return Company::model()->findAll($Criteria);
     }
 

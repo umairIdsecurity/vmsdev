@@ -1,0 +1,48 @@
+<div class="col-xs-12">
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1">
+      <h2 class="text-primary text-uppercase page-title">Preregistration for visitor identification card (VIC)</h2>
+    </div>
+  </div>
+  <hr/>
+</div>
+
+<div class="col-xs-10 col-xs-offset-1 content no-margin-bottom">
+  <h3 class="text-primary">Declarations</h3>
+  <br>
+  <p>I agree by ticking the boxes below:</p>
+  <br>
+</div>
+</div>
+
+<div class="col-xs-10 col-xs-offset-1 content no-margin-top">
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" ng-init="hasAgreed1=false" ng-model="hasAgreed1" value="agree">I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).
+    </label>
+    <div class="cleafix"></div>
+    <br>
+    <label>
+      <input type="checkbox" ng-init="hasAgreed2=false" ng-model="hasAgreed2" value="agree">I have not previously been either refused an AISC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Custom & Border Protection, or VIC issued prior to 21st November 2011).
+    </label>
+    <div class="cleafix"></div>
+    <br>
+    <label>
+      <input type="checkbox" ng-init="hasAgreed3=false" ng-model="hasAgreed3" value="agree">I have read and understood Perth Airport's privacy notice on the collection and release of personal information.
+    </label>
+    <div class="cleafix"></div>
+    <br>
+    <label>
+      <input type="checkbox" ng-init="hasAgreed4=false" ng-model="hasAgreed4" value="agree">I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport's privacy notice.
+    </label>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-xs-12">
+    <a class="btn btn-primary sticky-pull-left" ng-style="backButtonStyle" href="#/preregistration"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
+    <a ng-show="hasAgreed1==true && hasAgreed2==true && hasAgreed3==true && hasAgreed4==true" class="btn btn-primary sticky-pull-right" ng-style="forwardButtonStyle" href="#/scandriver">Next<span class="glyphicon glyphicon-chevron-right"></span></a>
+  </div>
+</div>
+<br>
+

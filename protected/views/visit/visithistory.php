@@ -140,7 +140,7 @@ function formatTime($time) {
 
 function isRoleAllowedToDelete() {
     $session = new CHttpSession;
-    if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
+    if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) {
         return true;
     } else {
         return false;

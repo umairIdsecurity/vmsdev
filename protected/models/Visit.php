@@ -228,9 +228,9 @@ class Visit extends CActiveRecord {
        //1. Set CLOSED all AUTOClosed VIC 24 hour and EVIC visits
        $this->updateAll(array("visit_status" => VisitStatus::CLOSED), 
                    " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
-                 . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."'"
+                 . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out < '".date("Y-m-d")."'"
                . $cond );
-                     
+                   
          return parent::beforeFind();
      }
      
@@ -1320,6 +1320,45 @@ class Visit extends CActiveRecord {
        }
        
     } 
+    
+    /**
+     * Closed all Auto Closed visits of a tenant 
+     * EVIC and 24 Hour Vic only
+     * 
+     */
+    public function setClosedAutoClosedVisits() {
+        
+        $cond = '';
+        if(isset(Yii::app()->user->tenant)){
+            $cond = " AND tenant = ".Yii::app()->user->tenant;
+        }
+
+       //1. Set CLOSED all AUTOClosed VIC 24 hour and EVIC visits
+       $condition = " (card_type = ".CardType::VIC_CARD_24HOURS." OR card_type = ".CardType::VIC_CARD_EXTENDED.")"
+                  . " AND visit_status = ".VisitStatus::AUTOCLOSED. " AND date_check_out <= '".date("Y-m-d")."' ".$cond;
+                   
+        $visits = $this->findAll( $condition );  
+        foreach( $visits as $v ) {
+            
+            $dateNow = new DateTime('NOW');
+            $dateOut = new DateTime( $v->date_check_out." ".$v->time_check_out );
+            $dateDiff = $dateOut->diff($dateNow)->format("%r%a");
+            $status = "";
+
+            if ( $dateDiff > 0 ) { // Set all expires visit to close 
+                $status = VisitStatus::CLOSED; 
+            } elseif ($dateDiff == 0 && $v->card_type == CardType::VIC_CARD_24HOURS) { 
+                // 24 Hour visit will be expired on the exact time when it was activated
+                if( ($dateNow->format("H") > $dateOut->format("H") ) || ($dateNow->format("H") == $dateOut->format("H") && $dateNow->format("i") > $dateOut->format("i"))) {
+                    $status = VisitStatus::CLOSED;  
+                }
+            } 
+            
+            if(!empty( $status ))
+                $this->updateByPk( $v->id , array("visit_status"=>$status));
+        }
+    }
+    
     /**
      * Set Expire Or Close all visits that should be expired today under a tenant
      * * Set status as Closed of the VIC 24Hours visit only if date/time checkout reached current date/time.
@@ -1379,6 +1418,10 @@ class Visit extends CActiveRecord {
              }
            }
         }
+        
+        // Closed Auto-Closed Visits
+        $this->setClosedAutoClosedVisits();
+
     }
     
     /**

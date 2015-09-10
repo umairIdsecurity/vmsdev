@@ -1,0 +1,15 @@
+<div>
+  <div ng-hide="isShowingPreview">
+    <div class="overlay"></div>
+    <div class="camera">
+      <video class="camera" autoplay=""/>
+      <div ng-transclude></div>
+    </div>
+  </div>
+  <div ng-show="isShowingPreview">
+    <div class="overlay"></div>
+    <canvas></canvas><br/>
+    <button class="btn btn-info notify-btn" ng-click="retake()">Retake</button>
+    <button class="btn btn-success  sticky-pull-right notification_btn aligned-btn" ng-style="forwardButtonStyle" ng-click="usePhoto()">Use This Photo</button>
+  </div>
+</div>

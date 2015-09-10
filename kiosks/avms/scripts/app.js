@@ -76,6 +76,30 @@ angular
         templateUrl: 'views/asicsponsor.html',
         controller: 'AsicsponsorCtrl'
       })
+      .when('/asicSponsorLogin', {
+        templateUrl: 'views/asicsponsorlogin.html',
+        controller: 'AsicsponsorloginCtrl'
+      })
+      .when('/createAsicSponsorAccount', {
+        templateUrl: 'views/createasicsponsoraccount.html',
+        controller: 'CreateasicsponsoraccountCtrl'
+      })
+      .when('/asicSponsorRemote', {
+        templateUrl: 'views/asicsponsorremote.html',
+        controller: 'AsicsponsorremoteCtrl'
+      })
+      .when('/photo_capture', {
+        templateUrl: 'views/photo_capture.html',
+        controller: 'PhotoCaptureCtrl'
+      })
+      .when('/pickup', {
+        templateUrl: 'views/pickup.html',
+        controller: 'PickupCtrl'
+      })
+      .when('/preregistration_declarations', {
+        templateUrl: 'views/preregistration_declarations.html',
+        controller: 'PreregistrationDeclarationsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

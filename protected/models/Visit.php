@@ -1403,7 +1403,7 @@ class Visit extends CActiveRecord {
          $dateOut = new DateTime($this->date_check_out);
          $dateNow = new DateTime("NOW" , new DateTimeZone($timezone)); 
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
-         
+                 
         if( $isExpired > 0 && $this->visit_status == VisitStatus::ACTIVE ) {
             
             $status = "";

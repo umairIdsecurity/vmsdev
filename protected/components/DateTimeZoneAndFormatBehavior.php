@@ -73,20 +73,21 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                         $event->sender->$columnName =
                                 $datetime_object->format($this->php_db_datetime);
                     }
-                } else if ($column->dbType == 'time') {
-                    $datetime_object = DateTime::createFromFormat($this->php_user_time, $event->sender->$columnName, new DateTimeZone($this->user_timezone));
-                    if ($datetime_object != false) {
-                        $datetime_object->setTimezone(new DateTimeZone($this->edtTimeZone));
-                        $event->sender->$columnName = $datetime_object->format($this->php_db_time);
-                    }
-                }
+                } 
+//                else if ($column->dbType == 'time') {
+//                    $datetime_object = DateTime::createFromFormat($this->php_user_time, $event->sender->$columnName, new DateTimeZone($this->user_timezone));
+//                    if ($datetime_object != false) {
+//                        $datetime_object->setTimezone(new DateTimeZone($this->edtTimeZone));
+//                        $event->sender->$columnName = $datetime_object->format($this->php_db_time);
+//                    }
+//                }
             }
         }
         return parent::beforeSave($event);
     }
  
     public function afterFind($event) {
-        foreach ($event->sender->tableSchema->columns as $columnName => $column) {
+          foreach ($event->sender->tableSchema->columns as $columnName => $column) {
             if (($column->dbType == 'date') ||
                     ($column->dbType == 'time') ||
                     ($column->dbType == 'timestamp') ||
@@ -110,13 +111,14 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                                     $this->php_user_datetime);
                         }
                     }
-                } else if ($column->dbType == 'time') {
-                    $datetime_object->setTimezone(new
-                            DateTimeZone($this->user_timezone));
-                    /* Output the required format */
-                    $event->sender->$columnName =
-                            $datetime_object->format($this->php_user_time);
-                }
+                } 
+//                else if ($column->dbType == 'time') {
+//                    $datetime_object->setTimezone(new
+//                            DateTimeZone($this->user_timezone));
+//                    /* Output the required format */
+//                    $event->sender->$columnName =
+//                            $datetime_object->format($this->php_user_time);
+//                }
             }
         }
         return parent::afterFind($event);

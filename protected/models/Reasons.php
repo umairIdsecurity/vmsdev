@@ -105,16 +105,13 @@ class Reasons extends CActiveRecord
 	{
 		return $this->reason_name;
 	}
-        
-	public function afterFind() 
-	{
-		$this->date_created = date("d-m-Y", strtotime($this->date_created) );
-		parent::afterFind();
-	}
 
 	public function getFormatdate()
 	{
-		return date("d-m-Y", strtotime($this->date_created) );
+		if (date("Y-m-d", strtotime($this->date_created)) != "1970-01-01" && date("Y-m-d", strtotime($this->date_created)) != "1969-12-31")
+			return date("d-m-Y", strtotime($this->date_created) );
+		else
+			return "";
 	}
 
 	public function behaviors() 

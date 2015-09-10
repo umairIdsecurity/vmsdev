@@ -67,14 +67,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Status',
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
-//        array(
-//            'name' => 'visitor_type',
-//            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
-//            'filter' => VisitorType::model()->returnVisitorTypes(),
-//        ),
         array(
             'name' => 'visitor_type',
-            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+            'value' => 'is_array(VisitorType::model()->returnVisitorTypes($data->visitor_type))? "" : VisitorType::model()->returnVisitorTypes($data->visitor_type)',
             'filter'=>CHtml::activeTextField(Visitor::model(), 'profile_type', array('placeholder'=>'Corporate Profile Type','disabled'=>'disabled')),
         ),
         array(
@@ -85,13 +80,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'firstname',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+            'value' => 'Visitor::model()->findByPk($data->visitor)? Visitor::model()->findByPk($data->visitor)->first_name : ""',
             'header' => 'First Name',
             'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
         ),
         array(
             'name' => 'lastname',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+            'value' => 'Visitor::model()->findByPk($data->visitor)? Visitor::model()->findByPk($data->visitor)->last_name : ""',
             'header' => 'Last Name',
             'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
         ),
@@ -105,13 +100,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'contactnumber',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
+            'value' => 'Visitor::model()->findByPk($data->visitor)? Visitor::model()->findByPk($data->visitor)->contact_number : ""',
             'header' => 'Contact Number',
             'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
         ),
         array(
             'name' => 'contactemail',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->email',
+            'value' => 'Visitor::model()->findByPk($data->visitor)? Visitor::model()->findByPk($data->visitor)->email : ""',
             'header' => 'Contact Email',
             'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email')),
         ),
@@ -153,19 +148,23 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function getCompany($id) {
-    $company_id = Visitor::model()->findByPk($id)->company;
+    if (Visitor::model()->findByPk($id))
+    {
+         $company_id = Visitor::model()->findByPk($id)->company;
 
-    if (isset($company_id)) {
+        if (isset($company_id)) {
 
-        $companyModel = Company::model();
+            $companyModel = Company::model();
 
-        $company = $companyModel->findByPk($company_id, "is_deleted >= 0 " );
+            $company = $companyModel->findByPk($company_id, "is_deleted >= 0 " );
 
-        if(isset($company))
-        {
-            return $company->name;
+            if(isset($company))
+            {
+                return $company->name;
+            }
         }
     }
+   
     return "Not Available";
 
 }
@@ -206,7 +205,8 @@ function formatTime($time) {
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date From",
-            dateFormat: "dd-mm-yy"
+            dateFormat: "dd-mm-yy",
+            onClose: function (selectedDate) { $("#Visit_date_check_in_1").datepicker("option", "minDate", selectedDate); },
         });
 
         $("#Visit_date_check_in_1").datepicker({

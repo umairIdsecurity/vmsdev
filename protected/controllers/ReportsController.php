@@ -496,7 +496,7 @@ class ReportsController extends Controller
         
         $config = Yii::app()->getComponents(false);
         $visitsCount = Yii::app()->db->createCommand()
-                ->select("t.id,t.name,count(visitors.id) as visitors,visitors.date_created as date_check_in") 
+                ->select("t.id,t.name,count(visitors.id) as visitors") 
                 ->from('visitor_type t')
                 ->join("visitor visitors",'t.id = visitors.visitor_type')
                 ->where($dateCondition)

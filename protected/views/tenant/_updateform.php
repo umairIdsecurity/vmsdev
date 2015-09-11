@@ -69,10 +69,8 @@ if ($this->action->id == 'update') {
                 ?>
             </td>
 
-
         </tr>
 
-        <!--WangFu Modified-->
         <?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
             <tr>
                 <td style="width:160px;">Tenant Code</td>
@@ -91,23 +89,6 @@ if ($this->action->id == 'update') {
             </tr>
         <?php } ?>
 
-
-        <!--<tr class="user_fields">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php //echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
-
-                <?php //echo "<br>" . $form->error($model, 'user_first_name'); ?>
-            </td>
-        </tr>
-
-        <tr class="user_fields">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php //echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
-
-                <?php //echo "<br>" . $form->error($model, 'user_last_name'); ?>
-            </td>
-        </tr>-->
-
         <tr class="user_fields">
             <td style="width:160px;">Email Address</td>
             <td><?php echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
@@ -123,7 +104,7 @@ if ($this->action->id == 'update') {
                 <?php echo "<br>" . $form->error($model, 'mobile_number'); ?>
             </td>
         </tr>
-        
+
         <tr class="user_fields">
             <td style="width:160px;">Module Access </td>
             <td>
@@ -131,10 +112,8 @@ if ($this->action->id == 'update') {
               <input type="checkbox" name="module_access_cvms" value="2" <?php echo $contacts[0]->allowed_module == '2' || $contacts[0]->allowed_module == 3?"checked":"";?> style="margin-left: 15px"> CVMS  
             </td>
         </tr>
-
+    </table>
 </div>
-
-</table>
 
 
 <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
@@ -239,9 +218,7 @@ if (isset($_GET['viewFrom'])) {
                 return false;
             return true;
         });
-
     });
-
 
 </script>
 
@@ -255,7 +232,4 @@ if (isset($_GET['viewFrom'])) {
         echo LicenseDetails::model()->getLicenseDetails();
         ?>
     </div>
-
 </div>
-
-

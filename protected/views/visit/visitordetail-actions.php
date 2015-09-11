@@ -508,20 +508,28 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     });
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
-                    // $btnASIC.on('click', function(e) {
-                    //     if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
-                    //         $('#identificationModal').modal('show');
-                    //     } else {
-                    //         activeVisit();
-                    //         return false;
-                    //     }
-                    // });
+                    $btnASIC.on('click', function(e) {
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                        } else {
+                            activeVisit();
+                            return false;
+                        }
+                    });
                 } else {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
                         var vicChecked = vicCheck(false);
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
+                            $btnASIC.on('click', function(e) {
+                                if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                                    $('#identificationModal').modal('show');
+                                } else {
+                                    activeVisit();
+                                    return false;
+                                }
+                            });
                         } else {
                             return false;
                         }

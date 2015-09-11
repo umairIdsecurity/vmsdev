@@ -138,7 +138,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
         //show list active event for negate
 
-        $('.listNegateVisit').live('click', function(e){
+        $('.listNegateVisit').on('click', function(e){
 
             e.preventDefault();
             document.getElementById('negate_reason').style.display="none";
@@ -204,7 +204,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         });
 
         //click on reset link, show modal for type reason
-        $('.resetCount').live('click', function(e){
+        $('.resetCount').on('click', function(e){
             e.preventDefault();
             var linkReset = $(this).data('link');
             $('#resetModal').removeClass('hidden');

@@ -1,3 +1,6 @@
+<?php
+$session = new CHttpSession;
+?>
 
 <div class="page-content">
     <h3 class="text-primary title">ASIC Sponsor Information</h3>
@@ -58,16 +61,57 @@
                         </div>
                     </div>
 
+                    <div class="row form-group">
+                        <div class="col-md-8">
+                            <?php
+
+                            $ws=Workstation::model()->findAll('is_deleted=0');
+
+                            $list=CHtml::listData($ws,'id','name');
+
+                            echo $form->dropDownList($model,'visitor_workstation',
+                                $list,
+                                array(
+                                    'class'=>'form-control input-sm',
+                                    'id'=>'WorkstationDropdown',
+                                    'empty' => 'Chose your entry point')
+                            );
+                            ?>
+                        </div>
+                        <?php echo $form->error($model,'visitor_workstation'); ?>
+                    </div>
+
+
                     <div class="row form-group" id="addCompanyDiv">
                          <div class="col-md-8">
                             <?php
-                                $this->widget('application.extensions.select2.Select2', array(
+                                /*$visitor = Registration::model()->findByPk($session['visitor_id']);
+
+                                if(isset($visitor->tenant)){
+                                    echo $form->dropDownList($model, 'company', CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
+                                }
+                                else
+                                {
+                                    echo $form->dropDownList($model,'company',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
+                                }*/
+                                if(isset($model->visitor_workstation) && ($model->visitor_workstation != "" && $model->visitor_workstation != null)){
+                                    $worsktation = Workstation::model()->findByPk($model->visitor_workstation);
+                                    $Criteria = new CDbCriteria();
+                                    $Criteria->condition = "tenant = ".$worsktation->tenant." and is_deleted = 0";
+                                    $companies = Company::model()->findAll($Criteria);
+                                    echo $form->dropDownList($model, 'company', CHtml::listData($companies, 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
+                                }else{
+                                     echo $form->dropDownList($model,'company',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
+                                }
+                            ?>
+                            <?php
+                                /*$this->widget('application.extensions.select2.Select2', array(
                                         'model' => $model,
                                         'attribute' => 'company',
                                         'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'),
                                         'selectedItems' => array(), // Items to be selected as default
                                         'placeHolder' => 'Please select a company',        
-                                ));
+                                ));*/
                             ?>
                             <?php echo $form->error($model,'company'); ?>
                         </div>
@@ -212,10 +256,7 @@
 
 
 <script type="text/javascript">
-
-
     $(document).ready(function() {
-
         $("#addCompanyBtn").unbind("click").click(function(event){
             var data=$("#company-form").serialize();
             $.ajax({
@@ -223,29 +264,56 @@
                 url: "<?php echo Yii::app()->createUrl('company/addCompany');?>",
                 data: data,
                 success: function (data) {
-                    
                     var data = JSON.parse(data);
                     console.log(data);
-
-                    if (data == 0)
+                    if (data.decision == 0)
                     {
-                        console.log("No data: " + data);
+                        console.log("errors got");
                     }
                     else
                     {
                         $("#Registration_company").append(data.dropDown);
-                        $('.select2-selection__rendered').text(data.compName);
                         $("#addCompanyModal").modal('hide');
-                    }
-                    
+                    }  
                 },
                 error: function(error){
                     console.log(error);
                 }
             });
-
         });
 
+        $("#WorkstationDropdown").change(function() {
+            var workstationId = $(this).val();
+            alert(workstationId);
+            if(workstationId != "" && workstationId != null){
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo Yii::app()->createUrl('preregistration/findAllCompanyFromWorkstation');?>",
+                    dataType: 'json',
+                    data: {"workstationId":workstationId},
+                    success: function (res) {
+                        if (res.data == "") {
+                            $("#Registration_company").empty();
+                            $("#Registration_company").append("<option value=''>Select Company</option>");
+                        }
+                        else
+                        {
+                            $("#Registration_company").empty();
+                            $("#Registration_company").append("<option value=''>Select Company</option>");
+                            $.each(res.data,function(index,element) {
+                                $("#Registration_company").append("<option value='"+element.id+"'>"+element.name+"</option>");
+                            }); 
+                        }
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+            }else{
+                $("#Registration_company").empty();
+                $("#Registration_company").append("<option value=''>Select Company</option>");
+            }
+        });
     });
 
 </script>

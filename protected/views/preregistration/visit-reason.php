@@ -154,11 +154,9 @@ $session = new CHttpSession;
     <?php $this->endWidget(); ?>
 </div>
 
-
-    <!-- ************************************************ -->
-
+<!-- ************************************************ -->
 <!-- ************************************** -->
-<!-- -Add Company Modal- -->
+<!-- -Add Company Modal starts here- -->
 <div class="modal fade" id="addCompanyModal" tabindex="-1" role="dialog" aria-labelledby="addCompanyModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content login-modal">
@@ -254,59 +252,166 @@ $session = new CHttpSession;
             </div>
        </div>
     </div>
-    <!-- - Login Model Ends Here -->
-
-
+    <!-- - company Modal Ends Here -->
 <!-- ************************************** -->
-    <!-- ************************************************ -->
+<!-- ************************************************ -->
+
+<!-- ************************************************ -->
+<!-- ************************************** -->
+<!-- -Add Company Contact Modal starts here- -->
+<div class="modal fade" id="addCompanyContactModal" tabindex="-1" role="dialog" aria-labelledby="addCompanyContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content login-modal">
+            <div class="modal-header login-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="addCompanyContactModalLabel">Add COMPANY CONTACT</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div role="tabpanel" class="login-tab">
+                        <!-- Nav tabs -->
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active text-center" id="home">
+                                
+                                <div class="clearfix"></div>
+                                
+                                <?php 
+                                    $form=$this->beginWidget('CActiveForm', array(
+                                        'id'=>'companyContact-form',
+                                        'enableAjaxValidation'=>false,
+                                        'enableClientValidation'=>true,
+                                        //'action' => array('company/addCompanyContactPreg'),
+                                        'clientOptions'=>array(
+                                            'validateOnSubmit'=>true,
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'onsubmit'=>"return false;",/* Disable normal form submit */
+                                            'class'=>"form-create-login"
+                                        )
+                                    ));
+                                ?>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                        <?php
+                                            $visitor = Registration::model()->findByPk($session['visitor_id']);
+
+                                            if(isset($visitor->tenant)){
+                                                echo $form->dropDownList($companyModel, 'name', CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-lg'));
+                                            }
+                                            else
+                                            {
+                                                echo $form->dropDownList($companyModel,'name',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
+                                            }
+                                        ?>
+                                    </div>
+                                    <?php echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
+                                </div>
+
+                                    <div class="form-group">
+                                        
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            Company Contact
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                    </div>
+
+                                    
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                    </div>
+
+
+                                    <?php echo CHtml::Button('Add',array('id'=>'addCompanyContactBtn','class'=>'btn btn-block bt-login')); ?>
+                                    
+                                <?php $this->endWidget(); ?>
+
+                            </div>
+                          
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+       </div>
+    </div>
+    <!-- - Add Company Contact Modal Ends Here -->
+<!-- ************************************** -->
+<!-- ************************************************ -->
 
 <script>
     $(document).ready(function() {
-        //alert('hello'); other-reason
+        
         $('#other-reason').hide();
         $('#Visit_reason').change(function(e){
             if ($('#Visit_reason').val() == 'other'){
-                //alert('hello');
                 $('#other-reason').show();
             }else{
                 $('#other-reason').hide();
             }
         });
-
         
         $("#addCompanyBtn").click(function(event){
-            
             var data=$("#company-form").serialize();
-            
             $.ajax({
                 type: 'POST',
                 url: "<?php echo Yii::app()->createUrl('company/addCompany');?>",
                 data: data,
                 success: function (data) {
-
                     var data = JSON.parse(data);
                     if (data.decision == 0)
                     {
-                       /* errors = data.errors;
-                        $(".input-group").addClass('error');
-                        $("#Company_name_em_").show();
-                        $("#Company_name_em_").html(errors.name[0]);*/
-                        
-                        
-                        //console.log(errors.name[0]);
+                        console.log("errors got");
                     }
                     else
                     {
-                        $("#Registration_company").append(data.dropDown);
+                        $("#Company_name").append(data.dropDown);
+                        $("#companyContact").empty();
+                        $("#companyContact").append("<option value=''>Select Company Contact</option>");
+                        $.each(data.contacts,function(index,element) {
+                            $("#companyContact").append("<option value='"+element.id+"'>"+element.first_name+" "+element.last_name+"</option>");
+                        }); 
                         $("#addCompanyModal").modal('hide');
                     }
-                    
                 },
                 error: function(error){
                     console.log(error);
                 }
             });
-
         });
 
         $("#Company_name").change(function() {
@@ -341,19 +446,45 @@ $session = new CHttpSession;
             }
         });
 
-        $("#nextBtn").click(function(e){
+        $("#addCompanyContactBtn").click(function(event){
+            var data=$("#companyContact-form").serialize();
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo Yii::app()->createUrl('company/addCompanyContactPreg');?>",
+                data: data,
+                success: function (data) {
+                    
+                    console.log(data);
+                    var data = JSON.parse(data);
+
+                    if (data.decision == 0)
+                    {
+                        console.log("errors got");
+                    }
+                    else
+                    {
+                        var contactCompany = data.contactCompany;
+                        $("#Company_name").append("<option selected='selected' value='"+contactCompany.id+"'>"+contactCompany.name+"</option>");
+                        $("#companyContact").append(data.dropDown);
+                        $("#addCompanyContactModal").modal('hide');
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        });
+
+
+        /*$("#nextBtn").click(function(e){
             var companyContactVal = $("#companyContact").val();
-
             alert(companyContactVal);
-
             if(companyContactVal == ""){
                 $("#companyContactError").show();
                 return false;
             }else{
                 $("#companyContactError").hide();
-            }
-            
-        });
-
+            } 
+        });*/
     });
 </script>

@@ -21,7 +21,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration'),
+				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -56,18 +56,12 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionIndex(){
-
 		$session = new CHttpSession;
-
 		$model = new EntryPoint();
-
 		/*if(isset($session['workstation']) && $session['workstation']!=""){
 			$model->entrypoint = $session['workstation'];
 		}*/
-
 		unset($session['workstation']);
-
-
 		if(isset($_POST['EntryPoint'])){
 
 			$model->attributes=$_POST['EntryPoint'];
@@ -396,7 +390,19 @@ class PreregistrationController extends Controller
 			$model->asic_no = $_POST['Registration']['asic_no'];
 			$model->asic_expiry = $_POST['Registration']['asic_expiry'];
 
-			$model->company = $_POST['Registration']['company'];
+			if(empty($model->company) || $model->company == "" || $model->company == null){
+				$model->company = $_POST['Registration']['company'];
+			}
+			
+			if(empty($model->visitor_workstation) || $model->visitor_workstation == "" || $model->visitor_workstation == null){
+				$model->visitor_workstation = $_POST['Registration']['visitor_workstation'];
+			}
+
+			if(empty($model->tenant) || $model->tenant == "" || $model->tenant == null){
+				$workstation = Workstation::model()->findByPk($_POST['Registration']['visitor_workstation']);
+				$model->tenant = $workstation->tenant;
+			}
+
 			$model->profile_type = "ASIC";
 			$model->role = 10; //role is 10: Visitor/Kiosik
 			$model->visitor_card_status = 2; //visitor card status is 2: VIC holder
@@ -563,7 +569,7 @@ class PreregistrationController extends Controller
 			$this->redirect(array('preregistration/index'));
 		}
 
-		$model->scenario = 'asic';
+		$model->scenario = 'preregistrationAsic';
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
 			echo CActiveForm::validate($model);
@@ -603,6 +609,10 @@ class PreregistrationController extends Controller
 				else{
 
 					if( !empty($model->email) && !empty($model->contact_number) ){
+
+						/*echo "<pre>";
+						print_r($_POST['Registration']);
+						die;*/
 
 						$model->profile_type = 'ASIC';
 						$model->key_string = hash('ripemd160', uniqid());
@@ -1505,6 +1515,23 @@ class PreregistrationController extends Controller
 	    echo CJavaScript::jsonEncode($resultMessage);
 	    Yii::app()->end();
     }
+
+    public function actionFindAllCompanyFromWorkstation()
+    {
+    	if(isset($_POST['workstationId'])){$workstationId = $_POST['workstationId'];}
+
+        $worsktation = Workstation::model()->findByPk($workstationId);
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = ".$worsktation->tenant." and is_deleted = 0";
+        $companies = Company::model()->findAll($Criteria);
+
+        $resultMessage['data'] = $companies;
+	    echo CJavaScript::jsonEncode($resultMessage);
+	    Yii::app()->end();
+    }
+
+    
 
     public function actionUploadProfilePhoto() {
 

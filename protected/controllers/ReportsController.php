@@ -662,8 +662,8 @@ class ReportsController extends Controller
         $criteria = new CDbCriteria;
         $criteria->addCondition("visit_status IN (".VisitStatus::ACTIVE.", ".VisitStatus::CLOSED.", ".VisitStatus::EXPIRED.")");
         $criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED." AND tenant = ".Yii::app()->user->tenant );
-        $dateFrom = Yii::app()->request->getParam("date_from_filter", date("Y-m-d", strtotime("-1 month")));
-        $dateTo = Yii::app()->request->getParam("date_to_filter", date("Y-m-d"));
+        $dateFrom = Yii::app()->request->getParam("date_from_filter", date("d-m-Y", strtotime("-1 month")));
+        $dateTo = Yii::app()->request->getParam("date_to_filter", date("d-m-Y"));
         $criteria->addCondition("date_check_in >= '".date("Y-m-d", strtotime($dateFrom))."' AND date_check_in <= '".date("Y-m-d", strtotime($dateTo))."'");
         
         $visits = Visit::model()->findAll($criteria);

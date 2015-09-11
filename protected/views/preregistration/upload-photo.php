@@ -1,18 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 7/11/15
- * Time: 3:21 PM
- */
-
-?>
-
-<?php
 $session = new CHttpSession;
-
-if(!empty($session['imgName'])){
-    $preImg = '/uploads/visitor/'.$session['imgName'];
+$visitor = Registration::model()->findByPk($session['visitor_id']);
+$preImg = '';
+if(!empty($visitor->photo) && !is_null($visitor->photo)){
+    $photoModel=Photo::model()->findByPk($visitor->photo);
+    if(!empty($photoModel->db_image))
+    {
+        $preImg = "data:image;base64," . $photoModel->db_image;
+    }
+    else
+    {
+        $preImg = Yii::app()->theme->baseUrl.'/images/user.png';
+    }
 }
 else{
     $preImg = Yii::app()->theme->baseUrl.'/images/user.png';
@@ -40,7 +39,7 @@ else{
 
 
     <div class="image-user">
-        <img src="<?=$preImg ?>" alt="image user" id="preview" width="220" height="253">
+        <img src="<?= $preImg ?>" alt="image user" id="preview" width="220" height="253">
     </div>
 
     <div class="form-group">

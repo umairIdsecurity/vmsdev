@@ -43,7 +43,7 @@ class CompanyController extends Controller
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('logo','addCompany'),
+                'actions' => array('logo','addCompany','addCompanyContactPreg'),
                 'users' => array('*'),
             ),
             array('deny', // deny all users
@@ -520,15 +520,16 @@ class CompanyController extends Controller
                     $company->attributes=$formInfo;
 
                     $company->name = $formInfo['name'];
+                    $company->trading_name = $formInfo['name'];
                     $company->contact = $formInfo['user_first_name'] . ' ' . $formInfo['user_last_name'];
                     $company->email_address = $formInfo['user_email'];
                     $company->mobile_number = $formInfo['user_contact_number'];
                     $company->office_number = $formInfo['user_contact_number'];
 
                     
-                    /*$company->created_by_user = $session['created_by'];
-                    $company->created_by_visitor  = $session['visitor_id'];
-                    $company->tenant = $session['tenant'];*/
+                    $company->created_by_user = empty($session['created_by']) ? NULL : $session['created_by'];
+                    $company->created_by_visitor  = empty($session['visitor_id']) ? NULL : $session['visitor_id'];
+                    $company->tenant = empty($session['tenant']) ? NULL : $session['tenant'];
 
                     $company->company_type = 3;
 
@@ -539,15 +540,12 @@ class CompanyController extends Controller
                     {
                         if ($company->save()) 
                         {
-
                             //integrity constraint violation fix.
                             //From preregisteration set attribute from session as it was set in session 
                             //for USER because Yii:app()->user->id in preregistration has Visitor Id and not USER id.
                             //If wrong handled then it will throws Integrity Constraint Violation as foreign key 
                             //of created_by in user refers to User table and not visitor table 
-
                             $command = Yii::app()->db->createCommand();
-
                             $result=$command->insert('user',array(
                                                         //'id'=>it is autoincrement,
                                                         'company'=>$company->id,
@@ -558,26 +556,27 @@ class CompanyController extends Controller
                                                         'timezone_id'=>1,
                                                         'photo'=>NULL,
                                                         'tenant'=> empty($session['tenant']) ? NULL : $session['tenant'],
-                                                        'user_type'=>1,
+                                                        'user_type'=>2,
                                                         'user_status'=>1,
-                                                        'role'=>9,
+                                                        'role'=>10,
                                                         'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
                                                     ));
-                           
-
                             if ($result)
                             {
+                                $Criteria = new CDbCriteria();
+                                $Criteria->condition = "company = ".$company->id." and is_deleted = 0";
+                                $contacts = User::model()->findAll($Criteria);
+
                                 $dropDown = "<option selected='selected' value='" . $company->id . "' >" . $company->name . "</option>"; // seriously why is this here?
-                                $ret = array("compId" =>  $company->id, "compName" => $company->name, "dropDown" => $dropDown);
+                                $ret = array("compId" =>  $company->id, "compName" => $company->name, "contacts"=>$contacts, "dropDown" => $dropDown);
                                 echo CJSON::encode($ret);
                                 Yii::app()->end();
                             }
                             else
                             {
-                                //print_r($contact->errors);
-                                echo "0";
+                                $data = array('decision'=>0);
+                                echo CJSON::encode($data);
                                 Yii::app()->end();
-                                //die("--DONE--");
                             }
                         }
                         else
@@ -612,6 +611,75 @@ class CompanyController extends Controller
                 }*/
             }
         //}    
+    }
+
+    /**
+        * PREREGISTRATION : Add company contact
+    */
+    public function actionAddCompanyContactPreg()
+    {
+        $session = new CHttpSession;
+        $company = new Company();
+        $company->scenario = 'preregistration';
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] == 'companyContact-form') {
+            echo CActiveForm::validate($company);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['Company'])) 
+        {
+            $formInfo = $_POST['Company'];
+
+            $company->attributes=$formInfo;
+
+            
+
+            if($company->validate())
+            {
+                $command = Yii::app()->db->createCommand();
+                $result=$command->insert('user',array(
+                                    //'id'=>it is autoincrement,
+                                    'company'=>$formInfo['name'],
+                                    'first_name'=>$formInfo['user_first_name'],
+                                    'last_name'=>$formInfo['user_last_name'],
+                                    'email'=>$formInfo['user_email'],
+                                    'contact_number'=>$formInfo['user_contact_number'],
+                                    'timezone_id'=>1,
+                                    'photo'=>NULL,
+                                    'tenant'=> empty($session['tenant']) ? NULL : $session['tenant'],
+                                    'user_type'=>2,
+                                    'user_status'=>1,
+                                    'role'=>10,
+                                    'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
+                                ));
+                if ($result)
+                {
+                    $last_id = Yii::app()->db->getLastInsertID();
+                    $user = User::model()->findByPk($last_id);
+                    
+                    $contactCompany = Company::model()->findByPk($formInfo['name'],"is_deleted = 0");
+
+                    $dropDown = "<option selected='selected' value='" . $user->id . "'>" .$user->first_name." ".$user->last_name."</option>"; // seriously why is this here?
+                    $ret = array("contactCompany"=>$contactCompany, "dropDown" => $dropDown);
+                    echo CJSON::encode($ret);
+                    Yii::app()->end();
+                }
+                else
+                {
+                    $data = array('decision'=>0);
+                    echo CJSON::encode($data);
+                    Yii::app()->end();
+                }
+            }
+            else
+            {
+                $errors = $company->errors;
+                $data = array('errors'=>$errors,'decision'=>0 );
+                echo CJSON::encode($data);
+                Yii::app()->end();
+            }
+        }
     }
 
     public function actionGetContacts()

@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/24/15
- * Time: 2:59 AM
- */
+$session = new CHttpSession;
 ?>
 <style type="text/css">
     table.dataTable.no-footer{
@@ -212,17 +207,28 @@
 
                 <div class="form-group" id="addCompanyDiv">
                     <?php
-                        $this->widget('application.extensions.select2.Select2', array(
+                        $visitor = Registration::model()->findByPk($session['visitor_id']);
+
+                        if(isset($visitor->tenant)){
+                            echo $form->dropDownList($model, 'company', CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
+                        }
+                        else
+                        {
+                            echo $form->dropDownList($model,'company',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
+                        }
+                    ?>
+                    <?php
+                        /*$this->widget('application.extensions.select2.Select2', array(
                                 'model' => $model,
                                 'attribute' => 'company',
                                 'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'),
                                 'selectedItems' => array(), // Items to be selected as default
                                 'placeHolder' => 'Please select a company',        
-                        ));
+                        ));*/
                     ?>
+                    <?php echo $form->error($model,'company'); ?>
                 </div>
-                 <?php echo $form->error($model,'company'); ?>
-
+                
                 <div class="form-group">
                     <a class="btn btn-primary" style="float: left;" href="#addCompanyModal" role="button" data-toggle="modal">Add Company</a>
                 </div>
@@ -459,21 +465,17 @@
                 url: "<?php echo Yii::app()->createUrl('company/addCompany');?>",
                 data: data,
                 success: function (data) {
-                    
-                    var data = JSON.parse(data);
-                    console.log(data);
 
-                    if (data == 0)
+                    var data = JSON.parse(data);
+                    if (data.decision == 0)
                     {
-                        console.log("No data: " + data);
+                        console.log("errors got");
                     }
                     else
                     {
                         $("#Registration_company").append(data.dropDown);
-                        $('.select2-selection__rendered').text(data.compName);
                         $("#addCompanyModal").modal('hide');
                     }
-                    
                 },
                 error: function(error){
                     console.log(error);

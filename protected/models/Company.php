@@ -77,7 +77,7 @@ class Company extends CActiveRecord {
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
                 array('password_requirement,password_option,user_password','safe'),
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
-                array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+                // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
                 array('code', 'match',
                     'pattern' => '/^[a-zA-Z\s]+$/',
                     'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
@@ -116,7 +116,7 @@ class Company extends CActiveRecord {
 
                             array('code', 'required', 'except' => 'preregistration'),
                             array('email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
-                            array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+                            // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
 
                             array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
                             array('code', 'match',

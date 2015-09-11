@@ -118,7 +118,7 @@ if ($this->action->id == 'update') {
 
         <tr class="user_fields">
             <td style="width:160px;">Contact number</td>
-            <td><?php echo $form->textField($model, 'mobile_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number', 'onkeyup' => 'restrictContactNo(this)')); ?>
+            <td><?php echo $form->textField($model, 'mobile_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
 
                 <?php echo "<br>" . $form->error($model, 'mobile_number'); ?>
             </td>
@@ -232,7 +232,13 @@ if (isset($_GET['viewFrom'])) {
             $( ".user_fields" ).show();
         }
 
-
+        $("#Company_mobile_number").on("keypress",function(evt){
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            //anything other than BACKSPACE,SPACE and numerics from 0 to 9 will not do anything in textbox
+            if (charCode > 32 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        });
 
     });
 

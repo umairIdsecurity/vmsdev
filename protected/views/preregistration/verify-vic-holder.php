@@ -94,9 +94,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
-                        <div class="col-lg-5">Date of Visit: <?= $visit->date_in ?></div>
+                        <div class="col-lg-5">Date of Visit: <?= $visit->date_check_in ?></div>
                         <div class="col-lg-2"></div>
-                        <div class="col-lg-5">Date Out: <?= $visit->date_out ?></div>
+                        <div class="col-lg-5">Date Out: <?= $visit->date_check_out ?></div>
                     </div>
                 </div>
             </div>

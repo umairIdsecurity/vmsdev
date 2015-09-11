@@ -1,4 +1,6 @@
-
+<?php
+$session = new CHttpSession;
+?>
 <style type="text/css">
     table.dataTable.no-footer{
         border-bottom: 0px solid #111 !important;
@@ -92,7 +94,7 @@
     <br>
     <div class="row">
         <div class="col-lg-7">
-             <h1 class="text-primary title">ASSIGN TO ANOTHER ASIC SPONSOR</h1>
+             <h1 class="text-primary title"><a href="<?php echo Yii::app()->createUrl('preregistration/assignAsicholder'); ?>">ASSIGN TO ANOTHER ASIC SPONSOR</a></h1>
         </div>
     </div>
     <br>
@@ -206,7 +208,7 @@
                         $this->widget('application.extensions.select2.Select2', array(
                                 'model' => $model,
                                 'attribute' => 'company',
-                                'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'),
+                                'items' =>  CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),
                                 'selectedItems' => array(), // Items to be selected as default
                                 'placeHolder' => 'Please select a company',        
                         ));
@@ -254,6 +256,7 @@
             $('#Registration_selected_asic_id').val("");
             $('#new_asic_area').show();
         });
+
         $('#search_asic_btn').click(function(event) {
             event.preventDefault();
 
@@ -295,7 +298,7 @@
                                         $('#Registration_selected_asic_id').val($(this).val());
                                         $('#Registration_contact_number').val("");
                                         $('#Registration_email').val("");
-                                        $('#new_asic_area').hide();
+                                        $('#new_asic_area').empty();
                                     });
                                 }
                             });

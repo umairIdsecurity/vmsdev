@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-lg-3"><a class="btn btn-primary" href="<?php echo Yii::app()->createUrl('preregistration/assignAsicholder'); ?>">Yes</a></div>
         
-        <div class="col-lg-2"><a class="btn btn-primary" href="<?php echo Yii::app()->createUrl('preregistration/declineVicholder'); ?>">No</a></div>
+        <div class="col-lg-2"><a class="btn btn-primary" href="<?php echo Yii::app()->createUrl('preregistration/vicholderDeclined'); ?>">No</a></div>
     </div>  
 
   

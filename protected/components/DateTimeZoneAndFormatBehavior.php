@@ -86,7 +86,7 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
     }
  
     public function afterFind($event) {
-        foreach ($event->sender->tableSchema->columns as $columnName => $column) {
+          foreach ($event->sender->tableSchema->columns as $columnName => $column) {
             if (($column->dbType == 'date') ||
                     ($column->dbType == 'time') ||
                     ($column->dbType == 'timestamp') ||

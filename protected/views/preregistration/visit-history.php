@@ -26,10 +26,10 @@
         <tbody>
         	<?php foreach($query1 as $q){ ?>
         			<tr class="status-">
-        				<td><?php echo date("j-n-Y",strtotime($q['date_in'])); ?></td>
+        				<td><?php echo date("j-n-Y",strtotime($q['date_check_in'])); ?></td>
 		                <td><?php echo $q['first_name']." ".$q['last_name']; ?></td>
 		                <td><?php echo $q['name']; ?></td>
-		                <td><?php echo date("j-n-Y",strtotime($q['date_out'])); ?></td>
+		                <td><?php echo date("j-n-Y",strtotime($q['date_check_out'])); ?></td>
 		                <td><?php echo $q['status'] == "Pre-registered" ? "Preregistered":$q['status']; ?></td>
         			</tr>	
         	<?php } ?> 

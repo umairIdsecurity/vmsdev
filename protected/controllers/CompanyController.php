@@ -502,13 +502,11 @@ class CompanyController extends Controller
     {
         //if (Yii::app()->request->isAjaxRequest) {
             $session = new CHttpSession;
-
             $company = new Company();
-
             $company->scenario = 'preregistration';
 
-            if (isset($_POST['ajax']) && $_POST['ajax'] === 'company-form') {
-                echo CActiveForm::validate($model);
+            if (isset($_POST['ajax']) && $_POST['ajax'] == 'company-form') {
+                echo CActiveForm::validate($company);
                 Yii::app()->end();
             }
 
@@ -571,7 +569,7 @@ class CompanyController extends Controller
                             {
                                 $dropDown = "<option selected='selected' value='" . $company->id . "' >" . $company->name . "</option>"; // seriously why is this here?
                                 $ret = array("compId" =>  $company->id, "compName" => $company->name, "dropDown" => $dropDown);
-                                echo json_encode($ret);
+                                echo CJSON::encode($ret);
                                 Yii::app()->end();
                             }
                             else
@@ -584,16 +582,25 @@ class CompanyController extends Controller
                         }
                         else
                         {
-                            $msg = print_r($company->getErrors(),1);
-                            throw new CHttpException(400,'Not saved because: '.$msg );
+                            //$msg = print_r($company->getErrors(),1);
+                            //throw new CHttpException(400,'Not saved because: '.$msg );
                             //echo "0";
+                            $errors = $company->errors;
+                            $data = array('errors'=>$errors,'decision'=>0 );
+                            echo CJSON::encode($data);
                             Yii::app()->end();
                         }    
                     }
                     else
                     {
-                        $msg = print_r($company->getErrors(),1);
-                        throw new CHttpException(400,'Not validated because: '.$msg );
+                        $errors = $company->errors;
+                        $data = array('errors'=>$errors,'decision'=>0 );
+                        echo CJSON::encode($data);
+                        Yii::app()->end();
+
+                        //print_r($data);
+                        /*$msg = print_r($company->getErrors(),1);
+                        throw new CHttpException(400,'Not validated because: '.$msg );*/
                         //echo "0";
                         //Yii::app()->end();
                     }

@@ -496,7 +496,7 @@ class ReportsController extends Controller
         
         $config = Yii::app()->getComponents(false);
         $visitsCount = Yii::app()->db->createCommand()
-                ->select("t.id,t.name,count(visitors.id) as visitors,visitors.date_created as date_check_in") 
+                ->select("t.id,t.name,count(visitors.id) as visitors") 
                 ->from('visitor_type t')
                 ->join("visitor visitors",'t.id = visitors.visitor_type')
                 ->where($dateCondition)
@@ -539,7 +539,7 @@ class ReportsController extends Controller
                 ->join("visit visits",'visitors.id = visits.visitor')
                 ->join("card_type cards",'cards.id = visits.card_type')
                 ->where($dateCondition)
-                ->group('cards.id,cards.name,visitors.date_created')
+                ->group('cards.id,cards.name')
                 ->queryAll();
 
         $allCards = CardType::model()->findAll("module=2");
@@ -662,8 +662,8 @@ class ReportsController extends Controller
         $criteria = new CDbCriteria;
         $criteria->addCondition("visit_status IN (".VisitStatus::ACTIVE.", ".VisitStatus::CLOSED.", ".VisitStatus::EXPIRED.")");
         $criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED." AND tenant = ".Yii::app()->user->tenant );
-        $dateFrom = Yii::app()->request->getParam("date_from_filter", date("Y-m-d", strtotime("-1 month")));
-        $dateTo = Yii::app()->request->getParam("date_to_filter", date("Y-m-d"));
+        $dateFrom = Yii::app()->request->getParam("date_from_filter", date("d-m-Y", strtotime("-1 month")));
+        $dateTo = Yii::app()->request->getParam("date_to_filter", date("d-m-Y"));
         $criteria->addCondition("date_check_in >= '".date("Y-m-d", strtotime($dateFrom))."' AND date_check_in <= '".date("Y-m-d", strtotime($dateTo))."'");
         
         $visits = Visit::model()->findAll($criteria);

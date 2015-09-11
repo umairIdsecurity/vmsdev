@@ -319,7 +319,7 @@ class VisitorTypeController extends Controller {
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition .= "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition .= "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
         }
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
@@ -329,11 +329,11 @@ class VisitorTypeController extends Controller {
         $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
         
         $visitsCount = Yii::app()->db->createCommand()
-                ->select("t.id,t.name,count(visitors.id) as visitors,DATE(visitors.date_created) as date_check_in") 
+                ->select("t.id,t.name,count(visitors.id) as visitors") 
                 ->from('visitor_type t')
                 ->join("visitor visitors",'t.id = visitors.visitor_type')
                 ->where($dateCondition)
-                ->group('t.id,DATE(visitors.date_created)')
+                ->group('t.id, t.name')
                 ->queryAll();
         
         $this->render("visitortypecount", array("visit_count"=>$visitsCount));

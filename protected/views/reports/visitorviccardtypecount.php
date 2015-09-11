@@ -103,6 +103,6 @@
 //very useful google chart
         $this->widget('ext.Hzl.google.HzlVisualizationChart', array('visualization' => 'PieChart',
             'data' => $datasets,
-            'options' => array('title' => 'Total VICs by Visitor Type')));
+            'options' => array('title' => 'Total VICs by Card Type')));
         ?>
     </div>

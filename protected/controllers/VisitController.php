@@ -1299,7 +1299,7 @@ class VisitController extends Controller {
             ->from('workstation t')
             ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)
-            ->group('t.id, visitors.date_created, t.name')
+            ->group('t.id, t.name')
             ->queryAll();
 //        $allWorkstations = Yii::app()->db->createCommand()
 //            ->select( 't.id,t.tenant,t.name')

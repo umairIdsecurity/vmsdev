@@ -539,7 +539,7 @@ class ReportsController extends Controller
                 ->join("visit visits",'visitors.id = visits.visitor')
                 ->join("card_type cards",'cards.id = visits.card_type')
                 ->where($dateCondition)
-                ->group('cards.id,cards.name,visitors.date_created')
+                ->group('cards.id,cards.name')
                 ->queryAll();
 
         $allCards = CardType::model()->findAll("module=2");

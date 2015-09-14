@@ -534,7 +534,7 @@ class ReportsController extends Controller
         $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (cards.module=2)";
 
         $visitorCount = Yii::app()->db->createCommand()
-                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors, visitors.date_created")
+                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors")
                 ->from('visitor visitors')
                 ->join("visit visits",'visitors.id = visits.visitor')
                 ->join("card_type cards",'cards.id = visits.card_type')

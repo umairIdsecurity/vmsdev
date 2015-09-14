@@ -476,6 +476,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var flag = true;
             var $btnVic = $('#btnVicConfirm'),
                 $btnASIC = $('#btnAsicConfirm');
+                $btnIdentification = $('#btnIdentificationConfirm');
 
             var isWorkstationDelete = "<?php echo $isWorkstationDelete; ?>";
             if (isWorkstationDelete == 'true') {
@@ -511,6 +512,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     $btnASIC.on('click', function(e) {
                         if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
                             $('#identificationModal').modal('show');
+                            $btnIdentification.on('click', function(e) {
+                                if ($('#identificationChkBoxYes').is(':checked')) {
+                                    $('#identificationModal').modal('hide');
+                                    $('input[name="identificationActiveVisit"]').prop('checked', true);
+                                    activeVisit();
+                                } else {
+                                    updateIdentificationDetails();
+                                }
+                            });
                         } else {
                             activeVisit();
                             return false;
@@ -525,6 +535,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             $btnASIC.on('click', function(e) {
                                 if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
                                     $('#identificationModal').modal('show');
+                                    $btnIdentification.on('click', function(e) {
+                                        if ($('#identificationChkBoxYes').is(':checked')) {
+                                            $('#identificationModal').modal('hide');
+                                            $('input[name="identificationActiveVisit"]').prop('checked', true);
+                                            activeVisit();
+                                        } else {
+                                            updateIdentificationDetails();
+                                        }
+                                    });
                                 } else {
                                     activeVisit();
                                     return false;

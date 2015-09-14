@@ -43,10 +43,6 @@ $('.search-form form').submit(function(){
 		'contact_person_name',
 		'contact_person_email',
 		array(
-            'name'=>'Formatdate',
-            'filter'=>false,
-        ),
-		array(
                     'header' => 'Actions',
                     'class' => 'CButtonColumn',
                     'template' => '{update} {delete}',

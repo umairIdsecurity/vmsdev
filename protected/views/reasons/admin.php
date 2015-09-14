@@ -42,10 +42,6 @@ $('.search-form form').submit(function(){
 	'columns'=>array(
 		'id',
 		'reason_name',
-		array(
-            'name'=>'Formatdate',
-            'filter'=>false,
-        ),
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

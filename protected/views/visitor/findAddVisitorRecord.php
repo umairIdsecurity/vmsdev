@@ -824,6 +824,7 @@ $model->identification_country_issued = 13;
                 $("#cardtype").val() != <?php echo CardType::SAME_DAY_VISITOR; ?>  &&
                 $("#cardtype").val() != <?php echo CardType::MANUAL_VISITOR; ?>  &&
                 $("#cardtype").val() != <?php echo CardType::VIC_CARD_SAMEDATE; ?>  && 
+                $("#cardtype").val() != <?php echo CardType::VIC_CARD_24HOURS; ?>  && 
                 $("#cardtype").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
             ){
                 $("#photoErrorMessage").show();

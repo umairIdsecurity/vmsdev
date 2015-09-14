@@ -230,11 +230,11 @@ class ReportsController extends Controller
             $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
         }
         
-        $dateCondition .= "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+        $dateCondition .= "( t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='CORPORATE')";
         
         $data = Yii::app()->db->createCommand()
-                ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
+                ->select("t.date_created AS date_check_in, t.first_name, t.id") 
                 ->from("visitor t")
                 ->where($dateCondition)
                 ->queryAll();

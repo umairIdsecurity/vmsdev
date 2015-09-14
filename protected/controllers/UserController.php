@@ -166,17 +166,22 @@ class UserController extends Controller
         //$this->loadModel($id)->delete();
         $model = $this->loadModel($id);
 
-        if (!$model->delete()) {
-            $visitExists = Visit::model()->exists("is_deleted = 0 and host =" . $id . "");
-            $isTenant = Company::model()->exists("is_deleted = 0 and tenant =" . $id . "");
-            $userWorkstation = UserWorkstations::model()->exists("user_id = " . $id . "");
-            $visitorExists = Visitor::model()->exists("tenant = " . $model->id . " and is_deleted=0");
-            $isTenantAgent = Company::model()->exists("tenant_agent = " . $model->id . " and is_deleted=0");
-
-            if (!$visitExists && !$isTenant && !$userWorkstation && !$visitorExists && !$isTenantAgent) {
-                return false;
-            }
+        if(!$model->delete())
+        {
+            return false;
         }
+
+        //if (!$model->delete()) {
+            //$visitExists = Visit::model()->exists("is_deleted = 0 and host =" . $id . "");
+            //$isTenant = Company::model()->exists("is_deleted = 0 and tenant =" . $model->company_id . "");
+            //$userWorkstation = UserWorkstations::model()->exists("user_id = " . $id . "");
+            //$visitorExists = Visitor::model()->exists("tenant = " . $model->tenant_id . " and is_deleted=0");
+            //$isTenantAgent = Company::model()->exists("tenant_agent = " . $model->tenant_id . " and is_deleted=0");
+
+            //if (!$visitExists && !$isTenant && !$userWorkstation && !$visitorExists && !$isTenantAgent) {
+                //return false;
+            //}
+        //}
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {

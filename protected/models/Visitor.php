@@ -201,7 +201,7 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         $rules = array(
-            array('first_name, last_name, email, contact_number', 'required'),
+            array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
             //array('tenant','required','message' =>'Please select a {attribute}'),
 
             array('is_deleted', 'numerical', 'integerOnly' => true),
@@ -317,7 +317,8 @@ class Visitor extends CActiveRecord {
         switch ($this->profile_type) {
             case self::PROFILE_TYPE_CORPORATE:
                 $rules[] = array(
-                    'company', 'required'
+                    'company', 'required',
+                    'message'=>'Please complete {attribute}'
                 );
                 break;
             case self::PROFILE_TYPE_VIC:
@@ -333,18 +334,21 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued'],
+                    'message'=>'Please complete {attribute}'
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
                 $rules[] = [
                     'identification_type, identification_document_no, identification_document_expiry', 'required',
                     'on' => 'asicApplicant',
-                    'except' => ['delete']
+                    'except' => ['delete'],
+                    'message'=>'Please complete {attribute}'
                 ];
                 $rules[] = array(
                     'visitor_card_status, asic_no, asic_expiry', 'required',
-                    'on' => 'asicIssued'
+                    'on' => 'asicIssued',
+                    'message'=>'Please complete {attribute}'
                 );
                 break;
         }

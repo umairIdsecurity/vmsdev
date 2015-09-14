@@ -120,7 +120,7 @@ $session = new CHttpSession;
                     <option value="">Select Company Contact</option>
                 </select>
 
-                <div style="display:none" id="companyContactError" class="errorMessage">Please select Company Contact</div>
+                <div style="display:none" id="companyContactError" class="errorMessage">Please complete Company Contact</div>
 
                 <?php
                     //echo $form->dropDownList($model,'host', array(''=>'Select Company'), array('prompt' => 'Select Company Contact' , 'class'=>'form-control input-sm'));

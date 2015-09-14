@@ -30,7 +30,7 @@ class UserWorkstations extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('user_id, workstation', 'required'),
+            array('user_id, workstation', 'required', 'message'=>'Please complete {attribute}'),
             array('user_id, workstation, created_by,is_primary', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

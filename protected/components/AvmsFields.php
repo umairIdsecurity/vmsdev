@@ -17,13 +17,13 @@ class AvmsFields extends CValidator
             switch ($attribute) {
                 case 'asic_no':
                     if(empty($object->$attribute) ){
-                        $object->addError($attribute, 'Please enter an ASIC number');
+                        $object->addError($attribute, 'Please complete ASIC number');
                     }
                     break;
 
                 case 'asic_expiry':
                     if(empty($object->$attribute) ){
-                        $object->addError($attribute, 'Please enter an ASIC expiry date');
+                        $object->addError($attribute, 'Please complete ASIC expiry date');
                     }
                     break;
 
@@ -38,10 +38,10 @@ class AvmsFields extends CValidator
 
             $str =  "if(value=='') {\n"
                     ."  if(attribute='asic_no') {\n"
-                    ."      messages.push('Please enter an ASIC number');\n"
+                    ."      messages.push('Please complete ASIC number');\n"
                     ."  }\n"
                     ."  if(atribute='asic_expiry'){\n"
-                    ."      messages.push('Please enter an ASIC expiry date');\n"
+                    ."      messages.push('Please complete ASIC expiry date');\n"
                     ."  }\n"
                     ."}\n";
 

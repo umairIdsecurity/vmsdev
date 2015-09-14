@@ -21,7 +21,7 @@ class AddAsicEscort extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('first_name, last_name, email,contact_number, asic_no, asic_expiry, company', 'required'),
+            array('first_name, last_name, email,contact_number, asic_no, asic_expiry, company', 'required', 'message'=>'Please complete {attribute}'),
             array('email', 'email'),
         );
     }

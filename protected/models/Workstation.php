@@ -46,9 +46,9 @@ class Workstation extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'required'),
-            array('timezone_id','required','message' =>'Please select a timezone'),
-            array('tenant','required','message' =>'Please select a {attribute}'),
+            array('name', 'required', 'message'=>'Please complete {attribute}'),
+            array('timezone_id','required','message' =>'Please complete timezone'),
+            array('tenant','required','message' =>'Please complete {attribute}'),
             array('contact_number, card_type,moduleCorporate, moduleVic, password', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),

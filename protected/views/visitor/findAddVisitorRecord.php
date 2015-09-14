@@ -469,7 +469,7 @@ $model->identification_country_issued = 13;
                                     </select>
                                     <span class="required">*</span>
 
-                                    <div class="errorMessage visitorReason">Select Reason</div>
+                                    <div class="errorMessage visitorReason">Please complete Reason</div>
                                 </td>
                             </tr>
 
@@ -481,7 +481,7 @@ $model->identification_country_issued = 13;
                                             <td>
                                                 <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128"
                                                     style="text-transform: capitalize;" placeholder="Add Reason"></textarea>
-                                                <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Select Reason</div>
+                                                <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please complete Reason</div>
                                             </td>
                                         </tr>
                                     </table>
@@ -721,7 +721,7 @@ $model->identification_country_issued = 13;
                 ?>
                 <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea>
 
-                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Select Reason</div>
+                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please complete Reason</div>
 
                 <?php $this->endWidget(); ?>
 
@@ -786,7 +786,7 @@ $model->identification_country_issued = 13;
         
         var visitor_type = $("#Visitor_visitor_type").val();
         if (visitor_type == "") {
-            $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
+            $("#Visitor_visitor_type_em_").html("Please complete visitor type").show();
             return false;
         } else {
             $("#Visitor_visitor_type_em_").empty().hide();
@@ -1273,7 +1273,7 @@ $model->identification_country_issued = 13;
     function addCompany() {
         var url;
         if ($("#Visitor_tenant").val() == '') {
-            $("#Visitor_company_em_").html("Please select a tenant");
+            $("#Visitor_company_em_").html("Please complete tenant");
             $("#Visitor_company_em_").show();
         } else {
             /*if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {

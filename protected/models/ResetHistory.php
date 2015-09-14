@@ -27,7 +27,7 @@ class ResetHistory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('visitor_id, reset_time, reason', 'required'),
+			array('visitor_id, reset_time, reason', 'required', 'message'=>'Please complete {attribute}'),
             array('lodgement_date', 'safe'),
 			array('visitor_id', 'length', 'max'=>20),
 			array('reason', 'length', 'max'=>250),

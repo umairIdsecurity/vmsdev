@@ -40,7 +40,7 @@ class CardStatus extends CActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
+			array('name', 'required', 'message'=>'Please complete {attribute}'),
 			array('name', 'length', 'max' => 50),
 			array('created_by', 'length', 'max' => 20),
 			// The following rule is used by search().

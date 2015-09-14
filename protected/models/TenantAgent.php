@@ -41,7 +41,7 @@ class TenantAgent extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, tenant_id, for_module', 'required'),
+			array('id, tenant_id, for_module', 'required', 'message'=>'Please complete {attribute}'),
 			array('id, tenant_id, for_module, is_deleted, created_by', 'length', 'max'=>20),
 			array('date_created', 'safe'),
 			// The following rule is used by search().

@@ -123,7 +123,7 @@ class Visit extends CActiveRecord {
             
             //array('other_reason', 'unique','className'=>'VisitReason','attributeName'=>'reason','message'=>"Reason must be unique"),
             
-            array('visitor_type,reason','required','on' => 'preregistration','message'=>'Please select {attribute}'),
+            array('visitor_type,reason','required','on' => 'preregistration','message'=>'Please complete {attribute}'),
             
             
 

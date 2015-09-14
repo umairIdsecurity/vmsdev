@@ -60,16 +60,16 @@ class TenantForm extends CFormModel
     {
         return array(
             // name, email, subject and message are required
-            array('timezone_id','required','message' =>'Please select a timezone'),    
-            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'save'),           
-            array('password_opt','required','message' => 'Please select a {attribute}', 'on'=>'save'),  
+            array('timezone_id','required','message' =>'Please complete timezone'),    
+            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'save', 'message'=>'Please complete {attribute}'),           
+            array('password_opt','required','message' => 'Please complete {attribute}', 'on'=>'save'),  
             array('tenant_name,first_name, last_name, email', 'length', 'max' => 50),
             array('tenant_code', 'length', 'max' => 3),
             array('tenant_code', 'length', 'min' => 3),
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
 
             //Edit Tenant 
-             array('tenant_name,tenant_code, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form"),
+             array('tenant_name,tenant_code, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form", 'message'=>'Please complete {attribute}'),
              array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id', 'params'=>array(
                 ':is_deleted'=>0, ':id'=>Yii::app()->user->id
                 )), 'on'=>'edit_form'),
@@ -77,7 +77,7 @@ class TenantForm extends CFormModel
             // End Edit Tenant Rules 
             
             // Tenant Agent Add
-            array('tenant_name,tenant_agent_name,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'tenant_agent'),
+            array('tenant_name,tenant_agent_name,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'tenant_agent', 'message'=>'Please complete {attribute}'),
               array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 )), 'on'=>'tenant_agent'),
@@ -86,7 +86,7 @@ class TenantForm extends CFormModel
 //             array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=', 'params'=>array(
 //                ':is_deleted'=>0
 //                )), 'on'=>'edit_agent_form'),
-              array('tenant_name,tenant_agent_name, first_name, last_name, email, contact_number', 'required', "on"=>"edit_agent_form"),
+              array('tenant_name,tenant_agent_name, first_name, last_name, email, contact_number', 'required', "on"=>"edit_agent_form", 'message'=>'Please complete {attribute}'),
             
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),

@@ -39,7 +39,7 @@ $session = new ChttpSession;
             
 
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' id="findrecordSidebar" class="submenu-icon findrecord"><span>Search Visits</span></a></li>
-            <?php  if ($module != "AVMS") { ?>
+            <?php  if ($module != "AVMS" && $session['role'] != Roles::ROLE_OPERATOR) { ?>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport&p=d'); ?>' id="evacuationreportSidebar" class="sidemenu-icon evacuationreport"><span>Evacuation Report</span></a></li>
             <?php } ?>
             <?php if (in_array($session['role'], array(Roles::ROLE_SUPERADMIN,Roles::ROLE_ADMIN,Roles::ROLE_ISSUING_BODY_ADMIN))) { ?>

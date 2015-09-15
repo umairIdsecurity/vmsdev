@@ -98,49 +98,50 @@ class LoginForm extends CFormModel {
             $user = User::model()->findByPk($id);
             $date_db = $user->induction_expiry;
             $current_date=date("Y-m-d");
-            $validateNotifiSend2Weeks = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 2 weeks'");
-            $validateNotifiSend1Day = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 1 day'");
-            if(empty($validateNotifiSend2Weeks)){
-                //2 weeks or 14 days prior to expiry date from today date
-                if (strtotime($date_db) <= strtotime($current_date) + 86400*14 && strtotime($date_db) > strtotime($current_date) + 86400*13) {
-                    $model=new Notification;
-                    $model->created_by = Yii::app()->user->tenant;
-                    $model->date_created = date("Y-m-d");
-                    $model->subject = "Login Expire in 2 weeks";
-                    $model->message = "Your login will expire after two weeks from today.";
-                    $model->role_id = $user->role;
-                    $model->notification_type = "Login Notifcation";
+            // There is no need to show login expires notification
+            // $validateNotifiSend2Weeks = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 2 weeks'");
+            // $validateNotifiSend1Day = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 1 day'");
+            // if(empty($validateNotifiSend2Weeks)){
+            //     //2 weeks or 14 days prior to expiry date from today date
+            //     if (strtotime($date_db) <= strtotime($current_date) + 86400*14 && strtotime($date_db) > strtotime($current_date) + 86400*13) {
+            //         $model=new Notification;
+            //         $model->created_by = Yii::app()->user->tenant;
+            //         $model->date_created = date("Y-m-d");
+            //         $model->subject = "Login Expire in 2 weeks";
+            //         $model->message = "Your login will expire after two weeks from today.";
+            //         $model->role_id = $user->role;
+            //         $model->notification_type = "Login Notifcation";
 
-                    if($model->save()){
-                        $notify = new UserNotification;
-                        $notify->user_id = $user->id;
-                        $notify->notification_id = $model->id;
-                        $notify->has_read = 0; //Not Yet
-                        $notify->save();
-                    }
-                }
-            }
+            //         if($model->save()){
+            //             $notify = new UserNotification;
+            //             $notify->user_id = $user->id;
+            //             $notify->notification_id = $model->id;
+            //             $notify->has_read = 0; //Not Yet
+            //             $notify->save();
+            //         }
+            //     }
+            // }
             
-            if(empty($validateNotifiSend1Day)){
-                //1 day prior to expiry date from today date
-                if (strtotime($date_db) <= strtotime($current_date) + 86400*1) {
-                    $model=new Notification;
-                    $model->created_by = Yii::app()->user->tenant;
-                    $model->date_created = date("Y-m-d");
-                    $model->notification_type = "Login Notifcation";
-                    $model->message = "Your login will expire after 1 day from today.";
-                    $model->role_id = $user->role;
-                    $model->subject = "Login Expire in 1 day";
+            // if(empty($validateNotifiSend1Day)){
+            //     //1 day prior to expiry date from today date
+            //     if (strtotime($date_db) <= strtotime($current_date) + 86400*1) {
+            //         $model=new Notification;
+            //         $model->created_by = Yii::app()->user->tenant;
+            //         $model->date_created = date("Y-m-d");
+            //         $model->notification_type = "Login Notifcation";
+            //         $model->message = "Your login will expire after 1 day from today.";
+            //         $model->role_id = $user->role;
+            //         $model->subject = "Login Expire in 1 day";
 
-                    if($model->save()){
-                        $notify = new UserNotification;
-                        $notify->user_id = $user->id;
-                        $notify->notification_id = $model->id;
-                        $notify->has_read = 0; //Not Yet
-                        $notify->save();
-                    }
-                }
-            }    
+            //         if($model->save()){
+            //             $notify = new UserNotification;
+            //             $notify->user_id = $user->id;
+            //             $notify->notification_id = $model->id;
+            //             $notify->has_read = 0; //Not Yet
+            //             $notify->save();
+            //         }
+            //     }
+            // }    
            
             $returnData=array("role"=>$user->role,"success"=>true,"inducComplete"=>true);
             

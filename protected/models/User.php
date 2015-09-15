@@ -349,7 +349,8 @@ class User extends VmsActiveRecord {
         }
 
         switch ($user->role) {
-            case Roles::ROLE_ADMIN:
+            case Roles::ROLE_ADMIN;
+            case Roles::ROLE_ISSUING_BODY_ADMIN;
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     // $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
                     $avms_roles = Roles::get_admin_allowed_roles(true);

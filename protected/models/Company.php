@@ -336,6 +336,15 @@ class Company extends CActiveRecord {
         if (empty($users)) {
             return false;
         } else {
+            if(Yii::app()->controller->id == "tenant" && Yii::app()->controller->action->id=="edit")
+            {
+                $tenant = Tenant::model()->with("id0", "user0")->find("t.id = ".$companyId . " AND user0.id = ".$user->id);
+                if (empty($tenant)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
             return true;
         }
     }

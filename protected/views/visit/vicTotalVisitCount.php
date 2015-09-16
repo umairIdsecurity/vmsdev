@@ -174,7 +174,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             var reason = $('#reasonForNegate').val();
             var linkNegate = '<?php echo Yii::app()->createUrl("visit/negate"); ?>';
             var container = $('.listActive').empty();
-            if(ids.length == 0|| reason.length == 0) {
+            if(ids.length == 0) {
                 $('#activeVisitModal').modal('hide');
                 return;
             }

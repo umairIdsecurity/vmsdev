@@ -79,8 +79,36 @@ class CHelper
         }else{
             return false;
         }
+    }
 
-        
+    /**
+     * Get Preregistration Visitors Unread Notification list
+     *
+     */
+    public static function get_unread_visitors_notifications()
+    {
+
+        if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
+
+            $notifications = Yii::app()->db->createCommand()
+                    ->select("*") 
+                    ->from("notification n")
+                    ->join("user_notification u","n.id = u.notification_id")
+                    ->where("u.has_read != 1 AND u.user_id = " . Yii::app()->user->id)
+                    ->order("u.notification_id DESC")
+                    ->queryAll();
+                
+
+
+            /*$notifications = Notification::model()->with('user_notification')->findAll(
+            array(
+                "condition" => "user_notification.has_read != 1 AND user_notification.user_id = " . Yii::app()->user->id,
+                "order" => "user_notification.notification_id DESC"
+            ));*/
+            return $notifications;
+        }else{
+            return false;
+        }
     }
 
     /**

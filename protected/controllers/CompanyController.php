@@ -516,7 +516,18 @@ class CompanyController extends Controller
                 /*if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {*/
                     
                     $formInfo = $_POST['Company'];
-                    
+
+                    if(isset($formInfo['workstation'])){
+                        $worsktation = Workstation::model()->findByPk($formInfo['workstation']);
+                        $company->created_by_user = $worsktation->created_by;
+                        $company->tenant = $worsktation->tenant;
+
+                    }else{
+                        $company->created_by_user = empty($session['created_by']) ? NULL : $session['created_by'];
+                        $company->created_by_visitor  = empty($session['visitor_id']) ? Yii::app()->user->id : $session['visitor_id'];
+                        $company->tenant = empty($session['tenant']) ? NULL : $session['tenant'];
+                    }
+
                     $company->attributes=$formInfo;
 
                     $company->name = $formInfo['name'];
@@ -525,11 +536,6 @@ class CompanyController extends Controller
                     $company->email_address = $formInfo['user_email'];
                     $company->mobile_number = $formInfo['user_contact_number'];
                     $company->office_number = $formInfo['user_contact_number'];
-
-                    
-                    $company->created_by_user = empty($session['created_by']) ? NULL : $session['created_by'];
-                    $company->created_by_visitor  = empty($session['visitor_id']) ? NULL : $session['visitor_id'];
-                    $company->tenant = empty($session['tenant']) ? NULL : $session['tenant'];
 
                     $company->company_type = 3;
 
@@ -555,11 +561,11 @@ class CompanyController extends Controller
                                                         'contact_number'=>$formInfo['user_contact_number'],
                                                         'timezone_id'=>1,
                                                         'photo'=>NULL,
-                                                        'tenant'=> empty($session['tenant']) ? NULL : $session['tenant'],
+                                                        'tenant'=> $company->tenant,//empty($session['tenant']) ? NULL : $session['tenant'],
                                                         'user_type'=>2,
                                                         'user_status'=>1,
                                                         'role'=>10,
-                                                        'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
+                                                        'created_by'=> $company->created_by_user,//empty($session['created_by']) ? NULL : $session['created_by'],
                                                     ));
                             if ($result)
                             {

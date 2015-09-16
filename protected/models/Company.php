@@ -65,19 +65,19 @@ class Company extends CActiveRecord {
         // will receive user inputs.
 		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1){
 		return array(
-	            array('name', 'required','message'=>'Please enter {attribute}'),
+	            array('name', 'required','message'=>'Please complete {attribute}'),
 
                 //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'preregistration'),
-                array('user_first_name','required','on' => 'preregistration','message'=>'Please enter First Name'),
-                array('user_last_name','required','on' => 'preregistration','message'=>'Please enter Last Name'),
-                array('user_email','required','on' => 'preregistration','message'=>'Please enter Email Address'),
-                array('user_contact_number','required','on' => 'preregistration','message'=>'Please enter Contact Number'),
+                array('user_first_name','required','on' => 'preregistration','message'=>'Please complete First Name'),
+                array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
+                array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
+                array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
 
 
-	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
+	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
                 array('password_requirement,password_option,user_password','safe'),
-				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
-                array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant', 'message'=>'Please complete {attribute}'),
+                // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
                 array('code', 'match',
                     'pattern' => '/^[a-zA-Z\s]+$/',
                     'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
@@ -93,8 +93,8 @@ class Company extends CActiveRecord {
 	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
 
                     // Senario for Add Tenant
-                    array('code, name, contact, email_address, office_number','required', 'on' => 'add_tenant'),
-                    array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent'),
+                    array('code, name, contact, email_address, office_number','required', 'on' => 'add_tenant', 'message'=>'Please complete {attribute}'),
+                    array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent', 'message'=>'Please complete {attribute}'),
                     
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
@@ -105,18 +105,18 @@ class Company extends CActiveRecord {
 		else{
 			return array(
 
-                            array('name', 'required','message'=>'Please enter {attribute}'),
+                            array('name', 'required','message'=>'Please complete {attribute}'),
                             
                             //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'preregistration'),
-                            array('user_first_name','required','on' => 'preregistration','message'=>'Please enter First Name'),
-                            array('user_last_name','required','on' => 'preregistration','message'=>'Please enter Last Name'),
-                            array('user_email','required','on' => 'preregistration','message'=>'Please enter Email Address'),
-                            array('user_contact_number','required','on' => 'preregistration','message'=>'Please enter Contact Number'),
+                            array('user_first_name','required','on' => 'preregistration','message'=>'Please complete First Name'),
+                            array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
+                            array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
+                            array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
                             array('user_email','email'),
 
-                            array('code', 'required', 'except' => 'preregistration'),
-                            array('email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
-                            array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+                            array('code', 'required', 'except' => 'preregistration', 'message'=>'Please complete {attribute}'),
+                            array('email_address , mobile_number', 'required' , 'on' => 'updatetenant', 'message'=>'Please complete {attribute}'),
+                            // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
 
                             array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
                             array('code', 'match',
@@ -133,8 +133,8 @@ class Company extends CActiveRecord {
                             array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 
                             // Senario for Add Tenant
-                            array('code, name,  email_address, office_number','required', 'on' => 'add_tenant'),
-                            array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent'),
+                            array('code, name,  email_address, office_number','required', 'on' => 'add_tenant', 'message'=>'Please complete {attribute}'),
+                            array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent', 'message'=>'Please complete {attribute}'),
 
                             // The following rule is used by search().
                             // @todo Please remove those attributes that should not be searched.
@@ -336,6 +336,15 @@ class Company extends CActiveRecord {
         if (empty($users)) {
             return false;
         } else {
+            if(Yii::app()->controller->id == "tenant" && Yii::app()->controller->action->id=="edit")
+            {
+                $tenant = Tenant::model()->with("id0", "user0")->find("t.id = ".$companyId . " AND user0.id = ".$user->id);
+                if (empty($tenant)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
             return true;
         }
     }

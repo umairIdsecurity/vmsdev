@@ -30,7 +30,7 @@ class Notification extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('subject, message', 'required'),
+			array('subject, message', 'required', 'message' =>'Please complete {attribute}'),
 			array('created_by, role_id', 'numerical', 'integerOnly'=>true),
 			array('subject', 'length', 'max'=>250),
 			array('notification_type', 'length', 'max'=>100),

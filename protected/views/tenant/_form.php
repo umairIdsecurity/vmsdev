@@ -348,8 +348,6 @@ $currentLoggedUserId = $session['id'];
                 </div> <!-- password-border -->
 
             </td>
-             
-            
                 </table>
             </td>
         </tr>
@@ -417,16 +415,12 @@ if (isset($_GET['viewFrom'])) {
             $('#TenantForm_password').val($('#random_password').val());
             $('#TenantForm_cnf_password').val($('#random_password').val());
             $("#close_generate").click();
-
         }
-
     }
 
     $(document).ready(function() {
 
         /*Added by farhat aziz for upload host photo*/
-
-
         $('#photoCropPreview2').imgAreaSelect({
             handles: true,
             onSelectEnd: function(img, selection) {
@@ -451,7 +445,6 @@ if (isset($_GET['viewFrom'])) {
                     y2: $("#y22").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    //imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
                     photoId: $('#Host_photo').val()
                 },
                 dataType: 'json',
@@ -463,14 +456,6 @@ if (isset($_GET['viewFrom'])) {
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                
-                                /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop2").css({
-                                    "background-size": "137px 190px"
-                                });*/
-
                                 //showing image from DB as saved in DB -- image is not present in folder
                                 var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
 
@@ -562,9 +547,6 @@ function getAssignableRoles($user_role, $model) {
                 break;
 
         }
-
-        //echo '<p><pre>';print_r($user_role);echo '</pre></p>';
-
         return $assignableRolesArray;
     }
 }
@@ -635,7 +617,6 @@ function get_avms_assignable_roles($user_role)
         <br>
     </div>
     <div id="modalBody"></div>
-
 </div>
 
 <div class="modal hide fade" id="generate_password" style="width: 410px">
@@ -647,27 +628,19 @@ function get_avms_assignable_roles($user_role)
                 </h1>
 
             </div>
-
             <br>
         </div>
         <div id="modalBody_gen">
-
             <table >
-
-                <div id="error_msg" style='font-size: 0.9em;color: #FF0000;padding-left: 11px; display:none' >Please Generate Password </div>
-
+                <div id="error_msg" style='font-size: 0.9em;color: #FF0000;padding-left: 11px; display:none' >Please Generate Password</div>
                 <tr><td colspan="2" style="padding-left:10px">Your randomly generated password is :</td></tr>
                 <tr><td colspan="2"></td></tr>
                 <tr><td colspan="2"style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password" /></td></tr>
-
                 <tr><td colspan="2"style="padding-left:10px; font:italic">Note: Please copy and save this password somewhere safe.</td></tr>
                 <tr><td  style="padding-left: 11px;padding-top: 26px !important; width:50%"> <input onclick="copy_password();"  style="border-radius: 4px; height: 35px; " type="button" value="Use Password" /></td>
                     <td style="padding-right:10px;padding-top: 25px;"> <input  onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel" /></td>
                 </tr>
-
             </table>
-
-
         </div>
         <a data-toggle="modal" data-target="#generate_password" id="gen_pass" style="display:none" class="btn btn-primary">Click me</a>
     </div>
@@ -682,7 +655,6 @@ function get_avms_assignable_roles($user_role)
         echo LicenseDetails::model()->getLicenseDetails();
         ?>
     </div>
-
 </div>
 <!-- PHOTO CROP-->
 <div id="light2" class="white_content">
@@ -693,7 +665,6 @@ function get_avms_assignable_roles($user_role)
     </div>
     <br>
     <img id="photoCropPreview2" src="">
-
 </div>
 
 <input type="hidden" id="x12"/>
@@ -707,29 +678,17 @@ function get_avms_assignable_roles($user_role)
 <script type="text/javascript">
     
     $('.hidingMsgPassword').css("color","red");
-
     $('#TenantForm_password, #TenantForm_cnf_password').on('keyup', function () {
-        if ($('#TenantForm_password').val() == $('#TenantForm_cnf_password').val()) {    
-
+        if ($('#TenantForm_password').val() == $('#TenantForm_cnf_password').val()) {
             $('#TenantForm_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
-            
             $('#TenantForm_cnf_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
-
-         //   $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
-            
             $('.hidingMsgPassword').hide();
         } else {
             $('.hidingMsgPassword').css("color","red");
             $('.hidingMsgPassword').show();
-
             $('#TenantForm_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
-            
             $('#TenantForm_cnf_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
-
-           // $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
-            
         }
-            
     });
 
     function restrict(ob){

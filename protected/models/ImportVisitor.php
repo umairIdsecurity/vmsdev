@@ -40,7 +40,7 @@ class ImportVisitor extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('first_name, last_name, email, company, check_in_date, check_out_date, imported_by, import_date', 'required'),
+			array('first_name, last_name, email, company, check_in_date, check_out_date, imported_by, import_date', 'required', 'message'=>'Please complete {attribute}'),
 			array('first_name, last_name, email, company, card_code', 'length', 'max'=>255),
 			array('check_in_date, check_out_date, card_code, date_printed, date_expiration, check_in_time, check_out_time, position, vehicle, contact_number', 'safe'),
 			// The following rule is used by search().

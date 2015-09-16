@@ -26,7 +26,7 @@ class Timezone extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('timezone_name, timezone_value', 'required'),
+			array('timezone_name, timezone_value', 'required', 'message'=>'Please complete {attribute}'),
 			array('timezone_name, timezone_value', 'length', 'max'=>250),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

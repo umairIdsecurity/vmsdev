@@ -355,7 +355,7 @@ class VisitorTypeController extends Controller {
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
         }
         
         $allWorkstations='';
@@ -373,11 +373,11 @@ class VisitorTypeController extends Controller {
         $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
         
         $visitors = Yii::app()->db->createCommand()
-                ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId")
+                ->select("count(visitors.id) as visitors, t.id, t.name, t.id  as workstationId")
                 ->from('workstation t')
                 ->join("visitor visitors",'t.id = visitors.visitor_workstation')
                 ->where($dateCondition)
-                ->group('t.id, DATE(visitors.date_created) ,t.name')
+                ->group('t.id, t.name')
                 ->queryAll();
         
         $otherWorkstations = array();

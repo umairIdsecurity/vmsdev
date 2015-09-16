@@ -33,7 +33,7 @@ class VisitReason extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('reason,module', 'required'),
+            array('reason,module', 'required', 'message'=>'Please complete {attribute}'),
             array('module', 'length','max' => 20),
             array('reason', 'filter', 'filter' => 'trim'),
             //array('reason', 'unique'),

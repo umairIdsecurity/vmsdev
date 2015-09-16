@@ -230,11 +230,11 @@ class ReportsController extends Controller
             $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
         }
         
-        $dateCondition .= "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+        $dateCondition .= "( t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='CORPORATE')";
         
         $data = Yii::app()->db->createCommand()
-                ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
+                ->select("t.date_created AS date_check_in, t.first_name, t.id") 
                 ->from("visitor t")
                 ->where($dateCondition)
                 ->queryAll();
@@ -534,7 +534,7 @@ class ReportsController extends Controller
         $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (cards.module=2)";
 
         $visitorCount = Yii::app()->db->createCommand()
-                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors, visitors.date_created")
+                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors")
                 ->from('visitor visitors')
                 ->join("visit visits",'visitors.id = visits.visitor')
                 ->join("card_type cards",'cards.id = visits.card_type')

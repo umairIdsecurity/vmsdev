@@ -26,7 +26,7 @@ class Reasons extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('reason_name', 'required'),
+			array('reason_name', 'required', 'message'=>'Please complete {attribute}'),
 			array('reason_name', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

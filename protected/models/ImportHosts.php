@@ -35,7 +35,7 @@ class ImportHosts extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('first_name, last_name, email, department, staff_id, contact_number', 'required'),
+			array('first_name, last_name, email, department, staff_id, contact_number', 'required', 'message'=>'Please complete {attribute}'),
 			array('imported_by, role', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, department, staff_id, contact_number, company, password, position', 'length', 'max'=>50),
 			array('email', 'length', 'max'=>255),

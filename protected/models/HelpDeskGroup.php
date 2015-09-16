@@ -33,7 +33,7 @@ class HelpDeskGroup extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'length', 'max' => 25),
-            array('name, is_default_value', 'required'),
+            array('name, is_default_value', 'required', 'message'=>'Please complete {attribute}'),
             array('created_by, order_by', 'length', 'max' => 20),
             array('is_default_value', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().

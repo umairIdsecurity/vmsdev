@@ -204,7 +204,7 @@
 
         function validateNameFolder(name) {
             if (name.length <= 0) {
-                $('#Folder_name').html('Please input name folder');
+                $('#Folder_name').html('Please complete name folder');
                 $('#Folder_name').fadeIn();
                 return false;
             }

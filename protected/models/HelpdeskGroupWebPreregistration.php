@@ -31,7 +31,7 @@ class HelpdeskGroupWebPreregistration extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('helpdesk_group', 'required'),
+            array('helpdesk_group', 'required', 'message'=>'Please complete {attribute}'),
             array('web_preregistration', 'length', 'max' => 20),
             array('helpdesk_group, web_preregistration', 'safe', 'on'=>'search'),
         );

@@ -54,7 +54,7 @@ class HelpdeskGroupUserRole extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('helpdesk_group, role', 'required'),
+            array('helpdesk_group, role', 'required', 'message'=>'Please complete {attribute}'),
             array('helpdesk_group, role', 'safe', 'on'=>'search'),
         );
     }

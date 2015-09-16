@@ -672,7 +672,7 @@ if (isset($company) && !empty($company)) {
 
     function getHostTenantAgentWithSameTenant(tenant) {
         $('#User_tenant_agent').empty();
-        $('#User_tenant_agent').append('<option value="">Please select a tenant agent</option>');
+        $('#User_tenant_agent').append('<option value="">Please complete tenant agent</option>');
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,

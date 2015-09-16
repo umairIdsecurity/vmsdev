@@ -38,8 +38,8 @@ class HelpDesk extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('question,answer', 'required'),
-            array('helpdesk_group_id','required','message' =>'Please select a {attribute}'),
+            array('question,answer', 'required','message' =>'Please complete {attribute}'),
+            array('helpdesk_group_id','required','message' =>'Please complete {attribute}'),
             array('question, answer,helpdesk_group_id,created_by,order_by', 'length'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

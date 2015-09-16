@@ -476,6 +476,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var flag = true;
             var $btnVic = $('#btnVicConfirm'),
                 $btnASIC = $('#btnAsicConfirm');
+                $btnIdentification = $('#btnIdentificationConfirm');
 
             var isWorkstationDelete = "<?php echo $isWorkstationDelete; ?>";
             if (isWorkstationDelete == 'true') {
@@ -508,20 +509,46 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     });
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
-                    // $btnASIC.on('click', function(e) {
-                    //     if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
-                    //         $('#identificationModal').modal('show');
-                    //     } else {
-                    //         activeVisit();
-                    //         return false;
-                    //     }
-                    // });
+                    $btnASIC.on('click', function(e) {
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                            $btnIdentification.on('click', function(e) {
+                                if ($('#identificationChkBoxYes').is(':checked')) {
+                                    $('#identificationModal').modal('hide');
+                                    $('input[name="identificationActiveVisit"]').prop('checked', true);
+                                    activeVisit();
+                                } else {
+                                    updateIdentificationDetails();
+                                }
+                            });
+                        } else {
+                            activeVisit();
+                            return false;
+                        }
+                    });
                 } else {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
                         var vicChecked = vicCheck(false);
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
+                            $btnASIC.on('click', function(e) {
+                                if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                                    $('#identificationModal').modal('show');
+                                    $btnIdentification.on('click', function(e) {
+                                        if ($('#identificationChkBoxYes').is(':checked')) {
+                                            $('#identificationModal').modal('hide');
+                                            $('input[name="identificationActiveVisit"]').prop('checked', true);
+                                            activeVisit();
+                                        } else {
+                                            updateIdentificationDetails();
+                                        }
+                                    });
+                                } else {
+                                    activeVisit();
+                                    return false;
+                                }
+                            });
                         } else {
                             return false;
                         }

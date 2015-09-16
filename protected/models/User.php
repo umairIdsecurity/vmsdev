@@ -115,13 +115,13 @@ class User extends VmsActiveRecord {
 
         if($this->scenario == 'add_company_contact') {
             return array(
-                    array('first_name, last_name, email, contact_number', 'required'),
+                    array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
                      array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                         ':is_deleted'=>0
                     ))),
                     array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
 
-                    array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration'),
+                    array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration', 'message'=>'Please complete {attribute}'),
                 
             );
 			
@@ -129,7 +129,7 @@ class User extends VmsActiveRecord {
 
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-                array('first_name, last_name, email, contact_number, user_type, tenant', 'required'),
+                array('first_name, last_name, email, contact_number, user_type, tenant', 'required', 'message'=>'Please complete {attribute}'),
                 array('tenant_agent','UserRoleTenantAgentValidator'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
@@ -139,7 +139,7 @@ class User extends VmsActiveRecord {
                 array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 ))),
-                array('role,company', 'required', 'message' => 'Please select a {attribute}'),
+                array('role,company', 'required', 'message' => 'Please complete {attribute}'),
                 array('tenant, tenant_agent, photo', 'default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no, asic_expiry', 'AvmsFields'),
 
@@ -152,14 +152,14 @@ class User extends VmsActiveRecord {
 				
 		        array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
 
-                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration'),
+                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration', 'message'=>'Please complete {attribute}'),
                 
             );
         } else {
 
 
             return array(
-                array("first_name, last_name, email, contact_number, user_type,is_deleted, tenant", 'required'),
+                array("first_name, last_name, email, contact_number, user_type,is_deleted, tenant", 'required', 'message'=>'Please complete {attribute}'),
                 array('password', 'PasswordCustom'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
@@ -169,12 +169,12 @@ class User extends VmsActiveRecord {
                 array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
                 ':is_deleted'=>0
                 ))),
-                array('role', 'required', 'message' => 'Please select a {attribute}'),
+                array('role', 'required', 'message' => 'Please complete {attribute}'),
                 array('tenant, tenant_agent, photo','default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no, asic_expiry', 'AvmsFields'),
                 array('tenant_agent','UserRoleTenantAgentValidator'),
 
-                array('asic_no, asic_expiry, first_name, last_name, email, contact_number, user_type,is_deleted', 'required', 'on'=>'add_sponsor'),
+                array('asic_no, asic_expiry, first_name, last_name, email, contact_number, user_type,is_deleted', 'required', 'on'=>'add_sponsor', 'message'=>'Please complete {attribute}'),
                 array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(':is_deleted'=>0)), 'on'=>'add_sponsor'),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
@@ -184,7 +184,7 @@ class User extends VmsActiveRecord {
 				
 		        array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
 
-                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration'),
+                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration', 'message'=>'Please complete {attribute}'),
                
             );
         }
@@ -349,7 +349,8 @@ class User extends VmsActiveRecord {
         }
 
         switch ($user->role) {
-            case Roles::ROLE_ADMIN:
+            case Roles::ROLE_ADMIN;
+            case Roles::ROLE_ISSUING_BODY_ADMIN;
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     // $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
                     $avms_roles = Roles::get_admin_allowed_roles(true);

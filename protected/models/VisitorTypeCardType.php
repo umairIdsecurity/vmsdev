@@ -35,7 +35,7 @@ class VisitorTypeCardType extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('visitor_type, card_type', 'required'),
+            array('visitor_type, card_type', 'required', 'message'=>'Please complete {attribute}'),
             array('visitor_type, card_type, tenant', 'safe', 'on'=>'search'),
         );
     }

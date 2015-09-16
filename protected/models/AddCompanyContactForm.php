@@ -23,7 +23,7 @@ class AddCompanyContactForm extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('companyName, firstName, lastName, email, mobile, companyType', 'required'),
+            array('companyName, firstName, lastName, email, mobile, companyType', 'required', 'message'=>'Please complete {attribute}'),
             array('email', 'email'),
             array('email', 'emailUnique', 'add_company_contact'),
             array('password_requirement,password_option,user_password','safe'),

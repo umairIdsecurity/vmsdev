@@ -26,6 +26,7 @@ $model->identification_country_issued = 13;
     .uploadnotetext {margin-top: 110px;margin-left: -80px;}
     #content h1 {color: #2f96b4;font-size: 18px;font-weight: bold;margin-left: 50px;  }
     .required {padding-left: 10px;}
+    .errorMessageImportant {display: block !important;}
 </style>
 
 <br>
@@ -65,7 +66,10 @@ $model->identification_country_issued = 13;
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form, data, hasError){
                                 return afterValidate(form, data, hasError);
-							}'
+							}',
+                            'beforeValidate' => 'js:function(form, data, hasError){
+                                return beforeValidate(form, data, hasError);
+                            }'
                         ),
                     ));
 //else if ($("#workstation").val() == ""){
@@ -270,7 +274,7 @@ $model->identification_country_issued = 13;
                                     </select>
                                     <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                         <span class="required">*</span>
-                                    <?php echo $form->error($model, 'contact_state'); ?>
+                                    <?php echo $form->error($model, 'contact_postcode'); ?>
                                 </td>
                             </tr>
                             <tr class="vic-visitor-fields">
@@ -469,7 +473,7 @@ $model->identification_country_issued = 13;
                                     </select>
                                     <span class="required">*</span>
 
-                                    <div class="errorMessage visitorReason">Select Reason</div>
+                                    <div class="errorMessage visitorReason">Please complete Reason</div>
                                 </td>
                             </tr>
 
@@ -481,7 +485,7 @@ $model->identification_country_issued = 13;
                                             <td>
                                                 <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128"
                                                     style="text-transform: capitalize;" placeholder="Add Reason"></textarea>
-                                                <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Select Reason</div>
+                                                <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please complete Reason</div>
                                             </td>
                                         </tr>
                                     </table>
@@ -721,7 +725,7 @@ $model->identification_country_issued = 13;
                 ?>
                 <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea>
 
-                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Select Reason</div>
+                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please complete Reason</div>
 
                 <?php $this->endWidget(); ?>
 
@@ -740,8 +744,79 @@ $model->identification_country_issued = 13;
 
 
 <script>
+    var is_error = false;
+    function beforeValidate(form, data, hasError) {
+        is_error = false;
+        if ($("#Visit_reason").val() == "") {
+            $(".visitorReason").show();
+            is_error = true;
+        } else {
+            $(".visitorReason").hide();
+        }
+
+        if($('#VisitCardType').val() > CONTRACTOR_TYPE) {
+            if ($("#Visitor_contact_street_no").val() == "") {
+                is_error = true;
+                $("#Visitor_contact_street_no_em_").html("Please complete contact street no.").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_contact_street_no_em_").empty().removeClass("errorMessageImportant");
+            }
+
+            if ($("#Visitor_contact_street_type").val() == "") {
+                is_error = true;
+                $("#Visitor_contact_street_type_em_").html("Please complete contact street type").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_contact_street_type_em_").empty().removeClass("errorMessageImportant");
+            }
+
+            if ($("#Visitor_contact_suburb").val() == "") {
+                is_error = true;
+                $("#Visitor_contact_suburb_em_").html("Please complete contact suburb").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_contact_suburb_em_").empty().removeClass("errorMessageImportant");
+            }
+
+            if ($("#Visitor_contact_postcode").val() == "") {
+                is_error = true;
+                $("#Visitor_contact_postcode_em_").html("Please complete contact postcode").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_contact_postcode_em_").empty().removeClass("errorMessageImportant");
+            }
+
+            if ($("#Visitor_contact_country").val() == "") {
+                is_error = true;
+                $("#Visitor_contact_country_em_").html("Please complete contact country").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_contact_country_em_").empty().removeClass("errorMessageImportant");
+            }
+
+            if ($("#Visitor_identification_type").val() == "") {
+                is_error = true;
+                $("#Visitor_identification_type_em_").html("Please complete identification type").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_identification_type_em_").empty().removeClass("errorMessageImportant");
+            }
+
+            if ($("#Visitor_identification_country_issued").val() == "") {
+                is_error = true;
+                $("#Visitor_identification_country_issued_em_").html("Please complete identification country issued").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_identification_country_issued_em_").empty().removeClass("errorMessageImportant");
+            }
+
+            if ($("#Visitor_identification_document_expiry").val() == "") {
+                is_error = true;
+                $("#Visitor_identification_document_expiry_em_").html("Please complete identification document expiry").addClass("errorMessageImportant");
+            } else {
+                $("#Visitor_identification_document_expiry_em_").empty().removeClass("errorMessageImportant");
+            }
+        }
+
+        return true;
+    }
 
     function afterValidate(form, data, hasError) {
+        if(is_error) return false;
         $("#selectedVisitorInSearchTable").val("");
         $("#register-host-form").show();
         $("#searchHostDiv").show();
@@ -783,14 +858,6 @@ $model->identification_country_issued = 13;
         } else {
             $("#Visitor_u18_identification_em_").hide();
         }
-        
-        var visitor_type = $("#Visitor_visitor_type").val();
-        if (visitor_type == "") {
-            $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
-            return false;
-        } else {
-            $("#Visitor_visitor_type_em_").empty().hide();
-        }
 
         if (!hasError){
             if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
@@ -807,10 +874,6 @@ $model->identification_country_issued = 13;
                 $("#Visitor_vehicle_em_").show();
                 $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
 
-            } else if ($("#Visitor_visitor_type").val() == "") {
-
-                $(".visitorType").show();
-
             } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
 
                 $(".visitorReason").show();
@@ -824,6 +887,7 @@ $model->identification_country_issued = 13;
                 $("#cardtype").val() != <?php echo CardType::SAME_DAY_VISITOR; ?>  &&
                 $("#cardtype").val() != <?php echo CardType::MANUAL_VISITOR; ?>  &&
                 $("#cardtype").val() != <?php echo CardType::VIC_CARD_SAMEDATE; ?>  && 
+                $("#cardtype").val() != <?php echo CardType::VIC_CARD_24HOURS; ?>  && 
                 $("#cardtype").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
             ){
                 $("#photoErrorMessage").show();
@@ -831,7 +895,6 @@ $model->identification_country_issued = 13;
 
                 $(".visitorReason").hide();
                 $("#photoErrorMessage").hide();
-                $(".visitorType").hide();
                 checkEmailIfUnique();
                 
             }
@@ -1272,7 +1335,7 @@ $model->identification_country_issued = 13;
     function addCompany() {
         var url;
         if ($("#Visitor_tenant").val() == '') {
-            $("#Visitor_company_em_").html("Please select a tenant");
+            $("#Visitor_company_em_").html("Please complete tenant");
             $("#Visitor_company_em_").show();
         } else {
             /*if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {

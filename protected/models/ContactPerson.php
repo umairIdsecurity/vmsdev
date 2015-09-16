@@ -28,7 +28,7 @@ class ContactPerson extends CActiveRecord
             // NOTE: you should only define rules for those attributes that
             // will receive user inputs.
             return array(
-                    array('contact_person_name, contact_person_email', 'required'),
+                    array('contact_person_name, contact_person_email', 'required','message' =>'Please complete {attribute}'),
                     array('contact_person_name, contact_person_email', 'length', 'max'=>50),
                     array('contact_person_message', 'length', 'max'=>100),
                     array('contact_person_email', 'email','message'=>"The email isn't a valid email address"),

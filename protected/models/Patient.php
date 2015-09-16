@@ -24,7 +24,7 @@ class Patient extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'length', 'max' => 100),
-            array('name', 'required'),
+            array('name', 'required', 'message'=>'Please complete {attribute}'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, name', 'safe', 'on' => 'search'),

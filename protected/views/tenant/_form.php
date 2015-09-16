@@ -112,9 +112,16 @@ $currentLoggedUserId = $session['id'];
                                 <?php echo "<br>" . $form->error($model, 'workstation'); ?>
                             </td>
                         </tr>
+                        <tr>
+                            <td><b>Module Access</b><span class="required">*</span> <br>
+                                <input type="checkbox" id="module_access_avms" value="1" checked> AVMS <br>
+                                <input type="checkbox" id="module_access_cvms" value="2"> CVMS <br>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
+
                 <div class="password-border" style="margin-top:20px;">
                     <table >
                         <tbody>
@@ -122,6 +129,7 @@ $currentLoggedUserId = $session['id'];
                             <td><strong>Tenant Admin</strong></td>
                         </tr>
                         <tr><td>&nbsp;</td></tr>
+
                         <tr>
                             <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
                                 <span class="required">*</span>
@@ -152,13 +160,7 @@ $currentLoggedUserId = $session['id'];
                     </table>
                 </div>
                 
-                <div class="password-border t-top20 paddingBottom10px">
-                    
-                    <strong>Module Access </strong> <br> <br>
-                    <input type="checkbox" name="module_access_avms" value="1" checked> AVMS <br>
-                    <input type="checkbox" name="module_access_cvms" value="2"> CVMS <br>
-                    
-                </div> 
+
                     
         </td>
 
@@ -173,7 +175,7 @@ $currentLoggedUserId = $session['id'];
                             if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
                                 //echo "disabled";
                             }
-                            ?> id="User_role" name="TenantForm[role]" disabled>
+                            ?> id="User_role" name="TenantForm[role]" >
                                 <!-- <option disabled value='' selected>Select Role</option> -->
                                 <?php
 
@@ -383,6 +385,16 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+    function setAvailableRoles(){
+        $("#User_role").find('option').remove().end();
+        $("#User_role").append('<option value="">Please select a user role.</option>');
+        if(document.getElementById("module_access_avms").checked) {
+            $("#User_role").append('<option value="<?php echo Roles::ROLE_ISSUING_BODY_ADMIN ?>">AVMS Issuing Body Admin</option>');
+        }
+        if(document.getElementById("module_access_cvms").checked) {
+            $("#User_role").append('<option value="<?php echo Roles::ROLE_ADMIN ?>">CVMS Administrator</option>');
+        }
+    }
     function generatepassword() {
 
         $("#random_password").val('');
@@ -480,7 +492,15 @@ if (isset($_GET['viewFrom'])) {
             var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
             ias.cancelSelection();
         });
+        $("#module_access_avms").click(function(){
+           setAvailableRoles();
+        });
+        $("#module_access_cvms").click(function(){
+            setAvailableRoles();
+        });
+        setAvailableRoles();
     });
+
 </script>
 <?php
 

@@ -24,8 +24,12 @@ class TenantController extends Controller {
                 'expression' => 'CHelper::check_module_authorization("Admin")'
             ),
             array('allow', // allow user if same company
-                'actions' => array('update', 'edit'),
+                'actions' => array('update'),
                 'expression' => 'Yii::app()->controller->isUserAllowedToUpdate(Yii::app()->user)',
+            ),
+            array('allow', // allow user if same tenant
+                'actions' => array('edit'),
+                'expression' => 'Yii::app()->controller->isUserAllowedToEdit(Yii::app()->user)',
             ),
             array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin', 'adminAjax', 'delete'),
@@ -52,6 +56,18 @@ class TenantController extends Controller {
             } else {
                 $currentlyEditedCompanyId = $_GET['id'];
                 return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
+            }
+        }
+        return false;
+    }
+
+    public function isUserAllowedToEdit($user) {
+        if(isset($user) && !empty($user->id)) {
+            if ($user->role == Roles::ROLE_SUPERADMIN) {
+                return true;
+            } else {
+                $currentlyEditedTenantId = $_GET['id'];
+                return Company::model()->isUserAllowedToViewTenant($currentlyEditedTenantId, $user);
             }
         }
         return false;

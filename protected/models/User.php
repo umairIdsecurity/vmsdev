@@ -251,6 +251,7 @@ class User extends VmsActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'companies1' => array(self::HAS_MANY, 'Company', 'created_by_user'),
+            'tenant0'=> array(self::MANY_MANY, 'Tenant', 'tenant_contact(user, tenant)'),
             'roles' => array(self::HAS_MANY, 'Roles', 'created_by'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'users' => array(self::HAS_MANY, 'User', 'created_by'),

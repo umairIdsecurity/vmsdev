@@ -185,6 +185,9 @@ class PreregistrationController extends Controller
 					if($model->profile_type == "VIC"){
 						$this->createVicNotificationIdentificationExpiry();
 					}
+					elseif($model->profile_type == "ASIC"){
+						$this->createAsicNotificationAsicExpiry();
+					}
 
 					$this->redirect(array('preregistration/visitReason'));
 					//***********************************************
@@ -613,6 +616,8 @@ class PreregistrationController extends Controller
 
 					$asicModel = Registration::model()->findByPk($model->selected_asic_id);
 
+					$this->createAsicNotificationRequestedVerifications($asicModel);
+
 					$session['host'] = $asicModel->id;
 
 					$loggedUserEmail = 'Admin@perthairport.com.au';
@@ -648,6 +653,8 @@ class PreregistrationController extends Controller
 						$model->visitor_card_status = 6; //6: Asic Issued
 
 						if ($model->save(false)) {
+
+							$this->createAsicNotificationRequestedVerifications($model);
 
 							$session['host'] = $model->id;
 
@@ -881,9 +888,8 @@ class PreregistrationController extends Controller
 				
 				if($session['account_type'] == 'VIC')
 				{
-					$this->createVicNotificationPreregisterVisit();
-					$this->createVicNotification20Visits();
-					$this->createVicNotification28Visits();
+					$this->createVicNotificationPreregisterVisit($model->date_check_in);
+					$this->createVicNotification20and28Visits();
 				}
 
 				$this->redirect(array('preregistration/success'));
@@ -895,42 +901,33 @@ class PreregistrationController extends Controller
 	}
 
 
-    public function createVicNotificationPreregisterVisit() {
+    public function createVicNotificationPreregisterVisit($date_of_visit) {
+    	//create VIC Notifications: 1. You have Preregistered a Visit
     	$session = new CHttpSession;
-     	//create VIC Notifications: 1. You have Preregistered a Visit
-		$notification = Notification::model()->findByAttributes(array('subject'=>'You have Preregistered a Visit'));
-		if($notification){
-			$notify = new UserNotification;
+    	$notification = new Notification();
+		$notification->created_by = null;
+        $notification->date_created = date("Y-m-d");
+        $notification->subject = 'You have Preregistered a Visit';
+        $notification->message = 'You have Preregistered a Visit ('.$date_of_visit.')';
+        $notification->notification_type = 'VIC Holder Notification';
+        $notification->role_id = 10;
+        if($notification->save()){
+        	$notify = new UserNotification;
             $notify->user_id = $session['visitor_id'];
             $notify->notification_id = $notification->id;
             $notify->has_read = 0; //Not Yet
             $notify->save();
-		}else{
-			$notification = new Notification();
-			$notification->created_by = null;
-            $notification->date_created = date("Y-m-d");
-            $notification->subject = 'You have Preregistered a Visit';
-            $notification->message = 'You have Preregistered a Visit';
-            $notification->notification_type = 'VIC Holder Notification';
-            $notification->role_id = 10;
-            if($notification->save()){
-            	$notify = new UserNotification;
-                $notify->user_id = $session['visitor_id'];
-                $notify->notification_id = $notification->id;
-                $notify->has_read = 0; //Not Yet
-                $notify->save();
-            }	
-		}
+        }
     }
 
-    public function createVicNotification20Visits() {
+    public function createVicNotification20and28Visits() {
     	$session = new CHttpSession;
         $visits = Yii::app()->db->createCommand()
                     ->select("t.id") 
                     ->from("visit t")
                     ->join("visitor v","v.id = t.visitor")
                     ->join("visit_status vs","vs.id = t.visit_status")
-                    ->where("(vs.visit_status='Pre-registered' AND t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".$session['visitor_id'].")")
+                    ->where("(vs.name='Pre-registered' AND t.is_deleted = 0 AND v.is_deleted =0 AND v.id=".$session['visitor_id'].")")
                     ->queryAll();
 		$visitCount = count($visits);
 
@@ -960,18 +957,6 @@ class PreregistrationController extends Controller
                 }	
 			}
 		}
-    }
-
-    public function createVicNotification28Visits() {
-    	$session = new CHttpSession;
-        $visits = Yii::app()->db->createCommand()
-                    ->select("t.id") 
-                    ->from("visit t")
-                    ->join("visitor v","v.id = t.visitor")
-                    ->join("visit_status vs","vs.id = t.visit_status")
-                    ->where("(vs.visit_status='Pre-registered' AND t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".$session['visitor_id'].")")
-                    ->queryAll();
-		$visitCount = count($visits);
 
 		if($visitCount == 28){
 			//create VIC Notifications: 3. You have reached your 28 Day Visit Count Limit
@@ -1001,6 +986,28 @@ class PreregistrationController extends Controller
 		}
     }
 
+   	public function createVicNotificationVerifiedYourVisit($visit)
+    {
+    	//create VIC Notifications: 4. ASIC Sponsor has verified your visit
+    	$host = Registration::model()->findByPk($visit->host);
+
+		$notification = new Notification();
+		$notification->created_by = null;
+        $notification->date_created = date("Y-m-d");
+        $notification->subject = 'ASIC Sponsor has verified your visit';
+        $notification->message = 'ASIC Sponsor has verified your visit (ASIC Sponsor Name: '.$host->first_name.' '.$host->last_name.' Date: '.date("d-m-Y",$visit->date_check_in).' Time: '.$visit->time_check_in.')';
+        $notification->notification_type = 'VIC Holder Notification';
+        $notification->role_id = 10;
+        if($notification->save()){
+        	$notify = new UserNotification;
+            $notify->user_id = $visit->visitor;
+            $notify->notification_id = $notification->id;
+            $notify->has_read = 0; //Not Yet
+            $notify->save();
+        }
+    }
+
+
     public function createVicNotificationIdentificationExpiry()
     {
     	$session = new CHttpSession;
@@ -1012,13 +1019,12 @@ class PreregistrationController extends Controller
     	}
 
     	if($visitor->identification_document_expiry != "" && $visitor->identification_document_expiry != null){
-    		$visitor->identification_document_expiry;
     		$day_before = date( 'Y-m-d', strtotime($visitor->identification_document_expiry.' -8 days' ) );
 			$today = date('Y-m-d');
 			
 			if ( strtotime($day_before) <= strtotime($today) ){
 				//create VIC Notifications: 5. Your Identification is about to expiry please update
-				$notification = Notification::model()->findByAttributes(array('subject'=>'Your Identification is about to expiry please update'));
+				$notification = Notification::model()->findByAttributes(array('subject'=>'Your Identification is about to expire'));
 				if($notification){
 					$notify = new UserNotification;
 		            $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
@@ -1029,8 +1035,8 @@ class PreregistrationController extends Controller
 					$notification = new Notification();
 					$notification->created_by = null;
 		            $notification->date_created = date("Y-m-d");
-		            $notification->subject = 'Your Identification is about to expiry please update';
-		            $notification->message = 'Your Identification is about to expiry please update';
+		            $notification->subject = 'Your Identification is about to expire';
+		            $notification->message = 'Your Identification is about to expire (Please update your Profile)';
 		            $notification->notification_type = 'VIC Holder Notification';
 		            $notification->role_id = 10;
 		            if($notification->save()){
@@ -1046,10 +1052,38 @@ class PreregistrationController extends Controller
     	}
     }
 
-    public function createVicNotificationVerifiedYourVisit($visit)
+    public function createAsicNotificationRequestedVerifications($asic)
     {
-    	//create VIC Notifications: 4. ASIC Sponsor has verified your visit
-		$notification = Notification::model()->findByAttributes(array('subject'=>'ASIC Sponsor has verified your visit'));
+    	//create VIC Notifications: 1. VIC Holder has requested ASIC Sponsor verification
+		$notification = Notification::model()->findByAttributes(array('subject'=>'VIC Holder has requested ASIC Sponsor verification'));
+		if($notification){
+			$notify = new UserNotification;
+            $notify->user_id = $asic->id;
+            $notify->notification_id = $notification->id;
+            $notify->has_read = 0; //Not Yet
+            $notify->save();
+		}else{
+			$notification = new Notification();
+			$notification->created_by = null;
+            $notification->date_created = date("Y-m-d");
+            $notification->subject = 'VIC Holder has requested ASIC Sponsor verification';
+            $notification->message = 'VIC Holder has requested ASIC Sponsor verification';
+            $notification->notification_type = 'ASIC Notification';
+            $notification->role_id = 10;
+            if($notification->save()){
+            	$notify = new UserNotification;
+                $notify->user_id = $asic->id;
+                $notify->notification_id = $notification->id;
+                $notify->has_read = 0; //Not Yet
+                $notify->save();
+            }	
+		}
+    }
+
+    public function createAsicNotificationAssignedVicHolder($visit)
+    {
+    	//create VIC Notifications: 2. ASIC Sponsor has assigned you a VIC holder Verification 
+		$notification = Notification::model()->findByAttributes(array('subject'=>'ASIC Sponsor has assigned you a VIC holder Verification '));
 		if($notification){
 			$notify = new UserNotification;
             $notify->user_id = $visit->visitor;
@@ -1060,9 +1094,9 @@ class PreregistrationController extends Controller
 			$notification = new Notification();
 			$notification->created_by = null;
             $notification->date_created = date("Y-m-d");
-            $notification->subject = 'ASIC Sponsor has verified your visit';
-            $notification->message = 'ASIC Sponsor has verified your visit';
-            $notification->notification_type = 'VIC Holder Notification';
+            $notification->subject = 'ASIC Sponsor has assigned you a VIC holder Verification';
+            $notification->message = 'ASIC Sponsor has assigned you a VIC holder Verification';
+            $notification->notification_type = 'ASIC Notification';
             $notification->role_id = 10;
             if($notification->save()){
             	$notify = new UserNotification;
@@ -1072,9 +1106,51 @@ class PreregistrationController extends Controller
                 $notify->save();
             }	
 		}
-
     }
 
+    public function createAsicNotificationAsicExpiry()
+    {
+    	$session = new CHttpSession;
+    	$visitor = '';
+    	if(isset(Yii::app()->user->id) && Yii::app()->user->id != ""){
+    		$visitor = Registration::model()->findByPk(Yii::app()->user->id);
+    	}else{
+    		$visitor = Registration::model()->findByPk($session['visitor_id']);
+    	}
+
+    	if($visitor->asic_expiry != "" && $visitor->asic_expiry != null){
+    		$day_before = date( 'Y-m-d', strtotime($visitor->asic_expiry.' -8 days' ) );
+			$today = date('Y-m-d');
+			
+			if ( strtotime($day_before) <= strtotime($today) ){
+				//create VIC Notifications: 3. Your ASIC is about to Expire
+				$notification = Notification::model()->findByAttributes(array('subject'=>'Your ASIC is about to Expire'));
+				if($notification){
+					$notify = new UserNotification;
+		            $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+		            $notify->notification_id = $notification->id;
+		            $notify->has_read = 0; //Not Yet
+		            $notify->save();
+				}else{
+					$notification = new Notification();
+					$notification->created_by = null;
+		            $notification->date_created = date("Y-m-d");
+		            $notification->subject = 'Your ASIC is about to Expire';
+		            $notification->message = 'Your ASIC is about to Expire (Apply for an ASIC or Update your Profile)';
+		            $notification->notification_type = 'ASIC Notification';
+		            $notification->role_id = 10;
+		            if($notification->save()){
+		            	$notify = new UserNotification;
+		                $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+		                $notify->notification_id = $notification->id;
+		                $notify->has_read = 0; //Not Yet
+		                $notify->save();
+		            }	
+				}
+
+			}
+    	}
+    }
 
 	public function actionSuccess()
 	{	
@@ -1161,6 +1237,9 @@ class PreregistrationController extends Controller
 
 				if(Yii::app()->user->account_type == "VIC"){
 					$this->createVicNotificationIdentificationExpiry();
+				}
+				elseif(Yii::app()->user->account_type == "ASIC") {
+					$this->createAsicNotificationAsicExpiry();
 				}
 
 				$this->redirect(array('preregistration/dashboard'));
@@ -1400,7 +1479,17 @@ class PreregistrationController extends Controller
     /* notifications */
     public function actionNotifications()
     {
-    	 $this->render('notifications');	
+    	Yii::app()->db->createCommand()->update("user_notification",array('has_read' => 1),"user_id = " . Yii::app()->user->id);
+
+    	 $notifications = Yii::app()->db->createCommand()
+                    ->select("*") 
+                    ->from("notification n")
+                    ->join("user_notification u","n.id = u.notification_id")
+                    ->where("u.user_id = " . Yii::app()->user->id)
+                    ->order("u.notification_id DESC")
+                    ->queryAll();
+
+    	 $this->render('notifications',array('notifications' => $notifications ));	
     }
 
     /* asic sponsor verifications */
@@ -1526,6 +1615,7 @@ class PreregistrationController extends Controller
 
 				if($visit->save(false))
 				{
+					$this->createAsicNotificationAssignedVicHolder($visit);
 					$this->redirect(array('preregistration/verifications'));
 				}
 			}
@@ -1550,6 +1640,7 @@ class PreregistrationController extends Controller
 
 					if($visit->save(false))
 					{
+						$this->createAsicNotificationAssignedVicHolder($visit);
 						$this->redirect(array('preregistration/verifications'));
 					}
 				}

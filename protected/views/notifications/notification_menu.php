@@ -1,10 +1,10 @@
 <?php 
-/*$session = new CHttpSession;
+$session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
 if (isset($company) && !empty($company)) {
     $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 }
-*/
+
 ?> 
 <style>
      .notification-dropdown li > h4 {

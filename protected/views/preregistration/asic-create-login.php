@@ -181,6 +181,36 @@ $session = new CHttpSession;
                                         )
                                     ));
                                 ?>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <?php
+
+                                            $ws=Workstation::model()->findAll('is_deleted=0');
+
+                                            $list=CHtml::listData($ws,'id','name');
+
+                                            /*echo $form->dropDownList($companyModel,'visitor_workstation',
+                                                $list,
+                                                array(
+                                                    'class'=>'form-control input-lg',
+                                                    'id'=>'WorkstationDropdownPopup',
+                                                    'empty' => 'Chose your entry point')
+                                            );*/
+                                            ?>
+
+                                            <select id="companyWorkstation" name="Company[workstation]" class="form-control input-lg">
+                                                <option value="">Chose your entry point</option>
+                                                <?php foreach ($list as $key => $value) {?>
+                                                    <option value="<?= $key ?>"><?= $value ?></option>
+                                                <?php } ?>
+                                            </select>
+
+                                        </div>
+                                        <?php //echo $form->error($model,'visitor_workstation'); ?>
+                                        <div id="entryPointErr" class="errorMessage" style="display:none;float: left;">Please chose your entry point</div>
+                                    </div>
+
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
@@ -189,9 +219,10 @@ $session = new CHttpSession;
                                         <?php echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
                                     </div>
 
+                                    
                                     <div class="form-group">
                                         <div class="input-group">
-                                            Company Contact
+                                            <span>Company Contact</span>
                                         </div>
                                     </div>
 
@@ -258,33 +289,41 @@ $session = new CHttpSession;
 <script type="text/javascript">
     $(document).ready(function() {
         $("#addCompanyBtn").unbind("click").click(function(event){
-            var data=$("#company-form").serialize();
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo Yii::app()->createUrl('company/addCompany');?>",
-                data: data,
-                success: function (data) {
-                    var data = JSON.parse(data);
-                    console.log(data);
-                    if (data.decision == 0)
-                    {
-                        console.log("errors got");
+            var workstation = $("#companyWorkstation").val();
+            if(workstation != ""){
+                var data=$("#company-form").serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo Yii::app()->createUrl('company/addCompany');?>",
+                    data: data,
+                    success: function (data) {
+                        var data = JSON.parse(data);
+                        console.log(data);
+                        if (data.decision == 0)
+                        {
+                            console.log("errors got");
+                        }
+                        else
+                        {
+                            $("#Registration_company").append(data.dropDown);
+                            $("#addCompanyModal").modal('hide');
+                        }  
+                    },
+                    error: function(error){
+                        console.log(error);
                     }
-                    else
-                    {
-                        $("#Registration_company").append(data.dropDown);
-                        $("#addCompanyModal").modal('hide');
-                    }  
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
+                });
+                $("#entryPointErr").hide();
+            }
+            else{
+                $("#entryPointErr").show();
+            }
+
+
         });
 
         $("#WorkstationDropdown").change(function() {
             var workstationId = $(this).val();
-            alert(workstationId);
             if(workstationId != "" && workstationId != null){
                 $.ajax({
                     type: 'POST',

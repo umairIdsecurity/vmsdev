@@ -336,9 +336,23 @@ class Company extends CActiveRecord {
         if (empty($users)) {
             return false;
         } else {
+            return true;
+        }
+    }
+
+    public function isUserAllowedToViewTenant($tenantId, $user) {
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = " . $tenantId . " and id=" . $user->id . "";
+        $users = User::model()->findAll($Criteria);
+
+        if (empty($users)) {
+            return false;
+        } else {
             if(Yii::app()->controller->id == "tenant" && Yii::app()->controller->action->id=="edit")
             {
-                $tenant = Tenant::model()->with("id0", "user0")->find("t.id = ".$companyId . " AND user0.id = ".$user->id);
+                $tenant = Tenant::model()->with("user0")->find("t.id = ".$tenantId . " AND user0.id = ".$user->id);
+                // $tenant = User::model()->with("tenant0")->find("t.id = ".$user->id . " AND tenant0.id = ".$tenantId);
                 if (empty($tenant)) {
                     return false;
                 } else {

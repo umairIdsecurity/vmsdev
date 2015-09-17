@@ -181,6 +181,11 @@ class PreregistrationController extends Controller
 				{
 					//**********************************************
 					$session['visitor_id'] = $model->id;
+
+					if($model->profile_type == "VIC"){
+						$this->createVicNotificationIdentificationExpiry();
+					}
+
 					$this->redirect(array('preregistration/visitReason'));
 					//***********************************************
 				}
@@ -465,13 +470,29 @@ class PreregistrationController extends Controller
 		if (isset($_POST['Registration'])) 
 		{
 			$model->attributes = $_POST['Registration'];
+
+
 			
 			$model->first_name = $_POST['Registration']['first_name'];
 			$model->last_name = $_POST['Registration']['last_name'];
 			$model->contact_number = $_POST['Registration']['contact_number'];
 			$model->email = $session['username'];
 			$model->password = User::model()->hashPassword($session['password']);
-			$model->company = ( ($_POST['Registration']['company'] != null) && ( !empty($_POST['Registration']['company']) ) ) ? $_POST['Registration']['company'] : null ;
+			
+
+			if(empty($model->company) || $model->company == "" || $model->company == null){
+				$model->company = $_POST['Registration']['company'];
+			}
+			
+			if(empty($model->visitor_workstation) || $model->visitor_workstation == "" || $model->visitor_workstation == null){
+				$model->visitor_workstation = $_POST['Registration']['visitor_workstation'];
+			}
+
+			if(empty($model->tenant) || $model->tenant == "" || $model->tenant == null){
+				$workstation = Workstation::model()->findByPk($_POST['Registration']['visitor_workstation']);
+				$model->tenant = $workstation->tenant;
+			}
+
 			$model->profile_type = "CORPORATE";
 			$model->role = 10; //role is 10: Visitor/Kiosik
 			$model->visitor_card_status = 2; //visitor card status is 2: VIC holder
@@ -485,8 +506,10 @@ class PreregistrationController extends Controller
                 $company->email_address = $_POST['Registration']['email'];
                 $company->mobile_number = $_POST['Registration']['contact_number'];
                 $company->office_number = $_POST['Registration']['contact_number'];                
-                /*$company->created_by_user = $session['created_by'];
-                $company->tenant = $session['tenant'];*/
+                
+                //$company->created_by_user = $session['created_by'];
+                $company->tenant = $model->tenant;
+
                	$company->created_by_visitor  = $model->id;
                 $company->company_type = 3;
                 if ($company->tenant_agent == '') {$company->tenant_agent = NULL;}
@@ -509,11 +532,11 @@ class PreregistrationController extends Controller
                                                 'contact_number'=>$_POST['Registration']['contact_number'],
                                                 'timezone_id'=>1,
                                                 'photo'=>NULL,
-                                                'tenant'=> empty($session['tenant']) ? NULL : $session['tenant'],
+                                                'tenant'=> $company->tenant,
                                                 'user_type'=>1,
                                                 'user_status'=>1,
                                                 'role'=>9,
-                                                //'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
+                                                //'created_by'=>$company->created_by_user
                                             ));
                 }
 				//****************************************************************************************************************************
@@ -855,6 +878,14 @@ class PreregistrationController extends Controller
 			$model->host = $session['host'];
 				
 			if($model->save()){
+				
+				if($session['account_type'] == 'VIC')
+				{
+					$this->createVicNotificationPreregisterVisit();
+					$this->createVicNotification20Visits();
+					$this->createVicNotification28Visits();
+				}
+
 				$this->redirect(array('preregistration/success'));
 			}
 
@@ -862,6 +893,188 @@ class PreregistrationController extends Controller
 
 		$this->render('visit-details' , array('model'=>$model) );
 	}
+
+
+    public function createVicNotificationPreregisterVisit() {
+    	$session = new CHttpSession;
+     	//create VIC Notifications: 1. You have Preregistered a Visit
+		$notification = Notification::model()->findByAttributes(array('subject'=>'You have Preregistered a Visit'));
+		if($notification){
+			$notify = new UserNotification;
+            $notify->user_id = $session['visitor_id'];
+            $notify->notification_id = $notification->id;
+            $notify->has_read = 0; //Not Yet
+            $notify->save();
+		}else{
+			$notification = new Notification();
+			$notification->created_by = null;
+            $notification->date_created = date("Y-m-d");
+            $notification->subject = 'You have Preregistered a Visit';
+            $notification->message = 'You have Preregistered a Visit';
+            $notification->notification_type = 'VIC Holder Notification';
+            $notification->role_id = 10;
+            if($notification->save()){
+            	$notify = new UserNotification;
+                $notify->user_id = $session['visitor_id'];
+                $notify->notification_id = $notification->id;
+                $notify->has_read = 0; //Not Yet
+                $notify->save();
+            }	
+		}
+    }
+
+    public function createVicNotification20Visits() {
+    	$session = new CHttpSession;
+        $visits = Yii::app()->db->createCommand()
+                    ->select("t.id") 
+                    ->from("visit t")
+                    ->join("visitor v","v.id = t.visitor")
+                    ->join("visit_status vs","vs.id = t.visit_status")
+                    ->where("(vs.visit_status='Pre-registered' AND t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".$session['visitor_id'].")")
+                    ->queryAll();
+		$visitCount = count($visits);
+
+		if($visitCount == 20){
+			//create VIC Notifications: 2. You have reached a Visit Count of 20 days
+			$notification = Notification::model()->findByAttributes(array('subject'=>'You have reached a Visit Count of 20 days'));
+			if($notification){
+				$notify = new UserNotification;
+                $notify->user_id = $session['visitor_id'];
+                $notify->notification_id = $notification->id;
+                $notify->has_read = 0; //Not Yet
+                $notify->save();
+			}else{
+				$notification = new Notification();
+				$notification->created_by = null;
+                $notification->date_created = date("Y-m-d");
+                $notification->subject = 'You have reached a Visit Count of 20 days';
+                $notification->message = 'You have reached a Visit Count of 20 days';
+                $notification->notification_type = 'VIC Holder Notification';
+                $notification->role_id = 10;
+                if($notification->save()){
+                	$notify = new UserNotification;
+                    $notify->user_id = $session['visitor_id'];
+                    $notify->notification_id = $notification->id;
+                    $notify->has_read = 0; //Not Yet
+                    $notify->save();
+                }	
+			}
+		}
+    }
+
+    public function createVicNotification28Visits() {
+    	$session = new CHttpSession;
+        $visits = Yii::app()->db->createCommand()
+                    ->select("t.id") 
+                    ->from("visit t")
+                    ->join("visitor v","v.id = t.visitor")
+                    ->join("visit_status vs","vs.id = t.visit_status")
+                    ->where("(vs.visit_status='Pre-registered' AND t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".$session['visitor_id'].")")
+                    ->queryAll();
+		$visitCount = count($visits);
+
+		if($visitCount == 28){
+			//create VIC Notifications: 3. You have reached your 28 Day Visit Count Limit
+			$notification = Notification::model()->findByAttributes(array('subject'=>'You have reached your 28 Day Visit Count Limit'));
+			if($notification){
+				$notify = new UserNotification;
+                $notify->user_id = $session['visitor_id'];
+                $notify->notification_id = $notification->id;
+                $notify->has_read = 0; //Not Yet
+                $notify->save();
+			}else{
+				$notification = new Notification();
+				$notification->created_by = null;
+                $notification->date_created = date("Y-m-d");
+                $notification->subject = 'You have reached your 28 Day Visit Count Limit';
+                $notification->message = 'You have reached your 28 Day Visit Count Limit';
+                $notification->notification_type = 'VIC Holder Notification';
+                $notification->role_id = 10;
+                if($notification->save()){
+                	$notify = new UserNotification;
+                    $notify->user_id = $session['visitor_id'];
+                    $notify->notification_id = $notification->id;
+                    $notify->has_read = 0; //Not Yet
+                    $notify->save();
+                }	
+			}
+		}
+    }
+
+    public function createVicNotificationIdentificationExpiry()
+    {
+    	$session = new CHttpSession;
+    	$visitor = '';
+    	if(isset(Yii::app()->user->id) && Yii::app()->user->id != ""){
+    		$visitor = Registration::model()->findByPk(Yii::app()->user->id);
+    	}else{
+    		$visitor = Registration::model()->findByPk($session['visitor_id']);
+    	}
+
+    	if($visitor->identification_document_expiry != "" && $visitor->identification_document_expiry != null){
+    		$visitor->identification_document_expiry;
+    		$day_before = date( 'Y-m-d', strtotime($visitor->identification_document_expiry.' -8 days' ) );
+			$today = date('Y-m-d');
+			
+			if ( strtotime($day_before) <= strtotime($today) ){
+				//create VIC Notifications: 5. Your Identification is about to expiry please update
+				$notification = Notification::model()->findByAttributes(array('subject'=>'Your Identification is about to expiry please update'));
+				if($notification){
+					$notify = new UserNotification;
+		            $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+		            $notify->notification_id = $notification->id;
+		            $notify->has_read = 0; //Not Yet
+		            $notify->save();
+				}else{
+					$notification = new Notification();
+					$notification->created_by = null;
+		            $notification->date_created = date("Y-m-d");
+		            $notification->subject = 'Your Identification is about to expiry please update';
+		            $notification->message = 'Your Identification is about to expiry please update';
+		            $notification->notification_type = 'VIC Holder Notification';
+		            $notification->role_id = 10;
+		            if($notification->save()){
+		            	$notify = new UserNotification;
+		                $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+		                $notify->notification_id = $notification->id;
+		                $notify->has_read = 0; //Not Yet
+		                $notify->save();
+		            }	
+				}
+
+			}
+    	}
+    }
+
+    public function createVicNotificationVerifiedYourVisit($visit)
+    {
+    	//create VIC Notifications: 4. ASIC Sponsor has verified your visit
+		$notification = Notification::model()->findByAttributes(array('subject'=>'ASIC Sponsor has verified your visit'));
+		if($notification){
+			$notify = new UserNotification;
+            $notify->user_id = $visit->visitor;
+            $notify->notification_id = $notification->id;
+            $notify->has_read = 0; //Not Yet
+            $notify->save();
+		}else{
+			$notification = new Notification();
+			$notification->created_by = null;
+            $notification->date_created = date("Y-m-d");
+            $notification->subject = 'ASIC Sponsor has verified your visit';
+            $notification->message = 'ASIC Sponsor has verified your visit';
+            $notification->notification_type = 'VIC Holder Notification';
+            $notification->role_id = 10;
+            if($notification->save()){
+            	$notify = new UserNotification;
+                $notify->user_id = $visit->visitor;
+                $notify->notification_id = $notification->id;
+                $notify->has_read = 0; //Not Yet
+                $notify->save();
+            }	
+		}
+
+    }
+
 
 	public function actionSuccess()
 	{	
@@ -945,6 +1158,10 @@ class PreregistrationController extends Controller
 			if ($model->validate() && $model->login()) {
 
 				$session = new CHttpSession;
+
+				if(Yii::app()->user->account_type == "VIC"){
+					$this->createVicNotificationIdentificationExpiry();
+				}
 
 				$this->redirect(array('preregistration/dashboard'));
 			}
@@ -1252,6 +1469,7 @@ class PreregistrationController extends Controller
 				
 				if($visit->save(false))
 				{
+					$this->createVicNotificationVerifiedYourVisit($visit);
 					$this->redirect(array('preregistration/verifications'));
 				}
 			}
@@ -1284,6 +1502,11 @@ class PreregistrationController extends Controller
 
 		$model = new Registration();
 		$model->scenario = 'preregistrationAsic';
+
+
+		$companyModel = new Company();
+		$companyModel->scenario = 'preregistration';
+		
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
 			echo CActiveForm::validate($model);
@@ -1334,7 +1557,7 @@ class PreregistrationController extends Controller
 
 		}
 		
-    	$this->render('reassign-asic',array('model'=>$model));
+    	$this->render('reassign-asic',array('model'=>$model,'companyModel' => $companyModel));
     }
 
 
@@ -1342,7 +1565,7 @@ class PreregistrationController extends Controller
 
     /* Visitor Visits history */
     public function actionVisitHistory() {
-    	
+
     	$per_page = 10;
 
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
@@ -1383,6 +1606,7 @@ class PreregistrationController extends Controller
             'pages'=>$pages,
         ));
     }
+
 
     /* Help Desk history */
 

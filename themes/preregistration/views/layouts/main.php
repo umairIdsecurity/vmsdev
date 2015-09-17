@@ -44,7 +44,17 @@ $session = new CHttpSession;
 
                     <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
                             <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>"><span class="glyphicon glyphicon-user"></span></a></li>
-                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>"><span class="glyphicon glyphicon-envelope"></span></a></li>
+                            
+                            <!-- <li class="group-2"><a href="<?php //echo Yii::app()->createUrl('preregistration/notifications'); ?>"><span class="glyphicon glyphicon-envelope"></span></a></li> -->
+
+                            <li class="notifications dropdown">
+                                <a title="notifications" href="#" class="dropdown-toggle" data-toggle="dropdown"> <?php $notifications = CHelper::get_unread_visitors_notifications();
+                                       if($notifications) 
+                                          echo '  <div class="notification-count"> '. count($notifications).'</div>';
+                                ?></a>
+                                <?php //echo $this->renderPartial("//preregistration/notification_menu", array('notifications'=>$notifications), false, false); ?>
+                            </li>
+
                             <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>"><span class="glyphicon glyphicon-question-sign"></span></a></li>
                             <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>"><span class="glyphicon glyphicon-log-out"></span></a></li>
                     <?php

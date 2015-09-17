@@ -25,6 +25,8 @@ class TenantForm extends CFormModel
     public $allowed_module;
     public $workstation;
     public $tenant_agent_name;
+    public $asic_no;
+    public $asic_expiry;
     
 
     public static $USER_ROLE_LIST = array(
@@ -69,24 +71,19 @@ class TenantForm extends CFormModel
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
 
             //Edit Tenant 
-             array('tenant_name,tenant_code, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form", 'message'=>'Please complete {attribute}'),
-             array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id', 'params'=>array(
+            array('tenant_name,tenant_code, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form", 'message'=>'Please complete {attribute}'),
+            array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id', 'params'=>array(
                 ':is_deleted'=>0, ':id'=>Yii::app()->user->id
                 )), 'on'=>'edit_form'),
-           array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'edit_form'),
+            array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'edit_form'),
             // End Edit Tenant Rules 
             
             // Tenant Agent Add
-            array('tenant_name,tenant_agent_name,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'tenant_agent', 'message'=>'Please complete {attribute}'),
-              array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
-                ':is_deleted'=>0
-                )), 'on'=>'tenant_agent'),
-            
-            // Edit Tenant Agent
-//             array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=', 'params'=>array(
-//                ':is_deleted'=>0
-//                )), 'on'=>'edit_agent_form'),
-              array('tenant_name,tenant_agent_name, first_name, last_name, email, contact_number', 'required', "on"=>"edit_agent_form", 'message'=>'Please complete {attribute}'),
+            //array('tenant_name,tenant_agent_name,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'tenant_agent', 'message'=>'Please complete {attribute}'),
+            //array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
+            //    ':is_deleted'=>0
+            //    )), 'on'=>'tenant_agent'),
+            //array('tenant_name,tenant_agent_name, first_name, last_name, email, contact_number', 'required', "on"=>"edit_agent_form", 'message'=>'Please complete {attribute}'),
             
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),
@@ -95,11 +92,11 @@ class TenantForm extends CFormModel
                 )), 'on'=>'save'),
             
           
-            array('password,cnf_password', 'required','on'=>'passwordrequire', 'message' => 'Please enter password or Autogenerate password'),
+            array('password,cnf_password', 'required','on'=>'passwordrequire', 'message' => 'Please enter or autogenerate password'),
 
             //array('password,cnf_password', 'required','on'=>'passwordrequire'),
             array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'passwordrequire'),
-            array('tenant_code','match', 'pattern' => '[^[A-Za-z]+$]','message' => 'Tenant code not contains the numeric value'),
+            array('tenant_code','match', 'pattern' => '[^[A-Za-z]+$]','message' => 'Tenant code should not contain a numeric value'),
             
         );
     }
@@ -137,7 +134,9 @@ class TenantForm extends CFormModel
             'timezone_id' => 'Timezone',
             'allowed_module' => 'Module Access',
             'password_opt' => 'Password Option',
-            'tenant_agent_name' => 'Tenant Agent Name'
+            'tenant_agent_name' => 'Tenant Agent Name',
+            'asic_no' => 'ASIC No',
+            'asic_expiry' => 'ASIC expiry'
         );
     }
     public function is_avms_user()

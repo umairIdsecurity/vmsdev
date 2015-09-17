@@ -46,7 +46,7 @@ class TenantContact extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'tenant0' => array(self::BELONGS_TO, 'Tenant', 'tenant'),
-                        'user0'=> array(self::HAS_ONE, 'User', 'id'),
+            'user0'=> array(self::HAS_ONE, 'User', 'id'),
 		);
 	}
 

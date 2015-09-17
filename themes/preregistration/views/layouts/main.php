@@ -15,6 +15,123 @@ $session = new CHttpSession;
     <meta name="keywords" content="keywords"/>
     <link rel="shortcut icon" href="<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-dashboard.png" type="image/x-icon"/>
 
+    <style type="text/css">
+.top_nav
+{
+    float: right;
+    /*margin-right: -27px !important;*/
+    margin-top: -53px !important;
+}
+.top_nav ul
+{
+    list-style:none;
+    float:right;
+    margin: 0;
+    padding: 0;
+}
+.top_nav ul li
+{
+    float:left;
+    color:#000;
+    font-size:14px;
+    padding:0 3px;
+}
+.top_nav ul li:last-child
+{
+    border-right:none;
+}
+
+.top_nav ul li img
+{
+    float:left;
+    width:14px;
+}
+.top_nav ul li a
+{
+    text-decoration:none;
+    color:#000;
+}
+.top_nav ul li a:hover
+{
+    color:#9BD62C;
+}
+
+.top_nav .profile{
+    padding: 0 ;
+}
+
+
+.open-folder a span{
+    height: 38px;
+    line-height: 38px;
+    display: block;
+    padding: 0 10px;
+    color: #666666;
+}
+.glyphicons-folder-open:before {
+    content: "\e118";
+    font-size: 18px;
+    vertical-align: sub;
+}
+
+.glyphicons-refresh:before {
+    content: "\e031";
+    font-size: 18px;
+    vertical-align: sub;
+}
+
+.top_nav .profile a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-profile.png') no-repeat center center;
+    text-indent: -9999px;
+}
+
+.top_nav .notifications a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-notifications.png') no-repeat center center;
+
+}
+.notifications .notification-count {
+     padding:0px 6px;
+     float:right;
+     border:1px solid red;
+     border-radius: 10px;
+     background: red;
+     font-size:10px;
+     color:#fff !important;
+
+}
+.top_nav .support a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-support.png') no-repeat center center;
+    text-indent: -9999px;
+}
+
+
+
+.top_nav .help a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-help.png') no-repeat center center;
+    text-indent: -9999px;
+}
+
+.top_nav .logout a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-logout.png') no-repeat center center;
+    text-indent: -9999px;
+}
+
+    </style>
 
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/main.css" rel="stylesheet">
@@ -36,32 +153,53 @@ $session = new CHttpSession;
                         <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
                     </a>
                 </div>
-                <ul class="icons">
-                    <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                            <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
-                            <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
-                    <?php } ?> 
+                <!-- ******************************************************************** -->
+                    <aside class="top_nav">
+                        <ul id="icons">
 
-                    <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
-                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>"><span class="glyphicon glyphicon-user"></span></a></li>
+                            <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
+                                <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
+                                <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
+                            <?php } ?> 
+
+
+                            <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
+                                    
+                                    <li class="profile">
+                                        <a title="profile" href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">
+                                            My Profile
+                                        </a>
+                                    </li>
                             
-                            <!-- <li class="group-2"><a href="<?php //echo Yii::app()->createUrl('preregistration/notifications'); ?>"><span class="glyphicon glyphicon-envelope"></span></a></li> -->
 
-                            <li class="notifications dropdown">
-                                <a title="notifications" href="#" class="dropdown-toggle" data-toggle="dropdown"> <?php $notifications = CHelper::get_unread_visitors_notifications();
-                                       if($notifications) 
-                                          echo '  <div class="notification-count"> '. count($notifications).'</div>';
-                                ?></a>
-                                <?php //echo $this->renderPartial("//preregistration/notification_menu", array('notifications'=>$notifications), false, false); ?>
-                            </li>
+                                    <li class="notifications dropdown">
+                                        <a title="notifications" href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>" class="dropdown-toggle" data-toggle="dropdown"> 
+                                            <?php $notifications = CHelper::get_unread_visitors_notifications();
+                                               if($notifications) 
+                                                  echo '  <div class="notification-count"> '. count($notifications).'</div>';
+                                        ?></a>
+                                    </li>
 
-                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>"><span class="glyphicon glyphicon-question-sign"></span></a></li>
-                            <li class="group-2"><a href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>"><span class="glyphicon glyphicon-log-out"></span></a></li>
-                    <?php
-                          }
-                    ?>
-                    
-                </ul>
+                                    
+                                    <li class="help">
+                                        <a title="help" href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>">
+                                            Help
+                                        </a>
+                                    </li>
+
+                                    <li class="logout">
+                                        <a title="logout" href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>">
+                                            <span class="glyphicon glyphicon-log-out"></span>
+                                        </a>
+                                    </li>
+                            
+                            <?php
+                                  }
+                            ?>
+                        </ul>
+                            
+                    </aside>
+                <!-- ******************************************************************** -->
             </div>
         </div>
         

@@ -86,7 +86,9 @@ $session = new CHttpSession;
 <div class="page-content">
     <!-- <a href="<?php //echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1></a> -->
 
-    <span>Please provide details of the ASIC Sponsor who will be escorting the VIC holder</span>
+    <a href="<?php echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><span>Please provide details of the ASIC Sponsor who will be escorting the VIC holder</span></a>
+
+    
 
     <br> <br> 
 
@@ -434,7 +436,7 @@ $session = new CHttpSession;
                                         $('#Registration_selected_asic_id').val($(this).val());
                                         $('#Registration_contact_number').val("");
                                         $('#Registration_email').val("");
-                                        $('#new_asic_area').hide();
+                                        $('#new_asic_area').empty();
                                     });
                                 }
                             });

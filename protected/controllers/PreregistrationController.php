@@ -259,6 +259,8 @@ class PreregistrationController extends Controller
 				$session['visit_id'] = $model->id;
 			}
 
+			$session['company_id'] =  $_POST['Company']['name'];
+
 			$registrationModel = Registration::model()->findByPk($session['visitor_id']);
 
 			if($registrationModel->company == null || $registrationModel->company == ""){
@@ -877,19 +879,18 @@ class PreregistrationController extends Controller
 			$model->date_check_in = date("Y-m-d", strtotime($_POST['Visit']['date_in']));
 			$model->date_check_out = date("Y-m-d", strtotime($_POST['Visit']['date_in']. " +1 day"));
 
-			
-			/*$model->time_in
-				= $oClock == 'am' ? $model->time_in :
-				date("H:i", strtotime($model->time_in . " + 12 hour"));*/
-
 			$model->host = $session['host'];
 				
-			if($model->save()){
-				
+			if($model->save())
+			{	
 				if($session['account_type'] == 'VIC')
 				{
 					$this->createVicNotificationPreregisterVisit($model->date_check_in);
 					$this->createVicNotification20and28Visits();
+				}
+				elseif ($session['account_type'] == 'CORPORATE') {
+					$this->createCompAdminNotificationPreregisterVisit($session['company_id'],$model->date_check_in);
+					$this->createCompAdminNotification20and28Visits($session['company_id']);
 				}
 
 				$this->redirect(array('preregistration/success'));
@@ -900,6 +901,109 @@ class PreregistrationController extends Controller
 		$this->render('visit-details' , array('model'=>$model) );
 	}
 
+	public function createCompAdminNotificationPreregisterVisit($company_id,$date_of_visit){
+		//create Company Admin Notifications: 1. VIC Holder in your company has Preregistered a Visit
+		$session = new CHttpSession;
+		$cond = "company=".$company_id." and profile_type='CORPORATE'";
+		$companyAdmins = Registration::model()->findAll($cond);
+		if($companyAdmins){
+	    	$notification = new Notification();
+			$notification->created_by = null;
+	        $notification->date_created = date("Y-m-d");
+	        $notification->subject = 'VIC Holder in your company has Preregistered a Visit';
+	        $notification->message = 'VIC Holder in your company has Preregistered a Visit ('.$date_of_visit.')';
+	        $notification->notification_type = 'Company Notification';
+	        $notification->role_id = 10;
+	        if($notification->save()){
+	        	foreach ($companyAdmins as $key => $companyAdmin) {
+					$notify = new UserNotification;
+		            $notify->user_id = $companyAdmin->id;
+		            $notify->notification_id = $notification->id;
+		            $notify->has_read = 0; //Not Yet
+		            $notify->save();
+				}
+        	}
+		}
+	}
+
+	public function createCompAdminNotification20and28Visits($company_id){
+		//create Company Admin Notifications: 2. VIC Holder in your company has reached their 20 day visit count
+		$session = new CHttpSession;
+		$cond = "company=".$company_id." and profile_type='CORPORATE'";
+		$companyAdmins = Registration::model()->findAll($cond);
+
+		if($companyAdmins){
+			foreach ($companyAdmins as $key => $companyAdmin) {
+				$visits = Yii::app()->db->createCommand()
+                    ->select("t.id") 
+                    ->from("visit t")
+                    ->join("visitor v","v.id = t.visitor")
+                    ->join("company c","c.id = v.company")
+                    ->join("visit_status vs","vs.id = t.visit_status")
+                    ->where("(vs.name='Pre-registered' AND t.is_deleted = 0 AND v.is_deleted =0 AND v.id=".$session['visitor_id'].")")
+                    ->queryAll();
+				$visitCount = count($visits);
+
+				if($visitCount == 20){
+					//create Company Admin Notifications: 2. You have reached a Visit Count of 20 days
+					$notification = Notification::model()->findByAttributes(array('subject'=>'VIC Holder in your company has reached their 20 day visit count'));
+					if($notification){
+						$notify = new UserNotification;
+		                $notify->user_id = $companyAdmin->id;
+		                $notify->notification_id = $notification->id;
+		                $notify->has_read = 0; //Not Yet
+		                $notify->save();
+					}else{
+						$notification = new Notification();
+						$notification->created_by = null;
+		                $notification->date_created = date("Y-m-d");
+		                $notification->subject = 'VIC Holder in your company has reached their 20 day visit count';
+		                $notification->message = 'VIC Holder in your company has reached their 20 day visit count';
+		                $notification->notification_type = 'Company Notification';
+		                $notification->role_id = 10;
+		                if($notification->save()){
+		                	$notify = new UserNotification;
+		                    $notify->user_id = $companyAdmin->id;
+		                    $notify->notification_id = $notification->id;
+		                    $notify->has_read = 0; //Not Yet
+		                    $notify->save();
+		                }	
+					}
+				}
+
+				if($visitCount == 28){
+					//create Company Admin Notifications: 3. VIC Holder in your company has reached their 28 day limit
+					$notification = Notification::model()->findByAttributes(array('subject'=>'VIC Holder in your company has reached their 28 day limit'));
+					if($notification){
+						$notify = new UserNotification;
+		                $notify->user_id = $companyAdmin->id;
+		                $notify->notification_id = $notification->id;
+		                $notify->has_read = 0; //Not Yet
+		                $notify->save();
+					}else{
+						$notification = new Notification();
+						$notification->created_by = null;
+		                $notification->date_created = date("Y-m-d");
+		                $notification->subject = 'VIC Holder in your company has reached their 28 day limit';
+		                $notification->message = 'VIC Holder in your company has reached their 28 day limit';
+		                $notification->notification_type = 'Company Notification';
+		                $notification->role_id = 10;
+		                if($notification->save()){
+		                	$notify = new UserNotification;
+		                    $notify->user_id = $companyAdmin->id;
+		                    $notify->notification_id = $notification->id;
+		                    $notify->has_read = 0; //Not Yet
+		                    $notify->save();
+		                }	
+					}
+				}
+
+			}
+	
+		}
+
+
+	}
 
     public function createVicNotificationPreregisterVisit($date_of_visit) {
     	//create VIC Notifications: 1. You have Preregistered a Visit
@@ -1018,38 +1122,47 @@ class PreregistrationController extends Controller
     		$visitor = Registration::model()->findByPk($session['visitor_id']);
     	}
 
-    	if($visitor->identification_document_expiry != "" && $visitor->identification_document_expiry != null){
-    		$day_before = date( 'Y-m-d', strtotime($visitor->identification_document_expiry.' -8 days' ) );
-			$today = date('Y-m-d');
-			
-			if ( strtotime($day_before) <= strtotime($today) ){
-				//create VIC Notifications: 5. Your Identification is about to expiry please update
-				$notification = Notification::model()->findByAttributes(array('subject'=>'Your Identification is about to expire'));
-				if($notification){
-					$notify = new UserNotification;
-		            $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
-		            $notify->notification_id = $notification->id;
-		            $notify->has_read = 0; //Not Yet
-		            $notify->save();
-				}else{
-					$notification = new Notification();
-					$notification->created_by = null;
-		            $notification->date_created = date("Y-m-d");
-		            $notification->subject = 'Your Identification is about to expire';
-		            $notification->message = 'Your Identification is about to expire (Please update your Profile)';
-		            $notification->notification_type = 'VIC Holder Notification';
-		            $notification->role_id = 10;
-		            if($notification->save()){
-		            	$notify = new UserNotification;
-		                $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
-		                $notify->notification_id = $notification->id;
-		                $notify->has_read = 0; //Not Yet
-		                $notify->save();
-		            }	
-				}
+    	$notifications = Yii::app()->db->createCommand()
+                    ->select("*") 
+                    ->from("notification n")
+                    ->join("user_notification u","n.id = u.notification_id")
+                    ->where("u.has_read = 0 AND u.user_id = " . $visitor->id)
+                    ->order("u.notification_id DESC")
+                    ->queryAll();
 
-			}
-    	}
+        if(!$notifications){
+	    	if($visitor->identification_document_expiry != "" && $visitor->identification_document_expiry != null){
+	    		$day_before = date( 'Y-m-d', strtotime($visitor->identification_document_expiry.' -8 days' ) );
+				$today = date('Y-m-d');
+				
+				if ( strtotime($day_before) <= strtotime($today) ){
+					//create VIC Notifications: 5. Your Identification is about to expiry please update
+					$notification = Notification::model()->findByAttributes(array('subject'=>'Your Identification is about to expire'));
+					if($notification){
+						$notify = new UserNotification;
+			            $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+			            $notify->notification_id = $notification->id;
+			            $notify->has_read = 0; //Not Yet
+			            $notify->save();
+					}else{
+						$notification = new Notification();
+						$notification->created_by = null;
+			            $notification->date_created = date("Y-m-d");
+			            $notification->subject = 'Your Identification is about to expire';
+			            $notification->message = 'Your Identification is about to expire (Please update your Profile)';
+			            $notification->notification_type = 'VIC Holder Notification';
+			            $notification->role_id = 10;
+			            if($notification->save()){
+			            	$notify = new UserNotification;
+			                $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+			                $notify->notification_id = $notification->id;
+			                $notify->has_read = 0; //Not Yet
+			                $notify->save();
+			            }	
+					}
+				}
+	    	}
+	    }
     }
 
     public function createAsicNotificationRequestedVerifications($asic)
@@ -1118,38 +1231,47 @@ class PreregistrationController extends Controller
     		$visitor = Registration::model()->findByPk($session['visitor_id']);
     	}
 
-    	if($visitor->asic_expiry != "" && $visitor->asic_expiry != null){
-    		$day_before = date( 'Y-m-d', strtotime($visitor->asic_expiry.' -8 days' ) );
-			$today = date('Y-m-d');
-			
-			if ( strtotime($day_before) <= strtotime($today) ){
-				//create VIC Notifications: 3. Your ASIC is about to Expire
-				$notification = Notification::model()->findByAttributes(array('subject'=>'Your ASIC is about to Expire'));
-				if($notification){
-					$notify = new UserNotification;
-		            $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
-		            $notify->notification_id = $notification->id;
-		            $notify->has_read = 0; //Not Yet
-		            $notify->save();
-				}else{
-					$notification = new Notification();
-					$notification->created_by = null;
-		            $notification->date_created = date("Y-m-d");
-		            $notification->subject = 'Your ASIC is about to Expire';
-		            $notification->message = 'Your ASIC is about to Expire (Apply for an ASIC or Update your Profile)';
-		            $notification->notification_type = 'ASIC Notification';
-		            $notification->role_id = 10;
-		            if($notification->save()){
-		            	$notify = new UserNotification;
-		                $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
-		                $notify->notification_id = $notification->id;
-		                $notify->has_read = 0; //Not Yet
-		                $notify->save();
-		            }	
-				}
+    	$notifications = Yii::app()->db->createCommand()
+            ->select("*") 
+            ->from("notification n")
+            ->join("user_notification u","n.id = u.notification_id")
+            ->where("u.has_read = 0 AND u.user_id = " . $visitor->id)
+            ->order("u.notification_id DESC")
+            ->queryAll();
 
-			}
-    	}
+        if(!$notifications){
+        	if($visitor->asic_expiry != "" && $visitor->asic_expiry != null){
+	    		$day_before = date( 'Y-m-d', strtotime($visitor->asic_expiry.' -8 days' ) );
+				$today = date('Y-m-d');
+				
+				if ( strtotime($day_before) <= strtotime($today) ){
+					//create VIC Notifications: 3. Your ASIC is about to Expire
+					$notification = Notification::model()->findByAttributes(array('subject'=>'Your ASIC is about to Expire'));
+					if($notification){
+						$notify = new UserNotification;
+			            $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+			            $notify->notification_id = $notification->id;
+			            $notify->has_read = 0; //Not Yet
+			            $notify->save();
+					}else{
+						$notification = new Notification();
+						$notification->created_by = null;
+			            $notification->date_created = date("Y-m-d");
+			            $notification->subject = 'Your ASIC is about to Expire';
+			            $notification->message = 'Your ASIC is about to Expire (Apply for an ASIC or Update your Profile)';
+			            $notification->notification_type = 'ASIC Notification';
+			            $notification->role_id = 10;
+			            if($notification->save()){
+			            	$notify = new UserNotification;
+			                $notify->user_id = $session['visitor_id'] == "" ? Yii::app()->user->id : $session['visitor_id'];
+			                $notify->notification_id = $notification->id;
+			                $notify->has_read = 0; //Not Yet
+			                $notify->save();
+			            }	
+					}
+				}
+	    	}
+	    }	
     }
 
 	public function actionSuccess()

@@ -4,6 +4,10 @@
 /* @var $model Company */
 /* @var $form CActiveForm */
 
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+$cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
 
 $session = new CHttpSession;
 $currentRoleinUrl = '';
@@ -156,6 +160,33 @@ $currentLoggedUserId = $session['id'];
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                         </tr>
+                        <tr>
+                            <td class="AsicNoInput">
+                                <?php echo $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 9, 'placeholder' => 'ASIC No', 'autocomplete' => 'off')); ?>
+                                <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'asic_no'); ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="AsicExpiryDropdown">
+                                ASIC Expiry<span class="required">*</span><br/>
+                                <?php echo $form->hiddenField($model,'asic_expiry',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
+                                <script>
+                                    $(function(){
+                                        $('#TenantForm_asic_expiry').combodate({
+                                            minYear: (new Date().getFullYear()),
+                                            maxYear: (new Date().getFullYear()+10),
+                                            smartDays: true,
+                                            customClass: 'yearSelect'
+                                        });
+                                    });
+                                </script>
+                                <?php echo "<br>" . $form->error($model, 'asic_expiry'); ?>
+
+                            </td>
+                        </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -169,38 +200,8 @@ $currentLoggedUserId = $session['id'];
                 <table>
                     <tr>
                         <td>
-                            <!-- <select  onchange="populateDynamicFields()"  -->  
-                            <select  <?php
-                            // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
-                            if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
-                                //echo "disabled";
-                            }
-                            ?> id="User_role" name="TenantForm[role]" >
-                                <!-- <option disabled value='' selected>Select Role</option> -->
-                                <?php
-
-                                $assignableRowsArray = getAssignableRoles($session['role'],$model); // roles with access rules from getaccess function
-                                foreach ($assignableRowsArray as $assignableRoles) {
-                                    foreach ($assignableRoles as $key => $value) {
-                                        ?>
-
-                                        <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
-                                        if (isset($_GET['role'])) { //if url with selected role
-                                            if ($currentRoleinUrl == $key) {
-                                                echo "selected ";
-                                            }
-                                        } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
-                                            if ($key == $model->role) {
-                                                echo " selected ";
-                                            }
-                                        }
-                                        ?>>
-                                            <?php echo $value; ?></option>
-                                    <?php
-                                    }
-                                }
-                                ?>
-
+                            <select id="User_role" name="TenantForm[role]" >
+                                <option value="">Please select a user role.</option>
                             </select><?php echo "<br>" . $form->error($model, 'role'); ?>
                         </td>
 
@@ -224,15 +225,6 @@ $currentLoggedUserId = $session['id'];
                      <tr>
                          
                         <td>
-                            <?php /*echo $form->dropDownList(
-                                    $model,
-                                    'timezone_id',
-                                    CHtml::listData(Timezone::model()->findAll(),
-                                            'id',
-                                            'timezone_name'),
-                                            array('empty'=>'Please select a timezone')
-                                    );*/
-                            ?>
 
                             <select id="Workstation_timezone_id" name="TenantForm[timezone_id]">
                                 <?php
@@ -385,16 +377,39 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+
     function setAvailableRoles(){
-        $("#User_role").find('option').remove().end();
-        $("#User_role").append('<option value="">Please select a user role.</option>');
+
+        //$("#User_role").find('option').remove().end();
+        //$("#User_role").append('<option value="">Please select a user role.</option>');
+
         if(document.getElementById("module_access_avms").checked) {
-            $("#User_role").append('<option value="<?php echo Roles::ROLE_ISSUING_BODY_ADMIN ?>">AVMS Issuing Body Admin</option>');
+            if($("#User_role option[value='<?php echo Roles::ROLE_ISSUING_BODY_ADMIN ?>']").length == 0) {
+                $("#User_role").append('<option value="<?php echo Roles::ROLE_ISSUING_BODY_ADMIN ?>">AVMS Issuing Body Admin</option>');
+            }
+        } else{
+            $("#User_role option[value='<?php echo Roles::ROLE_ISSUING_BODY_ADMIN ?>']").remove();
         }
-        if(document.getElementById("module_access_cvms").checked) {
-            $("#User_role").append('<option value="<?php echo Roles::ROLE_ADMIN ?>">CVMS Administrator</option>');
+
+        if(document.getElementById("module_access_cvms").checked ) {
+            if($("#User_role option[value='<?php echo Roles::ROLE_ADMIN ?>']").length==0) {
+                $("#User_role").append('<option value="<?php echo Roles::ROLE_ADMIN ?>">CVMS Administrator</option>');
+            }
+        } else {
+            $("#User_role option[value='<?php echo Roles::ROLE_ADMIN ?>']").remove();
         }
     }
+
+    function setAsicFields(){
+        if($("#User_role").val() == '<?php echo Roles::ROLE_ISSUING_BODY_ADMIN ?>') {
+            $(".AsicExpiryDropdown").show();
+            $(".AsicNoInput").show();
+        } else {
+            $(".AsicExpiryDropdown").hide();
+            $(".AsicNoInput").hide();
+        }
+    }
+
     function generatepassword() {
 
         $("#random_password").val('');
@@ -498,7 +513,13 @@ if (isset($_GET['viewFrom'])) {
         $("#module_access_cvms").click(function(){
             setAvailableRoles();
         });
+        $("#User_role").on('change', function (e) {
+            e.preventDefault();
+            setAsicFields();
+        });
         setAvailableRoles();
+        setAsicFields();
+
     });
 
 </script>

@@ -63,14 +63,13 @@ class User extends VmsActiveRecord {
 
     public static $USER_ROLE_LIST = array(
 
-        5 => 'Super Administrator',
-        1 => 'Administrator',
-        6 => 'Agent Administrator',
-        7 => 'Agent Operator',
-        8 => 'Operator',
-        9 => 'Staff Member',
-        10 => 'Visitor',
-
+        Roles::ROLE_SUPERADMIN => 'Super Administrator',
+        Roles::ROLE_ADMIN => 'Administrator',
+        Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
+        Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
+        Roles::ROLE_OPERATOR => 'Operator',
+        Roles::ROLE_STAFFMEMBER => 'Staff Member',
+        Roles::ROLE_VISITOR=> 'Visitor',
         Roles::ROLE_ISSUING_BODY_ADMIN => 'Issuing Body Administrator',
         Roles::ROLE_AIRPORT_OPERATOR => 'Airport Operator',
         Roles::ROLE_AGENT_AIRPORT_ADMIN =>'Agent Airport Administrator',

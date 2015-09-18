@@ -24,53 +24,13 @@ class TenantController extends Controller {
                 'expression' => 'CHelper::check_module_authorization("Admin")'
             ),
             array('allow', // allow user if same company
-                'actions' => array('update'),
-                'expression' => 'Yii::app()->controller->isUserAllowedToUpdate(Yii::app()->user)',
-            ),
-            array('allow', // allow user if same tenant
-                'actions' => array('edit'),
-                'expression' => 'Yii::app()->controller->isUserAllowedToEdit(Yii::app()->user)',
-            ),
-            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'adminAjax', 'delete'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
-            ),
-            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'adminAjax' , 'delete'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
-            ),
-            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('update'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+                'actions' => array('create','update','edit','admin', 'adminAjax', 'delete'),
+                'expression' => 'Yii::app()->user->role  == Roles::ROLE_SUPERADMIN',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
-    }
-
-    public function isUserAllowedToUpdate($user) {
-        if(isset($user) && !empty($user->id)) {
-            if ($user->role == Roles::ROLE_SUPERADMIN) {
-                return true;
-            } else {
-                $currentlyEditedCompanyId = $_GET['id'];
-                return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
-            }
-        }
-        return false;
-    }
-
-    public function isUserAllowedToEdit($user) {
-        if(isset($user) && !empty($user->id)) {
-            if ($user->role == Roles::ROLE_SUPERADMIN) {
-                return true;
-            } else {
-                $currentlyEditedTenantId = $_GET['id'];
-                return Company::model()->isUserAllowedToViewTenant($currentlyEditedTenantId, $user);
-            }
-        }
-        return false;
     }
 
     public function actionCreate() {
@@ -83,8 +43,6 @@ class TenantController extends Controller {
                 $model->scenario = "passwordrequire";
             }
             $this->performAjaxValidation($model);
-
-
         }
        
         if (isset($_POST['TenantForm'])) {
@@ -139,12 +97,8 @@ class TenantController extends Controller {
                         $passwordval = $_POST['TenantForm']['password'];
                     }
                     $userModel->password = $passwordval;
-                    //$userModel->role = $_POST['TenantForm']['role'];
-                    $userModel->role = 1;
-                    
-                    //$userModel->user_type = $_POST['TenantForm']['user_type'];
-                    //$userModel->user_status = $_POST['TenantForm']['user_status'];
-                    
+                    $userModel->role = $_POST['TenantForm']['role'];
+
                     $userModel->user_type = 1;
                     $userModel->user_status = 1;
                     
@@ -153,10 +107,6 @@ class TenantController extends Controller {
                     $userModel->notes = $_POST['TenantForm']['notes'];
                     $userModel->photo = $photolastId;//$_POST['TenantForm']['photo'];
 
-                    //$userModel->asic_no = 10;
-                    //$userModel->asic_expiry_day = 10;
-                    //$userModel->asic_expiry_month = 10;
-                    //$userModel->asic_expiry_year = 15;
                     /**
                      * Module Access
                      */ 

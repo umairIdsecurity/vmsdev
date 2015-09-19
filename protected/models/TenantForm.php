@@ -27,18 +27,18 @@ class TenantForm extends CFormModel
     public $tenant_agent_name;
     public $asic_no;
     public $asic_expiry;
+    public $module_access;
     
 
     public static $USER_ROLE_LIST = array(
 
-        5 => 'Super Administrator',
-        1 => 'Administrator',
-        6 => 'Agent Administrator',
-        7 => 'Agent Operator',
-        8 => 'Operator',
-        9 => 'Staff Member',
-        10 => 'Visitor',
-
+        Roles::ROLE_SUPERADMIN => 'Super Administrator',
+        Roles::ROLE_ADMIN => 'Administrator',
+        Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
+        Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
+        Roles::ROLE_OPERATOR => 'Operator',
+        Roles::ROLE_STAFFMEMBER => 'Staff Member',
+        Roles::ROLE_VISITOR => 'Visitor',
         Roles::ROLE_ISSUING_BODY_ADMIN => 'Issuing Body Administrator',
         Roles::ROLE_AIRPORT_OPERATOR => 'Airport Operator',
         Roles::ROLE_AGENT_AIRPORT_ADMIN =>'Agent Airport Administrator',
@@ -61,41 +61,47 @@ class TenantForm extends CFormModel
     public function rules()
     {
         return array(
-            // name, email, subject and message are required
-            array('timezone_id','required','message' =>'Please complete timezone'),    
-            array('tenant_name,tenant_code,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'save', 'message'=>'Please complete {attribute}'),           
-            array('password_opt','required','message' => 'Please complete {attribute}', 'on'=>'save'),  
+
+            // all cases
+            array('tenant_name,tenant_code, first_name, last_name, email, contact_number,role',
+                    'required',
+                    'message'=>'Please complete {attribute}'),
+
+
+            array('workstation, password_opt,timezone_id',
+                    'required',
+                    'on'=>['save','save.asic','save.passwordrequire','save.asic.passwordrequire'],
+                    'message'=>'Please complete {attribute}'),
+
+            array('asic_no, asic_expiry',
+                    'required',
+                    'on'=>['save.asic','save.asic.passwordrequire'],
+                    'message'=>'Please complete {attribute}'),
+
             array('tenant_name,first_name, last_name, email', 'length', 'max' => 50),
             array('tenant_code', 'length', 'max' => 3),
             array('tenant_code', 'length', 'min' => 3),
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
 
-            //Edit Tenant 
-            array('tenant_name,tenant_code, first_name, last_name, email, contact_number', 'required', "on"=>"edit_form", 'message'=>'Please complete {attribute}'),
-            array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id', 'params'=>array(
-                ':is_deleted'=>0, ':id'=>Yii::app()->user->id
-                )), 'on'=>'edit_form'),
             array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'edit_form'),
-            // End Edit Tenant Rules 
-            
-            // Tenant Agent Add
-            //array('tenant_name,tenant_agent_name,workstation, first_name, last_name, email, contact_number', 'required', 'on'=>'tenant_agent', 'message'=>'Please complete {attribute}'),
-            //array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
-            //    ':is_deleted'=>0
-            //    )), 'on'=>'tenant_agent'),
-            //array('tenant_name,tenant_agent_name, first_name, last_name, email, contact_number', 'required', "on"=>"edit_agent_form", 'message'=>'Please complete {attribute}'),
-            
+
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),
-            array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
-                ':is_deleted'=>0
-                )), 'on'=>'save'),
-            
-          
-            array('password,cnf_password', 'required','on'=>'passwordrequire', 'message' => 'Please enter or autogenerate password'),
 
-            //array('password,cnf_password', 'required','on'=>'passwordrequire'),
-            array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'passwordrequire'),
+            // email address will be the first for the tenant so no need for unique check.... no tenant check for uniqueness within anyway
+//            array('email',
+//                    'unique',
+//                    'className'=> 'User',
+//                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND id !=:id',
+//                    'params'=>array(':is_deleted'=>0, ':id'=>Yii::app()->user->tenant)),
+//                    'on'=>['edit_form','save','save.asic']),
+
+            array('password,cnf_password',
+                    'required',
+                    'on'=>['save.passwordrequire','save.asic.passwordrequire'],
+                    'message' => 'Please enter or autogenerate password'),
+
+            array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>['save.passwordrequire','save.asic.passwordrequire']),
             array('tenant_code','match', 'pattern' => '[^[A-Za-z]+$]','message' => 'Tenant code should not contain a numeric value'),
             
         );

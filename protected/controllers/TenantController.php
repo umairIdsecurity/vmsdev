@@ -37,11 +37,9 @@ class TenantController extends Controller {
     {
         $model = new TenantForm;
         if (yii::app()->request->isAjaxRequest) {
-            if ($_POST['TenantForm']['password_opt'] == 1) {
-                $model->scenario = "passwordrequire";
-            }
             $this->performAjaxValidation($model);
         }
+
         if (isset($_POST['TenantForm'])) {
 
             $transaction = Yii::app()->db->beginTransaction();
@@ -57,7 +55,7 @@ class TenantController extends Controller {
                     && $this->createTenant($tenantModel, $companyModel)
                     && $this->createUser($userModel, $companyModel)
                     && $this->createTenantContact($tenantContact, $tenantModel, $userModel)
-                    && $this->createTenantWorkstation($workstationModel, $tenantModel, $userModel)
+                    && $this->createWorkstation($workstationModel, $tenantModel, $userModel)
                     && $this->managePassword()
                 ) {
 
@@ -168,7 +166,7 @@ class TenantController extends Controller {
         return $tenantContactModel->validate() && $tenantContactModel->save();
     }
 
-    function createWorktation($workstationModel, $tenantModel,$userModel){
+    function createWorkstation($workstationModel, $tenantModel,$userModel){
 
         $workstationModel->name = $_POST["TenantForm"]["workstation"];
         $workstationModel->contact_name = $_POST["TenantForm"]["first_name"].' '.$_POST["TenantForm"]["last_name"];
@@ -452,9 +450,18 @@ class TenantController extends Controller {
     }
     protected function performAjaxValidation($model)
     {
-        if(isset($_POST['ajax']) && $_POST['ajax']==='tenant-form')
+       if(isset($_POST['ajax']) && $_POST['ajax']==='tenant-form')
         {
             $model->scenario = "save";
+
+            if($_POST['TenantForm']['role']==''.Roles::ROLE_ISSUING_BODY_ADMIN){
+                $model->scenario = $model->scenario.".asic";
+            }
+
+            if ($_POST['TenantForm']['password_opt'] == 1) {
+                $model->scenario = $model->scenario.".passwordrequire";
+            }
+
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

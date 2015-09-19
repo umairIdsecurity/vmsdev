@@ -99,6 +99,7 @@ class Tenant extends CActiveRecord
 		$criteria->compare('id0.code',$this->code,true);
 		$criteria->compare('id0.contact',$this->contact,true);
 		$criteria->compare('id0.email_address',$this->email_address,true);
+
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
             'sort' => array(

@@ -1,8 +1,10 @@
 
 <?php
 /* @var $this CompanyController */
-/* @var $model Company */
+/* @var $model TenantForm */
 /* @var $form CActiveForm */
+
+
 
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
@@ -51,7 +53,11 @@ $currentLoggedUserId = $session['id'];
     if (isset($_GET['viewFrom'])) {
         $isViewedFromModal = $_GET['viewFrom'];
     } else {
-        //echo $form->errorSummary($model);
+
+        //echo $form->errorSummary($userModel);
+        //echo $form->errorSummary($companyModel);
+        //echo $form->errorSummary($workstationModel);
+
     }
     ?>
 

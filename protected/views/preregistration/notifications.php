@@ -11,43 +11,65 @@
     <br><br>
     
     <?php if(Yii::app()->user->account_type == "VIC"): ?>
-	    <div class="row items">
-	    	<div class="col-lg-10">
-	    		<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Subject</th>
-							<th>Message</th>
-							<th>Date Created</th>
-							<th>Notification Type</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php if($notifications):?>
-							<?php foreach ($notifications as $key => $notification):?>	
-								<tr>
-									<td><?= $notification['subject'] ?></td>
-									<td><?= $notification['message'] ?></td>
-									<td><?= $notification['date_created'] ?></td>
-									<td><?= $notification['notification_type'] ?></td>
-									<td><a href="#" class="btn btn-danger">Delete</a></td>
-								</tr>
-							<?php endforeach; ?>
-						<?php else: ?>
-							<tr>
-								<td></td>
-								<td></td>
-								<td>No notifications found</td>
-								<td></td>
-								<td></td>
-							</tr>		
-						<?php endif; ?>
-					</tbody>
-				</table>
 
-	    	</div>
-	    </div>
+    	<div id="accordion">
+			<h3>Your Preregistered Visits</h3>
+		  	<div>
+		    	<p>
+				    Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer
+				    ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit
+				    amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut
+				    odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.
+			    </p>
+		  	</div>
+		  	<h3>20 Day Visit Count Limit </h3>
+			<div>
+				<p>
+			    	Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
+			    	purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
+			    	velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
+			    	suscipit faucibus urna.
+		    	</p>
+			</div>
+		  	<h3>28 Day Visit Count Limit</h3>
+		  	<div>
+		   		<p>
+		    		Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+		    		Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
+		    		ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
+		    		lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
+		    	</p>
+		  	</div>
+		  	<h3>ASIC Sponsor verified your visits</h3>
+		  	<div>
+		    	<p>
+		    		Cras dictum. Pellentesque habitant morbi tristique senectus et netus
+		    		et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
+		    		faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
+		    		mauris vel est.
+		    	</p>
+		    	<p>
+		    		Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+		    		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+		    		inceptos himenaeos.
+		    	</p>
+		  	</div>
+
+		  	<h3>Your Identification is about to expire</h3>
+		  	<div>
+		    	<p>
+		    		Cras dictum. Pellentesque habitant morbi tristique senectus et netus
+		    		et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
+		    		faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
+		    		mauris vel est.
+		    	</p>
+		    	<p>
+		    		Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+		    		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+		    		inceptos himenaeos.
+		    	</p>
+		  	</div>
+		</div>
 	<?php endif; ?>   
 
 	<!-- *************************************************************************************************** -->
@@ -70,5 +92,13 @@
 
 </div>
 
-
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+ 
+ <script>
+  $(function() {
+    $( "#accordion" ).accordion();
+  });
+  </script>
 

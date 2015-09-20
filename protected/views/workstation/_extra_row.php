@@ -8,7 +8,9 @@
     } 
     $module = CHelper::get_allowed_module();
 ?>
-<tr class='odd'><td width='180px' class='ws-padding'>Edit Card's Back Text</td><?php if(( $module == "CVMS" || $module == "Both") ) {
+<tr class='odd'>
+    <td width='180px' class='ws-padding'>Edit Card's Back Text</td>
+    <?php if(( $module == "CVMS" || $module == "Both") ) {
         ?><td><input value='edit'  class='edit_card_back corporate <?php echo $btn[1]?> greenBtn' type='button' name='Corporate Same Day Visitor' id='edit_1'><input value='edit'  class='edit_card_back corporate <?php echo $btn[2]?> greenBtn' type='button' name='Corporate Multiday Visitor' id='edit_2'><input value='edit'  class='edit_card_back corporate <?php echo $btn[3]?> greenBtn' type='button' name='Corporate Manual' id='edit_3'><input value='edit'  class='edit_card_back corporate <?php echo $btn[4]?> greenBtn' type='button' name='Corporate Contractor' id='edit_4'></td><?php
     }
     if(( $module == "AVMS" || $module == "Both") ) {

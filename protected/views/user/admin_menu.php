@@ -64,6 +64,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
             <!-- menu for Workstations -->
+            <?php if($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN){ ?>
             <li class='has-sub'><a class='manageworkstations'
                                    href='<?php echo Yii::app()->createUrl('workstation/admin'); ?>'><span>Workstations</span></a>
 
@@ -73,10 +74,13 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('workstation/create'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('workstation', 'create');?>>Add Workstation</span></a>
+
+                    <li>
+                        <a href='<?php echo Yii::app()->createUrl('workstation/create'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('workstation', 'create');?>>Add Workstation</span></a>
                     </li>
                 </ul>
             </li>
+            <?php } ?>
             <!-- menu for Workstations -->
 
             <!-- menu for CVMS Users -->

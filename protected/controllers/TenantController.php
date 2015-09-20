@@ -24,8 +24,12 @@ class TenantController extends Controller {
                 'expression' => 'CHelper::check_module_authorization("Admin")'
             ),
             array('allow', // allow user if same company
-                'actions' => array('create','update','edit','admin', 'adminAjax', 'delete'),
+                'actions' => array('create','update','admin', 'adminAjax', 'delete'),
                 'expression' => 'Yii::app()->user->role  == Roles::ROLE_SUPERADMIN',
+            ),
+            array('allow', // allow user if same company
+                'actions' => array('update'),
+                'expression' => 'in_array(Yii::app()->user->role,[Roles::ROLE_ISSUING_BODY_ADMIN,Roles::ROLE_ADMIN])',
             ),
             array('deny', // deny all users
                 'users' => array('*'),

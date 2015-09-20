@@ -237,7 +237,7 @@ class DashboardController extends Controller {
                 $contactModel = ContactPerson::model()->findByPk($model->contact_person_name);
                 $contactModel->attributes=$contactModel;
                 $contactModel->contact_person_message=$model->message;
-		$contactModel->save();
+		        $contactModel->save();
 
                 mail($contactModel->contact_person_email, "Contact Support", $content, $headers);
 

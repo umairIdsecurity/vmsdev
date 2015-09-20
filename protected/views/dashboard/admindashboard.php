@@ -55,7 +55,7 @@ if (isset($session['workstation'])) {
 
     if ($workstation) {
         foreach ($workstationList as $key => $value) {
-            if($session['role'] == Roles::ROLE_AIRPORT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+            if(in_array(intval($session['role']),[Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_OPERATOR])){
                 if ($value == $workstation->id) {
                     $moveWorkstation = $workstationList[$key];
                     $workstationList[$key] = $workstationList[0];
@@ -77,14 +77,14 @@ if (isset($session['workstation'])) {
 
 foreach ($workstationList as $workstation) {
     $x++;
-    if($session['role'] == Roles::ROLE_AIRPORT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+    if(in_array(intval($session['role']),[Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_OPERATOR] )){
         $workstationName = Workstation::model()->findByPk($workstation)->name;
     } else {
         $workstationName = $workstation->name;
     }
     echo "<h1>" . $workstationName . "</h1>";
     $merge = new CDbCriteria;
-    if($session['role'] == Roles::ROLE_AIRPORT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+    if(in_array(intval($session['role']),[Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_OPERATOR])){
         $workstationId = $workstation;
     } else {
         $workstationId = $workstation->id;

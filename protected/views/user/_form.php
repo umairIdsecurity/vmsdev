@@ -270,8 +270,8 @@ $form = $this->beginWidget('CActiveForm', array(
             <option value="">Please select a tenant agent</option>
                 <?php
                 //if ($this->action->Id != 'create' || isset($_POST['User'])) {
-
-                    $allAgentAdminNames = User::model()->findAllTenantAgent($model['tenant']);
+                    $tenantId =  $model['tenant']!=null?$model['tenant']:$session['tenant'];
+                    $allAgentAdminNames = User::model()->findAllTenantAgent($tenantId);
                     foreach ($allAgentAdminNames as $key => $value) {
                         ?>
                         <option <?php

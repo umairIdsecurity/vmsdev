@@ -310,6 +310,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create',
                                     array('role' => Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AGENT_AIRPORT_ADMIN);?>>Add Agent Airport Admin</span></a>
                             </li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create',
+                                    array('role' => Roles::ROLE_AGENT_AIRPORT_OPERATOR)); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AGENT_AIRPORT_OPERATOR);?>>Add Agent Airport Operator</span></a>
+                            </li>
 
                             <?php
                             break;

@@ -205,7 +205,7 @@ class TenantAgentController extends Controller
             $passwordval = $_POST['TenantForm']['password'];
         }
         $userModel->password = $passwordval;
-        $userModel->role = $isAvms?Roles::ROLE_ISSUING_BODY_ADMIN:Roles::ROLE_AGENT_ADMIN;
+        $userModel->role = $isAvms?Roles::ROLE_AGENT_AIRPORT_ADMIN:Roles::ROLE_AGENT_ADMIN;
         $userModel->user_type = 1;
         $userModel->user_status = 1;
         $userModel->created_by = Yii::app()->user->id;

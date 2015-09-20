@@ -199,7 +199,7 @@ $currentLoggedUserId = $session['id'];
                 <table>
                     <tbody>
                     <tr>
-                        <td><strong>Agent Administrator</strong></td>
+                        <td><strong>Workstation</strong></td>
                     </tr>
                     <tr><td>&nbsp;</td></tr>
                     <tr>

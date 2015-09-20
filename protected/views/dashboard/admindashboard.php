@@ -26,6 +26,7 @@ switch ($session['role']) {
     case Roles::ROLE_OPERATOR:
     case Roles::ROLE_AGENT_OPERATOR:
     case Roles::ROLE_AIRPORT_OPERATOR:
+    case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
         $Criteria = new CDbCriteria();
         $Criteria->condition = "user_id  IN (".Yii::app()->user->id.")";
         $workstationList = UserWorkstations::model()->findAll($Criteria);

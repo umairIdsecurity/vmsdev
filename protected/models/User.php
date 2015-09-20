@@ -731,10 +731,10 @@ class User extends VmsActiveRecord {
     public function isEmailAddressUnique($email, $tenantId) {
         $Criteria = new CDbCriteria();
         $session = new CHttpSession;
-        if ($tenantId != '') {
-            if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                $Criteria->condition = "email = '" . $email . "' and tenant = " . $tenantId . " and is_deleted!=1";
-            }
+        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+            $Criteria->condition = "email = '" . $email . "' and  is_deleted!=1";
+        }else if($tenantId!=''){
+            $Criteria->condition = "email = '" . $email . "' and tenant = " . $tenantId . " and is_deleted!=1";
         } else {
             $Criteria->condition = "email = '" . $email . "' and tenant = " . $session["tenant"] . " and is_deleted!=1 and tenant!=1";
         }

@@ -9,7 +9,7 @@
 ?>
 <div class="page-content">
     <div class="privacy-info">
-        <h3 class="text-primary">Perth Airport ASIC Sponsor Privacy Notice</h3>
+        <h4 class="text-primary">Perth Airport ASIC Sponsor Privacy Notice</h4>
         <div class="bg-gray-lighter privacy-notice" style="height:360px !important;">
             <div>
 

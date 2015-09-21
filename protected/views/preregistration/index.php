@@ -1,15 +1,5 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/4/15
- * Time: 3:31 PM
- */
-
-?>
-
 <div class="page-content">
-    <h1 class="text-primary title">PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)</h1>
+
 
         <?php
         $form=$this->beginWidget('CActiveForm', array(
@@ -24,49 +14,62 @@
         ));
         ?>
 
-        <br><br>
-
-        <h3 class="form-title">Where will you be collecting your VIC?</h3>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
         
-        <div class="text-center icon-info" style="margin-top:-32px">
-            <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>(VIC) What is this?</a>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <h5 class="form-title">Where will you be collecting your VIC?</h5>
+                    </div>
+                    <div class="col-lg-7" style="margin-top:10px">
+                        <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>(VIC) What is this?</a>
+                    </div>
+                </div>    
+            </div>
         </div>
-        
-        <br>
 
-        <div class="hidden sms-info">
-            <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
-            <h3>What is a Visitor Identification Card (VIC)?</h3>
-            <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="hidden sms-info">
+                    <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
+                    <h3>What is a Visitor Identification Card (VIC)?</h3>
+                    <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
+                </div>
+            </div>
         </div>
 
-        <br><br>
-        
-        <!-- form-fields-area -->
-    <div class="" style="width:480px;margin-left:auto;margin-right:auto">
-        
-        <div class="form-group">
-
-            <?php
-
-            $ws=Workstation::model()->findAll('is_deleted=0');
-
-            $list=CHtml::listData($ws,'id','name');
-
-            echo $form->dropDownList($model,'entrypoint',
-                $list,
-                array(
-                    'class'=>'form-control input-lg' ,
-                    'empty' => 'Chose your entry point')
-            );
-
-            ?>
+        <div class="row">
+            <div class="col-lg-5">&nbsp;</div>
+            <div class="col-lg-5">
+                <div class="form-group">
+                    <?php
+                        $ws=Workstation::model()->findAll('is_deleted=0');
+                        $list=CHtml::listData($ws,'id','name');
+                        echo $form->dropDownList($model,'entrypoint',
+                            $list,
+                            array(
+                                'class'=>'form-control input-lg' ,
+                                'empty' => 'Chose your entry point')
+                        );
+                    ?>
+                </div>
+                <?php echo $form->error($model,'entrypoint'); ?>
+            </div>
         </div>
-        <?php echo $form->error($model,'entrypoint'); ?>
- 
-    </div>
-
-     <br><br> <br><br> <br><br>
+          
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
+        <div class="row"><div class="col-lg-12">&nbsp;</div></div>
 
     <div class="row next-prev-btns">
         <div class="col-md-1">

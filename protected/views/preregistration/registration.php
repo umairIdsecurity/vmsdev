@@ -4,8 +4,9 @@ $session = new CHttpSession;
 
 <div class="page-content">
 
-    <h1 class="text-primary title">CREATE AVMS LOGIN</h1>
+
     <h5>Please select your user Preference</h5>
+    
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'preregistration-form',
         'enableAjaxValidation' => true,

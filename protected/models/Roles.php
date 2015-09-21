@@ -320,7 +320,7 @@ class Roles extends CActiveRecord {
 					Roles::ROLE_ISSUING_BODY_ADMIN,
 					Roles::ROLE_AGENT_AIRPORT_ADMIN,
 					Roles::ROLE_AIRPORT_OPERATOR,
-					//Roles::ROLE_AGENT_AIRPORT_OPERATOR
+					Roles::ROLE_AGENT_AIRPORT_OPERATOR
 				);
 				foreach ($assignableRoles as $roles) {
 					if (isset(User::$USER_ROLE_LIST[$roles])) {

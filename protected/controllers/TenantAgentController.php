@@ -131,7 +131,7 @@ class TenantAgentController extends Controller
 
                     $transaction->commit();
                     Yii::app()->user->setFlash("success", "Tenant Agent Created Successfully");
-                    $this->redirect(array("tenantAgent/create/&module=" . $_POST["for_module"]));
+                    $this->redirect(array("tenantAgent/" . $_POST["for_module"] ."agents"));
 
                 } else {
 
@@ -185,7 +185,7 @@ class TenantAgentController extends Controller
 
     function createUser($userModel, $companyModel)
     {
-
+        $isAvms = $_POST['for_module']=='avms';
         $photolastId = NULL;
         if (isset($_POST['TenantForm']['photo']) && $_POST['TenantForm']['photo'] != "") {
             $photolastId = $_POST['TenantForm']['photo'];
@@ -205,18 +205,21 @@ class TenantAgentController extends Controller
             $passwordval = $_POST['TenantForm']['password'];
         }
         $userModel->password = $passwordval;
-        $userModel->role = $_POST['TenantForm']['role'];
-        $userModel->user_type = $_POST['TenantForm']['user_type'];;
+        $userModel->role = $isAvms?Roles::ROLE_AGENT_AIRPORT_ADMIN:Roles::ROLE_AGENT_ADMIN;
+        $userModel->user_type = 1;
         $userModel->user_status = 1;
         $userModel->created_by = Yii::app()->user->id;
         $userModel->is_deleted = 0;
         $userModel->notes = $_POST['TenantForm']['notes'];
         $userModel->photo = $photolastId;
+        if($isAvms) {
+            $userModel->asic_no = $_POST['TenantForm']['asic_no'];
+            $userModel->asic_expiry = $_POST['TenantForm']['asic_expiry'];
+        }
         /**
          * Module Access
          */
-        $access = CHelper::get_module_access($_POST);
-        $userModel->allowed_module = $access;
+        $userModel->allowed_module = $isAvms?1:2;
 
         return $userModel->validate() && $userModel->save();
 

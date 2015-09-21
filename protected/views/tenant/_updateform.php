@@ -25,6 +25,11 @@ $dataId = '';
 if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
+
+$display = "";
+if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+    $display="disabled";
+}
 ?>
 
 <div class="form">
@@ -71,23 +76,23 @@ if ($this->action->id == 'update') {
 
         </tr>
 
-        <?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
-            <tr>
-                <td style="width:160px;">Tenant Code</td>
-                <td style="width:240px;">
-                    <?php
-                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Tenant Code', "onkeyup" => "restrict(this)"));
-                    if (isset($_GET['viewFrom'])) {
-                        echo "<br>" . $form->error($model, 'code');
-                    }
-                    ?>
-                    <?php
-                    if (!isset($_GET['viewFrom'])) {
-                        echo "<br>" . $form->error($model, 'code');
-                    }
-                    ?></td>
-            </tr>
-        <?php } ?>
+
+        <tr>
+            <td style="width:160px;">Tenant Code</td>
+            <td style="width:240px;">
+                <?php
+                echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Tenant Code', "onkeyup" => "restrict(this)"));
+                if (isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'code');
+                }
+                ?>
+                <?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'code');
+                }
+                ?></td>
+        </tr>
+
 
         <tr class="user_fields">
             <td style="width:160px;">Email Address</td>
@@ -106,15 +111,15 @@ if ($this->action->id == 'update') {
         </tr>
 
         <tr class="user_fields">
-            <td style="width:160px;">Module Access </td>
-            <td>
-              <input type="checkbox" name="module_access_avms" value="1" <?php echo $contacts[0]->allowed_module == '1' || $contacts[0]->allowed_module == 3?"checked":"";?>> AVMS     
-              <input type="checkbox" name="module_access_cvms" value="2" <?php echo $contacts[0]->allowed_module == '2' || $contacts[0]->allowed_module == 3?"checked":"";?> style="margin-left: 15px"> CVMS  
-            </td>
-        </tr>
+                <td style="width:160px;">Module Access </td>
+                <td>
+                  <input type="checkbox" name="module_access_avms" value="1" <?php echo $contacts[0]->allowed_module == '1' || $contacts[0]->allowed_module == 3?"checked":"";?> <?php echo $display ?> > AVMS
+                  <input type="checkbox" name="module_access_cvms" value="2" <?php echo $contacts[0]->allowed_module == '2' || $contacts[0]->allowed_module == 3?"checked":"";?> style="margin-left: 15px;" <?php echo $display ?> > CVMS
+                </td>
+            </tr>
+
     </table>
 </div>
-
 
 <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
     margin-left:173px;
@@ -130,15 +135,14 @@ if ($this->action->id == 'update') {
     } else {
         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             ?>
-            <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
+<!--            <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>-->
         <?php } else { ?>
-            <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>
+<!--            <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>-->
         <?php
         }
     }
     ?>
 </div>
-
 <?php $this->endWidget(); ?>
 
 

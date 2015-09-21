@@ -114,10 +114,13 @@ class User extends VmsActiveRecord {
 
         if($this->scenario == 'add_company_contact') {
             return array(
-                    array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
-                     array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
-                        ':is_deleted'=>0
-                    ))),
+
+                array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
+
+                    array('email','unique',
+                        'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1',
+                            'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant']))),
+
                     array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
 
                     array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration', 'message'=>'Please complete {attribute}'),
@@ -135,9 +138,9 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,password,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
-                array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
-                ':is_deleted'=>0
-                ))),
+                array('email','unique',
+                             'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant AND tenant!=1',
+                             'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant']))),
                 array('role,company', 'required', 'message' => 'Please complete {attribute}'),
                 array('tenant, tenant_agent, photo', 'default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no, asic_expiry', 'AvmsFields'),
@@ -163,18 +166,20 @@ class User extends VmsActiveRecord {
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
-                array('email', 'filter', 'filter' => 'trim'),
-                array('email', 'email'),
-                array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(
-                ':is_deleted'=>0
-                ))),
+
                 array('role', 'required', 'message' => 'Please complete {attribute}'),
                 array('tenant, tenant_agent, photo','default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no, asic_expiry', 'AvmsFields'),
                 array('tenant_agent','UserRoleTenantAgentValidator'),
 
                 array('asic_no, asic_expiry, first_name, last_name, email, contact_number, user_type,is_deleted', 'required', 'on'=>'add_sponsor', 'message'=>'Please complete {attribute}'),
-                array('email','unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted', 'params'=>array(':is_deleted'=>0)), 'on'=>'add_sponsor'),
+
+                array('email', 'filter', 'filter' => 'trim'),
+                array('email', 'email'),
+                array('email','unique',
+                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant AND tenant!=1',
+                        'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant']))),
+
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, '
@@ -726,14 +731,12 @@ class User extends VmsActiveRecord {
     public function isEmailAddressUnique($email, $tenantId) {
         $Criteria = new CDbCriteria();
         $session = new CHttpSession;
-        if ($tenantId != '') {
-            if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                $Criteria->condition = "email = '" . $email . "' and tenant = " . $tenantId . " and is_deleted!=1";
-            } else {
-                $Criteria->condition = "email = '" . $email . "' and tenant = " . $session["tenant"] . " and is_deleted!=1";
-            }
-        } else { //if position is admin compare to email only
-            $Criteria->condition = "email = '" . $email . "' and is_deleted!=1";
+        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+            $Criteria->condition = "email = '" . $email . "' and  is_deleted!=1";
+        }else if($tenantId!=''){
+            $Criteria->condition = "email = '" . $email . "' and tenant = " . $tenantId . " and is_deleted!=1";
+        } else {
+            $Criteria->condition = "email = '" . $email . "' and tenant = " . $session["tenant"] . " and is_deleted!=1 and tenant!=1";
         }
 
 
@@ -753,7 +756,7 @@ class User extends VmsActiveRecord {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "email = '$email'";
+        $Criteria->condition = "email = '$email' AND tenant=".$_SESSION['tenant'];
         $userId = User::model()->findAll($Criteria);
 
         foreach ($userId as $index => $value) {
@@ -794,7 +797,7 @@ class User extends VmsActiveRecord {
 
     public function restorePassword($email)
     {
-        if($user = $this->findByAttributes(array('email' => $email))){
+        if($user = $this->findByAttributes(array('email' => $email,'tenant'=>$_SESSION['tenant']))){
             return PasswordChangeRequest::model()->generateResetLink($user);
         } else {
             return "Email address does not exist in system.";

@@ -4,6 +4,10 @@
 /* @var $model Company */
 /* @var $form CActiveForm */
 
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+$cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
 
 $session = new CHttpSession;
 $currentRoleinUrl = '';
@@ -111,13 +115,7 @@ $currentLoggedUserId = $session['id'];
                                 <?php echo "<br>" . $form->error($model, 'tenant_agent_name'); ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td><?php echo $form->textField($model, 'workstation', array('size' => 50,'placeholder'=>'Workstation')); ?>
-                                <span class="required">*</span>
 
-                                <?php echo "<br>" . $form->error($model, 'workstation'); ?>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -126,7 +124,11 @@ $currentLoggedUserId = $session['id'];
                     <table >
                         <tbody>
                         <tr>
-                            <td><strong>Tenant Agent Admin</strong></td>
+                            <?php if($module_for == 'avms') {?>
+                                <td><strong>Agent Airport Administrator</strong></td>
+                            <?php }else{ ?>
+                                <td><strong>Agent Administrator</strong></td>
+                            <?php } ?>
                         </tr>
                         <tr><td>&nbsp;</td></tr>
                         <tr>
@@ -155,25 +157,36 @@ $currentLoggedUserId = $session['id'];
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                         </tr>
+                        <?php if($module_for == 'avms') {?>
+                            <tr>
+                                <td >
+                                    <?php echo $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 9, 'placeholder' => 'ASIC No', 'autocomplete' => 'off')); ?>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'asic_no'); ?>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td >
+                                    ASIC Expiry<span class="required">*</span><br/>
+                                    <?php echo $form->hiddenField($model,'asic_expiry',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
+                                    <script>
+                                        $(function(){
+                                            $('#TenantForm_asic_expiry').combodate({
+                                                minYear: (new Date().getFullYear()),
+                                                maxYear: (new Date().getFullYear()+10),
+                                                smartDays: true,
+                                                customClass: 'yearSelect'
+                                            });
+                                        });
+                                    </script>
+                                    <?php echo "<br>" . $form->error($model, 'asic_expiry'); ?>
+
+                                </td>
+                            </tr>
+                        <?php } ?>
                         </tbody>
                     </table>
-                </div>
-
-
-                <div class="password-border t-top20 paddingBottom10px">
-                    
-                    <strong>Module Access </strong> <br> <br>
-                    <?php
-                        $canCVMS = (CHelper::get_allowed_module()=='CVMS' || CHelper::get_allowed_module()=='Both');
-                        $canAVMS = (CHelper::get_allowed_module()=='AVMS' || CHelper::get_allowed_module()=='Both');
-
-                    ?>
-                    <?php if($canAVMS) { ?>
-                    <input type="checkbox" name="module_access_avms" value="1" <?php echo $module_for=='avms'?'checked':''; ?>> AVMS <br>
-                    <?php } ?>
-                    <?php if($canCVMS) { ?>
-                    <input type="checkbox" name="module_access_cvms" value="2" <?php echo $module_for=='cvms'?'checked':'' ?>> CVMS<br>
-                    <?php } ?>
                 </div>
 
 
@@ -181,55 +194,23 @@ $currentLoggedUserId = $session['id'];
 
             <td style="vertical-align: top; float:left; width:300px">
 
-
+                <div class="password-border">
 
                 <table>
+                    <tbody>
+                    <tr>
+                        <td><strong>Workstation</strong></td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr>
+                    <tr>
+                        <td><?php echo $form->textField($model, 'workstation', array('size' => 50,'placeholder'=>'Workstation')); ?>
+                            <span class="required">*</span>
+
+                            <?php echo "<br>" . $form->error($model, 'workstation'); ?>
+                        </td>
+                    </tr>
                     <tr>
                         <td>
-                            <!-- <select  onchange="populateDynamicFields()"  -->  
-                            <select id="User_role" name="TenantForm[role]">
-                                <?php if( $module_for == 'AVMS') { ?>
-                                     <option  value='<?php echo Roles::ROLE_AGENT_AIRPORT_ADMIN;?>' selected>Agent Airport Administrator</option>  
-                                <?php } else { ?>
-                                     <option  value='<?php echo Roles::ROLE_AGENT_ADMIN;?>' selected>Agent Administrator</option>  
-                                <?php } ?>
-                                
-
-                            </select>
-                                
-                                <?php echo "<br>" . $form->error($model, 'role'); ?>
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array(  'options' => array('1'=>array('selected'=>true)))); ?>
-                            <!-- <span class="required">*</span> -->
-                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
-                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
-                        </td>
-
-                    </tr>
-                     <tr>
-                         
-                        <td>
-                            <?php /*echo $form->dropDownList(
-                                    $model,
-                                    'timezone_id',
-                                    CHtml::listData(Timezone::model()->findAll(),
-                                            'id',
-                                            'timezone_name'),
-                                            array('empty'=>'Please select a timezone')
-                                    );*/
-                            ?>
-
                             <select id="Workstation_timezone_id" name="TenantForm[timezone_id]">
                                 <?php
                                     $timezoneList = Timezone::model()->findAll();
@@ -252,18 +233,11 @@ $currentLoggedUserId = $session['id'];
                         </td>
                  
                     </tr>
+                    </tbody>
                 </table>
+                </div>
 
-                <table>
-                    <tr>
-                        <td>
-                            <?php echo $form->textfield($model, 'notes', array('placeholder'=>'Notes','style'=>'width:205px;')); ?>
-                            <?php echo "<br>" . $form->error($model, 'notes'); ?>
-                        </td>
-                  </tr>
-                </table>
-
-                <div class="password-border">
+                <div class="password-border" style="margin-top:20px;">
                     <table>
                         <tr>
                             <td><strong>Password Options</strong></td>
@@ -273,7 +247,7 @@ $currentLoggedUserId = $session['id'];
 
                         <tr>
                             <td>
-                                <table style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                                <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
                                     <tr>
                                         <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                                     </tr>
@@ -345,6 +319,15 @@ $currentLoggedUserId = $session['id'];
                     </table>
                 </div> <!-- password-border -->
 
+
+                <table class="password-border" style="margin-top:20px;">
+                    <tr>
+                        <td>
+                            <?php echo $form->textArea($model, 'notes', array('placeholder'=>'Notes','style'=>'width:260px;','rows'=>4)); ?>
+                            <?php echo "<br>" . $form->error($model, 'notes'); ?>
+                        </td>
+                    </tr>
+                </table>
 
 
             </td>

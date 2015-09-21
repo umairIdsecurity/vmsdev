@@ -26,9 +26,14 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'adminAjax', 'delete', 'create', 'update', 'ajaxWorkstationCardtype'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+                'actions' => array('delete', 'create'),
+                'expression' => 'Yii::app()->user->role == Roles::ROLE_SUPERADMIN',
            
+            ),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'adminAjax', 'update', 'ajaxWorkstationCardtype'),
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -171,7 +176,7 @@ class WorkstationController extends Controller {
             $criteria->addCondition("workstation=" . $id);
             $criteria->addInCondition("visit_status", array(1, 2));
             //$criteria->addCondition("str_to_date(t.date_check_in,'%d-%m-%Y') > DATE_ADD(now(),interval 0 day)");
-            $criteria->addCondition("t.date_check_in > CONVERT(CURRENT_DATE, DATE)");
+            $criteria->addCondition("t.date_check_in > ". date("yyyy-mm-dd"));
             
             $visits = Visit::model()->findAll($criteria);
            

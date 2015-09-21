@@ -70,7 +70,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" <?php echo $model->asic_escort != NULL ? 'checked="checked"' : '';?> disabled value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
+            <input type="checkbox" <?php echo $model->asic_escort != NULL ? 'checked="checked"' : '';?> value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor/Escort</a>
         </td>
     </tr>

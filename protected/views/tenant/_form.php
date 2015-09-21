@@ -1,8 +1,10 @@
 
 <?php
 /* @var $this CompanyController */
-/* @var $model Company */
+/* @var $model TenantForm */
 /* @var $form CActiveForm */
+
+
 
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
@@ -51,7 +53,11 @@ $currentLoggedUserId = $session['id'];
     if (isset($_GET['viewFrom'])) {
         $isViewedFromModal = $_GET['viewFrom'];
     } else {
-        //echo $form->errorSummary($model);
+
+        //echo $form->errorSummary($userModel);
+        //echo $form->errorSummary($companyModel);
+        //echo $form->errorSummary($workstationModel);
+
     }
     ?>
 
@@ -109,31 +115,33 @@ $currentLoggedUserId = $session['id'];
                                 <?php echo "<br>" . $form->error($model, 'tenant_code'); ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td><?php echo $form->textField($model, 'workstation', array('size' => 50,'placeholder'=>'Workstation')); ?>
-                                <span class="required">*</span>
 
-                                <?php echo "<br>" . $form->error($model, 'workstation'); ?>
-                            </td>
-                        </tr>
                         <tr>
                             <td><b>Module Access</b><span class="required">*</span> <br>
-                                <input type="checkbox" id="module_access_avms" value="1" checked> AVMS <br>
-                                <input type="checkbox" id="module_access_cvms" value="2"> CVMS <br>
+                                <input type="checkbox" id="module_access_avms" name="module_access_avms" value="1" checked> AVMS
+                                <input type="checkbox" id="module_access_cvms" name="module_access_cvms" value="2"> CVMS
+
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="password-border" style="margin-top:20px;">
+                <div class="password-border" style="margin-top:10px;">
                     <table >
                         <tbody>
                         <tr>
                             <td><strong>Tenant Admin</strong></td>
                         </tr>
                         <tr><td>&nbsp;</td></tr>
+                        <tr>
+                            <td>
+                                <select id="User_role" name="TenantForm[role]" >
+                                    <option value="">Please select a user role.</option>
+                                </select><?php echo "<br>" . $form->error($model, 'role'); ?>
+                            </td>
 
+                        </tr>
                         <tr>
                             <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
                                 <span class="required">*</span>
@@ -193,155 +201,140 @@ $currentLoggedUserId = $session['id'];
                 
 
                     
-        </td>
-
-            <td style="vertical-align: top; float:left; width:300px">
-
-                <table>
-                    <tr>
-                        <td>
-                            <select id="User_role" name="TenantForm[role]" >
-                                <option value="">Please select a user role.</option>
-                            </select><?php echo "<br>" . $form->error($model, 'role'); ?>
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
-                            <!-- <span class="required">*</span> -->
-                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
-                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
-                        </td>
-
-                    </tr>
-                     <tr>
-                         
-                        <td>
-
-                            <select id="Workstation_timezone_id" name="TenantForm[timezone_id]">
-                                <?php
-                                    $timezoneList = Timezone::model()->findAll();
-                                    foreach ($timezoneList as $key => $value) {
-                                        ?>
-                                        <option <?php
-                                        if ($model['timezone_id'] == $value['id']) {
-                                            echo " selected ";
-                                        } elseif($model['timezone_id'] == '' && $value['timezone_value'] == $_SESSION["timezone"]) {
-                                            echo " selected ";
-                                        }
-                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['timezone_name']; ?></option>
-                                        <?php
-                                    }?>
-                            </select>
-
-
-
-                            <?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?>
-                        </td>
-                 
-                    </tr>
-                </table>
-
-                <table>
-                    <tr>
-                        <td>
-                            <?php echo $form->textfield($model, 'notes', array('placeholder'=>'Notes','style'=>'width:205px;')); ?>
-                            <?php echo "<br>" . $form->error($model, 'notes'); ?>
-                        </td>
-
-                    </tr>
-                </table>
-                <div class="password-border">
+        </td><td style="vertical-align: top; float:left; width:300px">
+                <div class="password-border" >
                     <table>
+                        <tbody>
                         <tr>
-                            <td><strong>Password Options</strong></td>
-
+                            <td><strong>Workstation</strong></td>
                         </tr>
-
-
+                        <tr><td>&nbsp;</td></tr>
                         <tr>
-                            <td>
-                                <table style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
-                                    <tr>
-                                        <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
-                                    </tr>
+                            <td><?php echo $form->textField($model, 'workstation', array('size' => 50,'placeholder'=>'Workstation')); ?>
+                                <span class="required">*</span>
 
-
-
-                                    <tr id="third_option" class='hiddenElement'>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            <?php echo $form->hiddenField($model, 'password_opt'); ?>
-                                            <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
-                                            &nbsp;Create Password
-                                        </td>
-
-                                        <?php echo "<br>". $form->error($model,'password_opt'); ?>
-                                    </tr>
-                                    <tr>
-
-                                        <td>
-                                            <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
-                                            <span class="required">*</span>
-
-                                            <?php  echo $form->error($model,'password', array("class"=>"hidingMsgPassword")); ?>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr >
-                                        <td >
-                                            <input placeholder="Repeat Password" type="password" id="TenantForm_cnf_password"  name="TenantForm[cnf_password]">
-                                            <span class="required">*</span>
-                                            <?php //echo $form->error($model,'cnf_password'); ?>
-
-                                        </td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td align="center">
-                                            <div class="row buttons" style="margin-left:23.5px;">
-
-                                                <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                                                <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
-
-                                            </div>
-
-                                        </td>
-                                        
-                                    </tr>
-
-                                    <tr>
-                                        <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
-                                            &nbsp;Send User Invitation</td>
-                                    </tr>
-
-                                </table>
+                                <?php echo "<br>" . $form->error($model, 'workstation'); ?>
                             </td>
                         </tr>
 
-                        <tr>
+                         <tr>
+
                             <td>
 
-                            </td>
-                        </tr>
+                                <select id="Workstation_timezone_id" name="TenantForm[timezone_id]">
+                                    <?php
+                                        $timezoneList = Timezone::model()->findAll();
+                                        foreach ($timezoneList as $key => $value) {
+                                            ?>
+                                            <option <?php
+                                            if ($model['timezone_id'] == $value['id']) {
+                                                echo " selected ";
+                                            } elseif($model['timezone_id'] == '' && $value['timezone_value'] == $_SESSION["timezone"]) {
+                                                echo " selected ";
+                                            }
+                                            ?> value="<?php echo $value['id']; ?>"><?php echo $value['timezone_name']; ?></option>
+                                            <?php
+                                        }?>
+                                </select>
 
+
+
+                                <?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?>
+                            </td>
+
+                        </tr>
+                        </tbody>
                     </table>
-                </div> <!-- password-border -->
+                    </div>
 
-            </td>
+
+                    <div class="password-border" style="margin-top:10px;">
+                        <table>
+                            <tbody >
+                            <tr>
+                                <td><strong>Password Options</strong></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
+                                        <tr>
+                                            <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
+                                        </tr>
+
+
+
+                                        <tr id="third_option" class='hiddenElement'>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <?php echo $form->hiddenField($model, 'password_opt'); ?>
+                                                <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
+                                                &nbsp;Create Password
+                                            </td>
+
+                                            <?php echo "<br>". $form->error($model,'password_opt'); ?>
+                                        </tr>
+                                        <tr>
+
+                                            <td>
+                                                <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
+                                                <span class="required">*</span>
+
+                                                <?php  echo $form->error($model,'password', array("class"=>"hidingMsgPassword")); ?>
+
+                                            </td>
+                                        </tr>
+
+                                        <tr >
+                                            <td >
+                                                <input placeholder="Repeat Password" type="password" id="TenantForm_cnf_password"  name="TenantForm[cnf_password]">
+                                                <span class="required">*</span>
+                                                <?php //echo $form->error($model,'cnf_password'); ?>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td align="center">
+                                                <div class="row buttons" style="margin-left:23.5px;">
+
+                                                    <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                                    <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
+
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
+                                                &nbsp;Send User Invitation</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div> <!-- password-border -->
+                    <table style="margin-top:10px;">
+                        <tr>
+                            <td>
+                                <?php echo $form->textArea($model, 'notes', array('placeholder'=>'Notes','style'=>'width:280px;','class'=>'password-border','rows'=>4)); ?>
+                                <?php echo "<br>" . $form->error($model, 'notes'); ?>
+                            </td>
+
+                        </tr>
+                    </table>
+                </td>
                 </table>
             </td>
         </tr>

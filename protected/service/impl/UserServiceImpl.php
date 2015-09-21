@@ -55,15 +55,10 @@ class UserServiceImpl implements UserService {
 			User::model()->restorePassword($user['email']);
 
             if ($workstation){
-                    User::model()->saveWorkstation($user->id, $workstation,$userLoggedIn->id);
+                User::model()->saveWorkstation($user->id, $workstation->id,$userLoggedIn->id);
             }
 			
 		}
-
-
-        if ($user->role == Roles::ROLE_OPERATOR || $user->role == Roles::ROLE_AGENT_OPERATOR) {
-            User::model()->saveWorkstation($user->id, $workstation, $userLoggedIn->id);
-        }
         return true;
     }
 

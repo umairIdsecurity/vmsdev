@@ -10,18 +10,15 @@
 /* @var $model Visit */
 $session = new CHttpSession();
 switch ($session['role']) {
+    case Roles::ROLE_ISSUING_BODY_ADMIN:
     case Roles::ROLE_ADMIN:
         $Criteria = new CDbCriteria();
         $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
-    case Roles::ROLE_ISSUING_BODY_ADMIN:
-        $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
-        $workstationList = Workstation::model()->findAll($Criteria);
-        break;
     case Roles::ROLE_AGENT_ADMIN:
-        $Criteria = new CDbCriteria();
+    case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+    $Criteria = new CDbCriteria();
         $Criteria->condition = "tenant = " . $session['tenant'] . " and tenant_agent = " . $session['tenant_agent'] . " AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
@@ -29,6 +26,7 @@ switch ($session['role']) {
     case Roles::ROLE_OPERATOR:
     case Roles::ROLE_AGENT_OPERATOR:
     case Roles::ROLE_AIRPORT_OPERATOR:
+    case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
         $Criteria = new CDbCriteria();
         $Criteria->condition = "user_id  IN (".Yii::app()->user->id.")";
         $workstationList = UserWorkstations::model()->findAll($Criteria);
@@ -44,24 +42,11 @@ switch ($session['role']) {
         $workstationList = array();
 }
 $x = 0; //initiate variable for foreach
-if (empty($workstationList)) {
-	if (Roles::ROLE_AGENT_ADMIN == $session['role'] || Roles::ROLE_ADMIN == $session['role']) {
-		echo '<div style="margin-top: 20px;" class="btn"><a class="addSubMenu" href="' . Yii::app()->createUrl('workstation/create') . '" ><span>Add Workstation</span></a></div>';
-	}else if(Roles::ROLE_ISSUING_BODY_ADMIN == $session['role']){
-    ?>
-        <div class="adminErrorSummary" >
+if (empty($workstationList)) { ?>
+    <div class="adminErrorSummary" >
         <p><br> No workstation found</p>
     </div>
-    <?php } else {
-    ?>
-
-    <div class="adminErrorSummary" >
-        <p><b>Error 503</b><br> No workstations available</p>
-    </div>
-
-    <?php
-	}
-}
+<?php }
 
 // move selected items to first
 if (isset($session['workstation'])) {
@@ -70,7 +55,7 @@ if (isset($session['workstation'])) {
 
     if ($workstation) {
         foreach ($workstationList as $key => $value) {
-            if($session['role'] == Roles::ROLE_AIRPORT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+            if(in_array(intval($session['role']),[Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_OPERATOR])){
                 if ($value == $workstation->id) {
                     $moveWorkstation = $workstationList[$key];
                     $workstationList[$key] = $workstationList[0];
@@ -92,14 +77,14 @@ if (isset($session['workstation'])) {
 
 foreach ($workstationList as $workstation) {
     $x++;
-    if($session['role'] == Roles::ROLE_AIRPORT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+    if(in_array(intval($session['role']),[Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_OPERATOR] )){
         $workstationName = Workstation::model()->findByPk($workstation)->name;
     } else {
         $workstationName = $workstation->name;
     }
     echo "<h1>" . $workstationName . "</h1>";
     $merge = new CDbCriteria;
-    if($session['role'] == Roles::ROLE_AIRPORT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+    if(in_array(intval($session['role']),[Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_OPERATOR])){
         $workstationId = $workstation;
     } else {
         $workstationId = $workstation->id;

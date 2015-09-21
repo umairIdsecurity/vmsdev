@@ -92,7 +92,7 @@ class VisitReason extends CActiveRecord {
         $criteria->compare('reason', $this->reason, true);
         $criteria->compare('created_by', $this->created_by, true);
         $criteria->compare('tenant', $this->tenant, true);
-        $criteria->compare('tenant_agent', $this->tenant_agent, true);
+        //$criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('module', $this->module, true);
         if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
             $criteria->addCondition("tenant=".Yii::app()->user->tenant);

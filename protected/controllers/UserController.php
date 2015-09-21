@@ -89,12 +89,22 @@ class UserController extends Controller
         $session = new CHttpSession;
         $workstation = null;
         
-        if (isset($session['workstation']))
-            $workstation = $session['workstation'];
+
 		
         if (isset($_POST['User'])) {
 
             $model->attributes = $_POST['User'];
+
+            if (isset($session['workstation'])) {
+                $workstation = $session['workstation'];
+            }else {
+                $workstations = Workstation::model()->findAll('tenant='.$model->tenant.' AND tenant_agent='.$model->tenant_agent);
+                if(sizeof($workstations) > 0){
+                    $workstation = $workstations[0];
+                }
+            }
+
+
 
             if (isset($_POST['User']['password_option'])) {
                 $model->password_option = $_POST['User']['password_option'];

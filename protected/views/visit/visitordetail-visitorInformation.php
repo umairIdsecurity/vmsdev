@@ -455,6 +455,8 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 ));
                                 ?>
 
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'asic_expiry'); ?>
                             </td>
                         </tr>
 

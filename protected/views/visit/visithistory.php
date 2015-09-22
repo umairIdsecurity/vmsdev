@@ -31,6 +31,7 @@ $session = new CHttpSession;
         $criteria = new CDbCriteria;
         $criteria->order = 'id DESC';
         $criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $visitor);
+        $criteria->addCondition("reset_id IS NULL AND negate_reason IS NULL");
 
 
         $model->unsetAttributes();

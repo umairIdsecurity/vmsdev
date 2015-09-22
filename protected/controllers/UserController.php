@@ -178,6 +178,22 @@ class UserController extends Controller
 
         if(!$model->delete())
         {
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = 'user_id ='.$id;
+            $userworkstations = UserWorkstations::model()->findAll($Criteria);
+
+            if ($userworkstations) 
+            {
+                foreach ($userworkstations as $userworkstation) {
+                    $userworkstation->delete();
+                }
+                
+                if(!$model->delete())
+                {
+                    return false;
+                }
+                return true;
+            }
             return false;
         }
 

@@ -9,7 +9,6 @@
 ?>
 <div class="page-content">
 
-    <h1 class="text-primary title">PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)</h1>
     <?php
     $form=$this->beginWidget('CActiveForm', array(
         'id'=>'declaration-form',
@@ -23,21 +22,10 @@
         )
     ));
     ?>
-        <br>
 
-        <?php   if($model->hasErrors('declaration1'))
-                {
-                   echo $form->error($model,'declaration1'); 
-                }
-                elseif($model->hasErrors('declaration2')) {
-                    echo $form->error($model,'declaration2'); 
-                }else{
-                    echo $form->error($model,'declaration4'); 
-                }
-
-        ?>
 
         <h3 class="text-primary">Declarations</h3>
+
         <h5>I agree by ticking the boxes below:</h5>
 
         <div class="form-group">
@@ -52,31 +40,41 @@
                 <?php echo $form->checkBox($model,'declaration1'); ?>
                 <span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).
             </label>
-
-
-
-            <!-- <label class="checkbox">
-                <?php //echo $form->checkBox($model,'declaration4'); ?>
-                <span class="checkbox-style"></span>I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.
-            </label> -->
-
         </div>
 
-    <div class="row next-prev-btns">
-        <div class="col-md-1 col-sm-1 col-xs-1">
-            <a href="<?=Yii::app()->createUrl("preregistration/privacyPolicy")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
-        </div>
 
-        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
-            <?php
-            echo CHtml::tag('button', array(
-                'type'=>'submit',
-                'class' => 'btn btn-primary btn-next'
-            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-            ?>
+        <?php   if($model->hasErrors('declaration1'))
+                {
+                   echo $form->error($model,'declaration1'); 
+                }
+                elseif($model->hasErrors('declaration2')) {
+                    echo $form->error($model,'declaration2'); 
+                }else{
+                    echo $form->error($model,'declaration4'); 
+                }
 
-        </div>
-    </div>
+        ?>
+
+        <br>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="pull-left">
+                        <a href="<?=Yii::app()->createUrl("preregistration/privacyPolicy")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    </div>
+                    <div class="pull-right">
+                        <?php
+                            echo CHtml::tag('button', array(
+                                'type'=>'submit',
+                                'class' => 'btn btn-primary btn-next'
+                            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>  
+
 
     <?php $this->endWidget(); ?>
 </div>

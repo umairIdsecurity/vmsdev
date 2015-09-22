@@ -12,10 +12,14 @@ $session = new CHttpSession;
         ),
     )); ?>
 
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+
     <div class="row">
 
-        <div class="col-xs-3">
-            <div class="form-group text-primary">Reason for Visit</div>
+        <div class="col-sm-4">
+            
+            <h4 class="text-primary">Reason for Visit</h4>
+            
             <div class="form-group">
                 <?php
                 $account=(isset(Yii::app()->user->account_type)) ? Yii::app()->user->account_type : "";
@@ -88,11 +92,11 @@ $session = new CHttpSession;
             </div>
         </div>    
 
-        <div class="col-xs-1"></div>
+        <div class="col-sm-1"></div>
 
-        <div class="col-xs-3">
-            <div class="form-group text-primary">Company Information</div>
+        <div class="col-sm-4">
 
+            <h4 class="text-primary">Company Information</h4>
 
             <div class="form-group" id="addCompanyDiv">
 
@@ -134,22 +138,29 @@ $session = new CHttpSession;
         </div>
     </div>
 
-    <div class="row next-prev-btns">
-        <div class="col-md-1 col-sm-1 col-xs-1">
-            <a href="<?=Yii::app()->createUrl("preregistration/personalDetails")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
-        </div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
-            <?php
-            echo CHtml::tag('button', array(
-                'type'=>'submit',
-                "id" => 'nextBtn',
-                'class' => 'btn btn-primary btn-next'
-            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-            ?>
 
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="pull-left">
+                    <a href="<?=Yii::app()->createUrl("preregistration/personalDetails")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                </div>
+                <div class="pull-right">
+                    <?php
+                        echo CHtml::tag('button', array(
+                            'type'=>'submit',
+                            "id" => 'nextBtn',
+                            'class' => 'btn btn-primary btn-next'
+                        ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                    ?>
+                </div>
+            </div>
         </div>
-    </div>
+    </div>  
+
 
     <?php $this->endWidget(); ?>
 </div>

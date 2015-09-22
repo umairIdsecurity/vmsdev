@@ -131,6 +131,36 @@ $session = new CHttpSession;
     text-indent: -9999px;
 }
 
+@media screen and (min-width: 300px)  and (max-width: 640px) {
+    .responsiveTitle{
+        font-size: 18px;
+        line-height: 22px;
+    }
+    .responsiveH3{
+        font-size: 16px;
+        line-height: 22px;
+    }
+    .responsiveLogo{
+        padding: 15px 0 0 !important;
+        width: 150px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .tableFont{
+        font-size: 10px;
+    }
+}
+
+@media screen and (min-width: 640px)  and (max-width: 1024px) {
+    .responsiveTitle{
+        font-size: 21px;
+        line-height: 22px;
+    }
+    .responsiveH3{
+        font-size: 19px;
+        line-height: 22px;
+    }
+}
     </style>
 
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" rel="stylesheet">
@@ -151,17 +181,17 @@ $session = new CHttpSession;
 
                 <div class="row">
                     
-                    <div class="col-lg-2">
-                        <div class="logo" style="padding:75px 0 0;width:150px">
+                    <div class="col-sm-3">
+                        <div class="logo responsiveLogo" style="padding:55px 0 0;width:160px">
                             <a href="./">
                                 <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
                             </a>
                         </div>
                     </div>
 
-                    <div class="col-lg-10" style="<?php if(isset($session['stepTitle'])){echo 'border-bottom: 3px solid #eee;margin-top:10px';}?>">
+                    <div class="col-sm-9" style="<?php if(isset($session['stepTitle'])){echo 'border-bottom: 3px solid #eee;margin-top:10px';}?>">
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-sm-12">
                                 <!-- ******************************************************************** -->
                                 <aside class="top_nav" style="<?php if(isset($session['stepTitle'])){echo 'margin-top:-5px !important';}else{echo 'margin-top:65px !important';}?>">
                                     <ul id="icons">
@@ -200,8 +230,8 @@ $session = new CHttpSession;
                                 <!-- ******************************************************************** -->
                             </div>
 
-                            <div class="col-lg-12" style="">
-                                <h1 class="text-primary title"><?= $session['stepTitle'] ?></h1>
+                            <div class="col-sm-12" style="">
+                                <h1 class="text-primary title responsiveTitle"><?= $session['stepTitle'] ?></h1>
                                 <h6 class="text-primary title">
                                     <?php if(isset($session['step1Subtitle'])&&($session['step1Subtitle']!="")){echo $session['step1Subtitle'];}?>
                                     <?php if(isset($session['step2Subtitle'])&&($session['step2Subtitle']!="")){echo $session['step2Subtitle'];}?>
@@ -222,8 +252,8 @@ $session = new CHttpSession;
 
 
                 <div class="row">
-                    <?php  if(isset($session['stepTitle'])){echo '<div class="col-lg-2"></div>';} ?>
-                    <div class="<?php if(isset($session['stepTitle'])){echo 'col-lg-10';}else{echo 'col-lg-12';}?>"
+                    <?php  if(isset($session['stepTitle'])){echo '<div class="col-sm-3"></div>';} ?>
+                    <div class="<?php if(isset($session['stepTitle'])){echo 'col-sm-9';}else{echo 'col-sm-12';}?>"
                         <div id="main">
                             <?php echo $content; ?>
                         </div>

@@ -86,21 +86,21 @@ $session = new CHttpSession;
 <div class="page-content">
 
     <div id="menu">
-        <div class="row items">
-            <div class="col-xs-4 text-center"><a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>"><span class="glyphicon glyphicon-home"></span></a></div>
-            <div class="col-xs-4 text-center"><a href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>">ASIC Sponsor Verifications</a></div>
+        <div class="row items" style="background-color:#fff;">
+            <div class="col-sm-4 col-xs-6 text-center"><a style="background-color: #eeeeee; height:40px;border-right: 1px solid #fff;" href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>"><span class="glyphicon glyphicon-home"></span></a></div>
+            <div class="col-sm-4 col-xs-6 text-center"><a style="background-color: #eeeeee; height:40px;" href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>" class="tableFont">ASIC Sponsor Verifications</a></div>
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-lg-7">
+        <div class="col-sm-7">
              <h1 class="text-primary title"><a href="<?php echo Yii::app()->createUrl('preregistration/assignAsicholder'); ?>">ASSIGN TO ANOTHER ASIC SPONSOR</a></h1>
         </div>
     </div>
     <br>
     <!--  searching ASIC -->
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-sm-3 col-xs-12" style="padding-top: 10px;">
             <?php  echo CHtml::textField('search_asic_box' , '',
                 array(
                     'class'=>'form-control input-sm',
@@ -113,7 +113,7 @@ $session = new CHttpSession;
             echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
             ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-sm-3 col-xs-12" style="padding-top: 10px;">
             <?php
             echo CHtml::tag('button', array(
                 'id'=>'search_asic_btn',
@@ -122,9 +122,18 @@ $session = new CHttpSession;
             ), 'Find ASIC Sponsor');
             ?>
         </div>
-        <div id="asic_holder"></div>
-        <div class="loader" id="loader">Loading...</div>
-        <p id="asic-notification" class="bg-info">No Record Found</p>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-xs-12" style="padding-top: 10px;">
+
+            <div class="tableFont" id="asic_holder"></div>
+
+            <div class="loader" id="loader">Loading...</div>
+
+            <p id="asic-notification" class="bg-info">No Record Found</p>
+        </div>
     </div>
     <!--  end searching ASIC -->
 
@@ -145,7 +154,7 @@ $session = new CHttpSession;
 
     <div class="row">
 
-        <div class="col-lg-3">
+        <div class="col-sm-3">
 
             <div class="form-group">
                 <?php echo $form->hiddenField($model, 'selected_asic_id' ,
@@ -171,7 +180,7 @@ $session = new CHttpSession;
                 </div>
 
                 <div class="row form-group">
-                    <div class="col-md-12">
+                    <div class="col-sm-12">
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model'       => $model,
@@ -231,7 +240,7 @@ $session = new CHttpSession;
     <br><br>
 
     <div class="row">
-        <div class="col-md-offset-3 col-sm-offset-3 col-xs-offset-4 col-md-1 col-sm-1 col-xs-1">
+        <div class="col-sm-3 col-xs-5">
             <?php
             echo CHtml::tag('button', array(
                 'type'=>'submit',

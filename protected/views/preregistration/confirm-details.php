@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/17/15
- * Time: 10:43 AM
- */
-
 /*$cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');*/
 
@@ -16,7 +9,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 ?>
 
 <div class="page-content">
-    <h1 class="text-primary title" style="margin-left: -23px">VIC Holder Personal Information</h1>
+
+    <h3 class="text-primary">Personal Information</h3>
     <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
     <?php
     $form=$this->beginWidget('CActiveForm', array(
@@ -37,6 +31,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
         <div class="row">
             <div class="col-sm-4">
+               
 
                 <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
                 
@@ -74,7 +69,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
                 <div class="row form-group">
                         <div class="col-xs-12 col-md-12 col-sm-12">
-                        <span class="">Date of Birth</span>
+                        <!-- <span class="">Date of Birth</span> -->
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model'       => $model,
@@ -116,7 +111,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
                 <div class="row form-group">
                     <div class="col-xs-12 col-md-12 col-sm-12">
-                        <span class="">Expiry</span>
+                        <!-- <span class="">Expiry</span> -->
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model'       => $model,
@@ -223,21 +218,27 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 </div>
             </div>
         </div>
-        <br><br><br>
-        <div class="row next-prev-btns">
-            <div class="col-md-1 col-sm-1 col-xs-1">
-                <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="pull-left">
+                        <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    </div>
+                    <div class="pull-right">
+                        <?php
+                            echo CHtml::tag('button', array(
+                                'type'=>'submit',
+                                'id' => 'btnSubmit',
+                                'class' => 'btn btn-primary btn-next'
+                            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                        ?>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
-                <?php
-                echo CHtml::tag('button', array(
-                    'type'=>'submit',
-                    'id' => 'btnSubmit',
-                    'class' => 'btn btn-primary btn-next'
-                ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-                ?>
-            </div>
-        </div>
+        </div>  
+
 
     </div>
     <?php $this->endWidget(); ?>

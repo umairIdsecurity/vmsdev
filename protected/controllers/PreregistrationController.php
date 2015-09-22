@@ -1343,6 +1343,8 @@ class PreregistrationController extends Controller
 
 		$session = new CHttpSession;
 
+		$session['stepTitle'] = 'CREATE LOGIN';
+
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}

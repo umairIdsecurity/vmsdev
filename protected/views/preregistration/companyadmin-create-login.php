@@ -95,20 +95,24 @@
         </div>
     </div>        
 
-    <div class="row next-prev-btns">
-        <div class="col-md-1 col-sm-1 col-xs-1">
-            <a href="<?=Yii::app()->createUrl("preregistration/registration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="pull-left">
+                    <a href="<?=Yii::app()->createUrl("preregistration/registration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                </div>
+                <div class="pull-right">
+                    <?php
+                        echo CHtml::tag('button', array(
+                            'type'=>'submit',
+                            'class' => 'btn btn-primary btn-next'
+                        ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                    ?>
+                </div>
+            </div>
         </div>
-        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-9 col-md-1 col-sm-1 col-xs-1">
-            <?php
-            echo CHtml::tag('button', array(
-                'type'=>'submit',
-                'class' => 'btn btn-primary btn-next'
-            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-            ?>
-        </div>
-        
-    </div>
+    </div>  
+
 
 </div>
 

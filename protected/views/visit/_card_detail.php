@@ -57,7 +57,7 @@ if ($card) {
                 <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p>
         </div>
         <div class="box-card-logo">
-            <div style="width:134px; overflow: hidden;  min-height:34px; max-height: 40px;margin-top:2px; display:block;">
+            <div style="text-align: left;margin-left: 18px;width:134px; overflow: hidden;  min-height:34px; max-height: 40px;margin-top:2px; display:block;">
                 <img border="1" style="height:38px !important;width:auto;" src="<?= $companyLogo; ?>">
             </div>
         </div>

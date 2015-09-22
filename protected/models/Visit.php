@@ -1156,6 +1156,11 @@ class Visit extends CActiveRecord {
     }
 
     public function getVisitCounts() {
+        if ($this->reset_id || $this->negate_reason)
+        {
+            return 0;
+        }
+
         $dateIn   = new DateTime($this->date_check_in);
         $dateOut  = new DateTime($this->date_check_out);
         $dateNow  = new DateTime(date('Y-m-d'));

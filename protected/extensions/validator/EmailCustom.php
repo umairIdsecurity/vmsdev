@@ -2,10 +2,11 @@
 
 class EmailCustom extends CEmailValidator
 {
+    public $pattern = '/^[ ]*[a-zA-Z0-9!#$%&\'*+\\/=?^_`’{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`’{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?[ ]*$/';
 
     protected function validateAttribute($object, $attribute)
     {
-        $pattern = '/^[ ]*[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?[ ]*$/';
+        $pattern = '/^[ ]*[a-zA-Z0-9!#$%&\'*+\\/=?^_`’{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`’{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?[ ]*$/';
         if ($object->visitor_card_status == 2) {
             if (!preg_match($pattern, $object->$attribute)) {
                 if ($object->$attribute !== $object->first_name . '.' . $object->last_name) {

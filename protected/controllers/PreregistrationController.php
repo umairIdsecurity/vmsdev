@@ -1163,7 +1163,7 @@ class PreregistrationController extends Controller
 		$notification->created_by = null;
         $notification->date_created = date("Y-m-d");
         $notification->subject = 'ASIC Sponsor has verified your visit';
-        $notification->message = 'ASIC Sponsor has verified your visit (ASIC Sponsor Name: '.$host->first_name.' '.$host->last_name.' Date: '.date("d-m-Y",$visit->date_check_in).' Time: '.$visit->time_check_in.')';
+        $notification->message = 'ASIC Sponsor has verified your visit (ASIC Sponsor Name: '.$host->first_name.' '.$host->last_name.' Date: '.date("d-m-Y",strtotime($visit->date_check_in)).' Time: '.$visit->time_check_in.')';
         $notification->notification_type = 'VIC Holder Notification';
         $notification->role_id = 10;
         if($notification->save()){
@@ -1263,7 +1263,7 @@ class PreregistrationController extends Controller
 		$notification = Notification::model()->findByAttributes(array('subject'=>'ASIC Sponsor has assigned you a VIC holder Verification '));
 		if($notification){
 			$notify = new UserNotification;
-            $notify->user_id = $visit->visitor;
+            $notify->user_id = $visit->host;
             $notify->notification_id = $notification->id;
             $notify->has_read = 0; //Not Yet
             $notify->save();
@@ -1277,7 +1277,7 @@ class PreregistrationController extends Controller
             $notification->role_id = 10;
             if($notification->save()){
             	$notify = new UserNotification;
-                $notify->user_id = $visit->visitor;
+                $notify->user_id = $visit->host;
                 $notify->notification_id = $notification->id;
                 $notify->has_read = 0; //Not Yet
                 $notify->save();
@@ -1742,13 +1742,16 @@ class PreregistrationController extends Controller
 		if(isset($_POST['Declarationverification']))
 		{
 			$model->attributes=$_POST['Declarationverification'];
+			
+
 			if($model->validate())
-			{				
+			{
 				$visit = Visit::model()->findByPk($session['verify_visit_id']);
+
 				$visit->visit_prereg_status = "Verified";
 				$visit->asic_declaration = 1;
 				$visit->asic_verification = 1;
-				
+
 				if($visit->save(false))
 				{
 					$this->createVicNotificationVerifiedYourVisit($visit);

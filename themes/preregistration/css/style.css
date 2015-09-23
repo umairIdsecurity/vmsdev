@@ -6108,6 +6108,9 @@ iframe[name="google_conversion_frame"] {
 #header .logo img {
   width: 100%;
 }
+#header .responsiveLogo img {
+  width: 100%;
+}
 #header .icons {
   position: absolute;
   right: 0;

@@ -131,6 +131,13 @@ $session = new CHttpSession;
     text-indent: -9999px;
 }
 
+.responsiveLogo
+{
+    padding: 0px;
+    width: 100px;
+    margin: 35px auto 20px;
+}
+
 @media screen and (min-width: 300px)  and (max-width: 640px) {
     .responsiveTitle{
         font-size: 18px;
@@ -161,6 +168,8 @@ $session = new CHttpSession;
         line-height: 22px;
     }
 }
+
+
     </style>
 
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" rel="stylesheet">
@@ -182,9 +191,9 @@ $session = new CHttpSession;
                 <div class="row">
                     
                     <div class="col-sm-3">
-                        <div class="logo responsiveLogo" style="padding:55px 0 0;width:160px">
+                        <div class="responsiveLogo">
                             <a href="./">
-                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
+                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
                             </a>
                         </div>
                     </div>

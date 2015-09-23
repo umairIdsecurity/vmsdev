@@ -7,52 +7,56 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase. '/js/helpdesk.js');
 $session = new ChttpSession;
 ?>
 <div class="page-content">
-<h1 class="text-primary title">Help Desk</h1>
 
+      <div id="menu">
+        <div class="row items" style="background-color:#fff;">
+            <div class="col-sm-4 col-xs-6 text-center" style="background-color: #eeeeee; height:40px;border-right: 1px solid #fff;"><a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>"><span class="glyphicon glyphicon-home"></span></a></div>
+            <div class="col-sm-4 col-xs-6 text-center" style="background-color: #eeeeee; height:40px;"><a href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>">Help Desk</a></div>
+        </div>
+    </div>
 
+    <br><br>
 
+<div class="row buttons">
+  <div class="col-sm-6 col-xs-6"><input type="text" class="form-control" name="txt_search"  id="txt_search" value="" placeholder="Example: How do I add a new visit?" /></div>
+  <div class="col-sm-1 col-xs-3"><input type="submit" name="searchFaq" id="searchFaq" value="Search" class="btn btn-primary actionForward"  /></div>
+  <div class="col-sm-1 col-xs-3"><input type="submit" name="showAllFaq" id="showAllFaq" value="Show All" class="btn btn-primary" /></div>
+</div>
 
-<div class="row buttons" style="margin-top: 30px;">
-         <input type="text" name="txt_search"  id="txt_search" value="" placeholder="Example: How do I add a new visit?" style="margin-bottom: 0;
-  margin-left: 50px; width: 500px;"  />
-		<input type="submit" name="searchFaq" id="searchFaq" value="Search" class="actionForward"  />
-        <input type="submit" name="showAllFaq" id="showAllFaq"  value="Show All"   />
+<div class="row buttons">
+  <div class="col-sm-8 col-xs-10">
+    <section class="help-desk">
+    	
+      
+    	<div class="help-desk-items">
+    	  <?php   foreach ($helpDeskGroupRecords as $key => $value) {	
+    	            $helpDeskRecords = HelpDesk::model()->getHelpDeskByGroup($value['id']);
+    				if(sizeof($helpDeskRecords)>0)
+    				{
+    	    ?>
         
-	</div>
-
-
-
-
-<section class="help-desk">
-	
-  
-	<div class="help-desk-items">
-	  <?php   foreach ($helpDeskGroupRecords as $key => $value) {	
-	            $helpDeskRecords = HelpDesk::model()->getHelpDeskByGroup($value['id']);
-				if(sizeof($helpDeskRecords)>0)
-				{
-	    ?>
-    
-    	<ul id="group_<?php echo $value['id']; ?>" class="help-desk-group">
-			<li class="help-desk-title"><h2><?php echo $value['name']; ?></h2></li>
-               <?php   
-			   
-			   foreach ($helpDeskRecords as $keyhelpdesk => $valuehelpdesk) {	  ?>
-                    <li>
-                           <a class="help-desk-trigger" href="#0"><?php echo $valuehelpdesk['question']; ?></a>
-                           <div class="help-desk-content">
-                               <p><?php echo $valuehelpdesk['answer']; ?></p>
-                           </div> 
-                    </li>
-             <?php  } ?> 
-            
-		</ul>
-    
-      <?php  } 
-	  }
-	  ?> 
-    </div> 
-</section> 
+        	<ul id="group_<?php echo $value['id']; ?>" class="help-desk-group">
+    			<li class="help-desk-title"><h2><?php echo $value['name']; ?></h2></li>
+                   <?php   
+    			   
+    			   foreach ($helpDeskRecords as $keyhelpdesk => $valuehelpdesk) {	  ?>
+                        <li>
+                               <a class="help-desk-trigger" href="#0"><?php echo $valuehelpdesk['question']; ?></a>
+                               <div class="help-desk-content">
+                                   <p><?php echo $valuehelpdesk['answer']; ?></p>
+                               </div> 
+                        </li>
+                 <?php  } ?> 
+                
+    		</ul>
+        
+          <?php  } 
+    	  }
+    	  ?> 
+        </div> 
+    </section> 
+  </div> 
+</div>      
 
 <style>
 

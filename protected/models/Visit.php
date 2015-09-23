@@ -581,10 +581,12 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
+            case Roles::ROLE_ISSUING_BODY_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
@@ -800,10 +802,12 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
+            case Roles::ROLE_ISSUING_BODY_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 

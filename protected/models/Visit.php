@@ -473,7 +473,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_out', $this->time_out, true);
 
         // $criteria->compare('date_check_in', $this->date_check_in, true);
-        $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(date_check_in, "%d-%m-%Y")', $this->date_check_in));
 
         $criteria->compare('time_check_in', $this->time_check_in, true);
         // $criteria->compare('date_check_out', $this->date_check_out, true);

@@ -459,16 +459,7 @@ $model->identification_country_issued = 13;
                                     <select id="Visit_reason" name="Visitor[reason]"
                                             onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
                                         <option value='' selected>Select Reason</option>
-                                        <option value="Other">Reason: Other</option>
-                                        <?php
-                                        $reason = VisitReason::model()->findAllReason();
-                                        foreach ($reason as $key => $value) {
-                                            ?>
-                                            <option
-                                                value="<?php echo $value->id; ?>"><?php echo 'Reason: ' . $value->reason; ?></option>
-                                        <?php
-                                        }
-                                        ?>
+                                        
 
                                     </select>
                                     <span class="required">*</span>

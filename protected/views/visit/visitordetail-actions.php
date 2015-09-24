@@ -166,7 +166,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED ) : ?>
                             <?php  
                             $disabled = '';
-                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->date_check_out)) {
+                            // CardType::VIC_CARD_EXTENDED
+                            if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->date_check_out)) {
                                 $disabled = 'disabled';
                             }
                             ?>
@@ -420,6 +421,25 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
                    return false;
+            }
+
+            // Check if whether ASIC no & ASIC expiry is present for selected ASIC.
+            if ($("#ASIC_asic_no").length) {
+                if ($("#ASIC_asic_no").val() == '') {
+                    $("#Visitor_asic_no_em_").html('Please complete ASIC no.').show();
+                } else {
+                    $("#Visitor_asic_no_em_").html('').hide();
+                }
+
+                if ($("#ASIC_asic_expiry").val() == '') {
+                    $("#Visitor_asic_expiry_em_").html('Please complete ASIC expiry.').show();
+                } else {
+                    $("#Visitor_asic_expiry_em_").html('').hide();
+                }
+
+                if ($("#ASIC_asic_no").val() == '' || $("#ASIC_asic_expiry").val() == '') {
+                    return false;
+                }
             }
             
             e.preventDefault();

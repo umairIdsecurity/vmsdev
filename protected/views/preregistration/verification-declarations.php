@@ -1,12 +1,4 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/6/15
- * Time: 3:04 PM
- */
 
-?>
 <div class="page-content">
 
     <div id="menu">
@@ -80,8 +72,8 @@
         </div>
 
     <div class="row">
-        <div class="col-lg-5"></div>
-        <div class="col-lg-2">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2">
             <?php
                 echo CHtml::tag('button', array(
                     'type'=>'submit',
@@ -89,7 +81,7 @@
                 ), 'Send to PAPL');
             ?>
         </div>
-        <div class="col-lg-5"></div>
+        <div class="col-sm-5"></div>
     </div>
 
     <?php $this->endWidget(); ?>

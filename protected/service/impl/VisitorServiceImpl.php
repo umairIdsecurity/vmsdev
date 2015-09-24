@@ -121,6 +121,7 @@ class VisitorServiceImpl implements VisitorService {
                 if (empty($visitor->asic_no) && (empty($visitor->asic_expiry)) || is_null(($visitor->asic_expiry))) {
                     $visitor->visitor_card_status == Visitor::ASIC_EXPIRED;
                 }
+                $visitor->setScenario('asic');
                 break;
             case Visitor::PROFILE_TYPE_CORPORATE:
                 break;

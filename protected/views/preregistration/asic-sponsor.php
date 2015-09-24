@@ -86,11 +86,11 @@ $session = new CHttpSession;
 <div class="page-content">
     <!-- <a href="<?php //echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1></a> -->
 
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+
     <a href="<?php echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><span>Please provide details of the ASIC Sponsor who will be escorting the VIC holder</span></a>
 
-    
-
-    <br> <br> 
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
     <?php
         foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -100,7 +100,7 @@ $session = new CHttpSession;
 
     <!--  searching ASIC -->
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-sm-4 col-xs-12" style="padding-top: 10px;">
             <?php  echo CHtml::textField('search_asic_box' , '',
                 array(
                     'class'=>'form-control input-sm',
@@ -113,7 +113,7 @@ $session = new CHttpSession;
             echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
             ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-sm-4 col-xs-12" style="padding-top: 10px;">
             <?php
             echo CHtml::tag('button', array(
                 'id'=>'search_asic_btn',
@@ -122,14 +122,21 @@ $session = new CHttpSession;
             ), 'Find ASIC Sponsor');
             ?>
         </div>
+    </div>
 
-        <div id="asic_holder"></div>
+    <div class="row">
+        <div class="col-sm-12 col-xs-12" style="padding-top: 10px;">
 
-        <div class="loader" id="loader">Loading...</div>
+            <div class="tableFont" id="asic_holder"></div>
 
-        <p id="asic-notification" class="bg-info">No Record Found</p>
+            <div class="loader" id="loader">Loading...</div>
 
-    </div><!--  end searching ASIC -->
+            <p id="asic-notification" class="bg-info">No Record Found</p>
+        </div>
+    </div>
+
+
+    <!--  end searching ASIC -->
 
 
     <?php
@@ -149,7 +156,7 @@ $session = new CHttpSession;
 
     <div class="row">
 
-        <div class="col-lg-3">
+        <div class="col-sm-4">
 
             <div class="form-group">
                 <?php echo $form->hiddenField($model, 'selected_asic_id' ,
@@ -175,7 +182,7 @@ $session = new CHttpSession;
                 </div>
 
                 <div class="row form-group">
-                    <div class="col-md-12">
+                    <div class="col-sm-12">
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model'       => $model,
@@ -252,23 +259,27 @@ $session = new CHttpSession;
 
     </div>
 
-    <br><br>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-    <div class="row next-prev-btns">
-        <div class="col-md-1 col-sm-1 col-xs-1">
-            <a href="<?=Yii::app()->createUrl("preregistration/visitReason")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="pull-left">
+                    <a href="<?=Yii::app()->createUrl("preregistration/visitReason")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                </div>
+                <div class="pull-right">
+                    <?php
+                        echo CHtml::tag('button', array(
+                            'type'=>'submit',
+                            'class' => 'btn btn-primary btn-next'
+                        ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                    ?>
+                </div>
+            </div>
         </div>
+    </div>  
 
-        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-9 col-md-1 col-sm-1 col-xs-1">
-            <?php
-            echo CHtml::tag('button', array(
-                'type'=>'submit',
-                'class' => 'btn btn-primary btn-next'
-            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-            ?>
-
-        </div>
-    </div>
 
 </div>
  <?php $this->endWidget(); ?>

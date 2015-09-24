@@ -5784,7 +5784,7 @@ iframe[name="google_conversion_frame"] {
 }
 @media only screen and (min-width: 768px) {
   .sms-info {
-    width: 700px;
+    /*width: 700px;*/
     padding: 0 60px 30px 35px;
     display: block;
     margin-left: auto;
@@ -5835,7 +5835,7 @@ iframe[name="google_conversion_frame"] {
   margin: 30px 0 0;
 }
 .form-comfirm-detail > .row {
-  margin: 0 -30px;
+/*  margin: 0 -30px;*/
 }
 .form-comfirm-detail > .row .col-sm-6 {
   padding: 0 30px;
@@ -6108,6 +6108,9 @@ iframe[name="google_conversion_frame"] {
 #header .logo img {
   width: 100%;
 }
+#header .responsiveLogo img {
+  width: 100%;
+}
 #header .icons {
   position: absolute;
   right: 0;
@@ -6222,7 +6225,7 @@ iframe[name="google_conversion_frame"] {
 }
 .no-touch #menu .items {
   background-color: #eeeeee;
-  margin: 0px auto;
+  margin:2px auto;
   padding: 0px;
 }
 #menu .items [class^="col-"] {

@@ -427,6 +427,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
+                                <input type="hidden" name="asic_id" id="asic_sponsor_id" value="<?php echo $asic->id; ?>">
                                 <?php echo $visitorForm->textField($asic, 'asic_no', ['disabled' => $disabled, 'name' => 'ASIC[asic_no]']); ?>
                                 <br />
                                 <?php echo $visitorForm->error($asic, 'asic_no'); ?>

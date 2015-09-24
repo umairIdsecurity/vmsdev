@@ -166,6 +166,15 @@ class VisitController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
+        // save asic no when activate visit
+        if (isset($_POST['asic_sponsor_id'])) {
+            $asic_sponsor = Visitor::model()->findByPk($_POST['asic_sponsor_id']);
+            $asic_sponsor->asic_no = $_POST['asic_no'];
+            $asic_sponsor->asic_expiry = date('Y-m-d', strtotime($_POST['asic_expiry']));
+            $asic_sponsor->setScenario('updateVic');
+            $asic_sponsor->save();
+        }
+
         if (isset($_POST['Visit'])) {
 
             $oldhost = $model->host;

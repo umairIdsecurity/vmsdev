@@ -247,8 +247,6 @@ $this->renderPartial('visithistory', array('model' => $model,
                     $("#addreasonTable").hide();
                     $(".success-add-reason").show();
                 });
-
-
             }
         });
     }

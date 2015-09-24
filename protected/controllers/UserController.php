@@ -111,8 +111,10 @@ class UserController extends Controller
             } else {
                 $model->password_option = '';
             }
+
             // User Allowed Module
-            $model->allowed_module = Yii::app()->user->allowed_module;
+            $this->setUserModuleAccess($model);
+
             $model->isNewRecord = 1;        
             if ($userService->save($model, Yii::app()->user, $workstation)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
@@ -131,6 +133,26 @@ class UserController extends Controller
         $this->render('create', array(
             'model' => $model,
         ));
+    }
+
+    function setUserModuleAccess($model){
+
+        // User Allowed Module
+        if(($model->allowed_module==null && $model->role == Roles::ROLE_ISSUING_BODY_ADMIN) || in_array($model->role,[Roles::ROLE_AGENT_AIRPORT_OPERATOR,Roles::ROLE_AGENT_AIRPORT_ADMIN,Roles::ROLE_AIRPORT_OPERATOR])){
+            $model->allowed_module = Module::MODULE_AVMS;
+
+        } else if(($model->allowed_module==null && $model->role == Roles::ROLE_ADMIN)       || in_array($model->role,[Roles::ROLE_AGENT_OPERATOR,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_OPERATOR])){
+            $model->allowed_module = Module::MODULE_CVMS;
+
+        } else {
+
+            if($model->role == Roles::ROLE_ADMIN && Yii::app()->user->allowed_roles == Module::MODULE_CVMS){
+                $model->role = Module::MODULE_CVMS;
+
+            } else if($model->role == Roles::ROLE_ISSUING_BODY_ADMIN && Yii::app()->user->allowed_roles == Module::MODULE_AVMS) {
+                $model->role = Module::MODULE_AVMS;
+            }
+        }
     }
     
      /**
@@ -153,7 +175,7 @@ class UserController extends Controller
             $model->attributes = $_POST['User'];
 
             // User Allowed Module
-            $model->allowed_module = Yii::app()->user->allowed_module;
+            $this->setUserModuleAccess($model);
             
             if ($userService->save($model, Yii::app()->user, null)) {
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));

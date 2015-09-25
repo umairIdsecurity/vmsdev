@@ -420,8 +420,13 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
             <tr>
 
                 <td>
-                    <?php echo $form->radioButtonList($model, 'password_requirement',
+                    <?php 
+                    if (!isset($model->password_requirement)) {
+                        $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                    }
+                    echo $form->radioButtonList($model, 'password_requirement',
                         array(
+                            PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                             PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
                         ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
                     ?>
@@ -545,6 +550,9 @@ if (isset($_GET['id'])) {
 <script>
 
 $(document).ready(function () {
+    $("#Visitor_password_requirement_0").hide();
+    $("[for='Visitor_password_requirement_0']").hide();
+
     if( $("#Visitor_password_requirement_1").is(":checked") ) {
          $(".user_requires_password").css("display", "block");
     }

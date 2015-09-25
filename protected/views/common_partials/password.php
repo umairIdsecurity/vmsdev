@@ -22,6 +22,7 @@ if (isset($company) && !empty($company)) {
 
                         echo $form->radioButtonList($model, 'password_requirement',
                             array(
+                                PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                 PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
                             ), array('class' => 'password_requirement form-label', 'separator' => ''));
                         ?>
@@ -92,6 +93,8 @@ if (isset($company) && !empty($company)) {
 <script>
 
     $(document).ready(function () {
+        $("#Visitor_password_requirement_0").hide();
+        $("[for='Visitor_password_requirement_0']").hide();
         $(parentElement() + "#passwordInputsTable").detach().insertAfter($( parentElement() + ".password_option:eq(1)").next());
 
 		/***********************hide password section if not required************************/

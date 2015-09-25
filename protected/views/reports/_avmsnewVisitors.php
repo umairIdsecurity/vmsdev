@@ -19,6 +19,10 @@
         $datasetsASIC = array(
             array('Visitors', 'Visitors')
         );
+
+        $datasetsVICASIC = array(
+            array('Visitors', 'Visitors')
+        );
         
         $totalVIC = 0;
         $totalASIC = 0;
@@ -30,6 +34,18 @@
             . '<td>'
             .$dt[0]
             . '</td>';
+
+            if(!empty($resultsVICASIC)){
+                foreach($resultsVICASIC as $key=>$val) {
+                    foreach($val as $k=>$v) {
+                        $myKey=$k."-".$key;
+                        if($myKey == $dt[1]){
+                            $datasetsVICASIC[] = array($dt[0], count($v));
+                            break;
+                        }
+                    }
+                }
+            }
 
             if(!empty($resultsVIC)){
                 foreach($resultsVIC as $key=>$val) {
@@ -99,16 +115,9 @@
         <?php
         //very useful google chart
         $this->widget('ext.Hzl.google.HzlVisualizationChart', array('visualization' => 'PieChart',
-            'data' => $datasetsVIC,
-            'options' => array('title' => 'Total New VIC Visitors')));
+            'data' => $datasetsVICASIC,
+            'options' => array('title' => 'Total New Visitors')));
         ?>
     
     <br>
-    
-        <?php
-            //very useful google chart
-            $this->widget('ext.Hzl.google.HzlVisualizationChart', array('visualization' => 'PieChart',
-                'data' => $datasetsASIC,
-                'options' => array('title' => 'Total New ASIC Visitors')));
-        ?>
     </div>

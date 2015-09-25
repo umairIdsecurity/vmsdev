@@ -57,6 +57,6 @@ $form=$this->beginWidget('CActiveForm', array(
 
 <?php
 
-    $this->renderPartial('_avmsnewVisitors', array("resultsVIC"=>$resultsVIC,"resultsASIC"=>$resultsASIC,"reversed"=>$reversed));
+    $this->renderPartial('_avmsnewVisitors', array("resultsVIC"=>$resultsVIC,"resultsASIC"=>$resultsASIC,"resultsVICASIC"=>$resultsVICASIC,"reversed"=>$reversed));
 ?>
 

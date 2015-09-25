@@ -362,10 +362,13 @@ class ReportsController extends Controller
         
 
         
-        $countArrayVIC=array();$countArrayASIC=array();
+        $countArrayVIC=array();
+        $countArrayASIC=array();
+        $countArrayVICASIC=array();
         
         $visitorsVIC = $this->getNewVICVisitorsData ($from,$to);
         $visitorsASIC = $this->getNewASICVisitorsData ($from,$to);
+        $visitors = $this->getNewVICASICVisitorsData($from,$to);
         
         foreach($visitorsVIC as $visitorVIC){
             $date_check_in = $visitorVIC['date_check_in'];
@@ -386,9 +389,19 @@ class ReportsController extends Controller
             $y = intval($year);
             $countArrayASIC[$y][$m][]=1;
         }
+
+        foreach($visitors as $visitor){
+            $date_check_in = $visitor['date_check_in'];
+            $time=strtotime($date_check_in);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
+            $countArrayVICASIC[$y][$m][]=1;
+        }
         
         
-        $this->render("avmsnewvisitorcount", array("resultsVIC"=>$countArrayVIC,"resultsASIC"=>$countArrayASIC,"reversed"=>$reversed));
+        $this->render("avmsnewvisitorcount", array("resultsVIC"=>$countArrayVIC,"resultsASIC"=>$countArrayASIC, "resultsVICASIC"=>$countArrayVICASIC,"reversed"=>$reversed));
     }
     
     
@@ -409,6 +422,33 @@ class ReportsController extends Controller
         }
         $reversed = array_reverse($periods);
         return $reversed;
+    }
+
+     /**
+     * Get New Visitors by Dates
+     * 
+     * @param date $from From date
+     * @param date $to to date 
+     * @return array Data array
+     */
+    function getNewVICASICVisitorsData( $from, $to ) {
+        
+        $dateCondition='';
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
+        }
+        
+        $dateCondition .= "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
+                         ." AND (t.is_deleted =0 ) AND (t.profile_type='VIC' OR t.profile_type='ASIC')";
+        
+        $data = Yii::app()->db->createCommand()
+                //->select("convert(varchar(10), t.date_created, 120) AS date_check_in, t.first_name, t.id")
+                ->select("t.date_created AS date_check_in, t.first_name, t.id")
+                ->from("visitor t")
+                ->where($dateCondition)
+                ->queryAll();
+        return $data;
     }
     
     

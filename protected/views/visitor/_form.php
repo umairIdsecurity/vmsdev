@@ -422,7 +422,6 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
                 <td>
                     <?php echo $form->radioButtonList($model, 'password_requirement',
                         array(
-                            PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                             PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
                         ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
                     ?>

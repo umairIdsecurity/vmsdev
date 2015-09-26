@@ -452,7 +452,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                         'style' => $datePickerStyle,
                                         'name' => 'ASIC[asic_expiry]'
                                     ),
-                                    'options' => $datePickerOptionAttributes
+                                    'options' => array_merge($datePickerOptionAttributes, array('maxDate' => date('d-m-Y', strtotime('+2 years 2 months', strtotime("NOW")))))
                                 ));
                                 ?>
 

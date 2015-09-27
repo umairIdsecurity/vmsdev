@@ -27,10 +27,10 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <?php 
     
-    if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) >= strtotime($model->finish_date)): ?>
+    if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
     <tr><td><div class="label label-warning" style=" width: 220px;word-wrap: break-word;white-space: pre;
 ">Another visit can not be activated until this EVIC expires. Please reprint this EVIC if continuing visit.</div></td></tr>
-    <?php elseif(in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) >= strtotime($model->finish_date)): ?>
+    <?php elseif(in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
     <tr><td><span class="label label-warning">Another visit can not be activated until this card expires.</span></td></tr>
     <?php endif; ?>
     <tr>

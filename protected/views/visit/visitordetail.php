@@ -38,7 +38,8 @@ if(!$hostModel) $hostModel = Visitor::model();
         </td>
         <td>
             <?php
-            $this->renderPartial('visitordetail-visitorInformation', array('model' => $model,
+            $this->renderPartial('visitordetail-visitorInformation', array(
+                'model' => $model,
                 'visitorModel' => $visitorModel,
                 'hostModel'    => $hostModel,
                 'reasonModel'  => $reasonModel,

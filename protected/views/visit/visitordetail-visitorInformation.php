@@ -392,8 +392,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         </li>
         <?php endif;?>
 
-        <?php if ($asic) : ?>
-        <?php //if ($model->card_type > CardType::CONTRACTOR_VISITOR) : ?>
+        <?php if ($asic || ($model->card_type > CardType::CONTRACTOR_VISITOR)) : ?>
+        <?php if (empty($asic) || !$asic) {
+            $asic = Visitor::model();
+        } ?>
 
         <li class='has-sub' id="asicDetails1Li">
             <a href="#"><span>ASIC Sponsor</span></a>

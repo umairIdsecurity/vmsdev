@@ -99,8 +99,8 @@ class VisitReasonController extends Controller {
             if(isset($session['tenant']))
                 $model->tenant = $session['tenant'];
 
-            if(isset($session['tenant_agent']))
-                $model->tenant = $session['tenant_agent'];
+            //if(isset($session['tenant_agent']))
+            //    $model->tenant = $session['tenant_agent'];
 
             if ($model->save())
                 $this->redirect(array('admin'));

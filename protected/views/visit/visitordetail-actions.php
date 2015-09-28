@@ -166,7 +166,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED ) : ?>
                             <?php  
                             $disabled = '';
-                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->date_check_out)) {
+                            // CardType::VIC_CARD_EXTENDED
+                            if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->date_check_out)) {
                                 $disabled = 'disabled';
                             }
                             ?>
@@ -421,6 +422,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
                    return false;
             }
+
+            // Check ASIC Sponsor
+            if ( $("#asicSponsorActiveVisitLink").length && !$("#asicSponsorActiveVisitLink").is(":checked")) {
+                   alert("Please verify ASIC Sponsor/Escort to activate the visit.");
+                   return false;
+            }
+
 
             // Check if whether ASIC no & ASIC expiry is present for selected ASIC.
             if ($("#ASIC_asic_no").length) {

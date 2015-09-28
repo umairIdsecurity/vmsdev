@@ -14,6 +14,10 @@
  */
 class Module extends CActiveRecord
 {
+	const MODULE_AVMS = 1;
+	const MODULE_CVMS = 2;
+	const MODULE_BOTH = 3;
+
 	/**
 	 * @return string the associated database table name
 	 */

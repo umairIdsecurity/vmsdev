@@ -477,7 +477,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_out', $this->time_out, true);
 
         // $criteria->compare('date_check_in', $this->date_check_in, true);
-        $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(date_check_in, "%d-%m-%Y")', $this->date_check_in));
 
         $criteria->compare('time_check_in', $this->time_check_in, true);
         // $criteria->compare('date_check_out', $this->date_check_out, true);
@@ -585,10 +585,12 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
+            case Roles::ROLE_ISSUING_BODY_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
@@ -804,10 +806,12 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
+            case Roles::ROLE_ISSUING_BODY_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 

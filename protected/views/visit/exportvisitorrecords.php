@@ -39,13 +39,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'firstname',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+            'value' => 'getFirstname($data->visitor)',
             'header' => 'First Name',
             'filter' => CHtml::textField('Visit[firstname]', '', array('class' => 'filterFirstName')),
         ),
         array(
             'name' => 'lastname',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+            'value' => 'getLastname($data->visitor)',
             'header' => 'Last Name',
             'filter' => CHtml::textField('Visit[lastname]', '', array('class' => 'filterLastName')),
         ),
@@ -59,12 +59,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'contactemail',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->email',
+            'value' => 'getEmail($data->visitor)',
             'header' => 'Contact Email'
         ),
         array(
             'name' => 'contactnumber',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
+            'value' => 'getContactNumber($data->visitor)',
             'header' => 'Contact Number'
         ),
         array(
@@ -94,7 +94,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 function getCompany($id) {
 
-    $company_id = Visitor::model()->findByPk($id)->company;
+    $visitor = Visitor::model()->findByPk($id);
+    if (isset($visitor)) {
+        $company_id = $visitor->company;
+    }
 
     if (isset($company_id)) {
 
@@ -109,6 +112,38 @@ function getCompany($id) {
     }
     return "Not Available";
 
+}
+
+function getFirstname($id) {
+    $visitor = Visitor::model()->findByPk($id);
+    if (isset($visitor)) {
+        return $visitor->first_name;
+    }
+    return "";
+}
+
+function getLastname($id) {
+    $visitor = Visitor::model()->findByPk($id);
+    if (isset($visitor)) {
+        return $visitor->last_name;
+    }
+    return "";
+}
+
+function getEmail($id) {
+    $visitor = Visitor::model()->findByPk($id);
+    if (isset($visitor)) {
+        return $visitor->email;
+    }
+    return "";
+}
+
+function getContactNumber($id) {
+    $visitor = Visitor::model()->findByPk($id);
+    if (isset($visitor)) {
+        return $visitor->contact_number;
+    }
+    return "";
 }
 
 function formatTime($time) {

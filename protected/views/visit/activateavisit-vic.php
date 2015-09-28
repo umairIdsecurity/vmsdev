@@ -27,11 +27,11 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <?php 
     
-    if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) >= strtotime($model->finish_date)): ?>
+    if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
     <tr><td><div class="label label-warning" style=" width: 220px;word-wrap: break-word;white-space: pre;
 ">Another visit can not be activated until this EVIC expires. Please reprint this EVIC if continuing visit.</div></td></tr>
-    <?php elseif(in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) >= strtotime($model->finish_date)): ?>
-    <tr><td><span class="label label-warning">Another visit can not be activated until this card expires.</span></td></tr>
+    <?php elseif(in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
+    <tr><td><div class="label label-warning" style=" width: 220px;word-wrap: break-word;white-space: pre;">Another visit can not be activated until this card expires.</div></td></tr>
     <?php endif; ?>
     <tr>
         <td>&nbsp;</td>
@@ -70,7 +70,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" <?php echo $model->asic_escort != NULL ? 'checked="checked"' : '';?> value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
+            <input type="checkbox" <?php echo $model->getAsicSponsor() ? 'checked="checked" disabled="disabled"' : '';?> value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor/Escort</a>
         </td>
     </tr>

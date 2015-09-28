@@ -93,6 +93,8 @@ if (isset($company) && !empty($company)) {
 <script>
 
     $(document).ready(function () {
+        $("#Visitor_password_requirement_0").hide();
+        $("[for='Visitor_password_requirement_0']").hide();
         $(parentElement() + "#passwordInputsTable").detach().insertAfter($( parentElement() + ".password_option:eq(1)").next());
 
 		/***********************hide password section if not required************************/

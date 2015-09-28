@@ -38,7 +38,8 @@ if(!$hostModel) $hostModel = Visitor::model();
         </td>
         <td>
             <?php
-            $this->renderPartial('visitordetail-visitorInformation', array('model' => $model,
+            $this->renderPartial('visitordetail-visitorInformation', array(
+                'model' => $model,
                 'visitorModel' => $visitorModel,
                 'hostModel'    => $hostModel,
                 'reasonModel'  => $reasonModel,
@@ -247,8 +248,6 @@ $this->renderPartial('visithistory', array('model' => $model,
                     $("#addreasonTable").hide();
                     $(".success-add-reason").show();
                 });
-
-
             }
         });
     }
@@ -434,6 +433,8 @@ $this->renderPartial('visithistory', array('model' => $model,
             $('#update-visitor-detail-form').submit();
         }
 
+        visitForm = visitForm + '&asic_sponsor_id=' + $("#asic_sponsor_id").val() + '&asic_no=' + $("#ASIC_asic_no").val() + '&asic_expiry=' + $("#ASIC_asic_expiry").val();
+
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
@@ -514,6 +515,8 @@ $this->renderPartial('visithistory', array('model' => $model,
         } else {
             var visitForm = $("#" + formId).serialize();
         }
+        visitForm = visitForm + '&asic_sponsor_id=' + $("#asic_sponsor_id").val() + '&asic_no=' + $("#ASIC_asic_no").val() + '&asic_expiry=' + $("#ASIC_asic_expiry").val();
+
         $.ajax({
             type: "POST",
             url: '<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id . "&new_created=" . $new_created)); ?>',

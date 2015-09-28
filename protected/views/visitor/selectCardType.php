@@ -119,6 +119,7 @@ if (!$cardTypeWorkstationModel) {
                 success: function (r) {
                     if(r) {
                         var opt = '<option value ="">Select Visit Reason</option>';
+                        opt += '<option value="Other">Visit Reason: Other</option>';
                         $.each(r, function (index, value) {
                             opt += '<option value="' + value.id + '">Visit Reason: ' + value.reason + '</option>';
                         });

@@ -10,6 +10,10 @@
  */
 class CompanyType extends CActiveRecord
 {
+	const COMPANY_TYPE_TENANT = 1;
+	const COMPANY_TYPE_AGENT = 2;
+	const COMPANY_TYPE_VISITOR = 3;
+
 	/**
 	 * @return string the associated database table name
 	 */

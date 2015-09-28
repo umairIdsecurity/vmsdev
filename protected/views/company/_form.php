@@ -205,7 +205,12 @@ if ($this->action->id == 'update') {
                             <tr>
 
                                 <td>
-                                    <?php echo $form->radioButtonList($model, 'password_requirement',
+
+                                    <?php 
+                                    if (!isset($model->password_requirement)) {
+                                        $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                                    }
+                                    echo $form->radioButtonList($model, 'password_requirement',
                                         array(
                                             PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                             PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
@@ -498,6 +503,10 @@ if (isset($_GET['viewFrom'])) {
     }
 
     $(document).ready(function() {
+
+        $("#Company_password_requirement_0").hide();
+        $("[for='Company_password_requirement_0']").hide();
+
         $(createCompanyForm()+".pass_option").on("click",function(){
             $(createCompanyForm()+".user_requires_password #pass_error_").hide();
         });

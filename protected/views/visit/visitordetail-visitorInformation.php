@@ -392,8 +392,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         </li>
         <?php endif;?>
 
-        <?php if ($asic) : ?>
-        <?php //if ($model->card_type > CardType::CONTRACTOR_VISITOR) : ?>
+        <?php if ($asic || ($model->card_type > CardType::CONTRACTOR_VISITOR)) : ?>
+        <?php if (empty($asic) || !$asic) {
+            $asic = Visitor::model();
+        } ?>
 
         <li class='has-sub' id="asicDetails1Li">
             <a href="#"><span>ASIC Sponsor</span></a>
@@ -427,6 +429,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
+                                <input type="hidden" name="asic_id" id="asic_sponsor_id" value="<?php echo $asic->id; ?>">
                                 <?php echo $visitorForm->textField($asic, 'asic_no', ['disabled' => $disabled, 'name' => 'ASIC[asic_no]']); ?>
                                 <br />
                                 <?php echo $visitorForm->error($asic, 'asic_no'); ?>
@@ -451,7 +454,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                         'style' => $datePickerStyle,
                                         'name' => 'ASIC[asic_expiry]'
                                     ),
-                                    'options' => $datePickerOptionAttributes
+                                    'options' => array_merge($datePickerOptionAttributes, array('maxDate' => date('d-m-Y', strtotime('+2 years 2 months', strtotime("NOW")))))
                                 ));
                                 ?>
 

@@ -117,22 +117,12 @@ class Photo extends CActiveRecord {
     }
 
     public function returnVisitorPhotoRelativePath($visitorId) {
-        /*$visitor = Visitor::model()->findByPK($visitorId);
-        if ($visitor->photo != '') {
-            $photo = Photo::model()->findByPK($visitor->photo);
-            if(file_exists($photo->relative_path)){
-                return Yii::app()->getBaseUrl(true)."/".$photo->relative_path;
-            }else{
-                return $this->defaultImage();
-            }
-            
-        }*/
+        $visitor = Registration::model()->findByPK($visitorId);
         
-        $visitor = Visitor::model()->findByPK($visitorId);
-
         if ($visitor->photo != '') {
             $photo = Photo::model()->findByPK($visitor->photo);
             if(!empty($photo->db_image)){
+
                  $aArray = array(
                     'relative_path' => '',
                     'db_image' => $photo->db_image,

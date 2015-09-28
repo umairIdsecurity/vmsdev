@@ -57,6 +57,13 @@ class Registration extends CActiveRecord {
     public $is_asic_verification;
     public $selected_asic_id;
 
+    //Define public variable
+    public $old_password;
+    public $new_password;
+    public $repeat_password;
+
+    public $password_saver;
+
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC = 'VIC';
     const PROFILE_TYPE_ASIC = 'ASIC';
@@ -203,6 +210,12 @@ class Registration extends CActiveRecord {
             array('contact_street_no', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Street no.'),
             array('contact_street_name', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Street name'),
             array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Postcode'),
+
+            array('old_password,new_password,repeat_password','length','min'=>5,'on' => 'preregistrationPass'),
+            array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistrationPass'),
+            array('old_password,new_password,repeat_password','safe','on' => 'preregistrationPass'),
+            /*array('old_password, new_password, repeat_password', 'required', 'on' => 'preregistrationPass'),
+            array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistrationPass'),*/
 
             //array('company', 'required' ,'on' => 'preregistrationCompanyAdmin', 'message'=>'Please select a Comapny'),
             
@@ -408,37 +421,27 @@ class Registration extends CActiveRecord {
 
     public function beforeSave() {
         $this->email = trim($this->email);
-
-        //$this->contact_country = self::AUSTRALIA_ID;
-
-        /*if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
-            $this->password = null;
-        } else {
-            $this->password = User::model()->hashPassword($this->password);
-        }*/
-
-        /*if(($this->password != null) && ($this->password != "")) {
-            $this->password = User::model()->hashPassword($this->password);
-        }*/
-        
-        if(!empty($this->date_of_birth)){
-            $this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));
-        }else{
-            $this->date_of_birth = NULL;
+        if(!is_null($this->password)) 
+        {
+            if (Yii::app()->controller->action->id == 'profile') 
+            {
+                if($this->password_saver == ""){
+                    //do not hash password if user doesn't to do such
+                    /*echo $this->password."<br>";
+                    die("before Save else called: ".$this->password);*/
+                }else{
+                    $this->password = User::model()->hashPassword($this->password);
+                }
+            }
+            else
+            {
+                $this->password = User::model()->hashPassword($this->password);
+            }
         }
-
-        if(!empty($this->identification_document_expiry)){
-            $this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
-        }else{
-            $this->identification_document_expiry = NULL;
-        }
-
-        if(!empty($this->asic_expiry)){
-            $this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));
-        }else{
-            $this->asic_expiry = NULL;
-        }
-
+        if(!empty($this->date_of_birth)){$this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));}else{$this->date_of_birth = NULL;}
+        if(!empty($this->identification_document_expiry)){$this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));}else{$this->identification_document_expiry = NULL;}
+        if(!empty($this->date_of_birth)){$this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));}else{$this->date_of_birth = NULL;}
+        if(!empty($this->asic_expiry)){$this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));}else{$this->asic_expiry = NULL;}
         return parent::beforeSave();
     }
 
@@ -509,7 +512,6 @@ class Registration extends CActiveRecord {
             $this->password_option = 1;
 
         }
-
 
         parent::afterFind();
     }

@@ -37,23 +37,59 @@ class Avms7DataTransformer
     private $db;
     private $dataHelper;
 
-    public function __constructor($db)
+    public function __construct($db)
     {
         $this->db = $db;
         $this->dataHelper = new DataHelper($this->db);
+        //parent::__construct();
     }
 
-    public function importTenant($code){
+    public function exportTenant($code){
 
         $data = [];
-        $data["company"]        = $this->getCompanies($code);
-        $data["user"]           = $this->getUsers($code);
-        $data["tenant"]         = $this->getTenant($code);
-        $data["tenant_agent"]   = $this->getTenantAgents($code);
-        $data["visitor"]        = $this->getVisitors($code);
-        $data["visit"]          = $this->getVisit($code);
+        $data = array_merge_recursive($data,$this->getTenant($code));
+        echo CJSON::encode($data);
 
     }
+
+    public function getTenant($code){
+        $result = ['company'=>[],'tenant'=>[],'user'=>[],'tenant_contact'=>[]];
+        $tenantCompany =$this->getTenantCompany($code);
+        $result['company'][] = $tenantCompany;
+        $result['users'][] = $this->getTenantUsers($code);
+        return $result;
+
+    }
+
+    public function GetTenantCompany($code){
+        $ib = $this->getIssuingBody($code);
+        $tenantCompany = [
+            'code' => $ib['IBCode'],
+            'name' => $ib['IssuingBody']." Airport",
+            'trading_name' => $ib['Company'],
+            'company_type' => CompanyType::COMPANY_TYPE_TENANT,
+            'created_by_user=1'
+        ];
+
+        $userArributes =$this->dataHelper->getFirstRow(
+            "SELECT concat_ws(' ',FirstName, LastName) as contact, ".
+            "EmailAddress as email_address, ".
+            "trim(concat_ws(' ',concat(Unit,'/'),StreetNo,Street,StreetType,Suburb,State,PostCode)) as billing_address, ".
+            "Telephone as office_number, ".
+            "Mobile as mobile_number ".
+            "FROM users ".
+            "WHERE (EmailAddress > '' OR FirstName > '' OR LastName > '') ".
+            "AND IBCode='".$code."' ".
+            "AND level IN (". implode(',', $this->roleLevel[Roles::ROLE_ISSUING_BODY_ADMIN]).")"
+        );
+
+        return array_merge_recursive($tenantCompany,$userArributes);
+    }
+
+    public function getTenantUsers($code){
+
+    }
+
 
     public function getCompanies($code)
     {

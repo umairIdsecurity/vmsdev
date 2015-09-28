@@ -10,7 +10,9 @@ class DatabaseCommand extends CConsoleCommand
 {
     public function actionIndex()
     {
-        $transformer = new Avms7DataTransformer();
+        $connection = new CDbConnection("mysql:host=localhost;dbname=avms7",'root','root');
+        $connection->active = true;
+        $transformer = new Avms7DataTransformer($connection);
         $transformer->exportTenant("BKQ");
     }
 

@@ -12,7 +12,7 @@ class DataHelper
     public function __construct($db)
     {
         $this->db = $db; 
-        parent::__construct();
+        //parent::__construct();
         
     }
 
@@ -186,6 +186,15 @@ class DataHelper
         return  ['table'=>$table,'columns'=>$columns,'rows'=>$rows];
     }
 
+    public function getFirstRow($sql){
+        $command = $this->db->createCommand($sql);
+        $command->execute();
+        $reader = $command->query();
+        foreach($reader as $row){
+            return $row;
+        }
+        return [];
+    }
 
 
 

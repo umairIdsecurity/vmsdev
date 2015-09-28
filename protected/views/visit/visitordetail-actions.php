@@ -423,6 +423,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                    return false;
             }
 
+            // Check ASIC Sponsor
+            if ( $("#asicSponsorActiveVisitLink").length && !$("#asicSponsorActiveVisitLink").is(":checked")) {
+                   alert("Please verify ASIC Sponsor/Escort to activate the visit.");
+                   return false;
+            }
+
+
             // Check if whether ASIC no & ASIC expiry is present for selected ASIC.
             if ($("#ASIC_asic_no").length) {
                 if ($("#ASIC_asic_no").val() == '') {

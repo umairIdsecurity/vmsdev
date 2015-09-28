@@ -85,7 +85,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 2)) ?>">Print On Card Printer</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
-<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) == strtotime($model->finish_date)): ?>
+<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
     <button class="btn btn-info printCardBtn dropdown-toggle actionForward" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">

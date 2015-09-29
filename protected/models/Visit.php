@@ -208,7 +208,11 @@ class Visit extends CActiveRecord {
              default :
                  break;
          }
-          return parent::beforeSave();
+
+        if(!empty($this->date_check_in)){$this->date_check_in = date("Y-m-d",strtotime($this->date_check_in));}else{$this->date_check_in = NULL;}
+        if(!empty($this->date_check_out)){$this->date_check_out = date("Y-m-d",strtotime($this->date_check_out));}else{$this->date_check_out = NULL;}
+        
+        return parent::beforeSave();
      }
 
      /**

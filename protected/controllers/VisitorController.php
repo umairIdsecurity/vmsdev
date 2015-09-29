@@ -71,10 +71,12 @@ class VisitorController extends Controller {
             }
             
                if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
-                //email sending
-                if(!empty($model->password_requirement)){
-                    $passwordRequire= intval($model->password_requirement);
-                    if($passwordRequire == 2){
+                 //email sending
+                if(!empty($model->password_option)){
+
+                    $passwordRequire= intval($model->password_option);
+
+                    if($passwordRequire == 1){
                         $loggedUserEmail = Yii::app()->user->email;
                         $headers = "MIME-Version: 1.0" . "\r\n";
                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -94,7 +96,35 @@ class VisitorController extends Controller {
                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
                         mail($to, $subject, $body, $headers);
                     }
+                    elseif ($passwordRequire == 2) {
+                        User::model()->restorePassword($model->email);
+                    }
                 }
+                
+                //email sending
+                // if(!empty($model->password_requirement)){
+                //     $passwordRequire= intval($model->password_requirement);
+                //     if($passwordRequire == 2){
+                //         $loggedUserEmail = Yii::app()->user->email;
+                //         $headers = "MIME-Version: 1.0" . "\r\n";
+                //         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                //         $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+                //         $to=$model->email;
+                //         $subject="Preregistration email notification";
+                //         $body = "<html><body>Hi,<br><br>".
+                //                 "This is preregistration email.<br><br>".
+                //                 "Please click on the below URL:<br>".
+                //                 "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
+                //         if(!empty($model->password_option)){
+                //             $passwordCreate= intval($model->password_option);
+                //             if($passwordCreate == 1){
+                //                 $body .= "Password: ".$_POST['Visitor']['password']."<br>";
+                //             }
+                //         }
+                //         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+                //         mail($to, $subject, $body, $headers);
+                //     }
+                // }
                 Yii::app()->end();
             } else { //todo: for debugging
                 print_r($model->errors);
@@ -601,10 +631,12 @@ class VisitorController extends Controller {
                         }
                     }
                 }
-                //email sending 
-                if(!empty($model->password_requirement)){
-                    $passwordRequire= intval($model->password_requirement);
-                    if($passwordRequire == 2){
+                //email sending
+                if(!empty($model->password_option)){
+
+                    $passwordRequire= intval($model->password_option);
+
+                    if($passwordRequire == 1){
                         $loggedUserEmail = Yii::app()->user->email;
                         $headers = "MIME-Version: 1.0" . "\r\n";
                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -624,11 +656,39 @@ class VisitorController extends Controller {
                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
                         @mail($to, $subject, $body, $headers);
                     }
+                    elseif ($passwordRequire == 2) {
+                        User::model()->restorePassword($model->email);
+                    }
                 }
+
+                //email sending 
+                // if(!empty($model->password_requirement)){
+                //     $passwordRequire= intval($model->password_requirement);
+                //     if($passwordRequire == 2){
+                //         $loggedUserEmail = Yii::app()->user->email;
+                //         $headers = "MIME-Version: 1.0" . "\r\n";
+                //         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                //         $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+                //         $to=$model->email;
+                //         $subject="Preregistration email notification";
+                //         $body = "<html><body>Hi,<br><br>".
+                //                 "This is preregistration email.<br><br>".
+                //                 "Please click on the below URL:<br>".
+                //                 Yii::app()->request->baseUrl."/index.php/preregistration/login<br>";
+                //         if(!empty($model->password_option)){
+                //             $passwordCreate= intval($model->password_option);
+                //             if($passwordCreate == 1){
+                //                 $body .= "Password: ".$_POST['Visitor']['password']."<br>";
+                //             }
+                //         }
+                //         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+                //         @mail($to, $subject, $body, $headers);
+                //     }
+                // }
                 if( $model->profile_type == "CORPORATE" ) {
                     Yii::app()->user->setFlash('success', 'Corporate Visitor Created Successfully!');
                     $this->redirect(array("visitor/admin&vms=cvms"));
-                    echo '<script> window.location = "'.Yii::app()->createUrl("/isitor/admin&vms=cvms").'"; </script>';
+                    echo '<script> window.location = "'.Yii::app()->createUrl("/visitor/admin&vms=cvms").'"; </script>';
                 }
                 else {
                     Yii::app()->end();
@@ -637,7 +697,7 @@ class VisitorController extends Controller {
             }  else {  // Not Save record then
                 //$errors = $model->getErrors(); print_r($errors); exit;
                  if( $model->profile_type == "CORPORATE" ) {
-                     $this->redirect(array("visitor/addvisitor"));
+                     $this->redirect(array("visitor/addvisitor/&profile_type=CORPORATE"));
                  }
             }
         }

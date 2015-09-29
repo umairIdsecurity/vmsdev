@@ -63,7 +63,7 @@ if ($this->action->id == 'update') {
 </style>
 
 
-<div class="addvisitor-form-ASIC">
+<div class="addvisitor-form-ASIC" data-ng-app="PwordForm">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id'                     => 'register-form',
@@ -580,6 +580,12 @@ if ($this->action->id == 'update') {
         } else {
             $('.visitor_password').empty().hide();
             $('.visitor_password_repeat').empty().hide();
+        }
+
+        if($(".pass_option").is(":checked")== false){
+            $("#pass_error_").show();
+            $("#User_password_em_").html("select one option");
+            return false;
         }
 
         if (!hasError) {

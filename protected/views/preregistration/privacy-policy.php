@@ -8,7 +8,7 @@
 
 ?>
 <div class="page-content">
-    <h1 class="text-primary title">REQUIREMENTS</h1>
+    <h3 class="text-primary">Requirements</h3>
     <div class="privacy-info">
         To proceed you will need to provide details of the following:
         <br><br>

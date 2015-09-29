@@ -25,7 +25,7 @@ if ($this->action->id == 'update') {
 }
 ?>
 
-<div class="form">
+<div class="form" data-ng-app="PwordForm">
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -38,35 +38,18 @@ if ($this->action->id == 'update') {
             'afterValidate' => 'js:function(form, data, hasError) {
                 if (!hasError) {
                     if($("#currentAction").val() == "create"){
-                        if ($("#company-form .password_requirement").is(":checked")== false) {
-                            $("#company-form #pass_error_").show();
+                        if($(".pass_option").is(":checked")== false){
+                            $("#pass_error_").show();
+                            $("#User_password_em_").html("select one option");
                             return false;
-                        } else {
-                            if ($("#Company_password_requirement_1").is(":checked")) {
-                                if($(createCompanyForm()+".pass_option").is(":checked") == false) {
-                                    $(createCompanyForm()+".user_requires_password #pass_error_").show();
-                                    return false;
-                                } else {
-                                    $(createCompanyForm()+".user_requires_password #pass_error_").hide();
-                                    if($(createCompanyForm()+"#pass_option_1").is(":checked")) {
-                                        var validatePass = validatePassword();
-                                        if(validatePass == true) {
-                                            var isMatch = isPasswordMatch();
-                                            if(isMatch == true) {
-                                                checkCompanyNameUnique();
-                                            } else {
-                                                return false;
-                                            }
-                                        } else {
-                                            return false;
-                                        }
-                                    }else {
-                                        checkCompanyNameUnique();
-                                    }
-                                }
-                            } else {
-                                checkCompanyNameUnique();
-                            }
+                        }
+                        else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Company_user_password").val()== "" || $("#Company_user_repeatpassword").val()=="")){
+                            $("#pass_error_").show();
+                            $("#pass_error_").html("Type password or generate");
+                            return false;
+                        }
+                        else{
+                            checkCompanyNameUnique();
                         }
                     } else{
                         checkCompanyNameUnique();
@@ -194,100 +177,91 @@ if ($this->action->id == 'update') {
                         <td colspan="2"><?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?></td>
                         </tr>
                     </table><!--Company Contact field-->
-                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -370px; max-width:275px !important;">
-                        <table style="float:left; width:300px;">
-                            <tr>
-                                <td><strong>Password Options</strong></td>
-                            </tr>
-                            <tr>
-                                <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select One Option</td>
-                            </tr>
-                            <tr>
+                   <div class="password-border" style="float: right; margin-right: 147px; margin-top: -370px; max-width: 275px !important; display: block;">
+                    <table>
+                        <tbody >
+                        <tr>
+                            <td><strong>Password Options</strong></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
+                                    <tr>
+                                        <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
+                                    </tr>
 
-                                <td>
 
-                                    <?php 
-                                    if (!isset($model->password_requirement)) {
-                                        $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-                                    }
-                                    echo $form->radioButtonList($model, 'password_requirement',
-                                        array(
-                                            PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
-                                            PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
-                                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
-                                    ?>
-                                    <?php echo $form->error($model, 'password_requirement'); ?>
-                                </td>
-                            </tr>
-                            <tr style="display:none;" class="user_requires_password">
-                                <td>
-                                    <table
-                                        style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left: 30px;">
 
-                                        <tr>
-                                            <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast
-                                                One option
-                                            </td>
-                                        </tr>
-                                        <tr id="third_option" class='hiddenElement'></tr>
-                                        <tr>
-                                            <td><input class="pass_option" id="pass_option_0" type="radio" name="Company[password_option]" value="1"/>&nbsp;Send
-                                                User Invitation
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-bottom:10px">
-                                                <input class="pass_option" id="pass_option_1" type="radio" name="Company[password_option]" value="2"/>
-                                                &nbsp;Create Password
-                                            </td>
-                                        </tr>
+                                    <tr id="third_option" class='hiddenElement'>
 
-                                        <tr>
-                                            <td>
-<!--                                                <input placeholder="Password" ng-model="user.passwords" data-ng-class="{-->
-<!--                                                                       'ng-invalid':registerform['Company[user_repeatpassword]'].$error.match}"-->
-<!--                                                       type="password" id="Company_user_password" name="Company[user_password]">-->
-<!--                                                <span class="required">*</span>-->
-                                                <?php echo $form->passwordField($model, 'user_password', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Password')); ?>
-                                                <span class="required">*</span>
-                                                <?php echo "<br>" . $form->error($model, 'user_password'); ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-<!--                                                <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"-->
-<!--                                                       id="Company_user_repeatpassword" data-match="user.passwords"-->
-<!--                                                       name="Company[user_repeatpassword]"/>-->
-<!--                                                <span class="required">*</span>-->
-<!---->
-<!--                                                <div style='font-size:0.9em;color:red;position: static;'-->
-<!--                                                     data-ng-show="registerform['Company[user_repeatpassword]'].$error.match">Password does-->
-<!--                                                    not match with Repeat <br> Password.-->
-<!--                                                </div>-->
-<!--                                                --><?php //echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
-                                                <?php echo $form->passwordField($model, 'user_repeatpassword', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Repeat Password')); ?>
-                                                <span class="required">*</span>
-                                                <?php echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
-                                                <?php echo '<div id="Company_user_passwordmatch_em_" class="errorMessage" style="display:none"></div>'?>
-                                            </td>
+                                    </tr>
 
-                                        </tr>
-                                        <tr>
-                                            <td align="center">
+                                    <tr>
+                                        <td>
+                                            <?php echo $form->hiddenField($model, 'password_option'); ?>
+                                            <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
+                                            &nbsp;Create Password
+                                        </td>
+
+                                        <?php echo "<br>". $form->error($model,'password_option'); ?>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                                                   'ng-invalid':registerform['Company[repeatpassword]'].$error.match}"
+                                                   type="password" id="Company_user_password" name="Company[password]">
+                                            <span class="required">*</span>
+                                            <?php  echo $form->error($model,'password'); ?>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+                                        <td >
+                                            <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                                   id="Company_user_repeatpassword" data-match="user.passwords"
+                                                   name="Company[repeatpassword]"/>
+                                            <span class="required">*</span>
+
+                                            <div style='font-size:0.9em;color:red;position: static;'
+                                                 data-ng-show="registerform['Company[repeatpassword]'].$error.match">Password does
+                                                not match with Repeat <br> Password.
+                                            </div>
+                                            <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center">
+                                            <div class="row buttons" style="margin-left:23.5px;">
+
                                                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                                                <div class="row buttons" style="text-align:center;">
-                                                    <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-                                                           style="<?php echo $background; ?>position: relative; padding: 3px 6px 5px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>                                  
-                                </td>                               
-                            </tr>
+                                                <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
 
+                                            </div>
 
-                        </table>
-                    </div> <!-- password-border -->               
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
+                                            &nbsp;Send User Invitation</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- password-border -->
                 </td>
             </tr>
     </table>
@@ -362,6 +336,15 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+    var radiochooseval = "";
+    function call_radio1(){
+        radiochooseval = $('#radio1').val();
+        $('#Visitor_password_option').val(radiochooseval);
+    }
+    function call_radio2(){
+        radiochooseval = $("#radio2").val();
+        $('#Visitor_password_option').val(radiochooseval);
+    }
     function createCompanyForm() {
         return "#company-form ";
     }
@@ -490,7 +473,8 @@ if (isset($_GET['viewFrom'])) {
 
     function generatepassword() {
         $("#random_password").val('');
-        $(createCompanyForm()+".pass_option").prop("checked", true);
+        $('.pass_option[value=1]').prop('checked', true);
+        $('#Visitor_password_option').val(1);
 
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -503,10 +487,6 @@ if (isset($_GET['viewFrom'])) {
     }
 
     $(document).ready(function() {
-
-        $("#Company_password_requirement_0").hide();
-        $("[for='Company_password_requirement_0']").hide();
-
         $(createCompanyForm()+".pass_option").on("click",function(){
             $(createCompanyForm()+".user_requires_password #pass_error_").hide();
         });

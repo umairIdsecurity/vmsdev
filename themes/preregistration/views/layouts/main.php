@@ -192,9 +192,14 @@ $session = new CHttpSession;
                     
                     <div class="col-sm-3">
                         <div class="responsiveLogo">
-                            <a href="./">
+                            <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
                                 <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
-                            </a>
+                            <?php } else{ ?>
+                                <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
+                                </a>
+                            <?php } ?> 
+                            
                         </div>
                     </div>
 

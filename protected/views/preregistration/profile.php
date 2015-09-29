@@ -89,29 +89,30 @@ $session = new CHttpSession;
     <div class="row">
         <div class="col-sm-4 col-xs-12">
             <table>
-                <input type="hidden" id="Visitor_photo" name="Visitor[photo]" value="<?php echo $model['photo']; ?>">
+                <input type="hidden" id="Visitor_photo" name="Registration[photo]" value="<?php echo $model['photo']; ?>">
                 
                 <div class="photoDiv" style="">
-                    <?php   
+                    <?php  
                             if ($model['photo'] != NULL) 
                             {
                                 $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
                                 $my_image = '';
+
                                 if(!empty($data['db_image']))
                                 {
                                     $my_image = "data:image;base64," . $data['db_image'];
                                 }
                                 else
                                 {
-                                    $my_image = $data['relative_path'];
+                                    $my_image = $data['relative_path']; 
                                 }
                              ?>
                                 <center><img id='photoPreview' src = "<?php echo $my_image ?>" style='display:block;height:174px;width:133px;'/></center>
                     <?php 
                             }
-                            elseif($model['photo'] == NULL)
-                            {
-                    ?>
+                            elseif($model->photo == NULL)
+                            { 
+                    ?>    
                                 <center><img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:block;height:174px;width:133px;'/></center>
                     <?php
                             }

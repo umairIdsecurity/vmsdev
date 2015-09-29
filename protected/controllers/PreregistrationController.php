@@ -248,7 +248,16 @@ class PreregistrationController extends Controller
 		$session['step5Subtitle'] = ' > Reason for Visit';
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 
-		$model = new Visit();
+		$model = '';
+		if(isset($session['visit_id']) && $session['visit_id'] != "")
+		{
+			$model = Visit::model()->findByPk($session['visit_id']);
+		}
+		else
+		{
+			$model = new Visit();
+		}
+
 
 		$companyModel = new Company();
 
@@ -522,17 +531,13 @@ class PreregistrationController extends Controller
 
 		$session['step8Subtitle'] = ' > Log Visit Details';
 
-
 		$model = Visit::model()->findByPk($session['visit_id']);
-		//$model = Visit::model()->findByAttributes(array('visitor'=>$session['visitor_id']));
 
 		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
 
 		if(isset($_POST['Visit']))
 		{
-			/*$oClock = $_POST['Visit']['ampm'];*/
 			
-
 			$model->attributes=$_POST['Visit'];
 
 			$model->time_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
@@ -541,14 +546,15 @@ class PreregistrationController extends Controller
 			$model->time_check_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
 			$model->time_check_out = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']. " + 24 hour"));
 
-			$model->date_in = date("Y-m-d", strtotime($_POST['Visit']['date_in']));
+			$model->date_in = $_POST['Visit']['date_in'] == "" ? date("Y-m-d") : date("Y-m-d", strtotime($_POST['Visit']['date_in']));
 			$model->date_out = date("Y-m-d", strtotime($_POST['Visit']['date_in']. " +1 day"));
 
-			$model->date_check_in = date("Y-m-d", strtotime($_POST['Visit']['date_in']));
+			$model->date_check_in = $_POST['Visit']['date_in'] == "" ? date("Y-m-d") : date("Y-m-d", strtotime($_POST['Visit']['date_in']));
 			$model->date_check_out = date("Y-m-d", strtotime($_POST['Visit']['date_in']. " +1 day"));
 
 			$model->host = $session['host'];
-				
+
+
 			if($model->save())
 			{	
 				if($session['account_type'] == 'VIC')
@@ -560,7 +566,8 @@ class PreregistrationController extends Controller
 					$this->createCompAdminNotificationPreregisterVisit($session['company_id'],$model->date_check_in);
 					$this->createCompAdminNotification20and28Visits($session['company_id']);
 				}
-
+				//clear the visit as it stored, fully
+				unset($session['visit_id']);
 				$this->redirect(array('preregistration/success'));
 			}
 
@@ -604,13 +611,14 @@ class PreregistrationController extends Controller
 					$userModel = new Registration();
 				}
 
-
 				$userModel->email = $model->username;
 				$userModel->password = User::model()->hashPassword($model->password);
+				
 				$userModel->profile_type = "VIC";
 				$userModel->role = 10; //role is 10: Visitor/Kiosik
 				$userModel->visitor_card_status = 2; //visitor card status is 2: VIC holder
 
+				
 				if ($userModel->save(false)) 
 				{
 					//**********************************************
@@ -626,7 +634,7 @@ class PreregistrationController extends Controller
 					else
 					{
 						$msg = print_r($loginModel->getErrors(),1);
-						throw new CHttpException(400,'Not redirected because: '.$msg );
+						throw new CHttpException(400,'Not logged in because: '.$msg );
 					}
 					//***********************************************
 				}
@@ -1158,7 +1166,6 @@ class PreregistrationController extends Controller
     {
     	//create VIC Notifications: 4. ASIC Sponsor has verified your visit
     	$host = Registration::model()->findByPk($visit->host);
-
 		$notification = new Notification();
 		$notification->created_by = null;
         $notification->date_created = date("Y-m-d");
@@ -1470,23 +1477,23 @@ class PreregistrationController extends Controller
 
     	$model = $this->loadModel($id);
 
-        $model->scenario = 'preregistration';
+        $model->scenario = 'preregistrationPass';
 
     	$new_passwordErr='';$repeat_passwordErr='';$old_passwordErr = '';
 
     	$companyModel = Company::model()->findByPk($model->company);
 
     	$cond="";
-    	if(isset($companyModel)){$cond=isset($_POST['Visitor'],$_POST['Company']);}else{$cond=isset($_POST['Visitor']);}
+    	if(isset($companyModel)){$cond=isset($_POST['Registration'],$_POST['Company']);}else{$cond=isset($_POST['Registration']);}
 
         if ($cond) 
         {	
-        	$model->attributes = $_POST['Visitor'];
+        	$model->attributes = $_POST['Registration'];
 
         	if(isset($companyModel)){$companyModel->attributes = $_POST['Company'];}
 
            	
-            if( $_POST['Visitor']['old_password'] =="" && $_POST['Visitor']['new_password'] =="" && $_POST['Visitor']['repeat_password']=="")
+            if( $_POST['Registration']['old_password'] =="" && $_POST['Registration']['new_password'] =="" && $_POST['Registration']['repeat_password']=="")
             {	
             	//**********************************************************************************
             	//****************************************************************
@@ -1497,8 +1504,8 @@ class PreregistrationController extends Controller
 		            /*
 					* This removes Integrity Constraint Issue
 		            */
-		            if(!empty($_POST['Visitor']['visitor_type'])){
-						$model->visitor_type = $_POST['Visitor']['visitor_type'];             	
+		            if(!empty($_POST['Registration']['visitor_type'])){
+						$model->visitor_type = $_POST['Registration']['visitor_type'];             	
 		            }else{
 		            	$model->visitor_type = NULL;             	
 		            }
@@ -1506,8 +1513,8 @@ class PreregistrationController extends Controller
 		            /*
 					* This removes Integrity Constraint Issue
 		            */
-		            if(!empty($_POST['Visitor']['photo'])){
-						$model->photo = $_POST['Visitor']['photo'];             	
+		            if(!empty($_POST['Registration']['photo'])){
+						$model->photo = $_POST['Registration']['photo'];             	
 		            }else{
 		            	$model->photo = NULL;             	
 		            }
@@ -1592,7 +1599,7 @@ class PreregistrationController extends Controller
 			            }
 
 			        	//$model->password = User::model()->hashPassword($_POST['Visitor']['new_password']);
-			        	$model->password = $_POST['Visitor']['new_password'];
+			        	$model->password = $_POST['Registration']['new_password'];
 
 
 			        	if(isset($companyModel)){
@@ -1655,6 +1662,10 @@ class PreregistrationController extends Controller
   
     	$companyModel = Company::model()->findByPk($model->company);
         
+        /*echo "<pre>";
+    	print_r($model->photo);
+    	die();*/
+
         $this->render('profile', array(
             'model' => $model,
             'companyModel' => $companyModel,
@@ -1689,7 +1700,7 @@ class PreregistrationController extends Controller
     	$this->unsetVariablesForGui();
     	$per_page = 10;
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
-        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND t.host=".Yii::app()->user->id." AND v.id=".Yii::app()->user->id.")";
+        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND t.host=".Yii::app()->user->id.")";
         $rawData = Yii::app()->db->createCommand()
                         ->select("t.id,t.date_check_in,t.host,v.first_name,v.last_name,t.visit_prereg_status") 
                         ->from("visit t")
@@ -1854,15 +1865,9 @@ class PreregistrationController extends Controller
     /* Visitor Visits history */
     public function actionVisitHistory() {
     	$this->unsetVariablesForGui();
-
     	$per_page = 10;
-
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
-
-    	
         $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".Yii::app()->user->id.")";
-        
-
         $rawData = Yii::app()->db->createCommand()
                         ->select("t.date_check_in,t.date_check_out,v.first_name,v.last_name,c.name,vs.name as status") 
                         ->from("visit t")
@@ -1872,8 +1877,7 @@ class PreregistrationController extends Controller
                         ->where($condition)
                         ->queryAll();
         $item_count = count($rawData);
-
-        $query1 = Yii::app()->db->createCommand()
+		$query1 = Yii::app()->db->createCommand()
                         ->select("t.date_check_in,t.date_check_out,v.first_name,v.last_name,c.name,vs.name as status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
@@ -1882,12 +1886,10 @@ class PreregistrationController extends Controller
                         ->where($condition)
                         ->limit($per_page,$page-1) // the trick is here!
                         ->queryAll();   
-
-		// the pagination itself
+        // the pagination itself
         $pages = new CPagination($item_count);
         $pages->setPageSize($per_page);
-
-		// render
+        // render
         $this->render('visit-history',array(
             'query1'=>$query1,
             'item_count'=>$item_count,
@@ -1895,10 +1897,7 @@ class PreregistrationController extends Controller
             'pages'=>$pages,
         ));
     }
-
-
     /* Help Desk history */
-
     public function actionHelpdesk() {
 
     	$this->unsetVariablesForGui();
@@ -1916,7 +1915,7 @@ class PreregistrationController extends Controller
 
     public function loadModel($id)
     {
-        $model = Visitor::model()->findByPk($id);
+        $model = Registration::model()->findByPk($id);
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
         }

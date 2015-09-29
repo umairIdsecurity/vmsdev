@@ -48,7 +48,7 @@ $result = CMap::mergeArray(
                 'application.helpers.*',
                 'application.extensions.*',
                 'application.extensions.yii-mail.YiiMailMessage',
-
+                'application.models.preregistration.*',
             ),
             'modules' => array(
                 // uncomment the following to enable the Gii tool

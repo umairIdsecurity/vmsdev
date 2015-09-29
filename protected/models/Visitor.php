@@ -55,12 +55,6 @@ class Visitor extends CActiveRecord {
     public $alternative_identification;
     public $companycode;
 
-    //Define public variable
-    public $old_password;
-    public $new_password;
-    public $repeat_password;
-
-    public $password_saver;
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC       = 'VIC';
@@ -203,7 +197,7 @@ class Visitor extends CActiveRecord {
         $rules = array(
             array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
             //array('tenant','required','message' =>'Please select a {attribute}'),
-            array('visitor_type', 'required', 'except' => ['asic', 'asicIssued', 'asicApplicant'], 'message'=>'Please complete {attribute}'),
+            array('visitor_type', 'required', 'except' => ['asic', 'asicIssued', 'asicApplicant', 'corporateVisitor'], 'message'=>'Please complete {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),
@@ -256,14 +250,6 @@ class Visitor extends CActiveRecord {
                 'safe'
             ),
             
-            array('old_password,new_password,repeat_password','length','min'=>5,'on' => 'preregistration'),
-            array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistration'),
-            array('old_password,new_password,repeat_password','safe','on' => 'preregistration'),
-
-            /*array('old_password, new_password, repeat_password', 'required', 'on' => 'preregistration'),
-            array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistration'),*/
-
-
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
             array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic','preregistration']),
@@ -537,21 +523,7 @@ class Visitor extends CActiveRecord {
         } 
         else
         {
-            if (Yii::app()->controller->action->id == 'profile') 
-            {
-                if($this->password_saver == ""){
-                    //do not hash password if user doesn't to do such
-                    /*echo $this->password."<br>";
-                        die("before Save else called: ".$this->password);*/
-                }else{
-                    $this->password = User::model()->hashPassword($this->password);
-                }
-            
-            }
-            else
-            {
                 $this->password = User::model()->hashPassword($this->password);
-            }
         }
 
         if(!empty($this->date_of_birth)){

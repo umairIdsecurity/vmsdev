@@ -54,7 +54,7 @@
         <div class="form-group" id="privacy_notice">
 
 
-            <label class="checkbox"><input id="toggleCheckbox" name="name1" type="checkbox" value="0"><span class="checkbox-style"></span>I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.<!-- I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC). --></label>
+            <label class="checkbox"><input id="toggleCheckbox" name="name1" type="checkbox" value="0"><span class="checkbox-style"></span>I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.</label>
             
             <div id="errorDiv" style="display:none;color:red;">
                 Please mark Privacy Notice

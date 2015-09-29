@@ -197,7 +197,7 @@ class Visitor extends CActiveRecord {
         $rules = array(
             array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
             //array('tenant','required','message' =>'Please select a {attribute}'),
-            array('visitor_type', 'required', 'except' => ['asic', 'asicIssued', 'asicApplicant'], 'message'=>'Please complete {attribute}'),
+            array('visitor_type', 'required', 'except' => ['asic', 'asicIssued', 'asicApplicant', 'corporateVisitor'], 'message'=>'Please complete {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),

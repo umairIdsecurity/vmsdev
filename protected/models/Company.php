@@ -76,6 +76,11 @@ class Company extends CActiveRecord {
 
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
                 array('password_requirement,password_option,user_password','safe'),
+                array('user_password,user_repeatpassword',
+                    'required',
+                    'on'=>['passwordrequire'],
+                    'message' => 'Please enter or autogenerate password'),
+                
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant', 'message'=>'Please complete {attribute}'),
                 // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
                 array('code', 'match',

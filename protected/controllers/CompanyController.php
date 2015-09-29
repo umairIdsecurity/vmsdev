@@ -95,6 +95,9 @@ class CompanyController extends Controller
         //     $this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = new Company;
+        if (yii::app()->request->isAjaxRequest) {
+            $this->performAjaxValidation($model);
+        }
         $model->scenario = 'company_contact';
         if (isset($_POST['is_user_field']) && $_POST['is_user_field'] == 1) {
             $session['is_field'] = 1;
@@ -401,6 +404,9 @@ class CompanyController extends Controller
     protected function performAjaxValidation($model)
     {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'company-form') {
+            if ($_POST['Company']['password_option'] == 1) {
+                $model->scenario = "passwordrequire";
+            }
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

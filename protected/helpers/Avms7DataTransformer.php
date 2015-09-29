@@ -20,19 +20,20 @@ class Avms7DataTransformer
         '10' => 'ASIC-Sponsor',
         '5' => 'Individual'
     ];
+
     private $roleLevel = [
-        Roles::ROLE_SUPERADMIN=>[1],
-        Roles::ROLE_AIRPORT_OPERATOR=>[2],
-        Roles::ROLE_ISSUING_BODY_ADMIN=>[3],
-        Roles::ROLE_VISITOR=>[5],
-        Roles::ROLE_AGENT_ADMIN=>[6],
-        Roles::ROLE_AGENT_AIRPORT_OPERATOR=>[7],
-        Roles::ROLE_VISITOR=>[4,10,5]
+        1=>Roles::ROLE_SUPERADMIN,
+        2=>Roles::ROLE_AIRPORT_OPERATOR,
+        3=>Roles::ROLE_ISSUING_BODY_ADMIN,
+        4=>Roles::ROLE_VISITOR,
+        5=>Roles::ROLE_VISITOR,
+        6=>Roles::ROLE_AGENT_AIRPORT_ADMIN,
+        7=>Roles::ROLE_AGENT_AIRPORT_OPERATOR,
+        8=>Roles::ROLE_ISSUING_BODY_ADMIN,
+        9=>Roles::ROLE_AGENT_AIRPORT_ADMIN,
+        10=>Roles::ROLE_VISITOR,
     ];
 
-    private $tenantQueries = [
-
-    ];
 
     private $db;
     private $dataHelper;
@@ -41,14 +42,14 @@ class Avms7DataTransformer
     {
         $this->db = $db;
         $this->dataHelper = new DataHelper($this->db);
-        //parent::__construct();
     }
 
     public function exportTenant($code){
 
         $data = [];
         $data = array_merge_recursive($data,$this->getTenant($code));
-        echo CJSON::encode($data);
+
+        echo json_encode($data,JSON_PRETTY_PRINT);
 
     }
 
@@ -56,13 +57,146 @@ class Avms7DataTransformer
         $result = ['company'=>[],'tenant'=>[],'user'=>[],'tenant_contact'=>[]];
         $tenantCompany =$this->getTenantCompany($code);
         $result['company'][] = $tenantCompany;
-        $result['users'][] = $this->getTenantUsers($code);
+        $result['user'][] = $this->getTenantUsers($code);
+        $result['tenant_agent'] = $this->getTenantAgents($code);
+        $result['visitor'] = $this->getTenantVisitors($code);
+
         return $result;
 
     }
+    public function getTenantVisitors($code){
 
-    public function GetTenantCompany($code){
+        return [
+            'company'=>$this->getTenantVisitorCompanies($code),
+            'user'=>$this->getTenantVisitorUsers($code),
+            'visitor'=>[
+                'visitor'=>$this->getTenantVisitorVisitors($code),
+                'visitor'=>$this->getTenantVisitorVisits($code),
+                ]
+            ];
+    }
+
+    public function getTenantVisitorCompanies($code){
+        $companies = "";
+    }
+
+    public function getTenantVisitorUsers($code){
+        $users = $this->dataHelper->getRows(
+            "SELECT DISTINCT ".
+            "FirstName as first_name, ".
+            "LastName as last_name, ".
+            "EmailAddress as email, ".
+            "Telephone as contact_number, ".
+            "DateOfBirth as date_of_birth, ".
+            "Password as password, ".
+            "1 as allowed_module, ".
+            "Level as role, ".
+            "2 as user_type, ".
+            "1 as user_status, ".
+            "1 as created_by, ".
+            "0 as is_deleted, ".
+            "Photo as photo, ".
+            "asic_number as asic_no, ".
+            "asic_expiry as asic_expiry ".
+            "FROM users ".
+            "JOIN asic_data ON asic_data.UserId = users.ID ".
+            "JOIN oc_set ON users.ID = oc_set.UserID ".
+            "WHERE AirportCode = '".$code."' ".
+            "AND Level = '5'");
+
+        $result = [];
+        foreach($users as $user){
+
+            $user['role'] = $this->roleLevel[$user['role']];
+
+            if($user['photo']>'') {
+                $user['photo'] = "https://avms7.idsecurity.com.au/store/files/" . $user["photo"];
+            }
+            $result[] = $user;
+
+        }
+        return $result;
+    }
+
+
+    public function getTenantAgents($code){
+
+        $tenantAgents = $this->dataHelper->getRows(
+            "SELECT concat_ws(' ',FirstName, LastName) as contact, ".
+                "Company as name, ".
+                "Company as trading_name, ".
+                "IBCode as code, ".
+                "EmailAddress as email_address, ".
+                "trim(concat_ws(' ',concat(Unit,'/'),StreetNo,Street,StreetType,Suburb,State,PostCode)) as billing_address, ".
+                "Telephone as office_number, ".
+                "Mobile as mobile_number ".
+            "FROM users ".
+            "WHERE (EmailAddress > '' OR FirstName > '' OR LastName > '') ".
+            "AND IBCode='".$code."' ".
+            "AND level = '6' "
+        );
+        $result = [];
+        foreach($tenantAgents as $company){
+
+            $company['company_type'] = CompanyType::COMPANY_TYPE_AGENT;
+            $company['is_deleted'] = false;
+            $company['created_by_user'] = 1;
+            $tenantAgent = ['company'=>[],'user'=>[]];
+            $tenantAgent['company'][] = $company;
+            $tenantAgent['user'] = $this->getTenantAgentUsers($code,$company);
+
+
+            $result[] = $tenantAgent;
+
+        }
+        return $result;
+
+    }
+    public function getTenantAgentUsers($code,$company)
+    {
+        $users = $this->dataHelper->getRows(
+            "SELECT ".
+                "FirstName as first_name, ".
+                "LastName as last_name, ".
+                "EmailAddress as email, ".
+                "Telephone as contact_number, ".
+                "DateOfBirth as date_of_birth, ".
+                "Password as password, ".
+                "1 as allowed_module, ".
+                "Level as role, ".
+                "1 as user_type, ".
+                "1 as user_status, ".
+                "1 as created_by, ".
+                "0 as is_deleted, ".
+                "Photo as photo, ".
+                "asic_number as asic_no, ".
+                "asic_expiry as asic_expiry ".
+            "FROM users ".
+            "JOIN asic_data ON asic_data.UserId = users.ID ".
+            "WHERE IBCode = '".$code."' ".
+            "AND (EmailAddress like '%@". explode('@',$company['email_address'] )[1]."' ".
+            "OR company = '".$company['name']."') ".
+            "AND Level in ('6','7','9')");
+
+        $result = [];
+        foreach($users as $user){
+
+            $user['role'] = $this->roleLevel[$user['role']];
+
+            if($user['photo']>'') {
+                $user['photo'] = "https://avms7.idsecurity.com.au/store/files/" . $user["photo"];
+            }
+            $result[] = $user;
+
+        }
+
+        return $result;
+
+    }
+    public function getTenantCompany($code){
+
         $ib = $this->getIssuingBody($code);
+
         $tenantCompany = [
             'code' => $ib['IBCode'],
             'name' => $ib['IssuingBody']." Airport",
@@ -73,20 +207,54 @@ class Avms7DataTransformer
 
         $userArributes =$this->dataHelper->getFirstRow(
             "SELECT concat_ws(' ',FirstName, LastName) as contact, ".
-            "EmailAddress as email_address, ".
-            "trim(concat_ws(' ',concat(Unit,'/'),StreetNo,Street,StreetType,Suburb,State,PostCode)) as billing_address, ".
-            "Telephone as office_number, ".
-            "Mobile as mobile_number ".
+                "EmailAddress as email_address, ".
+                "trim(concat_ws(' ',concat(Unit,'/'),StreetNo,Street,StreetType,Suburb,State,PostCode)) as billing_address, ".
+                "Telephone as office_number, ".
+                "Mobile as mobile_number ".
             "FROM users ".
             "WHERE (EmailAddress > '' OR FirstName > '' OR LastName > '') ".
             "AND IBCode='".$code."' ".
-            "AND level IN (". implode(',', $this->roleLevel[Roles::ROLE_ISSUING_BODY_ADMIN]).")"
+            "AND level = 3 "
         );
 
         return array_merge_recursive($tenantCompany,$userArributes);
     }
 
     public function getTenantUsers($code){
+
+        $users = $this->dataHelper->getRows(
+                "SELECT ".
+                    "FirstName as first_name, ".
+                    "LastName as last_name, ".
+                    "EmailAddress as email, ".
+                    "Telephone as contact_number, ".
+                    "DateOfBirth as date_of_birth, ".
+                    "Password as password, ".
+                    "1 as allowed_module, ".
+                    "Level as role, ".
+                    "1 as user_type, ".
+                    "1 as user_status, ".
+                    "1 as created_by, ".
+                    "0 as is_deleted, ".
+                    "Photo as photo, ".
+                    "asic_number as asic_no, ".
+                    "asic_expiry as asic_expiry ".
+                "FROM users ".
+                "JOIN asic_data ON asic_data.UserId = users.ID ".
+                "WHERE IBCode = '".$code."' ".
+                "AND Level in ('2','3','8')");
+        $result = [];
+        foreach($users as $user){
+
+            $user['role'] = $this->roleLevel[$user['role']];
+
+            if($user['photo']>'') {
+                $user['photo'] = "http://avms7.idsecurity.com.au/store/files/" . $user["photo"];
+            }
+            $result[] = $user;
+        }
+
+        return ['user'=>$result];
 
     }
 
@@ -98,7 +266,6 @@ class Avms7DataTransformer
                 "FROM company ".
                 "JOIN oc_set ON company.CompanyID = oc_set.CompanyID ".
                 "JOIN user ON user.ID = oc_set.UserID";
-
 
     }
 

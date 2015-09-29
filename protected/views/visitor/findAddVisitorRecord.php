@@ -191,31 +191,6 @@ $model->identification_country_issued = 13;
                                 </td>
                             </tr>
 
-                            <tr class="hidden">
-                                <td>
-                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
-                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
-                                           type="password" id="Visitor_password" name="Visitor[password]"
-                                           value="(NULL)">
-                                    <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'password'); ?>
-                                </td>
-                            </tr>
-                            <tr class="hidden">
-                                <td>
-                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
-                                           id="Visitor_repeatpassword" data-match="user.passwords"
-                                           name="Visitor[repeatpassword]" value="(NULL)"/>
-                                    <span class="required">*</span>
-
-                                    <div style='font-size:0.9em;color:red;'
-                                         data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New
-                                        Password does not match with Repeat <br> New Password.
-                                    </div>
-                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                                </td>
-                            </tr>
-
                             <tr>
                                 <td>
                                     <?php echo $form->textField($model, 'contact_number',
@@ -851,13 +826,13 @@ $model->identification_country_issued = 13;
         }
 
         if (!hasError){
-            if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
-                if($(parentElement()+".password_option").is(":checked") == false) {
-                    $(parentElement()+".user_requires_password #pass_error_").show();
-                    return false;
-                } else {
-                    $(parentElement()+".user_requires_password #pass_error_").hide();
-                }
+            if($(parentElement()+".pass_option").is(":checked")== false){
+                $(parentElement()+"#pass_error_").show();
+                $(parentElement()+"#User_password_em_").html("select one option");
+            }
+            else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeat_password").val()=="")){
+                $(parentElement()+"#pass_error_").show();
+                $(parentElement()+"#pass_error_").html("Type password or generate");
             }
             var vehicleValue = $("#Visitor_vehicle").val();
             if(vehicleValue.length < 6 && vehicleValue != ""){
@@ -1000,8 +975,6 @@ $model->identification_country_issued = 13;
         });
 
 		
-        $("#Visitor_password").val("(NULL)");
-        $("#Visitor_repeatpassword").val("(NULL)");
         if($('#photoCropPreview').imgAreaSelect) {
             $('#photoCropPreview').imgAreaSelect({
                 handles: true,

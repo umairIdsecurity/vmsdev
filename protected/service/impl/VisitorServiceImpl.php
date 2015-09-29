@@ -124,6 +124,7 @@ class VisitorServiceImpl implements VisitorService {
                 $visitor->setScenario('asic');
                 break;
             case Visitor::PROFILE_TYPE_CORPORATE:
+                $visitor->setScenario('corporateVisitor');
                 break;
         }    
         $visitor->tenant = Yii::app()->user->tenant; 

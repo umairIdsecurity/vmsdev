@@ -67,6 +67,8 @@ if (isset($company) && !empty($company)) {
 <div data-ng-app="PwordForm">
 
 <?php
+
+$login_url = $this->createUrl('site/login');
  
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'visitor-form',
@@ -74,10 +76,19 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => true,
     'clientOptions'=>array(
         'validateOnSubmit'=>true,
-        'afterValidate' => 'js:function(form,data,hasError){ 
+        'afterValidate' => 'js:function(form,data,hasError){
             if(!hasError){
-                window.location = "<?php echo Yii::app()->createUrl("site/login");?>";
-            };return false;
+                if($(".pass_option").is(":checked")== false){
+                    $("#pass_error_").show();
+                    $("#User_password_em_").html("select one option");
+                    return false;
+                }
+                else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#User_password").val()== "" || $("#User_repeat_password").val()=="")){
+                    $("#pass_error_").show();
+                    $("#pass_error_").html("Type password or generate");
+                    return false;
+                }
+            }
         }'
         ),
     
@@ -409,69 +420,49 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id == 'update') || $this->action->id == 'addvisitor') {
 
     ?>
-    <div class="password-border">
-        <table style="float:left;width:300px;">
+
+    <div class="password-border" style="margin-top:10px;">
+        <table>
+            <tbody >
             <tr>
                 <td><strong>Password Options</strong></td>
             </tr>
             <tr>
-                <td id="pass_error_1" style='font-size: 0.9em;color: #FF0000; display:none'>Select One Option</td>
-            </tr>
-            <tr>
-
                 <td>
-                    <?php 
-                    if (!isset($model->password_requirement)) {
-                        $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-                    }
-                    echo $form->radioButtonList($model, 'password_requirement',
-                        array(
-                            PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
-                            PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
-                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
-                    ?>
-                    <?php echo $form->error($model, 'password_requirement'); ?>
-                </td>
-            </tr>
-
-            <tr style="display:none;" class="user_requires_password">
-                <td>
-
-                    <table
-                        style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left: 30px;">
-
+                    <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
                         <tr>
-                            <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast
-                                One option
-                            </td>
+                            <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                         </tr>
 
 
-                        <tr id="third_option" class='hiddenElement'></tr>
 
-                        <tr>
-                            <td><input class="pass_option" type="radio" name="Visitor[password_option]" value="2"/>&nbsp;Send
-                                User Invitation
-                            </td>
+                        <tr id="third_option" class='hiddenElement'>
+
                         </tr>
 
                         <tr>
-                            <td style="padding-bottom:10px">
-                                <input class="pass_option" type="radio" name="Visitor[password_option]" value="1"/>
+                            <td>
+                                <?php echo $form->hiddenField($model, 'password_option'); ?>
+                                <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
                                 &nbsp;Create Password
                             </td>
-                        </tr>
 
+                            <?php echo "<br>". $form->error($model,'password_option'); ?>
+                        </tr>
                         <tr>
+
                             <td>
                                 <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
                                                                        'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
                                        type="password" id="Visitor_password" name="Visitor[password]">
                                 <span class="required">*</span>
+                                <?php  echo $form->error($model,'password'); ?>
+
                             </td>
                         </tr>
-                        <tr>
-                            <td>
+
+                        <tr >
+                            <td >
                                 <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
                                        id="Visitor_repeatpassword" data-match="user.passwords"
                                        name="Visitor[repeatpassword]"/>
@@ -482,31 +473,37 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
                                     not match with Repeat <br> Password.
                                 </div>
                                 <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+
                             </td>
 
                         </tr>
 
                         <tr>
                             <td align="center">
-                                <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                                <div class="row buttons" style="text-align:center;">
-                                    <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-                                    style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                <div class="row buttons" style="margin-left:23.5px;">
+
+                                    <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                    <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
+
                                 </div>
+
                             </td>
+
                         </tr>
 
                         <tr>
-                            <td>&nbsp;</td>
+                            <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
+                                &nbsp;Send User Invitation</td>
                         </tr>
-
-
                     </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
 
                 </td>
             </tr>
-
-
+            </tbody>
         </table>
     </div> <!-- password-border -->
  <div style="float:right; margin-right: 35px"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
@@ -548,14 +545,19 @@ if (isset($_GET['id'])) {
 ?>">
 
 <script>
+var radiochooseval = "";
+function call_radio1(){
+    radiochooseval = $('#radio1').val();
+    $('#Visitor_password_option').val(radiochooseval);
+}
+function call_radio2(){
+    radiochooseval = $("#radio2").val();
+    $('#Visitor_password_option').val(radiochooseval);
+}
 
 $(document).ready(function () {
-    $("#Visitor_password_requirement_0").hide();
-    $("[for='Visitor_password_requirement_0']").hide();
+    
 
-    if( $("#Visitor_password_requirement_1").is(":checked") ) {
-         $(".user_requires_password").css("display", "block");
-    }
     if ($("#currentAction").val() == 'update') {
 
         if ($("#Visitor_photo").val() != '') {
@@ -716,18 +718,6 @@ $(document).ready(function () {
         ias.cancelSelection();
     });
 
-
-    /***********************hide password section if not required************************/
-    $('.password_requirement').click(function () {
-        if ($('#Visitor_password_requirement_1').is(':checked')) {
-            $('.user_requires_password').css("display", "block");
-            $('.pass_option').prop('checked', false);
-        }
-        else {
-            $('.user_requires_password').css("display", "none");
-        }
-
-    });
 
     $('#Visitor_vehicle').keydown(function (e) {
 
@@ -1086,7 +1076,8 @@ function copy_password() {
 
 function generatepassword() {
     $("#random_password").val('');
-    $("#pass_option").prop("checked", true);
+    $('.pass_option[value=1]').prop('checked', true);
+    $('#Visitor_password_option').val(1);
 
     var text = "";
     var possible = "abcdefghijklmnopqrstuvwxyz0123456789";

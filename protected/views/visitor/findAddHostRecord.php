@@ -67,7 +67,7 @@ $defaultKey = key($asicCardTypes);
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="addhost">
 
-            <div id="findAddHostRecordDiv" class="findAddHostRecordDiv">
+            <div id="findAddHostRecordDiv" class="findAddHostRecordDiv" data-ng-app="PwordForm">
 
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
@@ -134,32 +134,19 @@ $defaultKey = key($asicCardTypes);
                                     document.getElementById("User_company").disabled = false;
                                     document.getElementById("User_tenant").disabled = false;
                                     document.getElementById("User_tenant_agent").disabled = false;
-                                     if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
-                                        if($(parentElement()+".password_option").is(":checked") == false) {
-                                            $(parentElement()+".user_requires_password #pass_error_").show();
-                                            return false;
-                                        } else {
-                                            $(parentElement()+".user_requires_password #pass_error_").hide();
-                                            if($(parentElement()+"#Visitor_password_option_1").is(":checked")) {
-                                                var validatePass = validatePassword();
-                                                if(validatePass == true) {
-                                                    var isMatch = isPasswordMatch();
-                                                    if(isMatch == true) {
-                                                        checkHostEmailIfUnique();
-                                                    } else {
-                                                        return false;
-                                                    }
-                                                } else {
-                                                    return false;
-                                                }
-                                            } else {
-                                                checkHostEmailIfUnique();
-                                            }
-                                        }
-                                    } else {
+                                    if($(parentElement()+".pass_option").is(":checked")== false){
+                                        $(parentElement()+"#pass_error_").show();
+                                        $(parentElement()+"#User_password_em_").html("select one option");
+                                        return false;
+                                    }
+                                    else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="")){
+                                        $(parentElement()+"#pass_error_").show();
+                                        $(parentElement()+"#pass_error_").html("Type password or generate");
+                                        return false;
+                                    }
+                                    else {
                                         checkHostEmailIfUnique();
                                     }
-
                                 }
                             }'
                         ),

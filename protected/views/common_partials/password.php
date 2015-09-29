@@ -1,119 +1,109 @@
 <?php
 
-$company               = Company::model()->findByPk($session['company']);
+$company = Company::model()->findByPk($session['company']);
 if (isset($company) && !empty($company)) {
     $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 }
 ?>
-<div class="password-border">
-<table class="no-margin-bottom">
-    <tr>
-        <td><strong>Password Options</strong></td>
-    </tr>
-    <tr>
-        <td>
-        <table style="margin-top:10px !important; width:273px; border-left-style:none; border-top-style:none">
-                <tr>
-                    <td>
-                        <?php
-                        if (!isset($model->password_requirement)) {
-                            $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-                        }
+<div class="password-border" style="margin-top:10px;">
+    <table>
+        <tbody >
+        <tr>
+            <td><strong>Password Options</strong></td>
+        </tr>
+        <tr>
+            <td>
+                <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
+                    <tr>
+                        <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
+                    </tr>
 
-                        echo $form->radioButtonList($model, 'password_requirement',
-                            array(
-                                PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
-                                PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
-                            ), array('class' => 'password_requirement form-label', 'separator' => ''));
-                        ?>
-                        <?php echo $form->error($model, 'password_requirement'); ?>
-                    </td>
-                </tr>
-                <tr class="user_requires_password" style="display:none;">
-                    <td >
-                        <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left:30px;">
-                            <tr>
-                                <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select
-                                    Atleast One option
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <?php echo $form->radioButtonList($model, 'password_option',
-                                        array(
-                                            PasswordOption::SEND_INVITATION => 'Send User Invitation',
-                                            PasswordOption::CREATE_PASSWORD => 'Create Password',
-                                        ), array('class' => 'password_option form-label', 'separator' => ''));
-                                    ?>
-                                    <?php echo $form->error($model, 'password_option'); ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table id="passwordInputsTable" style="margin-top:10px">
-                                        <tr>
-                                            <td>
-                                                <!--<input placeholder="Password" type="password" class="original-password" id="Visitor_password_input">-->
-                                                <?php echo $form->passwordField($model,'password',array("class"=>"original-password","id"=>"Visitor_password_input","placeholder"=>"Password"));?>
-                                                <span class="required">*</span>
-                                                <?php echo "<br>" . $form->error($model, 'password'); ?>
-                                                <div class="errorMessage visitor_password" style="display:none"></div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <!--<input placeholder="Repeat Password" type="password" id="Visitor_repeatpassword_input" />-->
-                                                <?php echo $form->passwordField($model,'repeatpassword',array("id"=>"Visitor_repeatpassword_input","placeholder"=>"Repeat Password"));?>
-                                                <span class="required">*</span>
-                                                <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                                                <div class="errorMessage visitor_password_repeat" style="display:none"></div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="center">
-                                                <div class="row buttons" style="text-align:center;">
-                                                	<?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                                                    <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-                                                    	style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:13px;margin-right:8px;"/>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                           
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+
+
+                    <tr id="third_option" class='hiddenElement'>
+
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <?php echo $form->hiddenField($model, 'password_option'); ?>
+                            <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
+                            &nbsp;Create Password
+                        </td>
+
+                        <?php echo "<br>". $form->error($model,'password_option'); ?>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                                   'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
+                                   type="password" id="Visitor_password" name="Visitor[password]">
+                            <span class="required">*</span>
+                            <?php  echo $form->error($model,'password'); ?>
+
+                        </td>
+                    </tr>
+
+                    <tr >
+                        <td >
+                            <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                   id="Visitor_repeatpassword" data-match="user.passwords"
+                                   name="Visitor[repeatpassword]"/>
+                            <span class="required">*</span>
+
+                            <div style='font-size:0.9em;color:red;position: static;'
+                                 data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does
+                                not match with Repeat <br> Password.
+                            </div>
+                            <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td align="center">
+                            <div class="row buttons" style="margin-left:23.5px;">
+
+                                <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
+                            &nbsp;Send User Invitation</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div> <!-- password-border -->
+
+ <!-- password-border -->
 <script>
+    var radiochooseval = "";
+    function call_radio1(){
+        radiochooseval = $('#radio1').val();
+        $('#Visitor_password_option').val(radiochooseval);
+    }
+    function call_radio2(){
+        radiochooseval = $("#radio2").val();
+        $('#Visitor_password_option').val(radiochooseval);
+    }
 
-    $(document).ready(function () {
-        $("#Visitor_password_requirement_0").hide();
-        $("[for='Visitor_password_requirement_0']").hide();
-        $(parentElement() + "#passwordInputsTable").detach().insertAfter($( parentElement() + ".password_option:eq(1)").next());
-
-		/***********************hide password section if not required************************/
-	    $(parentElement() + '.password_requirement').click(function() {
-		     if($(parentElement() + '#Visitor_password_requirement_1').is(':checked'))
-			 {
-                 $(parentElement() + '#Visitor_password_input').val('');
-                 $(parentElement() + '#Visitor_repeatpassword_input').val('');
-				 $(parentElement() + '.user_requires_password').css("display","block");
-				 $(parentElement() + '.password_option').prop('checked', false);
-			 }
-				else
-			 {
-				 $(parentElement() + '.user_requires_password').css("display","none");
-			 }
-
-         });
-    });
-
+    
     function parentElement() {
 
         var parentElement = '';
@@ -126,58 +116,6 @@ if (isset($company) && !empty($company)) {
         }
         return parentElement;
     }
-
-    function validatePassword() {
-        if ($(parentElement() + "#Visitor_password_input").val() == "") {
-            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
-            $(parentElement() + "#Visitor_password_em_").show();
-            return false;
-        } else if ($(parentElement() + "#Visitor_repeatpassword_input").val() == "") {
-            $(parentElement() + "#Visitor_password_em_").hide();
-            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
-            $(parentElement() + "#Visitor_repeatpassword_em_").show();
-            return false;
-        } else {
-            $(parentElement() + "#Visitor_password_em_").hide();
-            $(parentElement() + "#Visitor_repeatpassword_em_").hide();
-            return true;
-        }
-    }
-
-    function isPasswordMatch() {
-        if($(parentElement() + "#Visitor_password_option_1").is(":checked")){
-            if($(parentElement() + "#Visitor_password_input").val() == $(parentElement() +"#Visitor_repeatpassword_input").val()){
-                $(parentElement() + "#Visitor_repeatpassword_em_").hide();
-                return true;
-            } else {
-                $(parentElement() + "#Visitor_repeatpassword_em_").html("Passwords are not matched");
-                $(parentElement() + "#Visitor_repeatpassword_em_").show();
-                return false;
-            }
-        }
-    }
-
-    $(parentElement() + "#Visitor_password_input").on("change",function(){
-        $(parentElement() + "#Visitor_password_em_").hide();
-        if($(parentElement() + "#Visitor_password_input").val() == '') {
-            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
-            $(parentElement() + "#Visitor_password_em_").show();
-        } else {
-            $(parentElement() + "#Visitor_password_em_").hide();
-        }
-
-    });
-
-    $(parentElement() + "#Visitor_repeatpassword_input").on("change",function(){
-        $(parentElement() + "Visitor_repeatpassword_em_").hide();
-        if($(parentElement() + "#Visitor_repeatpassword").val() == '') {
-            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
-            $(parentElement() + "#Visitor_repeatpassword_em_").show();
-        } else {
-            $(parentElement() + "Visitor_repeatpassword_em_").hide();
-        }
-
-    });
 
     function cancel() {
         $(parentElement() + '#Visitor_repeatpassword').val('');
@@ -199,7 +137,8 @@ if (isset($company) && !empty($company)) {
 
     function generatepassword() {
         $(parentElement() + "#random_password").val('');
-        $(parentElement() + "#pass_option").prop("checked", true);
+        $('.pass_option[value=1]').prop('checked', true);
+        $('#Visitor_password_option').val(1);
 
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";

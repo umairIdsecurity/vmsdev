@@ -611,13 +611,14 @@ class PreregistrationController extends Controller
 					$userModel = new Registration();
 				}
 
-
 				$userModel->email = $model->username;
 				$userModel->password = User::model()->hashPassword($model->password);
+				
 				$userModel->profile_type = "VIC";
 				$userModel->role = 10; //role is 10: Visitor/Kiosik
 				$userModel->visitor_card_status = 2; //visitor card status is 2: VIC holder
 
+				
 				if ($userModel->save(false)) 
 				{
 					//**********************************************
@@ -633,7 +634,7 @@ class PreregistrationController extends Controller
 					else
 					{
 						$msg = print_r($loginModel->getErrors(),1);
-						throw new CHttpException(400,'Not redirected because: '.$msg );
+						throw new CHttpException(400,'Not logged in because: '.$msg );
 					}
 					//***********************************************
 				}

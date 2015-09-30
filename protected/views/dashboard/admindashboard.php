@@ -89,7 +89,7 @@ foreach ($workstationList as $workstation) {
     } else {
         $workstationId = $workstation->id;
     }
-    $merge->addCondition("workstation =" . $workstationId . " and (visit_status =" . VisitStatus::ACTIVE . " or visit_status =" . VisitStatus::PREREGISTERED . ")");
+    $merge->addCondition("workstation =" . $workstationId . " and (visit_status =" . VisitStatus::ACTIVE . " or visit_status =" . VisitStatus::PREREGISTERED . " or visit_status =" . VisitStatus::EXPIRED . ")");
 
 ?>
     <div  class="admindashboardDiv">
@@ -105,9 +105,6 @@ foreach ($workstationList as $workstation) {
             function(id, data) {
                 $('th > .asc').append('<div></div>');
                 $('th > .desc').append('<div></div>');
-                if (data.indexOf('Visitor Management System  - Login') > -1) {
-                    window.location = '$login_url';
-                }
             }",
             'columns' =>
             array(
@@ -239,11 +236,15 @@ function changeStatusClass($visitStatus) {
             break;
 
         case VisitStatus::CLOSED:
-            return "red";
+            return "black";
             break;
 
         case VisitStatus::SAVED:
             return "grey";
+            break;
+
+        case VisitStatus::EXPIRED:
+            return "red";
             break;
 
         default:

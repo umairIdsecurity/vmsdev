@@ -2,7 +2,12 @@
     <?php if ($model->visit_status == VisitStatus::ACTIVE || $model->visit_status == VisitStatus::EXPIRED) { ?>
         <tr>
             <td>
-                <strong style="color:#0088cc;">Status</strong>: <span style="color:#9BD62C!important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span>
+                <strong style="color:#0088cc;">Status</strong>: 
+                <?php if ($model->visit_status == VisitStatus::EXPIRED) { ?>
+                    <span style="color:#ff0000!important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span>
+                <?php } else { ?>
+                    <span style="color:#9BD62C!important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span>
+                <?php } ?>
             </td>
         </tr>
 

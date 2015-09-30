@@ -2019,6 +2019,9 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .blue .statusLink,.blue{
     color:#2F96B4 !important;
 }
+.black .statusLink,.black{
+    color: #333333 !important;
+}
 
 #view-visitor-records_c10,#view-visitor-records_c11,#view-visitor-records-history_c11{
     width:120px !important;

@@ -13,7 +13,7 @@ $asicEscort = new AddAsicEscort();
     <tr>
         <td><a style="text-decoration: none; ">Status: <span style="color:#<?php
                 if ($model->visit_status == VisitStatus::CLOSED) {
-                    echo "ff0000";
+                    echo "333333";
                 } else if ($model->visit_status == VisitStatus::ACTIVE) {
                     echo "9BD62C";
                 } else if ($model->visit_status == VisitStatus::PREREGISTERED) {

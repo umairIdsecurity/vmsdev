@@ -99,7 +99,6 @@ $session = new CHttpSession;
             <h4 class="text-primary">Company Information</h4>
 
             <div class="form-group" id="addCompanyDiv">
-
                 <?php
                     $visitor = Registration::model()->findByPk($session['visitor_id']);
 
@@ -119,7 +118,7 @@ $session = new CHttpSession;
             </div>
 
 
-            <div class="form-group" id="addCompanyContactDiv">
+            <div class="form-group" id="addCompanyContactDiv" style="display:none">
                 <select id="companyContact" class="form-control input-sm">
                     <option value="">Select Company Contact</option>
                 </select>
@@ -130,9 +129,9 @@ $session = new CHttpSession;
                     //echo $form->dropDownList($model,'host', array(''=>'Select Company'), array('prompt' => 'Select Company Contact' , 'class'=>'form-control input-sm'));
                 ?>
                 <?php //echo $form->error($model,'host'); ?>
-            </div>
-            <div class="form-group">
-                <a style="float: left;" href="#addCompanyContactModal" role="button" data-toggle="modal" class="btn btn-primary">Add Contact</a>
+                <!-- </div> -->
+                <div class="form-group"> </div>
+                <a style="float: left;" href="#addCompanyContactModal" role="button" data-toggle="modal" class="btn btn-primary" id="addCompanyContactModalBtn">Add Contact</a>
             </div>
 
         </div>
@@ -306,16 +305,19 @@ $session = new CHttpSession;
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon"><i class="fa fa-user"></i></div>
+
+                                            <input id="companyPlaceholder" type="text" class='form-control input-lg' placeholder='Company' disabled='disabled'/>
                                         <?php
-                                            $visitor = Registration::model()->findByPk($session['visitor_id']);
+                                            echo $form->hiddenField($companyModel,'name',array('class'=>'companyHiddenField'));
+                                            /*$visitor = Registration::model()->findByPk($session['visitor_id']);
 
                                             if(isset($visitor->tenant)){
                                                 echo $form->dropDownList($companyModel, 'name', CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-lg'));
                                             }
                                             else
                                             {
-                                                echo $form->dropDownList($companyModel,'name',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
-                                            }
+                                                echo $form->dropDownList($companyModel,'name',array(''=>'Select Company'),array('class'=>'form-control input-lg'));
+                                            }*/
                                         ?>
                                     </div>
                                     <?php echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
@@ -407,6 +409,7 @@ $session = new CHttpSession;
                     if (data.decision == 0)
                     {
                         console.log("errors got");
+                        $("#addCompanyContactDiv").hide();
                     }
                     else
                     {
@@ -416,6 +419,7 @@ $session = new CHttpSession;
                         $.each(data.contacts,function(index,element) {
                             $("#companyContact").append("<option value='"+element.id+"'>"+element.first_name+" "+element.last_name+"</option>");
                         }); 
+                        $("#addCompanyContactDiv").show();
                         $("#addCompanyModal").modal('hide');
                     }
                 },
@@ -446,6 +450,8 @@ $session = new CHttpSession;
                                 $("#companyContact").append("<option value='"+element.id+"'>"+element.first_name+" "+element.last_name+"</option>");
                             }); 
                         }
+                        $("#addCompanyContactDiv").show();
+
                     },
                     error: function(error){
                         console.log(error);
@@ -454,6 +460,7 @@ $session = new CHttpSession;
             }else{
                 $("#companyContact").empty();
                 $("#companyContact").append("<option value=''>Select Company Contact</option>");
+                $("#addCompanyContactDiv").hide();
             }
         });
 
@@ -475,7 +482,6 @@ $session = new CHttpSession;
                     else
                     {
                         var contactCompany = data.contactCompany;
-                        $("#Company_name").append("<option selected='selected' value='"+contactCompany.id+"'>"+contactCompany.name+"</option>");
                         $("#companyContact").append(data.dropDown);
                         $("#addCompanyContactModal").modal('hide');
                     }
@@ -485,7 +491,17 @@ $session = new CHttpSession;
                 }
             });
         });
+        
+        
 
+        $("#addCompanyContactModalBtn").click(function(e){
+            var companyId = $("#Company_name :selected").val();
+            var companyName = $("#Company_name :selected").text();
+            
+            $("#companyPlaceholder").val(companyName);
+            $(".companyHiddenField").val(companyId);
+
+        });
 
         /*$("#nextBtn").click(function(e){
             var companyContactVal = $("#companyContact").val();

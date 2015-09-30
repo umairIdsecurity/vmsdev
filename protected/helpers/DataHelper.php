@@ -196,6 +196,17 @@ class DataHelper
         return [];
     }
 
+    public function getRows($sql){
+        $command = $this->db->createCommand($sql);
+        $command->execute();
+        $reader =  $command->query();
+        $result = [];
+        foreach($reader as $row){
+            $result[] =  $row;
+        }
+        return $result;
+    }
+
 
 
 

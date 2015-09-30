@@ -427,15 +427,11 @@ class Registration extends CActiveRecord {
             {
                 if($this->password_saver == ""){
                     //do not hash password if user doesn't to do such
-                    /*echo $this->password."<br>";
-                    die("before Save else called: ".$this->password);*/
+                    // echo $this->password."<br>";
+                    // die("before Save else called: ".$this->password);
                 }else{
                     $this->password = User::model()->hashPassword($this->password);
                 }
-            }
-            else
-            {
-                $this->password = User::model()->hashPassword($this->password);
             }
         }
         if(!empty($this->date_of_birth)){$this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));}else{$this->date_of_birth = NULL;}

@@ -12,6 +12,50 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
     <h3 class="text-primary">Personal Information</h3>
     <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
+    
+    <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
+                
+
+    <!--  searching VIC -->
+    <div class="row">
+        <div class="col-sm-4 col-xs-12" style="padding-top: 10px;">
+            <?php  echo CHtml::textField('search_asic_box' , '',
+                array(
+                    'class'=>'form-control input-sm',
+                    'placeholder'=>'First Name, Last Name or Email'
+                )
+            );
+            ?>
+            <div id="search_asic_error" class="errorMessage" style="display:none">Please type something on search box</div>
+            <?php
+                echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
+            ?>
+        </div>
+        <div class="col-sm-4 col-xs-12" style="padding-top: 10px;">
+            <?php
+            echo CHtml::tag('button', array(
+                'id'=>'search_asic_btn',
+                'type'=>'button',
+                'class' => 'btn btn-primary btn-sm'
+            ), 'Find VIC Holder');
+            ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-xs-12" style="padding-top: 10px;">
+
+            <div class="tableFont" id="asic_holder"></div>
+
+            <div class="loader" id="loader" style="display:none">Loading...</div>
+
+            <p id="asic-notification" class="bg-info" style="display:none">No Record Found</p>
+        </div>
+    </div>
+    <!--  end searching VIC -->
+    
+    <?php } ?> 
+
     <?php
     $form=$this->beginWidget('CActiveForm', array(
         'id'=>'confirm-details-form',
@@ -28,29 +72,14 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         )
     ));
     ?>
+        <div class="form-group">
+            <?php echo $form->hiddenField($model, 'selected_asic_id' ,
+                array('value'=>'')
+            ); ?>
+        </div>
 
         <div class="row">
             <div class="col-sm-4">
-               
-
-                <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
-                
-                    <div class="form-group">
-                            <?php  echo CHtml::textField('search_asic_box' , '',
-                                array(
-                                    'class'=>'form-control input-sm',
-                                    'placeholder'=>'First Name, Last Name or email'
-                                )
-                            );
-                            ?>
-                            <div id="search_asic_error" class="errorMessage">Please type something on search box</div>
-                            <?php
-                            echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
-                            ?>
-                    </div>
-
-                <?php } ?>        
-
                 <div class="form-group">
                     <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'first_name'); ?>
@@ -75,7 +104,6 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             'model'       => $model,
                             'attribute'   => 'date_of_birth',
                             'options'     => array(
-                                //'maxDate' => '0',
                                 'dateFormat' => 'dd-mm-yy',
                                 'changeMonth' => true,
                                 'changeYear' => true,
@@ -84,7 +112,6 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             'htmlOptions' => array(
                                 'maxlength'   => '10',
                                 'placeholder' => 'Date of birth',
-                                /*'style'       => 'width: 80px;',*/
                                 'class' => 'form-control input-sm'
                             ),
                         ));
@@ -134,17 +161,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             </div>
 
             <div class="col-sm-3">
-                <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
-                
-                <?php
-                    echo CHtml::tag('button', array(
-                        'id'=>'search_asic_btn',
-                        'type'=>'button',
-                        'class' => 'btn btn-primary btn-next btn-sm'
-                    ), 'Find VIC holder');
-                ?>
-
-                <?php } ?>
+                &nbsp;
             </div>
 
             <div class="col-sm-4">
@@ -482,6 +499,74 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 }
             }
         });
+
+        //******************************************************************************************************
+        //******************************************************************************************************
+        $('#search_asic_box').on('input', function() {
+            $("#search_asic_error").hide();
+            $("#asic_table_wrapper").hide();
+            $("#asic-notification").hide();
+            $('#Registration_selected_asic_id').val("");
+            $('#new_asic_area').show();
+        });
+
+        $('#search_asic_btn').click(function(event) {
+            event.preventDefault();
+
+            var search = $("#search_asic_box").val();
+            var base_url = $("#base_url").val();
+
+            if (search.length > 0) {
+                $("#loader").show();
+                var search_value = 'search_value=' + search;
+
+                $.ajax({
+                    url: base_url + '/index.php/preregistration/ajaxVICHolderSearch',
+                    type: 'POST',
+                    data: search_value,
+                    success: function(data) {
+
+                        if(data == 'No Record'){
+                            $("#asic-notification").show();
+                        }
+                        else{
+
+                            var dataSet = JSON.parse(data);
+
+                            $('#asic_holder').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="asic_table"></table>' );
+
+                            $('#asic_table').dataTable( {
+                                //"ordering": false,
+                                "bLengthChange": false,
+                                "bFilter": false,
+                                "data": dataSet,
+                                "columns": [
+                                    { "title": "Select", "class":"selected_col"  },
+                                    { "title": "First Name" },
+                                    { "title": "Last Name" },
+                                    { "title": "Company" }
+                                ],
+                                "fnDrawCallback": function (oSettings) {
+                                    $('.selected_asic').click(function() {
+                                        $('#Registration_selected_asic_id').val($(this).val());
+                                        $('#Registration_contact_number').val("");
+                                        $('#Registration_email').val("");
+                                        $('#new_asic_area').empty();
+                                    });
+                                }
+                            });
+                        }
+                        $("#loader").hide();
+                    }
+
+                });
+            }
+            else{
+                $("#search_asic_error").show();
+            }
+        });
+        //******************************************************************************************************
+        //******************************************************************************************************
     });
 </script>
 

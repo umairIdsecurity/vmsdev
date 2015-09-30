@@ -88,6 +88,14 @@ $form = $this->beginWidget('CActiveForm', array(
                     $("#pass_error_").html("Type password or generate");
                     return false;
                 }
+                else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && $("#User_password").val() != "" && $("#User_repeat_password").val() !="" && $("#User_repeat_password").val() != $("#User_password").val()){
+                    $("#pass_error_").show();
+                    $("#pass_error_").html("Password does not match with Repeat Password.");
+                    return false;
+                }
+                else {
+                     $("#pass_error_").hide();
+                }
             }
         }'
         ),

@@ -161,7 +161,11 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             
                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
-                                <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
+                                <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED])) : ?>
+                                    <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                <?php else: ?>
+                                    <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
+                                <?php endif;?>
                             </div>
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED ) : ?>
                             <?php  

@@ -22,16 +22,16 @@ class Avms7DataTransformer
     ];
 
     private $roleLevel = [
-        1=>Roles::ROLE_SUPERADMIN,
-        2=>Roles::ROLE_AIRPORT_OPERATOR,
-        3=>Roles::ROLE_ISSUING_BODY_ADMIN,
-        4=>Roles::ROLE_VISITOR,
-        5=>Roles::ROLE_VISITOR,
-        6=>Roles::ROLE_AGENT_AIRPORT_ADMIN,
-        7=>Roles::ROLE_AGENT_AIRPORT_OPERATOR,
-        8=>Roles::ROLE_ISSUING_BODY_ADMIN,
-        9=>Roles::ROLE_AGENT_AIRPORT_ADMIN,
-        10=>Roles::ROLE_VISITOR,
+        1=>Roles::ROLE_SUPERADMIN, //5
+        2=>Roles::ROLE_AIRPORT_OPERATOR, //12
+        3=>Roles::ROLE_ISSUING_BODY_ADMIN, //11
+        4=>Roles::ROLE_VISITOR, //10
+        5=>Roles::ROLE_VISITOR, //10
+        6=>Roles::ROLE_AGENT_AIRPORT_ADMIN, //13
+        7=>Roles::ROLE_AGENT_AIRPORT_OPERATOR,// 14
+        8=>Roles::ROLE_ISSUING_BODY_ADMIN, //11
+        9=>Roles::ROLE_AGENT_AIRPORT_ADMIN, //13
+        10=>Roles::ROLE_VISITOR, //10
     ];
 
 
@@ -197,6 +197,8 @@ class Avms7DataTransformer
 
         $ib = $this->getIssuingBody($code);
 
+
+
         $tenantCompany = [
             'code' => $ib['IBCode'],
             'name' => $ib['IssuingBody']." Airport",
@@ -288,6 +290,8 @@ class Avms7DataTransformer
         }
         return null;
     }
+
+
 
 
 }

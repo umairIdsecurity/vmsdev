@@ -1709,7 +1709,14 @@ class PreregistrationController extends Controller
     	$this->unsetVariablesForGui();
     	$per_page = 10;
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
-        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND t.host=".Yii::app()->user->id.")";
+        $condition = "t.is_deleted = 0 AND v.is_deleted=0 AND t.host != 'NULL' AND t.host !=''"; 
+
+        if(isset(Yii::app()->user->account_type) && Yii::app()->user->account_type == "ASIC"){
+        	$condition .= " AND t.host=".Yii::app()->user->id;
+        }else{
+        	$condition .= " AND t.visitor=".Yii::app()->user->id;
+        }
+
         $rawData = Yii::app()->db->createCommand()
                         ->select("t.id,t.date_check_in,t.host,v.first_name,v.last_name,t.visit_prereg_status") 
                         ->from("visit t")
@@ -1723,6 +1730,7 @@ class PreregistrationController extends Controller
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->where($condition)
+                        ->order("t.id DESC")
                         ->limit($per_page,$page-1) // the trick is here!
                         ->queryAll();   
 
@@ -1892,6 +1900,7 @@ class PreregistrationController extends Controller
                         ->join("visitor v","v.id = t.visitor")
                         ->join("visit_status vs","vs.id = t.visit_status")
                         ->leftJoin("company c","c.id = v.company")
+                        ->order("t.id DESC")
                         ->where($condition)
                         ->limit($per_page,$page-1) // the trick is here!
                         ->queryAll();   

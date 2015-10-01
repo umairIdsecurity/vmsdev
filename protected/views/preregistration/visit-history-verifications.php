@@ -23,19 +23,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($query1 as $q){ ?>
-                            <tr class="status-">
-                                <?php if(Yii::app()->user->account_type ==  "ASIC"): ?>
-                                    <td><a href="<?php echo Yii::app()->createUrl('preregistration/verifyVicholder?id=' . $q['id']); ?>"><?php echo date("j-n-Y",strtotime($q['date_check_in'])); ?></a></td>
-                                <?php else: ?>
-                                    <td><?php echo date("j-n-Y",strtotime($q['date_check_in'])); ?></td>
-                                <?php endif; ?>
-                                    
-                                <td><?php echo $q["first_name"]." ".$q["last_name"]; ?></td>
-                                <td><?php echo returnAsicName($q['host']); ?></td>
-                                <td><?php echo $q['visit_prereg_status']; ?></td>
-                            </tr>   
-                    <?php } ?> 
+
+                    <?php 
+                        if($query1){
+                            foreach($query1 as $q){ ?>
+                                <tr class="status-">
+                                    <?php if(Yii::app()->user->account_type ==  "ASIC"): ?>
+                                        <td><a href="<?php echo Yii::app()->createUrl('preregistration/verifyVicholder?id=' . $q['id']); ?>"><?php echo date("j-n-Y",strtotime($q['date_check_in'])); ?></a></td>
+                                    <?php else: ?>
+                                        <td><?php echo date("j-n-Y",strtotime($q['date_check_in'])); ?></td>
+                                    <?php endif; ?>
+                                        
+                                    <td><?php echo $q["first_name"]." ".$q["last_name"]; ?></td>
+                                    <td><?php echo returnAsicName($q['host']); ?></td>
+                                    <td><?php echo $q['visit_prereg_status']; ?></td>
+                                </tr>   
+                    <?php 
+                            }
+                        }
+                        else
+                        {
+                            echo "<tr><td>No Result found</td><td></td><td></td><td></td></tr>";
+                        }
+                     ?> 
                 </tbody>
                 <tfoot>
                     <tr>
@@ -70,13 +80,16 @@
 
 <?php
     function returnAsicName($hostId){
-        $rawData = Yii::app()->db->createCommand()
-                        ->select("v.first_name,v.last_name") 
-                        ->from("visitor v")
-                        ->where("v.is_deleted = 0 AND v.id=".$hostId)
-                        ->queryRow();
-        $data =  $rawData["first_name"]." ".$rawData["last_name"];               
-        return $data;                
+        if($hostId){
+            $rawData = Yii::app()->db->createCommand()
+                ->select("v.first_name,v.last_name") 
+                ->from("visitor v")
+                ->where("v.is_deleted = 0 AND v.id=".$hostId)
+                ->queryRow();
+            $data =  $rawData["first_name"]." ".$rawData["last_name"];               
+            return $data;  
+        }
+              
     }
 ?>
 

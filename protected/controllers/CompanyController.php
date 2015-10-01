@@ -527,7 +527,6 @@ class CompanyController extends Controller
                         $worsktation = Workstation::model()->findByPk($formInfo['workstation']);
                         $company->created_by_user = $worsktation->created_by;
                         $company->tenant = $worsktation->tenant;
-
                     }else{
                         $company->created_by_user = empty($session['created_by']) ? NULL : $session['created_by'];
                         $company->created_by_visitor  = empty($session['visitor_id']) ? Yii::app()->user->id : $session['visitor_id'];

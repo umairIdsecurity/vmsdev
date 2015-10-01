@@ -48,6 +48,9 @@ $session = new CHttpSession;
                                 'attribute'   => 'asic_expiry',
                                 'options'     => array(
                                     'minDate' => '0',
+                                    'maxDate' => '+2y +2m',
+                                    'changeYear' => true,
+                                    'changeMonth' => true,
                                     'dateFormat' => 'dd-mm-yy',
                                 ),
                                 'htmlOptions' => array(

@@ -228,23 +228,13 @@ class PreregistrationController extends Controller
 
 		if (isset($_POST['Visit'])) 
 		{
-
 			$model->attributes    = $_POST['Visit'];
-
-			$reasonModel = new VisitReason();
-			$reasonModel->reason    = $_POST['Visit']['other_reason'];
-			if($reasonModel->validate())
-			{
-				$reasonModel->save();
-			}
-
-			if( empty($model->visitor_type) || empty($model->reason) ){
-				$model->visitor_type = null;
-				$model->reason 		 = null;
-			}
-			elseif($_POST['Visit']['reason']=='other')
-			{
-				$model->reason 		 = $reasonModel->id;
+			if($_POST['Visit']['other_reason'] != ""){
+				$reasonModel = new VisitReason();
+				$reasonModel->reason  = $_POST['Visit']['other_reason'];
+				if($reasonModel->save(false)){
+					$model->reason  = $reasonModel->id;
+				}
 			}
 
 			$model->visitor  = $session['visitor_id'];
@@ -354,11 +344,6 @@ class PreregistrationController extends Controller
 				else{
 
 					if( !empty($model->email) && !empty($model->contact_number) ){
-
-						/*echo "<pre>";
-						print_r($_POST['Registration']);
-						die;*/
-
 						$model->profile_type = 'ASIC';
 						$model->key_string = hash('ripemd160', uniqid());
 
@@ -493,6 +478,7 @@ class PreregistrationController extends Controller
 		$session['step8Subtitle'] = ' > Log Visit Details';
 
 		$model = Visit::model()->findByPk($session['visit_id']);
+
 
 		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
 

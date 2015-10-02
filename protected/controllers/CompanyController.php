@@ -510,19 +510,16 @@ class CompanyController extends Controller
             $session = new CHttpSession;
             $company = new Company();
             $company->scenario = 'preregistration';
-
-            if (isset($_POST['ajax']) && $_POST['ajax'] == 'company-form') {
+        /*  if (isset($_POST['ajax']) && $_POST['ajax'] == 'company-form') {
+                die("called inside");
                 echo CActiveForm::validate($company);
                 Yii::app()->end();
             }
-
+        */
             if (isset($_POST['Company'])) 
             {
-
                 /*if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {*/
-                    
                     $formInfo = $_POST['Company'];
-
                     if(isset($formInfo['workstation'])){
                         $worsktation = Workstation::model()->findByPk($formInfo['workstation']);
                         $company->created_by_user = $worsktation->created_by;
@@ -607,7 +604,6 @@ class CompanyController extends Controller
                         $data = array('errors'=>$errors,'decision'=>0 );
                         echo CJSON::encode($data);
                         Yii::app()->end();
-
                         //print_r($data);
                         /*$msg = print_r($company->getErrors(),1);
                         throw new CHttpException(400,'Not validated because: '.$msg );*/
@@ -643,8 +639,6 @@ class CompanyController extends Controller
             $formInfo = $_POST['Company'];
 
             $company->attributes=$formInfo;
-
-            
 
             if($company->validate())
             {

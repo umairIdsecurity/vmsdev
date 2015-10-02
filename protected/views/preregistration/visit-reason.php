@@ -88,7 +88,9 @@ $session = new CHttpSession;
             <div class="form-group" id="other-reason">
                 <?php echo $form->textField($model, 'other_reason', array('maxlength' => 50, 'placeholder' => 'Other Reason' ,'class'=>'form-control input-sm')); ?>
 
-                <?php echo $form->error($model, 'other_reason'); ?>
+                <div style="display:none" id="otherReasonError" class="errorMessage">Please complete Other Reason</div>
+
+                <?php //echo $form->error($model, 'other_reason'); ?>
             </div>
         </div>    
 
@@ -204,7 +206,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
                                             <?php echo $form->textField($companyModel, 'name', array('placeholder' => 'Company Name','class'=>'form-control input-lg')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyNameErr" style="display:none;float:left"></div>
                                     </div>
 
                                     <div class="form-group">
@@ -218,7 +221,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyFirstnameErr" style="display:none;float:left"></div>
                                     </div>
 
                                     <div class="form-group">
@@ -226,7 +230,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyLastnameErr" style="display:none;float:left"></div>
                                     </div>
 
                                     
@@ -235,7 +240,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyEmailErr" style="display:none;float:left"></div>
                                     </div>
 
                                     <div class="form-group">
@@ -243,7 +249,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyContactNumberErr" style="display:none;float:left"></div>
                                     </div>
 
 
@@ -338,7 +345,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyContactFirstnameErr" style="display:none;float:left"></div>
                                     </div>
 
                                     <div class="form-group">
@@ -346,7 +354,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyContactLastnameErr" style="display:none;float:left"></div>
                                     </div>
 
                                     
@@ -355,7 +364,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyContactEmailErr" style="display:none;float:left"></div>
                                     </div>
 
                                     <div class="form-group">
@@ -363,7 +373,8 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyContactContactNumberErr" style="display:none;float:left"></div>
                                     </div>
 
 
@@ -408,8 +419,62 @@ $session = new CHttpSession;
                     var data = JSON.parse(data);
                     if (data.decision == 0)
                     {
-                        console.log("errors got");
-                        $("#addCompanyContactDiv").hide();
+                        if(data.errors){//console.log(data.errors);
+                            if(data.errors.name)
+                            {
+                                if($('#Company_name').val() == ""){
+                                    if($('#companyNameErr').is(':empty')){
+                                        $("#companyNameErr").append("<p>"+data.errors.name+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyNameErr").empty().hide();
+                            }
+
+                            if(data.errors.user_first_name)
+                            {
+                                if($('#Company_user_first_name').val() == ""){
+                                    if($('#companyFirstnameErr').is(':empty')){
+                                        $("#companyFirstnameErr").append("<p>"+data.errors.user_first_name+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyFirstnameErr").empty().hide();
+                            }
+
+                            if(data.errors.user_last_name)
+                            {
+                                if($('#Company_user_last_name').val() == ""){
+                                    if($('#companyLastnameErr').is(':empty')){
+                                        $("#companyLastnameErr").append("<p>"+data.errors.user_last_name+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyLastnameErr").empty().hide();
+                            }
+
+                            if(data.errors.user_email)
+                            {
+                                if($('#Company_user_email').val() == ""){
+                                    if($('#companyEmailErr').is(':empty')){
+                                        $("#companyEmailErr").append("<p>"+data.errors.user_email+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyEmailErr").empty().hide();
+                            }
+
+                            if(data.errors.user_contact_number)
+                            {
+                                if($('#Company_user_contact_number').val() == ""){
+                                    if($('#companyContactNumberErr').is(':empty')){
+                                        $("#companyContactNumberErr").append("<p>"+data.errors.user_contact_number+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyContactNumberErr").empty().hide();
+                            }
+                        }
                     }
                     else
                     {
@@ -471,13 +536,54 @@ $session = new CHttpSession;
                 url: "<?php echo Yii::app()->createUrl('company/addCompanyContactPreg');?>",
                 data: data,
                 success: function (data) {
-                    
-                    console.log(data);
                     var data = JSON.parse(data);
-
                     if (data.decision == 0)
                     {
-                        console.log("errors got");
+                        if(data.errors){//console.log(data.errors);
+                            if(data.errors.user_first_name)
+                            {
+                                if($('#Company_user_first_name').val() == ""){
+                                    if($('#companyContactFirstnameErr').is(':empty')){
+                                        $("#companyContactFirstnameErr").append("<p>"+data.errors.user_first_name+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyContactFirstnameErr").empty().hide();
+                            }
+
+                            if(data.errors.user_last_name)
+                            {
+                                if($('#Company_user_last_name').val() == ""){
+                                    if($('#companyContactLastnameErr').is(':empty')){
+                                        $("#companyContactLastnameErr").append("<p>"+data.errors.user_last_name+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyContactLastnameErr").empty().hide();
+                            }
+
+                            if(data.errors.user_email)
+                            {
+                                if($('#Company_user_email').val() == ""){
+                                    if($('#companyContactEmailErr').is(':empty')){
+                                        $("#companyContactEmailErr").append("<p>"+data.errors.user_email+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyContactEmailErr").empty().hide();
+                            }
+
+                            if(data.errors.user_contact_number)
+                            {
+                                if($('#Company_user_contact_number').val() == ""){
+                                    if($('#companyContactContactNumberErr').is(':empty')){
+                                        $("#companyContactContactNumberErr").append("<p>"+data.errors.user_contact_number+"</p>").show();
+                                    }
+                                }
+                            }else{
+                                $("#companyContactContactNumberErr").empty().hide();
+                            }
+                        }
                     }
                     else
                     {
@@ -513,5 +619,18 @@ $session = new CHttpSession;
                 $("#companyContactError").hide();
             } 
         });*/
+
+        $("#nextBtn").click(function(e){
+            var reason = $("#Visit_reason").val();
+            var otherReason = $("#Visit_other_reason").val();
+            
+            if(reason == "other" && otherReason == ""){
+                $("#otherReasonError").show();
+                e.preventDefault();
+            }else{
+                $("#otherReasonError").hide();
+            } 
+        });
+
     });
 </script>

@@ -176,7 +176,7 @@ class TenantController extends Controller {
         $workstationModel->contact_name = $_POST["TenantForm"]["first_name"].' '.$_POST["TenantForm"]["last_name"];
         $workstationModel->contact_email_address = $_POST["TenantForm"]["email"];
         $workstationModel->contact_number = $_POST["TenantForm"]["contact_number"];
-        $workstationModel->createdBy = Yii::app()->user->id;
+        $workstationModel->created_by = Yii::app()->user->id;
         $workstationModel->tenant = $tenantModel->id;
         $workstationModel->tenant_agent = $userModel->id;
         $workstationModel->password = NULL;
@@ -185,7 +185,7 @@ class TenantController extends Controller {
             $userWorkstation = new UserWorkstations;
             $userWorkstation->user_id = $userModel->id;
             $userWorkstation->workstation = $workstationModel->id;
-            $userWorkstation->createdBy = Yii::app()->user->id;
+            $userWorkstation->created_by = Yii::app()->user->id;
             $userWorkstation->is_primary = 1;
 
             return $userWorkstation->validate() && $userWorkstation->save();

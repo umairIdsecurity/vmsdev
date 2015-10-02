@@ -166,7 +166,7 @@ class Roles extends CActiveRecord {
 					self::ROLE_ISSUING_BODY_ADMIN,
 					self::ROLE_AGENT_AIRPORT_ADMIN,
 					self::ROLE_AIRPORT_OPERATOR,
-					//self::ROLE_AGENT_AIRPORT_OPERATOR
+					self::ROLE_AGENT_AIRPORT_OPERATOR
 				);
 			} else {
 				return array(
@@ -190,7 +190,7 @@ class Roles extends CActiveRecord {
 				self::ROLE_ISSUING_BODY_ADMIN,
 				self::ROLE_AGENT_AIRPORT_ADMIN,
 				self::ROLE_AIRPORT_OPERATOR,
-				//self::ROLE_AGENT_AIRPORT_OPERATOR
+				self::ROLE_AGENT_AIRPORT_OPERATOR
 			);
 		}
 	}

@@ -202,7 +202,7 @@ class TenantAgentController extends Controller
 
         $passwordval = NULL;
         if (isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] != "") {
-            $passwordval = $_POST['TenantForm']['password'];
+            $passwordval = CPasswordHelper::hashPassword($_POST['TenantForm']['password']);
         }
         $userModel->password = $passwordval;
         $userModel->role = $isAvms?Roles::ROLE_AGENT_AIRPORT_ADMIN:Roles::ROLE_AGENT_ADMIN;

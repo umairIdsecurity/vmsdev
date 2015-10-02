@@ -122,7 +122,7 @@ class TenantController extends Controller {
 
         $passwordval = NULL;
         if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] != ""){
-            $passwordval = $_POST['TenantForm']['password'];
+            $passwordval = CPasswordHelper::hashPassword($_POST['TenantForm']['password']);
         }
         $userModel->password = $passwordval;
         $userModel->role = $_POST['TenantForm']['role'];

@@ -146,10 +146,10 @@ class UserController extends Controller
 
         } else {
 
-            if($model->role == Roles::ROLE_ADMIN && Yii::app()->user->allowed_roles == Module::MODULE_CVMS){
+            if($model->role == Roles::ROLE_ADMIN && Yii::app()->user->allowed_module == Module::MODULE_CVMS){
                 $model->role = Module::MODULE_CVMS;
 
-            } else if($model->role == Roles::ROLE_ISSUING_BODY_ADMIN && Yii::app()->user->allowed_roles == Module::MODULE_AVMS) {
+            } else if($model->role == Roles::ROLE_ISSUING_BODY_ADMIN && Yii::app()->user->allowed_module == Module::MODULE_AVMS) {
                 $model->role = Module::MODULE_AVMS;
             }
         }

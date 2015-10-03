@@ -99,6 +99,9 @@ class UserController extends Controller
                 $sql = 'tenant='.$model->tenant;
                 if($model->tenant_agent>1){
                     $sql = $sql." AND tenant_agent=".$model->tenant_agent;
+                } else
+                {
+                    $sql = $sql." AND tenant_agent=0 or tenant_agent=NULL";
                 }
                 $workstations = Workstation::model()->findAll($sql);
                 if(sizeof($workstations) > 0){

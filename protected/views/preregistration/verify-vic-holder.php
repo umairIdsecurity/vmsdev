@@ -109,7 +109,7 @@
     <div class="row">
         <!-- <div class="col-sm-1 col-xs-1"></div> -->
 
-        <div class="col-sm-5 col-xs-8"><a class="btn btn-success" href="<?php echo Yii::app()->createUrl('preregistration/verificationDeclarations'); ?>">Verif</a></div>
+        <div class="col-sm-5 col-xs-8"><a class="btn btn-success" href="<?php echo Yii::app()->createUrl('preregistration/verificationDeclarations'); ?>">Verify</a></div>
         
         <div class="col-sm-1 col-xs-2"><a class="btn btn-danger" href="<?php echo Yii::app()->createUrl('preregistration/declineVicholder'); ?>">Decline</a></div>
 

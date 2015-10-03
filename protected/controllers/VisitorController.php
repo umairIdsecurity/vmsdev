@@ -654,7 +654,7 @@ class VisitorController extends Controller {
                             }
                         }
                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-                        @mail($to, $subject, $body, $headers);
+                        mail($to, $subject, $body, $headers);
                     }
                     elseif ($passwordRequire == 2) {
                         User::model()->restorePassword($model->email);

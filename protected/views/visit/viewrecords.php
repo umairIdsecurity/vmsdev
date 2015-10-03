@@ -206,11 +206,15 @@ function changeStatusClass($visitStatus) {
 			break;
 
 		case VisitStatus::CLOSED:
-			return "red";
+			return "black";
 			break;
 
 		case VisitStatus::SAVED:
 			return "grey";
+			break;
+
+		case VisitStatus::EXPIRED:
+			return "red";
 			break;
 
 		default:

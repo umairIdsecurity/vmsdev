@@ -131,11 +131,22 @@ $session = new CHttpSession;
     text-indent: -9999px;
 }
 
-.responsiveLogo
+.standardLogo 
 {
-    padding: 0px;
-    width: 100px;
-    margin: 35px auto 20px;
+    margin:50px 10px 20px auto;
+    padding: 0;
+    width: 70px;
+}
+
+.standardLogo img {
+    width: 100%;
+}
+
+.mobileLogo{
+    display: none;       
+}
+.mobileLogo img{
+    width: 100%; 
 }
 
 @media screen and (min-width: 300px)  and (max-width: 640px) {
@@ -147,11 +158,15 @@ $session = new CHttpSession;
         font-size: 16px;
         line-height: 22px;
     }
-    .responsiveLogo{
+    .mobileLogo{
+        display: block;
         padding: 15px 0 0 !important;
         width: 150px;
         margin-left: auto;
         margin-right: auto;
+    }
+    .standardLogo{
+        display: none;       
     }
     .tableFont{
         font-size: 10px;
@@ -191,16 +206,26 @@ $session = new CHttpSession;
                 <div class="row">
                     
                     <div class="col-sm-3">
-                        <div class="responsiveLogo">
+                        <div class="standardLogo">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
                                 <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
                             <?php } else{ ?>
                                 <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
                                     <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
                                 </a>
-                            <?php } ?> 
-                            
+                            <?php } ?>
                         </div>
+
+                        <div class="mobileLogo">
+                            <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
+                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logoOld.png" alt="Pre registration"/>
+                            <?php } else{ ?>
+                                <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logoOld.png" alt="Pre registration"/>
+                                </a>
+                            <?php } ?>
+                        </div>
+
                     </div>
 
                     <div class="col-sm-9" style="<?php if(isset($session['stepTitle'])){echo 'border-bottom: 3px solid #eee;margin-top:10px';}?>">
@@ -245,7 +270,7 @@ $session = new CHttpSession;
                             </div>
 
                             <div class="col-sm-12" style="">
-                                <h1 class="text-primary title responsiveTitle"><?= $session['stepTitle'] ?></h1>
+                                <h2 class="text-primary title responsiveTitle"><?= $session['stepTitle'] ?></h2>
                                 <h6 class="text-primary title">
                                     <?php if(isset($session['step1Subtitle'])&&($session['step1Subtitle']!="")){echo $session['step1Subtitle'];}?>
                                     <?php if(isset($session['step2Subtitle'])&&($session['step2Subtitle']!="")){echo $session['step2Subtitle'];}?>

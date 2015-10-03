@@ -436,7 +436,6 @@ class Registration extends CActiveRecord {
         }
         if(!empty($this->date_of_birth)){$this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));}else{$this->date_of_birth = NULL;}
         if(!empty($this->identification_document_expiry)){$this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));}else{$this->identification_document_expiry = NULL;}
-        if(!empty($this->date_of_birth)){$this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));}else{$this->date_of_birth = NULL;}
         if(!empty($this->asic_expiry)){$this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));}else{$this->asic_expiry = NULL;}
         return parent::beforeSave();
     }
@@ -446,25 +445,6 @@ class Registration extends CActiveRecord {
 
         $Criteria = new CDbCriteria();
         $Criteria->condition = "is_deleted=0";
-
-        if(!empty($this->date_of_birth)){
-            $this->date_of_birth = date("d-m-Y",strtotime($this->date_of_birth));
-        }else{
-            $this->date_of_birth = NULL;
-        }
-
-        if(!empty($this->identification_document_expiry)){
-            $this->identification_document_expiry = date("d-m-Y",strtotime($this->identification_document_expiry));
-        }else{
-            $this->identification_document_expiry = NULL;
-        }
-
-        if(!empty($this->asic_expiry)){
-            $this->asic_expiry = date("d-m-Y",strtotime($this->asic_expiry));
-        }else{
-            $this->asic_expiry = NULL;
-        }
-
 
         return parent::beforeFind();
     }
@@ -506,8 +486,11 @@ class Registration extends CActiveRecord {
         else {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
             $this->password_option = 1;
-
         }
+
+        if(!empty($this->date_of_birth)){$this->date_of_birth = date("d-m-Y",strtotime($this->date_of_birth));}else{$this->date_of_birth = NULL;}
+        if(!empty($this->identification_document_expiry)){$this->identification_document_expiry = date("d-m-Y",strtotime($this->identification_document_expiry));}else{$this->identification_document_expiry = NULL;}
+        if(!empty($this->asic_expiry)){$this->asic_expiry = date("d-m-Y",strtotime($this->asic_expiry));}else{$this->asic_expiry = NULL;}
 
         parent::afterFind();
     }

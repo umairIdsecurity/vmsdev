@@ -44,53 +44,28 @@ if ($model->time_in != '') {
                 <label class="col-sm-4 text-primary control-label middleLabels">Date of Visit</label>
                 <div class="col-sm-7">
                     <span class="glyphicon glyphicon-calendar" style="margin-top:-11px"></span>
-                    <?php echo $form->textField($model,'date_in',
+                    <?php
+                        
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'       => $model,
+                            'attribute'   => 'date_in',
+                            'htmlOptions' => array(
+                                'placeholder' => 'DD-MM-YYYY',
+                                'class'=>'form-control input-sm from_date',
+                            ),
+                        ));
+
+                        /*echo $form->textField($model,'date_in',
                         array(
                             'placeholder' => 'DD-MM-YYYY',
                             'class'=>'form-control input-sm from_date',
                             //'data-date-picker-start'=>"",
                             'data-date-format'=>'dd-mm-yyyy',
                             'value'=>''
-                        )); ?>
+                        )); */
+                    ?>
                 </div>
             </div>
-
-            <!-- <div class="form-group">
-                <label class="col-sm-4 text-primary control-label middleLabels">END DATE OF VISIT</label>
-                <div class="col-sm-7">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                    <?php
-                    /*echo $form->textField($model,'date_out',
-                        array(
-                            'placeholder' => 'DD-MM-YYYY',
-                            'class'=>'form-control input-lg to_date',
-                            //'data-date-picker-end'=>"",
-                            'data-date-format'=>'dd-mm-yyyy',
-                            'value'=>'',
-                            'disabled'=>'disabled'
-                        ));*/
-                    ?>
-                </div>
-            </div> -->
-
-
-            <!-- <div class="form-group">
-                <label class="col-sm-4 text-primary control-label middleLabels">TIME IN</label>
-                <div class="row col-sm-7">
-
-                    <div class="col-xs-6">
-                    <?php
-                    //echo $form->dropDownList($model,'time_in', $model->visitClockTime , array('class'=>'form-control input-lg') )
-                    ?>
-
-                    </div>
-                    <div class="col-xs-4">
-                        <?php
-                            //echo $form->dropDownList($model,'ampm', $model->oClock,array('class'=>'form-control input-lg'));
-                        ?>
-                    </div>
-                </div>
-            </div> -->
 
             <div class="form-group">
                 <label class="col-sm-4 text-primary control-label middleLabels">Time In</label>
@@ -167,39 +142,12 @@ if ($model->time_in != '') {
 </div>
 
 <script type="text/javascript">
-
-    /*function getTime(t1,t2){
-    //function getTime(){
-        var t1 = '08:00', t2 = '08:00';
-        var m = (t1.substring(0,t1.indexOf(':'))-0) * 60 +
-            (t1.substring(t1.indexOf(':')+1,t1.length)-0) +
-            (t2.substring(0,t2.indexOf(':'))-0) * 60 +
-            (t2.substring(t2.indexOf(':')+1,t2.length)-0);
-        var h = Math.floor(m / 60);
-        //document.write(h + ':' + (m - (h * 60)));
-
-        var min = m - (h * 60);
-
-        if( min == 0 ){
-            var time = h + ':' + '00';
-        }
-        else{
-            var time = h + ':' + (m - (h * 60));
-        }
-
-        return time;
-    }
-
-    //alert(getTime());
-
-    alert(50+'10');
-    $('#time_in').on('change', function() {
-
-
-        //var t1 = $(this).val(), t2 = '12:00';
-        //var time = getTime(t1,t2);
-        //alert($(this).val());
-        //alert(time);
-    });*/
-
+        $(document).ready(function(){
+            $('#Visit_date_in').datepicker({
+                minDate: '+1',
+                changeYear: true,
+                changeMonth: true,
+                dateFormat: 'dd-mm-yy'
+            });
+        });
 </script>

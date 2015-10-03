@@ -829,10 +829,20 @@ $model->identification_country_issued = 13;
             if($(parentElement()+".pass_option").is(":checked")== false){
                 $(parentElement()+"#pass_error_").show();
                 $(parentElement()+"#User_password_em_").html("select one option");
+                return false;
             }
-            else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeat_password").val()=="")){
+            else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="")){
                 $(parentElement()+"#pass_error_").show();
                 $(parentElement()+"#pass_error_").html("Type password or generate");
+                return false;
+            }
+            else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && $("#Visitor_password").val() != "" && $("#Visitor_repeatpassword").val() !="" && $("#Visitor_repeatpassword").val() != $("#Visitor_password").val()){
+                $(parentElement()+"#pass_error_").show();
+                $(parentElement()+"#pass_error_").html("Password does not match with Repeat Password.");
+                return false;
+            }
+            else {
+                 $(parentElement()+"#pass_error_").hide();
             }
             var vehicleValue = $("#Visitor_vehicle").val();
             if(vehicleValue.length < 6 && vehicleValue != ""){

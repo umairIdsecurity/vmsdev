@@ -134,8 +134,6 @@ $session = new CHttpSession;
             <p id="asic-notification" class="bg-info">No Record Found</p>
         </div>
     </div>
-
-
     <!--  end searching ASIC -->
 
 
@@ -189,6 +187,9 @@ $session = new CHttpSession;
                             'attribute'   => 'asic_expiry',
                             'options'     => array(
                                 'minDate' => '0',
+                                'maxDate' => '+2y +2m',
+                                'changeYear' => true,
+                                'changeMonth' => true,
                                 'dateFormat' => 'dd-mm-yy',
                             ),
                             'htmlOptions' => array(
@@ -496,9 +497,6 @@ $session = new CHttpSession;
             });
 
         });
-
-
-
 
 
     });

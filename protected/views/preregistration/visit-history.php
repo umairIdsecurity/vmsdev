@@ -23,17 +23,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                	<?php foreach($query1 as $q){ ?>
-                			<tr class="status-">
-                				<td><?php echo (($q['date_check_in'] == NULL) || ($q['date_check_in'] == "")) ?  "- - - -" : date("j-n-Y",strtotime($q['date_check_in'])); ?></td>
-        		                <td><?php echo $q['first_name']." ".$q['last_name']; ?></td>
-        		                <td><?php echo $q['name']; ?></td>
-        		                
-                                <td><?php echo (($q['date_check_out'] == NULL) || ($q['date_check_out'] == "")) ?  "- - - -" : date("j-n-Y",strtotime($q['date_check_out'])); ?></td>
-                                
-        		                <td><?php echo $q['status'] == "Pre-registered" ? "Preregistered":$q['status']; ?></td>
-                			</tr>	
-                	<?php } ?> 
+                	<?php 
+                        if($query1){
+                            foreach($query1 as $q){ ?>
+                    			<tr class="status-">
+                    				<td><?php echo (($q['date_check_in'] == NULL) || ($q['date_check_in'] == "")) ?  "- - - -" : date("j-n-Y",strtotime($q['date_check_in'])); ?></td>
+            		                <td><?php echo $q['first_name']." ".$q['last_name']; ?></td>
+            		                <td><?php echo $q['name']; ?></td>
+            		                
+                                    <td><?php echo (($q['date_check_out'] == NULL) || ($q['date_check_out'] == "")) ?  "- - - -" : date("j-n-Y",strtotime($q['date_check_out'])); ?></td>
+                                    
+            		                <td><?php echo $q['status'] == "Pre-registered" ? "Preregistered":$q['status']; ?></td>
+                    			</tr>	
+                	<?php 
+                            }
+                        }
+                        else
+                        {
+                            echo "<tr><td>No Result found</td><td></td><td></td><td></td><td></td></tr>";
+                        }
+                     ?>  
                 </tbody>
                 <tfoot>
                     <tr>

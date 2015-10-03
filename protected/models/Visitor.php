@@ -251,8 +251,8 @@ class Visitor extends CActiveRecord {
             ),
             
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
-            array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic','preregistration']),
+            // array('password', 'PasswordCustom'),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic','preregistration', 'corporateVisitor']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),

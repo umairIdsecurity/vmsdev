@@ -52,10 +52,6 @@ if (isset($company) && !empty($company)) {
                                    name="Visitor[repeatpassword]"/>
                             <span class="required">*</span>
 
-                            <div style='font-size:0.9em;color:red;position: static;'
-                                 data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does
-                                not match with Repeat <br> Password.
-                            </div>
                             <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
 
                         </td>

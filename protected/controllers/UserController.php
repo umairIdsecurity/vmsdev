@@ -88,9 +88,7 @@ class UserController extends Controller
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
         $workstation = null;
-        
 
-		
         if (isset($_POST['User'])) {
 
             $model->attributes = $_POST['User'];
@@ -98,12 +96,15 @@ class UserController extends Controller
             if (isset($session['workstation'])) {
                 $workstation = $session['workstation'];
             }else {
-                $workstations = Workstation::model()->findAll('tenant='.$model->tenant.' AND tenant_agent='.$model->tenant_agent);
+                $sql = 'tenant='.$model->tenant;
+                if($model->tenant_agent>1){
+                    $sql = $sql." AND tenant_agent=".$model->tenant_agent;
+                }
+                $workstations = Workstation::model()->findAll($sql);
                 if(sizeof($workstations) > 0){
                     $workstation = $workstations[0];
                 }
             }
-
 
 
             if (isset($_POST['User']['password_option'])) {
@@ -127,7 +128,6 @@ class UserController extends Controller
                     Yii::app()->end();
                 }
             }
-
         }
 
         $this->render('create', array(

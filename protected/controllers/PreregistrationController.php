@@ -2064,9 +2064,8 @@ class PreregistrationController extends Controller
 					$ext  = pathinfo($name, PATHINFO_EXTENSION);
 					$newNameHash = hash('adler32', time());
 					$newName    = $newNameHash.'-' . time().'.'.$ext;
-					$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/profile/'.$newName;
-					$relativeImgSrc = 'uploads/profile/'.$newName;
-
+					$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
+					$relativeImgSrc = 'uploads/visitor/'.$newName;
 			        $fileInputInstance=CUploadedFile::getInstanceByName('fileInput');
 			        if($fileInputInstance->saveAs($fullImgSource))
 			        {

@@ -229,6 +229,7 @@ class PreregistrationController extends Controller
 		if (isset($_POST['Visit'])) 
 		{
 			$model->attributes    = $_POST['Visit'];
+
 			if($_POST['Visit']['other_reason'] != ""){
 				$reasonModel = new VisitReason();
 				$reasonModel->reason  = $_POST['Visit']['other_reason'];
@@ -243,8 +244,8 @@ class PreregistrationController extends Controller
 			$model->created_by = $session['created_by'];
 			$model->workstation  = $session['workstation'];
 			$model->tenant = $session['tenant'];
-
 			$model->visit_status  = 2; //default visit status is 2=PREREGISTER
+			$model->company =  $_POST['Company']['name'];
 
 			if($model->validate())
 			{
@@ -282,43 +283,33 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAddAsic(){
-
 		$session = new CHttpSession;
-
 		if(isset(Yii::app()->user->id,$session['account_type']) &&($session['account_type'] != "") && ($session['account_type'] == "ASIC")){
 			$model = Registration::model()->findByPk(Yii::app()->user->id,"profile_type=:param",array(":param"=>"ASIC"));
 		}else{
 			$model = new Registration();
 		}
-		
-
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
-
 		$session['stepTitle'] = 'ASIC SPONSOR';
-
 		$session['step6Subtitle'] = ' > ASIC Sponsor';
 		unset($session['step7Subtitle']);unset($session['step8Subtitle']);
-
-
 		$model->scenario = 'preregistrationAsic';
-
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-
 		if (isset($_POST['Registration'])) {
 
 			$model->attributes = $_POST['Registration'];
 
-			if($_POST['Registration']['is_asic_verification']==0){
+			/*if($_POST['Registration']['is_asic_verification']==0){
 				
 				$this->redirect(array('preregistration/uploadPhoto'));
 			}
 			else
-			{
+			{*/
 				if(!empty($model->selected_asic_id)){
 
 					$asicModel = Registration::model()->findByPk($model->selected_asic_id);
@@ -381,8 +372,10 @@ class PreregistrationController extends Controller
 
 				}
 
+
+
 				$this->redirect(array('preregistration/uploadPhoto'));
-			}
+			//}
 
 		}
 
@@ -1858,30 +1851,25 @@ class PreregistrationController extends Controller
     	$this->render('reassign-asic',array('model'=>$model,'companyModel' => $companyModel));
     }
 
-
-
-
     /* Visitor Visits history */
     public function actionVisitHistory() {
     	$this->unsetVariablesForGui();
     	$per_page = 10;
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
-        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND c.is_deleted =0 AND v.id=".Yii::app()->user->id.")";
+        $condition = "(t.is_deleted = 0 AND v.is_deleted =0 AND v.id=".Yii::app()->user->id.")";
         $rawData = Yii::app()->db->createCommand()
-                        ->select("t.date_check_in,t.date_check_out,v.first_name,v.last_name,c.name,vs.name as status") 
+                        ->select("t.company,t.date_check_in,t.date_check_out,v.first_name,v.last_name,vs.name as status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->join("visit_status vs","vs.id = t.visit_status")
-                        ->leftJoin("company c","c.id = v.company")
                         ->where($condition)
                         ->queryAll();
         $item_count = count($rawData);
 		$query1 = Yii::app()->db->createCommand()
-                        ->select("t.date_check_in,t.date_check_out,v.first_name,v.last_name,c.name,vs.name as status") 
+                        ->select("t.company,t.date_check_in,t.date_check_out,v.first_name,v.last_name,vs.name as status") 
                         ->from("visit t")
                         ->join("visitor v","v.id = t.visitor")
                         ->join("visit_status vs","vs.id = t.visit_status")
-                        ->leftJoin("company c","c.id = v.company")
                         ->order("t.id DESC")
                         ->where($condition)
                         ->limit($per_page,$page-1) // the trick is here!
@@ -1899,18 +1887,12 @@ class PreregistrationController extends Controller
     }
     /* Help Desk history */
     public function actionHelpdesk() {
-
     	$this->unsetVariablesForGui();
-
     	$helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup();
-
-    	
         $session = new CHttpSession;
-
         $this->render('helpdesk', array(
             'helpDeskGroupRecords' => $helpDeskGroupRecords
         ));
-    	
     }
 
     public function loadModel($id)
@@ -1931,13 +1913,10 @@ class PreregistrationController extends Controller
 
 	public function actionAsicPrivacyPolicy(){
 		$session = new CHttpSession;
-
 		$session['stepTitle'] = 'ASIC SPONSOR CREATE LOGIN';
-
 		$session['step2Subtitle'] = ' > Privacy Policy';
 		unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
-
 		$this->render('asic-privacy-policy');
 	}
 
@@ -1956,7 +1935,6 @@ class PreregistrationController extends Controller
 	{
 		$email = '';
 		if(isset($_POST['email'])){$email = $_POST['email'];}
-
 		if(!empty($email))
 		{
 			if(Visitor::model()->findByAttributes(array("email"=>$email)))
@@ -1981,13 +1959,11 @@ class PreregistrationController extends Controller
 			$aArray[] = array(
 	        	'isTaken' => 0,
 	        );
-
 	        $resultMessage['data'] = $aArray;
 	        echo CJavaScript::jsonEncode($resultMessage);
 	        Yii::app()->end();
 		}
     }
-
 
     public function actionCheckUserProfile() 
 	{

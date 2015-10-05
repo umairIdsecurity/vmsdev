@@ -34,6 +34,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     }
                     ?>>
                         <li><a href='<?php echo Yii::app()->createUrl('tenant/create/&role=1'); ?>' class="addSubMenu ajaxLinkLi"><span <?php CHelper::is_selected_submenu('tenant', 'create');?>>Add Tenant</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('tenantTransfer/import'); ?>' class="addSubMenu ajaxLinkLi"><span <?php CHelper::is_selected_submenu('tenant', 'import');?>>Import Tenant</span></a></li>
                     </ul>
                 </li>
             <?php

@@ -118,6 +118,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 </td>
             </tr>
 
+
     </table>
 </div>
 
@@ -128,6 +129,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
     echo "text-align:right;";
 }
 ?>">
+    <?php echo CHtml::button('Export', array('id' => 'export-button', 'class' => 'btn DeleteBtn actionForward complete')); ?>
     <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
     <?php if (isset($_GET['viewFrom'])) { ?>
 
@@ -222,10 +224,23 @@ if (isset($_GET['viewFrom'])) {
                 return false;
             return true;
         });
+
+
+        $('#export-button').on('click', function() {
+            exportTenant();
+        });
+
+
     });
+    function exportTenant()
+    {
+        window.location = '<?php echo $this->createUrl("tenantTransfer/export&tenant=".$model->tenant); ?>'
+    }
 
 </script>
-
+<div class="hide">
+    <?php echo CHtml::form('tenantTransfer/download','GET','') ?>
+</div>
 <div class="modal hide fade" id="viewLicense" style="width:600px;">
     <div class="modal-header">
         <a data-dismiss="modal" class="close" id="dismissModal" >×</a>

@@ -1,9 +1,8 @@
 <?php $this->renderPartial('//importHosts/buttonstyle', null, false); ?>
-<h1> Import Tenant </h1>
 <br>
 
 <ol>
-    <li> Select a tenant import file.</li>
+    <li> Select a tenant file to import.</li>
 </ol>
 <br>
 

@@ -101,7 +101,7 @@ class TenantController extends Controller {
         $companyModel->is_deleted = 0;
         $companyModel->created_by_user = Yii::app()->user->id;
 
-        if($companyModel->validate() &&  $companyModel->save())
+        if($companyModel->save())
         {
             $companyModel->tenant = $companyModel->id;
             return $companyModel->save();
@@ -120,11 +120,9 @@ class TenantController extends Controller {
         $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
         $userModel->tenant = $companyModel->id;
 
-        $passwordval = NULL;
         if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] != ""){
-            $passwordval = CPasswordHelper::hashPassword($_POST['TenantForm']['password']);
+            $userModel->password = $_POST['TenantForm']['password'];
         }
-        $userModel->password = $passwordval;
         $userModel->role = $_POST['TenantForm']['role'];
 
         $userModel->user_type = 1;
@@ -151,7 +149,7 @@ class TenantController extends Controller {
         $access = CHelper::get_module_access($_POST);
         $userModel->allowed_module = $access;
 
-        return $userModel->validate() && $userModel->save();
+        return $userModel->save();
 
     }
 
@@ -160,14 +158,14 @@ class TenantController extends Controller {
         $tenantModel->id = $companyModel->id;
         $tenantModel->is_deleted = 0;
         $tenantModel->created_by = Yii::app()->user->id;
-        return $tenantModel->validate() && $tenantModel->save();
+        return $tenantModel->save();
     }
 
     function createTenantContact($tenantContactModel,$tenantModel,$userModel)
     {
         $tenantContactModel->tenant = $tenantModel->id;
         $tenantContactModel->user = $userModel->id;
-        return $tenantContactModel->validate() && $tenantContactModel->save();
+        return $tenantContactModel->save();
     }
 
     function createWorkstation($workstationModel, $tenantModel,$userModel){
@@ -188,7 +186,7 @@ class TenantController extends Controller {
             $userWorkstation->created_by = Yii::app()->user->id;
             $userWorkstation->is_primary = 1;
 
-            return $userWorkstation->validate() && $userWorkstation->save();
+            return $userWorkstation->save();
         }
         return;
     }
@@ -426,7 +424,7 @@ class TenantController extends Controller {
            $user->timezone_id = $_POST['TenantForm']['timezone_id'];
           //Save Password. 
            if( !empty( $_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] == $_POST['TenantForm']['cnf_password']){
-                 $user->password = CPasswordHelper::hashPassword($_POST['TenantForm']['password']);          
+                 $user->password = $_POST['TenantForm']['password'];
            }
            //Save Photo
             if (isset($_POST['TenantForm']['photo']) && $_POST['TenantForm']['photo'] != "") {

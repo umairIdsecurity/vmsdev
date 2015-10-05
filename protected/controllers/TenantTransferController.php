@@ -33,6 +33,7 @@ class TenantTransferController extends Controller
     }
 
     public function actionExport(){
+
         $tenant = $_REQUEST['tenant'];
         $userTable = Yii::app()->db->quoteTableName('user');
         $default_condition = 'WHERE tenant='.$tenant.' and is_deleted=0';
@@ -119,6 +120,7 @@ class TenantTransferController extends Controller
 
     }
 
+
     public function actionImport()
     {
         $model = new ImportTenantForm();
@@ -126,9 +128,10 @@ class TenantTransferController extends Controller
 
         if (isset($_POST['ImportTenantForm'])) {
             $model->attributes = $_POST['ImportTenantForm'];
-                
+
+
         }
-        return $this->render("index", array("model" => $model));
+        return $this->render("view", array("model" => $model));
     }
 
     function getTenantName($data){

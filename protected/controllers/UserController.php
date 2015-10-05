@@ -173,7 +173,7 @@ class UserController extends Controller
             if ($_POST['User']['password'] == '') {
                 $_POST['User']['password'] = $model->password;
             } else {
-                $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
+                $_POST['User']['password'] = $_POST['User']['password'];
             }
             $model->attributes = $_POST['User'];
 

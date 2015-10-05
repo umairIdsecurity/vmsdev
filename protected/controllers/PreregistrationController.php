@@ -1656,10 +1656,6 @@ class PreregistrationController extends Controller
 
   
     	$companyModel = Company::model()->findByPk($model->company);
-        
-        /*echo "<pre>";
-    	print_r($model->photo);
-    	die();*/
 
         $this->render('profile', array(
             'model' => $model,
@@ -2058,60 +2054,46 @@ class PreregistrationController extends Controller
 	    Yii::app()->end();
     }
 
-    
-
     public function actionUploadProfilePhoto() {
-
         //if (Yii::app()->request->isAjaxRequest) {
-            $session = new CHttpSession;
-            
-            $folderKey = '/profile/';
-            $output_dir = Yii::getPathOfAlias('webroot') . "/uploads" . $folderKey;
-
-			if (!file_exists($output_dir)) {
-			    mkdir($output_dir, 0777, true);
-			}
-
-			if (isset($_FILES["fileInput"])) 
+            if (isset($_FILES["fileInput"])) 
 			{
-			    
-			    $error = $_FILES["fileInput"]["error"];
-			    if (!is_array($_FILES["fileInput"]["name"])) 
-			    { //single file
-			        $fileName = $_FILES["fileInput"]["name"];
-			        $uniqueFileName = $_FILES["fileInput"]["name"] . '-' . time() . ".jpg";
+				//*******************************************************************************
+				$name  = $_FILES["fileInput"]["name"];
+				if(!empty($name)){
+					$ext  = pathinfo($name, PATHINFO_EXTENSION);
+					$newNameHash = hash('adler32', time());
+					$newName    = $newNameHash.'-' . time().'.'.$ext;
+					$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/profile/'.$newName;
+					$relativeImgSrc = 'uploads/profile/'.$newName;
 
-			        $path = "uploads" . $folderKey . $uniqueFileName;
+			        $fileInputInstance=CUploadedFile::getInstanceByName('fileInput');
+			        if($fileInputInstance->saveAs($fullImgSource))
+			        {
+			        	$file=file_get_contents($fullImgSource);
+					    $image = base64_encode($file);
 
-			        //temporay uploaded -- will be deleted after saving in DB
-			        move_uploaded_file($_FILES["fileInput"]["tmp_name"], $output_dir . $uniqueFileName);
-			        
-			        //save in database
-			        //save image in db as diretced by Geoff
-			        $uploadedFile = $output_dir.$uniqueFileName;
-			        $file=file_get_contents($uploadedFile);
-			        $image = base64_encode($file);
+				        $connection = Yii::app()->db;
+				        $command = $connection->createCommand("INSERT INTO photo". "(filename, unique_filename, relative_path, db_image) VALUES ('" . $name . "','" . $newName . "','" . $relativeImgSrc . "','" . $image . "')");
+				        $command->query();
 
-			        $connection = Yii::app()->db;
-			        $command = $connection->createCommand("INSERT INTO photo". "(filename, unique_filename, relative_path, db_image) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "','" . $image . "')");
-			        $command->query();
+				        $lastId = Yii::app()->db->lastInsertID;
 
-			        $lastId = Yii::app()->db->lastInsertID;
+				        $update = $connection->createCommand("update visitor set photo=" . $lastId . " where id=" . Yii::app()->user->id);
+				        $update->query();
 
-			        $update = $connection->createCommand("update visitor set photo=" . $lastId . " where id=" . Yii::app()->user->id);
-			        $update->query();
+				        $photoModel=Photo::model()->findByPk($lastId);
 
-			        $photoModel=Photo::model()->findByPk($lastId);
+				        $ret = array("photoId" =>  $lastId, "db_image" => $photoModel->db_image);
 
-			        $ret = array("photoId" =>  $lastId, "db_image" => $photoModel->db_image);
-
-                    echo json_encode($ret);
-			        //delete uploaded file from folder as inserted in DB -- directed by Geoff
-			        if (file_exists($uploadedFile)) {
-			            unlink($uploadedFile);
+	                    echo json_encode($ret);
+				        //delete uploaded file from folder as inserted in DB -- directed by Geoff
+				        if (file_exists($fullImgSource)) {
+				            unlink($fullImgSource);
+				        }
 			        }
-			    }
-
+				}
+				//*******************************************************************************
 			}
 			Yii::app()->end();
         //}

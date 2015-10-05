@@ -236,14 +236,14 @@ $session = new CHttpSession;
                                     'size'        => '0',
                                     'maxlength'   => '10',
                                     'placeholder' => 'Expiry',
-                                    'style'       => 'width:120px;margin-top:-34px;margin-left:180px',
+                                    'style'       => 'width:145px;margin-top:-34px;margin-left:180px',
                                     'class' => 'form-control input-xs',
                                 ),
                             ));
                         ?>
                         <span class="required primary-identification-require">*</span>
-                        <?php echo $form->error($model, 'identification_document_no'); ?>
-                        <?php echo $form->error($model, 'identification_document_expiry'); ?>
+                        <?php echo $form->error($model, 'identification_document_no',array('style'=>'width:175px;float:left')); ?>
+                        <?php echo $form->error($model, 'identification_document_expiry',array('style' => 'width:145px;float:right')); ?>
                     </td>
                 </tr>
                 <?php endif; ?>

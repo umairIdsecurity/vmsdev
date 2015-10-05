@@ -148,7 +148,7 @@ class DataHelper
         }
 
         $tableName = $this->db->quoteTableName($table);
-        $sql="SELECT ".implode(',',$columnsQuoted)." "
+        $sql="SELECT ".implode(','.$tableName.'.',$columnsQuoted)." "
             ."FROM $tableName ";
 
         if($condition) {

@@ -31,7 +31,7 @@ class PreregistrationController extends Controller
 			),
 			array(
                 'allow',
-                'actions' => array('assignAsicholder','vicholderDeclined','declineVicholder','verifyVicholder','profile','visitHistory','helpdesk','notifications','verifications','verificationDeclarations'),
+                'actions' => array('assignAsicholder','vicholderDeclined','declineVicholder','verifyVicholder','profile','visitHistory','helpdesk','notifications','verifications','verificationDeclarations','verifyDeclarations'),
                 //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
                 'users' => array('@')
             ),
@@ -296,28 +296,22 @@ class PreregistrationController extends Controller
 		$session['step6Subtitle'] = ' > ASIC Sponsor';
 		unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 		$model->scenario = 'preregistrationAsic';
+		
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-		if (isset($_POST['Registration'])) {
-
+		if (isset($_POST['Registration'])) 
+		{
 			$model->attributes = $_POST['Registration'];
-
-			/*if($_POST['Registration']['is_asic_verification']==0){
-				
-				$this->redirect(array('preregistration/uploadPhoto'));
-			}
-			else
-			{*/
-				if(!empty($model->selected_asic_id)){
-
-					$asicModel = Registration::model()->findByPk($model->selected_asic_id);
-
-					$this->createAsicNotificationRequestedVerifications($asicModel);
-
-					$session['host'] = $asicModel->id;
-
+			if(!empty($model->selected_asic_id))
+			{
+				$asicModel = Registration::model()->findByPk($model->selected_asic_id);
+				$this->createAsicNotificationRequestedVerifications($asicModel);
+				$session['host'] = $asicModel->id;
+				//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
+				if($_POST['Registration']['is_asic_verification'] == 1)
+				{
 					$loggedUserEmail = 'Admin@perthairport.com.au';
 					$headers = "MIME-Version: 1.0" . "\r\n";
 					$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -330,27 +324,30 @@ class PreregistrationController extends Controller
 						"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/login'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/login</a><br>";
 					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 					mail($to, $subject, $body, $headers);
-
 				}
-				else{
+				//*******************************************************************************
+			}
+			else{
 
-					if( !empty($model->email) && !empty($model->contact_number) ){
-						$model->profile_type = 'ASIC';
-						$model->key_string = hash('ripemd160', uniqid());
+				if( !empty($model->email) && !empty($model->contact_number) ){
+					$model->profile_type = 'ASIC';
+					$model->key_string = hash('ripemd160', uniqid());
 
-						$model->tenant = $session['tenant'];
+					$model->tenant = $session['tenant'];
 
-						$model->visitor_workstation = $session['workstation'];
-						$model->created_by = $session['created_by'];
-						$model->role = 9; //Staff Member/Intranet
-						$model->visitor_card_status = 6; //6: Asic Issued
+					$model->visitor_workstation = $session['workstation'];
+					$model->created_by = $session['created_by'];
+					$model->role = 9; //Staff Member/Intranet
+					$model->visitor_card_status = 6; //6: Asic Issued
 
-						if ($model->save(false)) {
+					if ($model->save(false)) 
+					{
+						$this->createAsicNotificationRequestedVerifications($model);
+						$session['host'] = $model->id;
 
-							$this->createAsicNotificationRequestedVerifications($model);
-
-							$session['host'] = $model->id;
-
+						//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
+						if($_POST['Registration']['is_asic_verification'] == 1)
+						{
 							$loggedUserEmail = 'Admin@perthairport.com.au';
 							$headers = "MIME-Version: 1.0" . "\r\n";
 							$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -364,21 +361,16 @@ class PreregistrationController extends Controller
 							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 							mail($to, $subject, $body, $headers);
 						}
-						else{
-							$msg = print_r($model->getErrors(),1);
-							throw new CHttpException(400,'Data not saved in for asic because: '.$msg );
-						}
+						//*******************************************************************************
 					}
-
+					else{
+						$msg = print_r($model->getErrors(),1);
+						throw new CHttpException(400,'Data not saved in for asic because: '.$msg );
+					}
 				}
-
-
-
-				$this->redirect(array('preregistration/uploadPhoto'));
-			//}
-
+			}
+			$this->redirect(array('preregistration/uploadPhoto'));
 		}
-
 		$companyModel = new Company();
 		$companyModel->scenario = 'preregistrationAddComp';
 
@@ -1170,6 +1162,26 @@ class PreregistrationController extends Controller
         }
     }
 
+    public function createVicNotificationDeclinedYourVisit($visit)
+    {
+    	//create VIC Notifications: 4. ASIC Sponsor has declined your visit
+    	$host = Registration::model()->findByPk($visit->host);
+		$notification = new Notification();
+		$notification->created_by = null;
+        $notification->date_created = date("Y-m-d");
+        $notification->subject = 'ASIC Sponsor has rejected your visit';
+        $notification->message = 'ASIC Sponsor has rejected your visit (ASIC Sponsor Name: '.$host->first_name.' '.$host->last_name.' Date: '.date("d-m-Y",strtotime($visit->date_check_in)).' Time: '.$visit->time_check_in.')';
+        $notification->notification_type = 'VIC Holder Notification';
+        $notification->role_id = 10;
+        if($notification->save()){
+        	$notify = new UserNotification;
+            $notify->user_id = $visit->visitor;
+            $notify->notification_id = $notification->id;
+            $notify->has_read = 0; //Not Yet
+            $notify->save();
+        }
+    }
+
 
     public function createVicNotificationIdentificationExpiry()
     {
@@ -1257,6 +1269,21 @@ class PreregistrationController extends Controller
     	//create VIC Notifications: 2. ASIC Sponsor has assigned you a VIC holder Verification 
 		$notification = Notification::model()->findByAttributes(array('subject'=>'ASIC Sponsor has assigned you a VIC holder Verification '));
 		if($notification){
+			//************** EMAIL SENDING *****************************
+			$loggedUserEmail = Yii::app()->user->email;
+			$asic = Registration::model()->findByPk($visit->host);
+			$headers = "MIME-Version: 1.0" . "\r\n";
+			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+			$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+			$to=$asic->email;
+			$subject="Request for verification of VIC profile";
+			$body = "<html><body>Hi,<br><br>".
+				"VIC Holder urgently requires your Verification of their visit.<br><br>".
+				"Link of the VIC profile<br>".
+				"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
+			$body .="<br>"."Thanks,"."</body></html>";
+			mail($to, $subject, $body, $headers);
+			//***********************************************************	
 			$notify = new UserNotification;
             $notify->user_id = $visit->host;
             $notify->notification_id = $notification->id;
@@ -1270,7 +1297,23 @@ class PreregistrationController extends Controller
             $notification->message = 'ASIC Sponsor has assigned you a VIC holder Verification';
             $notification->notification_type = 'ASIC Notification';
             $notification->role_id = 10;
-            if($notification->save()){
+            if($notification->save())
+            {
+            	//************** EMAIL SENDING *****************************
+				$loggedUserEmail = Yii::app()->user->email;
+				$asic = Registration::model()->findByPk($visit->host);
+				$headers = "MIME-Version: 1.0" . "\r\n";
+				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+				$to=$asic->email;
+				$subject="Request for verification of VIC profile";
+				$body = "<html><body>Hi,<br><br>".
+					"VIC Holder urgently requires your Verification of their visit.<br><br>".
+					"Link of the VIC profile<br>".
+					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
+				$body .="<br>"."Thanks,"."</body></html>";
+				mail($to, $subject, $body, $headers);
+				//***********************************************************
             	$notify = new UserNotification;
                 $notify->user_id = $visit->host;
                 $notify->notification_id = $notification->id;
@@ -1335,34 +1378,24 @@ class PreregistrationController extends Controller
 
 	public function actionSuccess()
 	{	
-
 		$session = new CHttpSession;
-
 		$session['stepTitle'] = 'CREATE LOGIN';
-
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
-
 		$model = Registration::model()->findByPk($session['visitor_id']);
-
 		//if he has not created a login, redirect to create login
 		if(!isset($model->password) || ($model->password =="") || ($model->password == null))
 		{
 			$this->render('success');
 		}
-
 		//if they are logged in, redirect to visit history page
 		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
 			$this->redirect(array('preregistration/visitHistory'));
 		}
-
-		
 	}
 
-
 	public function actionAsicPass(){
-
 		if(
 			isset($_GET['id'], $_GET['email'], $_GET['k_str']) &&
 			!empty($_GET['id']) && !empty($_GET['email']) && !empty($_GET['k_str'])
@@ -1646,10 +1679,7 @@ class PreregistrationController extends Controller
             	//**********************************************************************************
             }
         }
-
-  
     	$companyModel = Company::model()->findByPk($model->company);
-
         $this->render('profile', array(
             'model' => $model,
             'companyModel' => $companyModel,
@@ -1657,8 +1687,6 @@ class PreregistrationController extends Controller
             'repeat_passwordErr' => $repeat_passwordErr,
             'old_passwordErr' => $old_passwordErr,
         ));	
-        
-
     }
 
     /* notifications */
@@ -1691,7 +1719,6 @@ class PreregistrationController extends Controller
         }else{
         	$condition .= " AND t.visitor=".Yii::app()->user->id;
         }
-
         $rawData = Yii::app()->db->createCommand()
                         ->select("t.id,t.date_check_in,t.host,v.first_name,v.last_name,t.visit_prereg_status") 
                         ->from("visit t")
@@ -1699,7 +1726,6 @@ class PreregistrationController extends Controller
                         ->where($condition)
                         ->queryAll();
         $item_count = count($rawData);
-
         $query1 = Yii::app()->db->createCommand()
                         ->select("t.id,t.date_check_in,t.host,v.first_name,v.last_name,t.visit_prereg_status") 
                         ->from("visit t")
@@ -1739,31 +1765,23 @@ class PreregistrationController extends Controller
     public function actionVerificationDeclarations()
     {
     	$this->unsetVariablesForGui();
+		$this->render('verification-declarations');
+    }
+
+    public function actionVerifyDeclarations()
+    {
     	$session = new CHttpSession;
-    	$model = new Declarationverification();
+		$visit = Visit::model()->findByPk($session['verify_visit_id']);
 
-		if(isset($_POST['Declarationverification']))
+		$visit->visit_prereg_status = "Verified";
+		$visit->asic_declaration = 1;
+		$visit->asic_verification = 1;
+
+		if($visit->save(false))
 		{
-			$model->attributes=$_POST['Declarationverification'];
-			
-
-			if($model->validate())
-			{
-				$visit = Visit::model()->findByPk($session['verify_visit_id']);
-
-				$visit->visit_prereg_status = "Verified";
-				$visit->asic_declaration = 1;
-				$visit->asic_verification = 1;
-
-				if($visit->save(false))
-				{
-					$this->createVicNotificationVerifiedYourVisit($visit);
-					$this->redirect(array('preregistration/verifications'));
-				}
-			}
+			$this->createVicNotificationVerifiedYourVisit($visit);
+			$this->redirect(array('preregistration/verifications'));
 		}
-		
-		$this->render('verification-declarations' , array('model'=>$model) );
     }
 
 
@@ -1780,6 +1798,7 @@ class PreregistrationController extends Controller
 		
 		if($visit->save(false))
 		{
+			$this->createVicNotificationDeclinedYourVisit($visit);
 			$this->redirect(array('preregistration/verifications'));
 		}
     }

@@ -105,7 +105,7 @@ $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : 
 $totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
 $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
-    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?>
+    Total Visits at <?php //echo $companyName; ?>: <?php echo $totalCompanyVisit; ?>
     <?php if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit == 28):?>
         <span class="glyphicon glyphicons-refresh"></span>
     <?php endif;?>

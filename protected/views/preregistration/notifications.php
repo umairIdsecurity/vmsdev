@@ -72,6 +72,21 @@
 		    		<?php } ?>
 		    	</p>
 		    </div>
+		    <h3>ASIC Sponsor rejected your visits</h3>
+		  	<div>
+		    	<p>
+		    		<?php if($notifications){
+	    					foreach ($notifications as $key => $notification) {
+	    						if($notification['subject'] == 'ASIC Sponsor has rejected your visit'){
+	    							echo $notification['message']."<br>";
+	    						}
+	    					}
+		    		 ?>
+		    		<?php }else{?>
+		    			Sorry, no notifications found
+		    		<?php } ?>
+		    	</p>
+		    </div>
 
 		  	<h3>Your Identification is about to expire</h3>
 		  	<div>

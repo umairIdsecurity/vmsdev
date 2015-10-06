@@ -130,7 +130,10 @@ class VisitController extends Controller {
                 $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : 'Other');
                 $newReason->created_by = Yii::app()->user->id;
                 $newReason->tenant = Yii::app()->user->tenant;
-                $newReason->module = "AVMS";
+                if ($model->card_type > CardType::CONTRACTOR_VISITOR)
+                    $newReason->module = "AVMS";
+                else
+                    $newReason->module = "CVMS";
                 if($newReason->save()){
                     $model->reason = $newReason->id;
                 }
@@ -432,7 +435,7 @@ class VisitController extends Controller {
                 }
             }
 
-            if (isset($_POST['Host'])) {
+            if (isset($_POST['Host']) && isset($hostModel)) {
                 // Get visitor params
                 $hostParams                      = Yii::app()->request->getPost('Host');
                 $hostModel->attributes           = $hostParams;

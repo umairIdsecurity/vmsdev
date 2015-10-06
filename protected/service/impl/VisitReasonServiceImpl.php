@@ -18,7 +18,8 @@ class VisitReasonServiceImpl implements VisitReasonService {
         //transform text
         $visitReason->reason = ucwords($visitReason->reason); 
         $visitReason->tenant = Yii::app()->user->tenant;
-        $visitReason->module = Yii::app()->request->getParam("vms", 'AVMS');
+        if (!isset($visitReason->module))
+            $visitReason->module = Yii::app()->request->getParam("vms", 'AVMS');
         if (!($visitReason->save())) {
             return false;
         }

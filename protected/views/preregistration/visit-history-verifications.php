@@ -35,7 +35,10 @@
                                     <?php endif; ?>
                                         
                                     <td><?php echo $q["first_name"]." ".$q["last_name"]; ?></td>
-                                    <td><?php echo returnAsicName($q['host']); ?></td>
+                                
+                                    <td><?php echo returnAsicName($q['host']) == "" ? "- - - -": returnAsicName($q['host']); ?></td>
+                                    
+
                                     <td><?php echo $q['visit_prereg_status']; ?></td>
                                 </tr>   
                     <?php 

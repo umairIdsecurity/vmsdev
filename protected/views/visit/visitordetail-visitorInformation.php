@@ -299,7 +299,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         <?php endif; ?>
 
         <?php //if (!$asic) : ?>
-        <?php if ($model->card_type <= CardType::CONTRACTOR_VISITOR) : ?>
+        <?php //if ($model->card_type <= CardType::CONTRACTOR_VISITOR) : ?>
 
         <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
             <ul>
@@ -327,14 +327,14 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         <tr id="addreasonTable">
                             <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
                             <td>
-                                <?php //echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
+                                <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
                             </td>
                         </tr>
                     </table>
                 </li>
             </ul>
         </li>
-        <?php endif; ?>
+        <?php //endif; ?>
         <?php if (($visitorModel->profile_type == "ASIC") || ($visitorModel->profile_type == "VIC")) : ?>
         <li class='has-sub' id="asicDetailsLi">
             <a href="#"><span>Identification</span></a>

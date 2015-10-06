@@ -826,23 +826,25 @@ $model->identification_country_issued = 13;
         }
 
         if (!hasError){
-            if($(parentElement()+".pass_option").is(":checked")== false){
-                $(parentElement()+"#pass_error_").show();
-                $(parentElement()+"#User_password_em_").html("select one option");
-                return false;
-            }
-            else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="")){
-                $(parentElement()+"#pass_error_").show();
-                $(parentElement()+"#pass_error_").html("Type password or generate");
-                return false;
-            }
-            else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && $("#Visitor_password").val() != "" && $("#Visitor_repeatpassword").val() !="" && $("#Visitor_repeatpassword").val() != $("#Visitor_password").val()){
-                $(parentElement()+"#pass_error_").show();
-                $(parentElement()+"#pass_error_").html("Password does not match with Repeat Password.");
-                return false;
-            }
-            else {
-                 $(parentElement()+"#pass_error_").hide();
+            if($('#VisitCardType').val() > CONTRACTOR_TYPE) {
+                if($(parentElement()+".pass_option").is(":checked")== false){
+                    $(parentElement()+"#pass_error_").show();
+                    $(parentElement()+"#User_password_em_").html("select one option");
+                    return false;
+                }
+                else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="")){
+                    $(parentElement()+"#pass_error_").show();
+                    $(parentElement()+"#pass_error_").html("Type password or generate");
+                    return false;
+                }
+                else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && $("#Visitor_password").val() != "" && $("#Visitor_repeatpassword").val() !="" && $("#Visitor_repeatpassword").val() != $("#Visitor_password").val()){
+                    $(parentElement()+"#pass_error_").show();
+                    $(parentElement()+"#pass_error_").html("Password does not match with Repeat Password.");
+                    return false;
+                }
+                else {
+                     $(parentElement()+"#pass_error_").hide();
+                }
             }
             var vehicleValue = $("#Visitor_vehicle").val();
             if(vehicleValue.length < 6 && vehicleValue != ""){
@@ -1292,9 +1294,15 @@ $model->identification_country_issued = 13;
                 reasonForm = $("#register-reason-form").serialize();
             }
 
+            reason_url = "<?php echo CHtml::normalizeUrl(array("visitReason/create&register=1")); ?>";
+
+            if($("#VisitCardType").val() < CONTRACTOR_TYPE) {
+                reason_url += "&vms=cvms";
+            }
+
             $.ajax({
                 type: "POST",
-                url: "<?php echo CHtml::normalizeUrl(array("visitReason/create&register=1")); ?>",
+                url: reason_url,
                 data: reasonForm,
                 success: function(data) {
                     addReasonInDropdown();

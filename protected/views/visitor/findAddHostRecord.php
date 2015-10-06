@@ -133,24 +133,29 @@ $defaultKey = key($asicCardTypes);
                                 document.getElementById("User_company").disabled = false;
                                 document.getElementById("User_tenant").disabled = false;
                                 document.getElementById("User_tenant_agent").disabled = false;
-                                if($("#register-host-form .pass_option").is(":checked")== false){
-                                    $("#register-host-form #pass_error_").show();
-                                    $("#register-host-form #User_password_em_").html("select one option");
-                                    return false;
-                                }
-                                else if($("#register-host-form .pass_option").is(":checked")== true && $("#register-host-form .pass_option:checked").val()==1 && ($("#register-host-form #Visitor_password").val()== "" || $("#register-host-form #Visitor_repeatpassword").val()=="")){
-                                    $("#register-host-form #pass_error_").show();
-                                    $("#register-host-form #pass_error_").html("Type password or generate");
-                                    return false;
-                                }
-                                else if($("#register-host-form .pass_option").is(":checked")== true && $("#register-host-form .pass_option:checked").val()==1 && $("#register-host-form #Visitor_password").val() != "" && $("#register-host-form #Visitor_repeatpassword").val() !="" && $("#register-host-form #Visitor_repeatpassword").val() != $("#register-host-form #Visitor_password").val()){
-                                    $("#register-host-form #pass_error_").show();
-                                    $("#register-host-form #pass_error_").html("Password does not match with Repeat Password.");
-                                    return false;
+                                if($("#VisitCardType").val() > CONTRACTOR_TYPE) {
+                                    if($("#register-host-form .pass_option").is(":checked")== false){
+                                        $("#register-host-form #pass_error_").show();
+                                        $("#register-host-form #User_password_em_").html("select one option");
+                                        return false;
+                                    }
+                                    else if($("#register-host-form .pass_option").is(":checked")== true && $("#register-host-form .pass_option:checked").val()==1 && ($("#register-host-form #Visitor_password").val()== "" || $("#register-host-form #Visitor_repeatpassword").val()=="")){
+                                        $("#register-host-form #pass_error_").show();
+                                        $("#register-host-form #pass_error_").html("Type password or generate");
+                                        return false;
+                                    }
+                                    else if($("#register-host-form .pass_option").is(":checked")== true && $("#register-host-form .pass_option:checked").val()==1 && $("#register-host-form #Visitor_password").val() != "" && $("#register-host-form #Visitor_repeatpassword").val() !="" && $("#register-host-form #Visitor_repeatpassword").val() != $("#register-host-form #Visitor_password").val()){
+                                        $("#register-host-form #pass_error_").show();
+                                        $("#register-host-form #pass_error_").html("Password does not match with Repeat Password.");
+                                        return false;
+                                    }
+                                    else {
+                                         $("#register-host-form #pass_error_").hide();
+                                         checkHostEmailIfUnique();
+                                    }
                                 }
                                 else {
-                                     $("#register-host-form #pass_error_").hide();
-                                     checkHostEmailIfUnique();
+                                    checkHostEmailIfUnique();
                                 }
                             }'
                         ),

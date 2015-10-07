@@ -111,12 +111,8 @@ class TenantTransferController extends Controller
                 $data[$table] = array_merge($data[$table],$dataHelper->getRows("SELECT " . $tableName . ".* FROM " . $tableName . " " . $condition));
             }
         }
-
-        echo "<pre>";
-        print_r($data);
-        die;
         
-        //Yii::app()->getRequest()->sendFile($this->getTenantName($data).'.tenant',json_encode($data));
+        Yii::app()->getRequest()->sendFile($this->getTenantName($data).'.tenant',json_encode($data));
 
     }
 

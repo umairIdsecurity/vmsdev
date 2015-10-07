@@ -170,11 +170,12 @@ class UserController extends Controller
 
         if (isset($_POST['User'])) {
             
-            if ($_POST['User']['password'] == '') {
-                $_POST['User']['password'] = $model->password;
+            if (isset($_POST['User']['password'])) {
+                $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
             } else {
-                $_POST['User']['password'] = $_POST['User']['password'];
+                $_POST['User']['password'] = $model->password;
             }
+
             $model->attributes = $_POST['User'];
 
             // User Allowed Module
@@ -182,7 +183,6 @@ class UserController extends Controller
             
             if ($userService->save($model, Yii::app()->user, null)) {
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
-
             }
         }
         

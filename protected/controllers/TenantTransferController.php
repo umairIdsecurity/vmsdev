@@ -56,8 +56,6 @@ class TenantTransferController extends Controller
 
             //'cvms_kiosk'                        =>[$default_condition],
 
-            'kiosk'                             =>[$default_condition],
-
             'reasons'                            =>['WHERE tenant='.$tenant],
 
             'password_change_request'           =>['JOIN '.$userTable.' ON '.$userTable.'.id = password_change_request.user_id '.
@@ -101,8 +99,6 @@ class TenantTransferController extends Controller
                                                     $default_condition],
 
             'audit_trail'                       =>['JOIN '.$userTable.' ON user.id = audit_trail.user_id '.$default_condition],
-
-
 
         ];
 

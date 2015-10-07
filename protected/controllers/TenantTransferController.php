@@ -54,7 +54,7 @@ class TenantTransferController extends Controller
 
             'contact_person'                    =>['WHERE tenant='.$tenant],
 
-            'cvms_kiosk'                        =>[$default_condition],
+            //'cvms_kiosk'                        =>[$default_condition],
 
             'kiosk'                             =>[$default_condition],
 
@@ -116,7 +116,11 @@ class TenantTransferController extends Controller
             }
         }
 
-        Yii::app()->getRequest()->sendFile($this->getTenantName($data).'.tenant',json_encode($data));
+        echo "<pre>";
+        print_r($data);
+        die;
+        
+        //Yii::app()->getRequest()->sendFile($this->getTenantName($data).'.tenant',json_encode($data));
 
     }
 
@@ -125,13 +129,61 @@ class TenantTransferController extends Controller
     {
         $model = new ImportTenantForm();
         $session = new CHttpSession;
-
-        if (isset($_POST['ImportTenantForm'])) {
-            $model->attributes = $_POST['ImportTenantForm'];
-
-
+/*        if(isset($_POST['ajax']) && $_POST['ajax']==='importtenant-form')
+        {
+            echo "called";
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }*/
+        if (isset($_POST['ImportTenantForm'])) 
+        {
+            $model->attributes = $_POST['ImportTenantForm']; 
+            //****************************************************************
+            $name  = $_FILES['ImportTenantForm']['name']['file'];
+            if(!empty($name)) 
+            {
+                $model->file=CUploadedFile::getInstance($model,'file');
+                $fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$name;
+                if($model->file->saveAs($fullImgSource))
+                {
+                    $data=file_get_contents($fullImgSource);
+                    $obj = json_decode($data);
+                    /*** cast the object to array ***/
+                    $contents = (array) $obj;
+                    foreach ($contents as $tableName => $content) 
+                    {
+                        if( !empty($content) ) // if table has data, then create insert statements otherwise neglect it
+                        {
+                            $rows = (array) $content;
+                            $cols = array();
+                            $sql = '';
+                            foreach ($rows as $rowKey => $row) 
+                            {
+                                $row = (array) $row;
+                                if(!$cols){$cols = array_keys($row);}
+                                $values = array_values($row);
+                                $vals = array();
+                                foreach ($values as $val)
+                                {
+                                    $vals[] = "'".mysql_real_escape_string($val)."'";
+                                }
+                                $sql == "" ? $sql .= "(".implode(',', $vals).")" : $sql = $sql . ",". "(".implode(',', $vals).")"; 
+                            }
+                            echo $sql = "INSERT into ".$tableName."(".implode(',', $cols).") VALUES ". $sql;
+                            echo "<br><br>";    
+                        }
+                    }
+                    if (file_exists($fullImgSource)) 
+                    {
+                        unlink($fullImgSource);
+                    }
+                    die();
+                }
+            }
+            //****************************************************************
         }
-        return $this->render("view", array("model" => $model));
+
+        $this->render("view", array("model" => $model));
     }
 
     function getTenantName($data){

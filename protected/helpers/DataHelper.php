@@ -207,9 +207,10 @@ class DataHelper
         return $result;
     }
 
-
-
-
+    public function insertRows($sql){
+        $command = $this->db->createCommand($sql);
+        $command->execute();
+    }
 
 
 }

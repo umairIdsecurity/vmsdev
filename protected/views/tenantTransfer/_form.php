@@ -12,8 +12,10 @@
     $form = $this->beginWidget('CActiveForm', array(
         'id'=>'importtenant-form',
         'enableAjaxValidation'=>false,
+        /*'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),*/
         'method'=>'post',
-
         'htmlOptions'=>array(
             'enctype'=>'multipart/form-data'
         )

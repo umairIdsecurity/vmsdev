@@ -247,13 +247,14 @@ $session = new CHttpSession;
             <!--  new asic -->
             <div class="form-group">
                 <label class="checkbox">
-                    <?php echo $form->checkBox($model,'is_asic_verification'); ?>
+                    <input type="checkbox" name="Registration[is_asic_verification]" value="0" id="toggleCheckbox" />
+                    <?php //echo $form->checkBox($model,'is_asic_verification'); ?>
                     <span class="checkbox-style"></span>
                     <p class="text-success">
                         Request ASIC Sponsor Verification
                     </p>
                 </label>
-                <?php echo $form->error($model,'is_asic_verification'); ?>
+                <?php //echo $form->error($model,'is_asic_verification'); ?>
             </div>
 
         </div>
@@ -405,6 +406,14 @@ $session = new CHttpSession;
             $("#asic-notification").hide();
             $('#Registration_selected_asic_id').val("");
             $('#new_asic_area').show();
+        });
+
+        $("#toggleCheckbox").on("click",function(e){
+            if(this.checked){
+                $(this).val(1);
+            }else{
+                $(this).val(0);
+            }
         });
 
         $('#search_asic_btn').click(function(event) {

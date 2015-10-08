@@ -8,6 +8,57 @@
  */
 class DatabaseIndexHelper
 {
+    public static function getForeignKeys(){
+
+        $driverName = Yii::app()->db->driverName;
+        $sql = null;
+
+        switch($driverName) {
+
+            case 'mysql';
+                $sql = "SELECT table_name, column_name, referenced_table_name, referenced_column_name"
+                    ."FROM information_schema.key_column_usage "
+                    ."WHERE   constraint_catalog = (SELECT DATABASE())";
+                break;
+
+            case 'mssql';
+            case 'sqlsrv';
+                $sql = "SELECT FK.TABLE_NAME as table_name, CU.COLUMN_NAME as column_name, "
+                    .   "PK.TABLE_NAME as referenced_table_name, PT.COLUMN_NAME as  referenced_column_name "
+                    ."FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS C "
+                    ."	INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS FK "
+                    ."		ON C.CONSTRAINT_NAME = FK.CONSTRAINT_NAME "
+                    ."	INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS PK "
+                    ."		ON C.UNIQUE_CONSTRAINT_NAME = PK.CONSTRAINT_NAME "
+                    ."	INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE CU "
+                    ."		ON C.CONSTRAINT_NAME = CU.CONSTRAINT_NAME "
+                    ."	INNER JOIN ( "
+                    ."            SELECT i1.TABLE_NAME, i2.COLUMN_NAME "
+                    ."            FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS i1 "
+                    ."              INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE i2 "
+                    ."                ON i1.CONSTRAINT_NAME = i2.CONSTRAINT_NAME "
+                    ."            WHERE i1.CONSTRAINT_TYPE = 'PRIMARY KEY' "
+                    ."           ) PT "
+                    ."      ON PT.TABLE_NAME = PK.TABLE_NAME ";
+                break;
+
+            default;
+                throw new CDbException($driverName." is not supported");
+
+        }
+
+        $command = Yii::app()->db->createCommand($sql);
+        $command->execute();
+        $reader =  $command->query();
+        $result = [];
+        foreach($reader as $row){
+            $result[] =  $row;
+        }
+        return $result;
+
+    }
+
+
     public static function getForeignKeyName($table,$column,$refTable,$refColumn){
 
         $driverName = Yii::app()->db->driverName;

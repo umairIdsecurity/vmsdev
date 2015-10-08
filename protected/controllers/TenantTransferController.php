@@ -136,22 +136,44 @@ class TenantTransferController extends Controller
             {
                 $model->file=CUploadedFile::getInstance($model,'file');
                 $fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$name;
+
+                // get database foriegn keys
+                $foreignKeys = $this->getForeignKeys();
+
                 if($model->file->saveAs($fullImgSource))
                 {
                     $data=file_get_contents($fullImgSource);
                     $obj = json_decode($data);
                     /*** cast the object to array ***/
                     $contents = (array) $obj;
+
+                    // create a mappings array
+                    $idMappings = [];
+
                     foreach ($contents as $tableName => $content) 
                     {
+
                         if( !empty($content) ) // if table has data, then create insert statements otherwise neglect it
                         {
+                            // initialise mappings for table
+                            $idMappings[$tableName] = [];
+
                             $rows = (array) $content;
                             $cols = array();
                             $sql = '';
                             foreach ($rows as $rowKey => $row) 
                             {
                                 $row = (array) $row;
+
+                                // remember the old id for mapping later
+                                $oldId = null;
+                                if(isset($row['id'])){
+                                    $oldId = $row['id'];
+                                    unset($row['id']);
+                                }
+                                // populate referencing columns
+                                $this->setReferencingIds($tableName,$row,$foreignKeys,$idMappings);
+
                                 if(!$cols){$cols = array_keys($row);}
                                 $values = array_values($row);
                                 $vals = array();
@@ -159,10 +181,15 @@ class TenantTransferController extends Controller
                                 {
                                     $vals[] = "'".mysql_real_escape_string($val)."'";
                                 }
-                                $sql == "" ? $sql .= "(".implode(',', $vals).")" : $sql = $sql . ",". "(".implode(',', $vals).")"; 
+                                $sql = "INSERT into ".$tableName."(".implode(',', $cols).") VALUES (".implode(',',$vals).")";
+                                //TODO: RUN SQL
+
+                                $newId = 1; //TODO:  GET NEW ID FROM DB CONNECTION
+                                $idMappings[$tableName][$oldId] = $newId;
+
+
                             }
-                            echo $sql = "INSERT into ".$tableName."(".implode(',', $cols).") VALUES ". $sql;
-                            echo "<br><br>";    
+                            echo "<br><br>";
                         }
                     }
                     if (file_exists($fullImgSource)) 
@@ -178,7 +205,52 @@ class TenantTransferController extends Controller
         $this->render("view", array("model" => $model));
     }
 
+    function getId($row){
+        if(isset($row['id'])){
+            return $row['id'];
+        }
+
+    }
+
+    function setReferencingIds($tableName, $row, $foreignKeys,$idMappings){
+
+        // go through each column
+        foreach($row as $columnName=>$value){
+
+            // if there is a foriegn key reference
+            if(isset($foreignKeys[$tableName][$columnName])){
+
+                // get the reference
+                $ref = $foreignKeys[$tableName][$columnName];
+
+                // check that we've already got a value for the reference
+                if(isset($idMappings[$ref['referenced_table_name'][$value]])){
+
+                    // set the reference value on the row
+                    $row[$columnName] = $idMappings[$ref['referenced_table_name']][$value];
+
+                } else {
+                    throw new CException("new id value for ".$tableName.".".$columnName."=".$value." does not exist. perhaps tables are added in wrong order?");
+                }
+            }
+        }
+
+    }
+
     function getTenantName($data){
         return $data['company'][0]['name'];
+    }
+
+    function getForeignKeys()
+    {
+        $rows = DatabaseIndexHelper::getForeignKeys();
+        $referencedTables = [];
+        foreach($rows as $row){
+            if(!isset($referencedTables[$row['table_name']])){
+                $referencedTables[$row['table_name']]=[];
+            }
+            $referencedTables[$row['table_name']][$row['column_name']]=['referenced_table_name'=>$row['referenced_table_name'],'referenced_column_name'=>$row['referenced_column_name']];
+        }
+        return $referencedTables;
     }
 }

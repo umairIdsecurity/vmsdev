@@ -327,7 +327,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         <tr id="addreasonTable">
                             <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
                             <td>
-                                <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
+                                <?php //echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
                             </td>
                         </tr>
                     </table>

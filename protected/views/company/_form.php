@@ -105,24 +105,24 @@ if ($this->action->id == 'update') {
                         </tr>
 
                         <!--WangFu Modified-->
-                        <?php if ($session['role'] != Roles::ROLE_ADMIN) { ?>
-                            <tr class="user_fields1">
-                                <td style="width:160px;">&nbsp;</td>
-                                <td style="width:240px;">
-                                    <?php
-                                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Company Code'));
-                                    if (isset($_GET['viewFrom'])) {
-                                        echo "<br>" . $form->error($model, 'code');
-                                    }
-                                    ?></td>
-                                <td><?php
-                                    if (!isset($_GET['viewFrom'])) {
-                                        echo "<br>" . $form->error($model, 'code');
-                                    }
-                                    ?></td>
-
-                            </tr>
-                        <?php } ?>
+<!--                        --><?php //if ($session['role'] != Roles::ROLE_ADMIN) { ?>
+<!--                            <tr class="user_fields1">-->
+<!--                                <td style="width:160px;">&nbsp;</td>-->
+<!--                                <td style="width:240px;">-->
+<!--                                    --><?php
+//                                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Company Code'));
+//                                    if (isset($_GET['viewFrom'])) {
+//                                        echo "<br>" . $form->error($model, 'code');
+//                                    }
+//                                    ?><!--</td>-->
+<!--                                <td>--><?php
+//                                    if (!isset($_GET['viewFrom'])) {
+//                                        echo "<br>" . $form->error($model, 'code');
+//                                    }
+//                                    ?><!--</td>-->
+<!---->
+<!--                            </tr>-->
+<!--                        --><?php //} ?>
 
                         <!-- <tr class="user_fields1">
             <td style="width:160px;">&nbsp;</td>

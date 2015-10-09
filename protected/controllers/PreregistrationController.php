@@ -134,11 +134,7 @@ class PreregistrationController extends Controller
 
 		$model = '';
 
-		//if he is logged in, update its data rather than create new visitor
-		/*if(!empty($model->selected_asic_id)){
-			
-		}	
-		else*/if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
+		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
 			$model = Registration::model()->findByPk(Yii::app()->user->id);
 		}
 		else{
@@ -156,6 +152,13 @@ class PreregistrationController extends Controller
 
 		if (isset($_POST['Registration'])) {
 
+			//if he is logged in, update its data rather than create new visitor
+			/*if(isset($_POST['Registration']['selected_asic_id']) && !empty($_POST['Registration']['selected_asic_id'])){
+				$vic = Registration::model()->findByPk($_POST['Registration']['selected_asic_id']);
+				$session['vic_id'] = $vic->id;
+				$this->redirect(array('preregistration/visitReason'));
+			}	*/
+			
 			$model->attributes = $_POST['Registration'];
 			
 			$model->tenant = $session['tenant'];
@@ -1788,6 +1791,10 @@ class PreregistrationController extends Controller
 
     public function actionVerifyVicholder($id)
     {
+    	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
+			$this->redirect(array('preregistration/dashboard'));
+		}
+
     	$this->unsetVariablesForGui();
     	$session = new CHttpSession;
     	$session['verify_visit_id'] = $id;
@@ -1802,12 +1809,19 @@ class PreregistrationController extends Controller
     /* asic sponsor verifications */
     public function actionVerificationDeclarations()
     {
+    	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
+			$this->redirect(array('preregistration/dashboard'));
+		}
     	$this->unsetVariablesForGui();
 		$this->render('verification-declarations');
     }
 
     public function actionVerifyDeclarations()
     {
+    	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
+			$this->redirect(array('preregistration/dashboard'));
+		}
+
     	$session = new CHttpSession;
 		$visit = Visit::model()->findByPk($session['verify_visit_id']);
 
@@ -1824,10 +1838,17 @@ class PreregistrationController extends Controller
 
 
     public function actionDeclineVicholder(){
+    	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
+			$this->redirect(array('preregistration/dashboard'));
+		}
     	$this->render('decline-vic');
     }
 
     public function actionVicholderDeclined(){
+
+    	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
+			$this->redirect(array('preregistration/dashboard'));
+		}
     	$session = new CHttpSession;
     	$visit = Visit::model()->findByPk($session['verify_visit_id']);
 		$visit->visit_prereg_status = "Rejected";
@@ -1843,6 +1864,10 @@ class PreregistrationController extends Controller
 
     public function actionAssignAsicholder()
     {
+    	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
+			$this->redirect(array('preregistration/dashboard'));
+		}
+
     	$this->unsetVariablesForGui();
     	$session = new CHttpSession;
 

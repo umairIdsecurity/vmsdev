@@ -1,24 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "contact_person".
+ * This is the model class for table "contact_support".
  *
- * The followings are the available columns in table 'contact_person':
+ * The followings are the available columns in table 'contact_support':
  * @property integer $id
- * @property integer $user_role
- * @property integer $reason_id
- * @property string $contact_person_name
- * @property string $contact_person_email
+ * @property integer $contact_person_id
+ * @property integer $contact_reason_id
+ * @property integer $user_id
+ * @property string $contact_message
  * @property string $date_created
  */
-class ContactPerson extends CActiveRecord
+class ContactSupport extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'contact_person';
+		return 'contact_support';
 	}
 
 	/**
@@ -29,13 +29,10 @@ class ContactPerson extends CActiveRecord
             // NOTE: you should only define rules for those attributes that
             // will receive user inputs.
             return array(
-                    array('contact_person_name, contact_person_email, user_role, reason_id', 'required','message' =>'Please complete {attribute}'),
-                    array('contact_person_name, contact_person_email', 'length', 'max'=>50),
-                    // array('contact_person_message', 'length', 'max'=>100),
-                    array('contact_person_email', 'email','message'=>"The email isn't a valid email address"),
+                    array('contact_person_id, contact_reason_id, user_id', 'required','message' =>'Please complete {attribute}'),
                     // The following rule is used by search().
                     // @todo Please remove those attributes that should not be searched.
-                    array('id, contact_person_name, contact_person_email, user_role, reason_id, date_created', 'safe', 'on'=>'search'),
+                    array('id, contact_person_id, contact_reason_id, user_id, contact_message, date_created', 'safe', 'on'=>'search'),
             );
 	}
 
@@ -57,13 +54,11 @@ class ContactPerson extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'contact_person_name' => 'Contact Person Name',
-			'contact_person_email' => 'Contact Person Email',
-			'user_role' => 'Contact User Role',
-			'reason_id' => 'Contact Reason',
-			// 'contact_person_message' => 'Contact Person Message',
+			'contact_person_id' => 'Contact Person',
+			'contact_reason_id' => 'Contact Reason',
+			'user_id' => 'User',
+			'contact_message' => 'Contact Message',
 			'date_created' => 'Date Created',
-			'Formatdate' => 'Date Created',
 		);
 	}
 
@@ -104,15 +99,14 @@ class ContactPerson extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('contact_person_name',$this->contact_person_name,true);
-		$criteria->compare('contact_person_email',$this->contact_person_email,true);
-		$criteria->compare('user_role',$this->user_role,true);
-		$criteria->compare('reason_id',$this->reason_id,true);
-		// $criteria->compare('contact_person_message',$this->contact_person_message,true);
+		$criteria->compare('contact_person_id',$this->contact_person_id,true);
+		$criteria->compare('contact_reason_id',$this->contact_reason_id,true);
+		$criteria->compare('user_id',$this->user_id,true);
+		$criteria->compare('contact_message',$this->contact_message,true);
 		$criteria->compare('date_created',$this->date_created,true);
-                //Show only same tenant related persons. 
-                if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
-                    $criteria->condition = "t.tenant = " . Yii::app()->user->tenant;
+		//Show only same tenant related persons. 
+		if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
+			$criteria->condition = "t.tenant = " . Yii::app()->user->tenant;
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
@@ -127,13 +121,5 @@ class ContactPerson extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
-	}
-
-	public function getFormatdate()
-	{
-		if (date("Y-m-d", strtotime($this->date_created)) != "1970-01-01" && date("Y-m-d", strtotime($this->date_created)) != "1969-12-31")
-			return date("d-m-Y", strtotime($this->date_created) );
-		else
-			return "";
 	}
 }

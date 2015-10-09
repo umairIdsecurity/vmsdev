@@ -325,6 +325,10 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id, $new_created=NULL) {
+        
+        // set Close visit that are Auto Closed and will expire today.
+        Visit::model()->setClosedAutoClosedVisits($id);  
+        
         $session = new CHttpSession;
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
@@ -616,6 +620,8 @@ class VisitController extends Controller {
         $session['lastPage'] = 'visitorrecords';
         //Archive Expired 48 Old Pre-registered Visits
         Visit::model()->archivePregisteredOldVisits();
+        // Auto Closed TO Closed the EVIC and 24 Hour Visits
+        Visit::model()->setClosedAutoClosedVisits();
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {

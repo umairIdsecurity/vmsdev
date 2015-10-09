@@ -18,7 +18,7 @@
 			    	<p>
 			    		<?php 
 			    			foreach ($notifications[0] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/visitHistory'); ?>"><?= $notification['message'] ?></a> <br>
+			    				<?= $notification['message'] ?><br>
 		    			<?php
 		    				}	 
 			    		?>
@@ -58,7 +58,7 @@
 			    	<p>
 			    		<?php 
 			    			foreach ($notifications[3] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>"><?= $notification['message'] ?></a> <br>
+			    				<?= $notification['message'] ?> <br>
 		    			<?php
 		    				}	 
 			    		?>
@@ -72,7 +72,7 @@
 			    	<p>
 			    		<?php 
 			    			foreach ($notifications[4] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>"><?= $notification['message'] ?></a> <br>
+			    				<?= $notification['message'] ?><br>
 		    			<?php
 		    				}	 
 			    		?>
@@ -86,7 +86,7 @@
 			    	<p>
 			    		<?php 
 			    			foreach ($notifications[5] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/profile'); ?>"><?= $notification['message'] ?></a> <br>
+			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . Yii::app()->user->id); ?>"><?= $notification['message'] ?></a> <br>
 		    			<?php
 		    				}	 
 			    		?>
@@ -137,7 +137,7 @@
 			   		<p>
 			    		<?php 
 			    			foreach ($notifications[2] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/profile'); ?>"><?= $notification['message'] ?></a> <br>
+			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . Yii::app()->user->id); ?>"><?= $notification['message'] ?></a> <br>
 		    			<?php
 		    				}	 
 			    		?>
@@ -159,8 +159,8 @@
 			  	<div>
 			    	<p>
 			    		<?php 
-			    			foreach ($notifications[1] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/visitHistory'); ?>"><?= $notification['message'] ?></a> <br>
+			    			foreach ($notifications[0] as $key => $notification) { ?>
+			    				<?= $notification['message'] ?><br>
 		    			<?php
 		    				}	 
 			    		?>

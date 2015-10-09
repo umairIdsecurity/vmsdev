@@ -310,7 +310,7 @@ class PreregistrationController extends Controller
 				$this->createAsicNotificationRequestedVerifications($asicModel);
 				$session['host'] = $asicModel->id;
 				//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
-				if($_POST['Registration']['is_asic_verification'] == 1)
+				if(isset($_POST['Registration']['is_asic_verification']) && $_POST['Registration']['is_asic_verification'] == 1)
 				{
 					$loggedUserEmail = 'Admin@perthairport.com.au';
 					$headers = "MIME-Version: 1.0" . "\r\n";
@@ -346,8 +346,9 @@ class PreregistrationController extends Controller
 						$session['host'] = $model->id;
 
 						//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
-						if($_POST['Registration']['is_asic_verification'] == 1)
+						if(isset($_POST['Registration']['is_asic_verification']) && $_POST['Registration']['is_asic_verification'] == 1)
 						{
+				
 							$loggedUserEmail = 'Admin@perthairport.com.au';
 							$headers = "MIME-Version: 1.0" . "\r\n";
 							$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -1694,16 +1695,50 @@ class PreregistrationController extends Controller
     {
     	$this->unsetVariablesForGui();
     	Yii::app()->db->createCommand()->update("user_notification",array('has_read' => 1),"user_id = " . Yii::app()->user->id);
-
-    	 $notifications = Yii::app()->db->createCommand()
+    	/*$notifications = Yii::app()->db->createCommand()
                     ->select("*") 
                     ->from("notification n")
                     ->join("user_notification u","n.id = u.notification_id")
                     ->where("u.user_id = " . Yii::app()->user->id)
                     ->order("u.notification_id DESC")
-                    ->queryAll();
+                    ->queryAll();*/
 
-    	 $this->render('notifications',array('notifications' => $notifications ));	
+        $criteriaArray = array();
+        $notifications = '';
+
+        if(Yii::app()->user->account_type == "VIC")
+        {
+        	$criteriaArray = array('You have Preregistered a Visit','You have reached a Visit Count of 20 days','You have reached your 28 Day Visit Count Limit','ASIC Sponsor has verified your visit','ASIC Sponsor has rejected your visit','Your Identification is about to expire');
+        	$notifications = $this->criteriaBasedNotifications($criteriaArray); 
+    	}
+    	elseif (Yii::app()->user->account_type == "ASIC") 
+    	{
+    		$criteriaArray = array('VIC Holder has requested ASIC Sponsor verification','ASIC Sponsor has assigned you a VIC holder Verification','Your ASIC is about to Expire');
+        	$notifications = $this->criteriaBasedNotifications($criteriaArray); 
+    	}
+    	else
+    	{
+    		$criteriaArray = array('VIC Holder in your company has Preregistered a Visit','VIC Holder in your company has reached their 20 day visit count','VIC Holder in your company has reached their 28 day limit');
+        	$notifications = $this->criteriaBasedNotifications($criteriaArray); 
+    	}
+    	$this->render('notifications',array('notifications' => $notifications ));	
+    }
+
+    public function criteriaBasedNotifications($criteriaArray)
+    {
+    	$notifications = array();
+    	for($i=0; $i < sizeof($criteriaArray); $i++)
+    	{
+    		$notification = Yii::app()->db->createCommand()
+                    ->select("*") 
+                    ->from("notification n")
+                    ->join("user_notification u","n.id = u.notification_id")
+                    ->where("u.user_id = " . Yii::app()->user->id. " AND subject='".$criteriaArray[$i]."'")
+                    ->order("u.notification_id DESC")
+                    ->queryAll();
+            array_push($notifications, $notification);        
+    	}
+    	return $notifications;
     }
 
     /* asic sponsor verifications */

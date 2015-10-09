@@ -321,7 +321,7 @@ class PreregistrationController extends Controller
 					$body = "<html><body>Hi,<br><br>".
 						"VIC Holder urgently requires your Verification of their visit.<br><br>".
 						"Link of the VIC profile<br>".
-						"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/login'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/login</a><br>";
+						"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."</a><br>";
 					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 					mail($to, $subject, $body, $headers);
 				}
@@ -358,7 +358,8 @@ class PreregistrationController extends Controller
 							$body = "<html><body>Hi,<br><br>".
 								"VIC Holder urgently requires your Verification of their visit.<br><br>".
 								"Link of the VIC profile<br>".
-								"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
+								//"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
+								"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."</a><br>";
 							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 							mail($to, $subject, $body, $headers);
 						}
@@ -1281,7 +1282,8 @@ class PreregistrationController extends Controller
 			$body = "<html><body>Hi,<br><br>".
 				"VIC Holder urgently requires your Verification of their visit.<br><br>".
 				"Link of the VIC profile<br>".
-				"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
+				//"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
+				"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."</a><br>";
 			$body .="<br>"."Thanks,"."</body></html>";
 			mail($to, $subject, $body, $headers);
 			//***********************************************************	
@@ -1311,7 +1313,8 @@ class PreregistrationController extends Controller
 				$body = "<html><body>Hi,<br><br>".
 					"VIC Holder urgently requires your Verification of their visit.<br><br>".
 					"Link of the VIC profile<br>".
-					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
+					//"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
+					"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."</a><br>";
 				$body .="<br>"."Thanks,"."</body></html>";
 				mail($to, $subject, $body, $headers);
 				//***********************************************************

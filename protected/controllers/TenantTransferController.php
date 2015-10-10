@@ -35,8 +35,11 @@ class TenantTransferController extends Controller
     public function actionExport(){
 
         $tenant = $_REQUEST['tenant'];
+
         $userTable = Yii::app()->db->quoteTableName('user');
+
         $default_condition = 'WHERE tenant='.$tenant.' and is_deleted=0';
+
         $queries = [
             'company'                           =>[$default_condition." OR id=".$tenant],
 
@@ -182,9 +185,12 @@ class TenantTransferController extends Controller
                                     $vals[] = "'".mysql_real_escape_string($val)."'";
                                 }
                                 $sql = "INSERT into ".$tableName."(".implode(',', $cols).") VALUES (".implode(',',$vals).")";
-                                //TODO: RUN SQL
 
-                                $newId = 1; //TODO:  GET NEW ID FROM DB CONNECTION
+                                //TODO: RUN SQL
+                                echo $sql;
+
+                                $newId = $this->getDummyIncrement($tableName); //TODO:  GET NEW ID FROM DB CONNECTION
+
                                 $idMappings[$tableName][$oldId] = $newId;
 
 
@@ -205,12 +211,20 @@ class TenantTransferController extends Controller
         $this->render("view", array("model" => $model));
     }
 
-    function getId($row){
-        if(isset($row['id'])){
-            return $row['id'];
+    function getDummyIncrement($tableName, $idMappings){
+        if(!isset($idMappings[$tableName])) {
+            return 1;
         }
-
+        return end(array_values($idMappings[$tableName])) + 1;
     }
+
+//    function getRowId($row){
+//        if(isset($row['id'])){
+//            return $row['id'];
+//        }
+//        return null;
+//
+//    }
 
     function setReferencingIds($tableName, $row, $foreignKeys,$idMappings){
 

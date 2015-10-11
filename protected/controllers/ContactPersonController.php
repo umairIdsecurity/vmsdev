@@ -68,6 +68,7 @@ class ContactPersonController extends Controller
 			$model->attributes=$_POST['ContactPerson'];
             $model->created_by=Yii::app()->user->id;
             $model->tenant=Yii::app()->user->tenant;
+			$model->date_created = localtime();
                         
 			if($model->save())
 				$this->redirect(array('admin'));

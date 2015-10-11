@@ -5,11 +5,11 @@ class m151009_042040_change_contact_support_person extends CDbMigration
 	public function safeUp()
 	{
 		// add user_role and reason_id to contact_person
-		$this->addColumn("contact_person", "user_role", "TINYINT NULL");
-		$this->addColumn("contact_person", "reason_id", "BIGINT NULL");
+		//$this->addColumn("contact_person", "user_role", "TINYINT NULL");
+		//$this->addColumn("contact_person", "reason_id", "BIGINT NULL");
 
 		// remove contact person message
-		$this->dropColumn("contact_person", "contact_person_message");
+		//$this->dropColumn("contact_person", "contact_person_message");
 
 		// add contact support table
 		$this->createTable("contact_support", array(
@@ -18,7 +18,7 @@ class m151009_042040_change_contact_support_person extends CDbMigration
             'contact_reason_id'=>'BIGINT NULL',
             'user_id'=>'BIGINT NULL',
             'contact_message'=>'VARCHAR(100) NULL',
-            'date_created' =>'datetime DEFAULT CURRENT_TIMESTAMP'
+            'date_created' =>'DATETIME NOT NULL'
 		));
 	}
 

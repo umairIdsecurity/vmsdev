@@ -228,7 +228,7 @@ class TenantTransferController extends Controller
         if($tableName=='company'){
             if($row['company_type']==1) {
                 $sql[] = "UPDATE company SET tenant = id where id=" . $row['id'];
-            } else if($row['company_type']==1=2) {
+            } else if($row['company_type']==2) {
                 $sql[] = "UPDATE company SET tenant_agent = id where id=" . $row['id'];
             }
         }

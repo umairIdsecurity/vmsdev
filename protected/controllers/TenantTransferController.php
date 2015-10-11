@@ -14,6 +14,7 @@ class TenantTransferController extends Controller
         ['table_name'=>'user_workstation', 'column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'tenant_contact', 'column_name'=>'user','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'company', 'column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'tenant_agent', 'column_name'=>'id','referenced_table_name'=>'company','referenced_column_name'=>'id'],
     ];
 
     public function filters() {
@@ -179,7 +180,7 @@ class TenantTransferController extends Controller
                                         //$row['id'] = Yii::app()->db->getLastInsertID();
 
                                     }
-                                    $this->afterInsertRow($tableName,$row);
+                                    $this->afterInsertRow($tableName,$row,$idMappings);
                                     if (isset($row['id'])) {
                                         $idMappings[$tableName][$oldId] = $row['id'];
                                         echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
@@ -221,7 +222,7 @@ class TenantTransferController extends Controller
         }
     }
 
-    function afterInsertRow($tableName,&$row){
+    function afterInsertRow($tableName,&$row, &$idMappings,$oldId){
 
         $sql = [];
 

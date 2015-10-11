@@ -77,7 +77,7 @@ class TenantController extends Controller {
             } catch (CException $ex){
 
                 $transaction->rollback();
-                Yii::app()->user->setFlash("error", "Sorry Unable to create new Tenant");
+                Yii::app()->user->setFlash("error", "Sorry Unable to create new Tenant: ".$ex->getMessage());
             }
 
         }

@@ -13,7 +13,7 @@ class TenantTransferController extends Controller
         ['table_name'=>'tenant', 'column_name'=>'id','referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'user_workstation', 'column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'tenant_contact', 'column_name'=>'user','referenced_table_name'=>'user','referenced_column_name'=>'id'],
-
+        ['table_name'=>'company', 'column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
     ];
 
     public function filters() {
@@ -31,7 +31,7 @@ class TenantTransferController extends Controller
     public function accessRules() {
         return array(
             array('allow', // allow user if same company
-                'actions' => array('export','import'),
+                'actions' => array('export','import','deleteSql'),
                 'expression' => 'Yii::app()->user->role  == Roles::ROLE_SUPERADMIN',
             ),
             array('deny', // deny all users
@@ -50,6 +50,7 @@ class TenantTransferController extends Controller
         $data=[];
         $dataHelper = new DataHelper(Yii::app()->db);
         foreach($queries as $table=>$conditions){
+
             $tableName = Yii::app()->db->quoteTableName($table);
             $data[$table] = [];
             foreach($conditions as $condition) {
@@ -59,6 +60,24 @@ class TenantTransferController extends Controller
         
         Yii::app()->getRequest()->sendFile($this->getTenantName($data).'.tenant',json_encode($data,JSON_PRETTY_PRINT));
 
+    }
+
+    function actionDeleteSql()
+    {
+        $tenant = $_REQUEST['tenant'];
+        $queries = array_reverse($this->getQueries($tenant));
+
+        $data=[];
+        $sql = "";
+        foreach($queries as $table=>$conditions){
+            $tableName = Yii::app()->db->quoteTableName($table);
+            $data[$table] = [];
+            foreach($conditions as $condition) {
+                $sql = $sql."DELETE FROM " . $tableName . " WHERE EXISTS (SELECT ".$tableName.".* WHERE " . $condition." )\r\n";
+            }
+        }
+
+        Yii::app()->getRequest()->sendFile("Delete Tenant ".$tenant.'.sql',$sql);
     }
 
 
@@ -95,6 +114,7 @@ class TenantTransferController extends Controller
 
                     // add super admin to mappings
                     $idMappings['user'][1]=1;
+                    $idMappings['company'][1]=1;
 
                     $targetTables = $this->getTargetTableNames();
 
@@ -127,6 +147,9 @@ class TenantTransferController extends Controller
                                         }
                                     }
 
+                                    // masage the data in out of the ordinary circumstances
+                                    $this->beforeInsertRow($tableName,$row);
+
                                     // populate referencing columns
                                     $this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables);
 
@@ -145,10 +168,10 @@ class TenantTransferController extends Controller
 
                                     $quotedTableName = Yii::app()->db->quoteTableName($tableName);
 
-                                    $sql = "INSERT INTO " . $quotedTableName . " (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
+                                    $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $cols) . ") VALUES (" . implode(', ', $vals) . ")";
 
                                     //TODO: RUN SQL
-                                    echo $sql . "<br><br>";
+                                    echo $sql . "<br>";
 
                                     if ($isAutoIncrement) {
 
@@ -156,12 +179,12 @@ class TenantTransferController extends Controller
                                         //$row['id'] = Yii::app()->db->getLastInsertID();
 
                                     }
-
+                                    $this->afterInsertRow($tableName,$row);
                                     if (isset($row['id'])) {
                                         $idMappings[$tableName][$oldId] = $row['id'];
                                         echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
                                     }
-
+                                    echo "<br><br>";
                                 }
                                 echo "<br><br>";
                             }
@@ -187,6 +210,36 @@ class TenantTransferController extends Controller
 
         $this->render("view", array("model" => $model));
     }
+
+    function beforeInsertRow($tableName, &$row){
+        if($tableName=='company'){
+            if($row['company_type']==1){
+                $row['tenant'] = NULL;
+            } else if($row['company_type']==2){
+                $row['tenant_agent'] = NULL;
+            }
+        }
+    }
+
+    function afterInsertRow($tableName,&$row){
+
+        $sql = [];
+
+        if($tableName=='company'){
+            if($row['company_type']==1) {
+                $sql[] = "UPDATE company SET tenant = id where id=" . $row['id'];
+            } else if($row['company_type']==1=2) {
+                $sql[] = "UPDATE company SET tenant_agent = id where id=" . $row['id'];
+            }
+        }
+
+        foreach($sql as $statement){
+            //Yii::app()->db->createCommand($statement)->execute();
+            echo $statement."<br>";
+        }
+
+    }
+
 
     function quoteValue($tableName,$columnName,$value){
         $column = Yii::app()->db->schema->tables[$tableName]->columns[$columnName];
@@ -242,6 +295,7 @@ class TenantTransferController extends Controller
 
     }
 
+
     function getTenantName($data){
         return $data['company'][0]['name'];
     }
@@ -269,22 +323,22 @@ class TenantTransferController extends Controller
     {
         $userTable = Yii::app()->db->quoteTableName('user');
 
-        $default_condition = 'WHERE tenant='.$tenant.' and is_deleted=0';
+        $default_condition = 'WHERE (tenant='.$tenant.' AND is_deleted=0) ';
 
 
         return [
 
             'photo'                             =>[ 'JOIN company ON company.logo = photo.id '.$default_condition,
-                'JOIN '.$userTable.' ON '.$userTable.'.photo = photo.id '.$default_condition],
+                                                    'JOIN '.$userTable.' ON '.$userTable.'.photo = photo.id '.$default_condition],
 
-            'company'                           =>[$default_condition." OR id=".$tenant],
+            'company'                           =>[$default_condition." OR (id=".$tenant." AND is_deleted=0) "],
 
             'company_laf_preferences'           =>['JOIN company ON company_laf_preferences.id = company_laf_preferences.id '.
-                $default_condition],
+                                                    $default_condition],
 
-            'tenant'                            =>['WHERE id='.$tenant.' and is_deleted=0'],
+            'tenant'                            =>['WHERE id='.$tenant.' AND is_deleted=0'],
 
-            'tenant_agent'                      =>['WHERE tenant_id='.$tenant.' and is_deleted=0'],
+            'tenant_agent'                      =>['WHERE tenant_id='.$tenant.' AND is_deleted=0'],
 
             'user'                              =>[$default_condition],
 
@@ -337,4 +391,5 @@ class TenantTransferController extends Controller
 
         ];
     }
+
 }

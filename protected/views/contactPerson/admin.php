@@ -43,6 +43,20 @@ $('.search-form form').submit(function(){
 		'contact_person_name',
 		'contact_person_email',
 		array(
+            'name' => 'user_role',
+            'value' => '!empty($data->user_role) ? Roles::get_cavms_roles_name()[$data->user_role] : ""',
+            'header' => 'User Role',
+            'filter' => Roles::get_cavms_roles_name(),
+            'htmlOptions' => array('width' => '110px'),
+        ),
+        array(
+            'name' => 'reason_id',
+            'value' => 'getReasonName($data->reason_id)',
+            'header' => 'Contact Reason',
+            'filter' => false,
+            'htmlOptions' => array('width' => '110px'),
+        ),
+		array(
                     'header' => 'Actions',
                     'class' => 'CButtonColumn',
                     'template' => '{update} {delete}',
@@ -60,3 +74,16 @@ $('.search-form form').submit(function(){
                 ),
 	),
 )); ?>
+
+<?php 
+function getReasonName($id) {
+	if(!empty($id)) {
+		$reason = Reasons::model()->findByPK($id);
+		if (isset($reason)) {
+			return $reason->reason_name;
+		}
+	}
+	return "";
+}
+
+?>

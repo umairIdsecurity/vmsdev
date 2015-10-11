@@ -124,7 +124,7 @@ if ($model->time_in != '') {
         <div class="col-sm-12">
             <div class="form-group">
                 <div class="pull-left">
-                    <a href="<?=Yii::app()->createUrl("preregistration/confirmDetails")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    <a href="<?=Yii::app()->createUrl("preregistration/uploadPhoto")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
                 <div class="pull-right">
                     <?php

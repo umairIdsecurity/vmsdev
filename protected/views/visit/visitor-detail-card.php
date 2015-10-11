@@ -135,7 +135,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
 ?>
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
     <?php
-        if ($asic) {
+        //if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
                 $profileType = Visitor::PROFILE_TYPE_VIC;
 
@@ -145,7 +145,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
 
             echo $detailForm->dropDownList($visitorModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
-        }
+        //}
 
         $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
         if (!empty($workstationList)) {
@@ -160,7 +160,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
         // echo $detailForm->error($model, 'workstation');
         echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
-        if ($asic) {
+        // if ($asic) {
             //$visitor_types = VisitorType::model()->returnVisitorTypes();
            // if(is_array($visitor_types)) {
                $visitor_types = VisitorType::model()->getFromCardType(-1);
@@ -180,7 +180,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             if( isset($results) && count($results))
                 echo $detailForm->dropDownList($model, 'reason', $results);
             echo "<br />";
-        }
+        //}
 
         $cardTypeOptions = [];
         if ($model->visit_status == VisitStatus::AUTOCLOSED) {

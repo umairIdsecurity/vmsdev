@@ -25,6 +25,8 @@ $this->menu=array(
 		'contact_person_name',
 		'contact_person_email',
 		//'contact_person_message',
+		'user_role',
+		'reason_id',
 		'date_created',
 	),
 )); ?>

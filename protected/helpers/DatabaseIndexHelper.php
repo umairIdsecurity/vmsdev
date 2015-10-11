@@ -16,9 +16,9 @@ class DatabaseIndexHelper
         switch($driverName) {
 
             case 'mysql';
-                $sql = "SELECT table_name, column_name, referenced_table_name, referenced_column_name"
-                    ."FROM information_schema.key_column_usage "
-                    ."WHERE   constraint_catalog = (SELECT DATABASE())";
+                $sql =  "SELECT table_name, column_name, referenced_table_name, referenced_column_name "
+                        ."FROM  information_schema.key_column_usage ";
+                        //."WHERE constraint_catalog =  DATABASE()";
                 break;
 
             case 'mssql';

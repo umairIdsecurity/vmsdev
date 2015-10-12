@@ -77,7 +77,7 @@ class TenantController extends Controller {
             } catch (CException $ex){
 
                 $transaction->rollback();
-                Yii::app()->user->setFlash("error", "Sorry Unable to create new Tenant");
+                Yii::app()->user->setFlash("error", "Sorry Unable to create new Tenant: ".$ex->getMessage());
             }
 
         }
@@ -176,7 +176,7 @@ class TenantController extends Controller {
         $workstationModel->contact_number = $_POST["TenantForm"]["contact_number"];
         $workstationModel->created_by = Yii::app()->user->id;
         $workstationModel->tenant = $tenantModel->id;
-        $workstationModel->tenant_agent = $userModel->id;
+        $workstationModel->tenant_agent = NULL;
         $workstationModel->password = NULL;
         $workstationModel->timezone_id = $_POST["TenantForm"]["timezone_id"];
         if( $workstationModel->validate() && $workstationModel->save() ) {

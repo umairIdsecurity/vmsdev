@@ -1287,7 +1287,7 @@ class Visit extends CActiveRecord {
         $criteria->addCondition(" ( id != ".$current_visit_id." ) AND "
                 . " tenant = ".Yii::app()->user->tenant." "
                 . " AND (visit_status != ".VisitStatus::SAVED." AND visit_status != ".VisitStatus::PREREGISTERED."  ) "
-                . " AND visitor = " . $this->visitor. " AND is_deleted = 0");
+                . " AND visitor = " . $this->visitor. " AND is_deleted = 0 && reset_id != 1");
         $visits = $this->findAll($criteria);
        if( $visits ) {
            $visitCount  = 0;
@@ -1321,45 +1321,54 @@ class Visit extends CActiveRecord {
      * Reference: CAVMS-1065
      */
     public function setClosedAutoClosedVisits( $id = "") {
-        
+            
         $cond = "";
-        !empty($id) ? $cond .= " AND t.id = ".$id : $cond;
-        isset(Yii::app()->user->tenant) ? $cond .= " AND t.tenant = ".Yii::app()->user->tenant : $cond;
+        $cond .= !empty($id) ? " AND t.id = ".$id : "";
+        $cond .= isset(Yii::app()->user->tenant) ? " AND t.tenant = ".Yii::app()->user->tenant : "";
             
        //1. Set CLOSED all AUTOClosed VIC 24 hour and EVIC visits
        $condition = " (t.card_type = ".CardType::VIC_CARD_24HOURS." OR t.card_type = ".CardType::VIC_CARD_EXTENDED.")"
-                  . " AND t.visit_status = ".VisitStatus::AUTOCLOSED. " AND t.date_check_out <= '".date("Y-m-d")."' ".$cond;
-                   
+                  . " AND t.visit_status = ".VisitStatus::AUTOCLOSED . $cond;
+                          
         $visits = $this->with("visitor0")->findAll( $condition );  
       
         foreach( $visits as $v ) {
-         
+           
+            $update = array();
+            
             $dateNow = new DateTime("NOW");
             $dateOut = new DateTime( $v->date_check_out." ".$v->time_check_out );
             $dateDiff = $dateOut->diff($dateNow)->format("%r%a");
             $status = "";
             
-            if ( $dateDiff > 0 ) { // Set all expires visit to close 
-                $status = VisitStatus::CLOSED; 
+            // Set all expires visit to close 
+            if ( $dateDiff > 0 ) { 
+                $update["visit_closed_date"] = $dateNow->format("Y-m-d H:i:s");
+                $update["visit_status"] = VisitStatus::CLOSED;
             } elseif ($dateDiff == 0 && $v->card_type == CardType::VIC_CARD_24HOURS) { 
                 // 24 Hour visit will be expired on the exact time when it was activated
                 if( ($dateNow->format("H") > $dateOut->format("H") ) || ($dateNow->format("H") == $dateOut->format("H") && $dateNow->format("i") > $dateOut->format("i"))) {
-                    $status = VisitStatus::CLOSED;  
+                    $update["visit_closed_date"] = $dateNow->format("Y-m-d H:i:s");
+                    $update["visit_status"] = VisitStatus::CLOSED;
                 }
             }
+           
+            // Change (EVIC) VIC holder to Asic Pending  
+            if ($v->card_type == CardType::VIC_CARD_EXTENDED && $v->visitor0["visitor_card_status"] == Visitor::VIC_HOLDER) {
+                 Visitor::model()->updateByPk($v->visitor0["id"], array("visitor_card_status" => Visitor::VIC_ASIC_PENDING));
+                 // Total visit count becomes 0 and Auto Closed EVIC visit then change to 'Closed' immediately.
+                 $update["reset_id"] = 1;
+                 $update["visit_closed_date"] = $dateNow->format("Y-m-d 23:59:59");
+            }
             
-            //EVIC Auto Closed visits should get closed & VIC changes status to 'ASIC Pending'
-            if(!empty( $status )) {
-               
-                $update = array();
-                $update["visit_status"] = $status;
-                // Change (EVIC) VIC holder to Asic Pending  
-                if ($v->card_type == CardType::VIC_CARD_EXTENDED && $v->visitor0["visitor_card_status"] == Visitor::VIC_HOLDER) {
-                    Visitor::model()->updateByPk($v->visitor0["id"], array("visitor_card_status" => Visitor::VIC_ASIC_PENDING));
-                    // Total visit count becomes 0 and Auto Closed EVIC visit then change to 'Closed' immediately.
-                    // $update["is_deleted"] = 1;
-                }
-                $this->updateByPk($v->id, $update);   
+             // Closed the Auto Closed EVIC visits at Midnight of the current Auto Closed date
+            if( CardType::VIC_CARD_EXTENDED && !is_null($v->visit_closed_date)  && time() >= strtotime($v->visit_closed_date)) {
+                $update["visit_status"] = VisitStatus::CLOSED;
+            }
+            
+            // Update Visit Table
+            if( count( $update ) ) {
+               $this->updateByPk($v->id, $update);   
             }
         }
         return 0;

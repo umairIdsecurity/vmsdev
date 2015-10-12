@@ -81,7 +81,7 @@ class VisitController extends Controller {
             if (!isset($visitParams['reason']) || empty($visitParams['reason'])) {
                 $visitParams['reason'] = NULL;
             }
-
+          
             $model->attributes = $visitParams;
 
             // If datepicker is disabled then date check out is empty
@@ -138,7 +138,7 @@ class VisitController extends Controller {
                     $model->reason = $newReason->id;
                 }
             }
-
+            $model->reset_id = NULL;
             if ($visitService->save($model, $session['id'])) {
                 if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
                     $visitor = Visitor::model()->findByPk($model->visitor);
@@ -184,7 +184,7 @@ class VisitController extends Controller {
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
 
-			if ($model->visitor_type == null) {
+		if ($model->visitor_type == null) {
                 $model->visitor_type = $oldVisitorType;
             }
             if ($model->reason == null) {
@@ -509,13 +509,15 @@ class VisitController extends Controller {
             }
         }
 
-        if (isset($_POST['Visit'])) {
+        if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) {
             $visitParams = Yii::app()->request->getPost('Visit');
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
 
             $model->attributes = $visitParams;
+            $model->reset_id = NULL;
+            $model->visit_closed_date = NULL;
             // If operator select other reason then save new one
             if (isset($_POST['VisitReason'])) {
                 $visitReasonModel             = new VisitReason;
@@ -540,6 +542,10 @@ class VisitController extends Controller {
 
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                             $model->visit_closed_date = date("Y-m-d 23:59:59");
+                             Visitor::model()->updateByPk($model->visitor, array("visitor_card_status" => Visitor::VIC_ASIC_PENDING));
+                             $model->reset_id = 1;
+                             
                             if ($visitParams['finish_date'] != NULL) {
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
                             } else { 

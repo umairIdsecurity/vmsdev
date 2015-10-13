@@ -247,7 +247,8 @@ class TenantTransferController extends Controller
             //****************************************************************
         }
 
-        $this->render("view", array("model" => $model));
+        return $this->render("view", array("model" => $model));
+        
     }
 
     function beforeInsertRow($tableName, &$row){

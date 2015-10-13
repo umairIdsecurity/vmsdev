@@ -147,7 +147,14 @@ class TenantTransferController extends Controller
 
                     $transaction = Yii::app()->db->beginTransaction();
                     try {
-                        foreach ($contents as $tableName => $content) {
+                        
+                        foreach($targetTables as $tableName){
+                        //foreach ($contents as $tableName => $content) {
+
+                            if(!isset($contents[$tableName]))
+                                continue;
+
+                            $content = $contents[$tableName];
 
                             if (!empty($content)) // if table has data, then create insert statements otherwise neglect it
                             {
@@ -199,14 +206,17 @@ class TenantTransferController extends Controller
 
                                     //TODO: RUN SQL
                                     echo $sql . "<br>";
+                                    Yii::app()->db->createCommand($sql)->execute();
 
                                     if ($isAutoIncrement) {
 
-                                        $row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
-                                        //$row['id'] = Yii::app()->db->getLastInsertID();
+                                        //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
+                                        $row['id'] = Yii::app()->db->getLastInsertID();
 
                                     }
+
                                     $this->afterInsertRow($tableName,$row,$idMappings,$oldId);
+
                                     if (isset($row['id'])) {
                                         $idMappings[$tableName][$oldId] = $row['id'];
                                         echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
@@ -219,10 +229,12 @@ class TenantTransferController extends Controller
 
                         $transaction->commit();
 
-                    } catch (CDbException $e) {
+                    } catch (CException $e) {
 
                         $transaction->rollback();
-
+                        echo "<br><br>";
+                        echo $e->getMessage();
+                        die();
                     }
 
                     if (file_exists($fullImgSource)) 
@@ -405,7 +417,9 @@ class TenantTransferController extends Controller
             'visitor'                           =>[$default_condition],
 
             'card_generated'                    =>["WHERE tenant=".$tenant],
+
             'visit'                             =>[$default_condition],
+
             'visitor_type_card_type'            =>[$default_condition],
 
             'visitor_password_change_request'   =>['JOIN visitor ON visitor.id = visitor_password_change_request.visitor_id '.

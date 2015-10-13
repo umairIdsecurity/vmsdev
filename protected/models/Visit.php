@@ -1357,8 +1357,11 @@ class Visit extends CActiveRecord {
             if ($v->card_type == CardType::VIC_CARD_EXTENDED && $v->visitor0["visitor_card_status"] == Visitor::VIC_HOLDER) {
                  Visitor::model()->updateByPk($v->visitor0["id"], array("visitor_card_status" => Visitor::VIC_ASIC_PENDING));
                  // Total visit count becomes 0 and Auto Closed EVIC visit then change to 'Closed' immediately.
-                 $update["reset_id"] = 1;
                  $update["visit_closed_date"] = $dateNow->format("Y-m-d 23:59:59");
+                 
+                 // Auto Reset a visit First Time only
+                 if( is_null( $v->parent_id ) )
+                    $update["reset_id"] = 1;
             }
             
              // Closed the Auto Closed EVIC visits at Midnight of the current Auto Closed date

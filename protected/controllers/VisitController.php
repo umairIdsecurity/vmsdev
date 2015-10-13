@@ -516,8 +516,6 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $visitParams;
-            $model->reset_id = NULL;
-            $model->visit_closed_date = NULL;
             // If operator select other reason then save new one
             if (isset($_POST['VisitReason'])) {
                 $visitReasonModel             = new VisitReason;
@@ -1035,7 +1033,13 @@ class VisitController extends Controller {
         if ($type == 'backdate') {
             $model->visit_status = VisitStatus::CLOSED;
         }
-
+        
+        $model->reset_id = NULL;
+        $model->visit_closed_date = NULL;
+        // Parent ID if a EVIC visit is auto Closed
+        if ($model->card_type == CardType::VIC_CARD_EXTENDED )
+           $model->parent_id = $id; 
+            
         //update date checkout in case card 24h
         if (!empty($model) && empty($model->date_check_out)) {
             switch ($model->card_type) {

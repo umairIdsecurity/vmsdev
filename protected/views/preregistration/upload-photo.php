@@ -1,6 +1,7 @@
 <?php
 $session = new CHttpSession;
-$visitor = Registration::model()->findByPk($session['visitor_id']);
+//$visitor = Registration::model()->findByPk($session['visitor_id']);
+$visitor = Registration::model()->findByPk(Yii::app()->user->id);
 $preImg = '';
 if(!empty($visitor->photo) && !is_null($visitor->photo)){
     $photoModel=Photo::model()->findByPk($visitor->photo);

@@ -102,14 +102,15 @@ $session = new CHttpSession;
 
             <div class="form-group" id="addCompanyDiv">
                 <?php
-                    $visitor = Registration::model()->findByPk($session['visitor_id']);
+                    $visitor = Registration::model()->findByPk(Yii::app()->user->id);
+                    //$visitor = Registration::model()->findByPk($session['visitor_id']);
 
                     if(isset($visitor->tenant)){
                         echo $form->dropDownList($companyModel, 'name', CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
                     }
                     else
                     {
-                        echo $form->dropDownList($companyModel,'name',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
+                        echo $form->dropDownList($companyModel,'name',CHtml::listData(Company::model()->findAll('is_deleted=0'), 'id', 'name'),array('prompt'=>'Select Company','class'=>'form-control input-sm'));
                     }
                     
                 ?>

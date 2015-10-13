@@ -55,34 +55,25 @@ class PreregistrationController extends Controller
 		}
 	}
 
-	public function actionIndex(){
+	public function actionIndex()
+	{
 		$session = new CHttpSession;
-
 		$session['stepTitle'] = 'PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)';
-
 		$session['step1Subtitle'] = 'Preregister for a VIC';
 		unset($session['step2Subtitle']);unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
-
 		$model = new EntryPoint();
-		/*if(isset($session['workstation']) && $session['workstation']!=""){
-			$model->entrypoint = $session['workstation'];
-		}*/
 		unset($session['workstation']);
-		if(isset($_POST['EntryPoint'])){
-
+		if(isset($_POST['EntryPoint']))
+		{
 			$model->attributes=$_POST['EntryPoint'];
-
 			if($model->validate())
 			{
 				$workstation = Workstation::model()->findByPk($model->entrypoint);
-
 				//these will be used to ensure the nothing left in flow
 				$session['workstation'] = $workstation->id;
 				$session['created_by'] = $workstation->created_by;
 				$session['tenant'] = $workstation->tenant;
-
-
 				$session['pre-page'] = 2;
 				$this->redirect(array('preregistration/privacyPolicy'));
 			}
@@ -91,11 +82,10 @@ class PreregistrationController extends Controller
 		$this->render('index',array('model'=>$model));
 	}
 
-	public function actionPrivacyPolicy(){
+	public function actionPrivacyPolicy()
+	{
 		$session = new CHttpSession;
-
 		$session['stepTitle'] = 'VIC REQUIREMENTS';
-
 		$session['step2Subtitle'] = ' > Requirements';
 		unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
@@ -103,91 +93,68 @@ class PreregistrationController extends Controller
 		$this->render('privacy-policy');
 	}
 
-	public function actionDeclaration(){
-
+	public function actionDeclaration()
+	{
 		$session = new CHttpSession;
-
 		$session['stepTitle'] = 'DECLARATIONS';
-
 		$session['step3Subtitle'] = ' > Declarations';
 		unset($session['step4Subtitle']);unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
-
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
-
 		$this->render('declaration');
 
 	}
 
 	public function actionPersonalDetails()
 	{
-
 		$session = new CHttpSession;
-
 		$session['stepTitle'] = 'PERSONAL INFORMATION';
-
 		$session['step4Subtitle'] = ' > Personal Information';
 		unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
+		
+		unset($session['vic_model']);
 
 		$model = '';
 
 		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
-			$model = Registration::model()->findByPk(Yii::app()->user->id);
+			if(isset($session['visitor_model']) && $session['visitor_model'] != ''){
+				$model = $session['visitor_model'];
+			}else{
+				$model = Registration::model()->findByPk(Yii::app()->user->id);
+			}
+		}
+		elseif(isset($session['visitor_model']) && $session['visitor_model'] != ''){
+			$model = $session['visitor_model'];
 		}
 		else{
 			$model = new Registration();	
 		}
-		
 
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
-
 		$model->scenario = 'preregistration';
-
 		$error_message = '';
-
-		if (isset($_POST['Registration'])) {
-
-			//if he is logged in, update its data rather than create new visitor
-			/*if(isset($_POST['Registration']['selected_asic_id']) && !empty($_POST['Registration']['selected_asic_id'])){
+		if (isset($_POST['Registration']))
+		{
+			if(isset($_POST['Registration']['selected_asic_id']) && !empty($_POST['Registration']['selected_asic_id'])){
 				$vic = Registration::model()->findByPk($_POST['Registration']['selected_asic_id']);
-				$session['vic_id'] = $vic->id;
+				$session['vic_model'] = $vic;
 				$this->redirect(array('preregistration/visitReason'));
-			}	*/
-			
+			}	
 			$model->attributes = $_POST['Registration'];
-			
-			$model->tenant = $session['tenant'];
-			$model->created_by = $session['created_by'];
-			$model->visitor_workstation = $session['workstation'];
-
+			if($model->tenant == null || $model->tenant == ""){$model->tenant = $session['tenant'];}
+			if($model->created_by == null || $model->created_by == ""){$model->created_by =  $session['created_by'];}
+			if($model->visitor_workstation == null || $model->visitor_workstation == ""){$model->visitor_workstation = $session['workstation'];}
 			$model->identification_country_issued = $_POST['Registration']['identification_country_issued'];
 			
 			if (!empty($_POST['Registration']['contact_state']))
 			{
-				if ($model->save(false)) 
-				{
-					//**********************************************
-					$session['visitor_id'] = $model->id;
-
-					if($model->profile_type == "VIC"){
-						$this->createVicNotificationIdentificationExpiry();
-					}
-					elseif($model->profile_type == "ASIC"){
-						$this->createAsicNotificationAsicExpiry();
-					}
-
-					$this->redirect(array('preregistration/visitReason'));
-					//***********************************************
-				}
-				else{
-					$msg = print_r($model->getErrors(),1);
-					throw new CHttpException(400,'Please refresh, data not saved because: '.$msg );
-				}
+				$session['visitor_model'] = $model;
+				$this->redirect(array('preregistration/visitReason'));
             } 
             else {
             	$model->contact_country = Visitor::AUSTRALIA_ID;
@@ -208,31 +175,24 @@ class PreregistrationController extends Controller
 		}
 
 		$session['stepTitle'] = 'REASON FOR VISIT';
-
 		$session['step5Subtitle'] = ' > Reason for Visit';
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 
 		$model = '';
-		if(isset($session['visit_id']) && $session['visit_id'] != "")
-		{
-			$model = Visit::model()->findByPk($session['visit_id']);
+		if(isset($session['visit_model']) && $session['visit_model'] != ''){
+			$model = $session['visit_model'];
 		}
 		else
 		{
 			$model = new Visit();
 		}
-
-
 		$companyModel = new Company();
-
 		$companyModel->scenario = 'preregistration';
-		
 		$model->scenario = 'preregistration';
 
 		if (isset($_POST['Visit'])) 
 		{
 			$model->attributes    = $_POST['Visit'];
-
 			if($_POST['Visit']['other_reason'] != ""){
 				$reasonModel = new VisitReason();
 				$reasonModel->reason  = $_POST['Visit']['other_reason'];
@@ -240,9 +200,6 @@ class PreregistrationController extends Controller
 					$model->reason  = $reasonModel->id;
 				}
 			}
-
-			$model->visitor  = $session['visitor_id'];
-			
 			$model->card_type = 6; //VIC 24 hour Card
 			$model->created_by = $session['created_by'];
 			$model->workstation  = $session['workstation'];
@@ -252,28 +209,10 @@ class PreregistrationController extends Controller
 
 			if($model->validate())
 			{
-				$model->save();
-				$session['visit_id'] = $model->id;
-			}
-
-			$session['company_id'] =  $_POST['Company']['name'];
-
-			$registrationModel = Registration::model()->findByPk($session['visitor_id']);
-
-			if($registrationModel->company == null || $registrationModel->company == ""){
-				$registrationModel->company = $_POST['Company']['name'];
-			}
-
-			if($registrationModel->visitor_type == null || $registrationModel->visitor_type == ""){
-				$registrationModel->visitor_type = $_POST['Visit']['visitor_type'];
-			}
-
-			if($registrationModel->save(true,array('company','visitor_type'))){
-				$this->redirect(array('preregistration/addAsic'));
-			}else{
+				$session['visit_model'] = $model;
+				$session['company_id'] =  $_POST['Company']['name'];
 				$this->redirect(array('preregistration/addAsic'));
 			}
-
 		}
 
 		$this->render(
@@ -298,6 +237,7 @@ class PreregistrationController extends Controller
 		$session['stepTitle'] = 'ASIC SPONSOR';
 		$session['step6Subtitle'] = ' > ASIC Sponsor';
 		unset($session['step7Subtitle']);unset($session['step8Subtitle']);
+		unset($session['is_listed']);
 		$model->scenario = 'preregistrationAsic';
 		
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
@@ -310,7 +250,6 @@ class PreregistrationController extends Controller
 			if(!empty($model->selected_asic_id))
 			{
 				$asicModel = Registration::model()->findByPk($model->selected_asic_id);
-				$this->createAsicNotificationRequestedVerifications($asicModel);
 				$session['host'] = $asicModel->id;
 				//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
 				if(isset($_POST['Registration']['is_asic_verification']) && $_POST['Registration']['is_asic_verification'] == 1)
@@ -327,11 +266,12 @@ class PreregistrationController extends Controller
 						"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."</a><br>";
 					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 					mail($to, $subject, $body, $headers);
+				}else{
+					$session['is_listed'] = 0;
 				}
 				//*******************************************************************************
 			}
 			else{
-
 				if( !empty($model->email) && !empty($model->contact_number) ){
 					$model->profile_type = 'ASIC';
 					$model->key_string = hash('ripemd160', uniqid());
@@ -345,9 +285,7 @@ class PreregistrationController extends Controller
 
 					if ($model->save(false)) 
 					{
-						$this->createAsicNotificationRequestedVerifications($model);
 						$session['host'] = $model->id;
-
 						//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
 						if(isset($_POST['Registration']['is_asic_verification']) && $_POST['Registration']['is_asic_verification'] == 1)
 						{
@@ -366,6 +304,9 @@ class PreregistrationController extends Controller
 							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 							mail($to, $subject, $body, $headers);
 						}
+						else{
+							$session['is_listed'] = 0;
+						}
 						//*******************************************************************************
 					}
 					else{
@@ -382,65 +323,48 @@ class PreregistrationController extends Controller
 		$this->render('asic-sponsor' , array('model'=>$model,'companyModel'=>$companyModel) );
 	}
 
-	public function actionUploadPhoto(){
+	public function actionUploadPhoto()
+	{
 		$session = new CHttpSession;
-
 		unset(Yii::app()->session['imgName']);
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
-
 		$session['stepTitle'] = 'PHOTO';
-
 		$session['step7Subtitle'] = ' > Photo';
 		unset($session['step8Subtitle']);
-
-
 		$model = new UploadForm();
-
 		if(isset($_POST['UploadForm']))
 		{
-
 			$model->attributes=$_POST['UploadForm'];
-
 			$name  = $_FILES['UploadForm']['name']['image'];
-
 			if(!empty($name)){
-
 				$ext  = pathinfo($name, PATHINFO_EXTENSION);
-
 				$newNameHash = hash('adler32', time());
-
 				$newName    = $newNameHash.'-' . time().'.'.$ext;
-
 				$model->image=CUploadedFile::getInstance($model,'image');
-
 				$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
-
 				$relativeImgSrc = 'uploads/visitor/'.$newName;
-
 				if($model->image->saveAs($fullImgSource)){
 					$photoModel = new Photo();
 					$photoModel->filename = $name;
 					$photoModel->unique_filename = $newName;
 					$photoModel->relative_path = $relativeImgSrc;
-
-
 			        $file=file_get_contents($fullImgSource);
 			        $image = base64_encode($file);
-
 			        $photoModel->db_image = $image;
-
-					if($photoModel->save()){
-						
+					if($photoModel->save())
+					{
 						if (file_exists($fullImgSource)) {
 				            unlink($fullImgSource);
 				        }
 
-						$visitorModel = Registration::model()->findByPk($session['visitor_id']);
+						//$visitorModel = Registration::model()->findByPk($session['visitor_id']);
+				        //$visitorModel->photo = $photoModel->id;
+				        //$visitorModel->save(true,array('photo'));
 
-						$visitorModel->photo = $photoModel->id;
-						$visitorModel->save(true,array('photo'));
+				        $session['photo'] = $photoModel->id;
+
 						$session['imgName'] = $newName;
 						$this->redirect(array('preregistration/visitDetails'));
 					}
@@ -455,65 +379,106 @@ class PreregistrationController extends Controller
 		$this->render('upload-photo',array('model'=>$model) );
 	}
 
-	public function actionVisitDetails(){
-
+	public function actionVisitDetails()
+	{
 		$session = new CHttpSession;
-
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
-
 		$session['stepTitle'] = 'LOG VISIT DETAILS';
-
 		$session['step8Subtitle'] = ' > Log Visit Details';
 
-		$model = Visit::model()->findByPk($session['visit_id']);
+		$sessionVisitor = (isset($session['visitor_model']) && ($session['visitor_model'] != "")) ? $session['visitor_model'] : $session['vic_model'];
+		$visitor='';
 
+		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id))
+		{
+			if(isset($session['vic_model']) && $session['vic_model'] != ''){
+				$visitor = Registration::model()->findByPk($session['vic_model']->attributes['id']);
+			}else{
+				$visitor = Registration::model()->findByPk(Yii::app()->user->id);
+			}
+		}
+		else{
+			$visitor = new Registration();	
+		}
+
+		$sessionVisit = $session['visit_model'];
+		$model = new Visit();
 
 		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
 
 		if(isset($_POST['Visit']))
 		{
-			
-			$model->attributes=$_POST['Visit'];
-
+			$model->attributes = $sessionVisit->attributes;
 			$model->time_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
 			$model->time_out = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']. " + 24 hour"));
-
 			$model->time_check_in = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']));
 			$model->time_check_out = date("H:i:s", strtotime($_POST['Visit']['time_in_hours'].":".$_POST['Visit']['time_in_minutes']. " + 24 hour"));
-
 			$model->date_in = $_POST['Visit']['date_in'] == "" ? date("Y-m-d",strtotime("+1 day")) : date("Y-m-d", strtotime($_POST['Visit']['date_in']));
 			$model->date_out = date("Y-m-d", strtotime($model->date_in." +1 day"));
-
 			$model->date_check_in = $_POST['Visit']['date_in'] == "" ? date("Y-m-d",strtotime("+1 day")) : date("Y-m-d", strtotime($_POST['Visit']['date_in']));
 			$model->date_check_out = date("Y-m-d", strtotime($model->date_check_in." +1 day"));
-
 			$model->host = $session['host'];
-
-			if($model->save())
-			{	
-				if($session['account_type'] == 'VIC')
-				{
-					$this->createVicNotificationPreregisterVisit($model->date_check_in);
-					$this->createVicNotification20and28Visits();
-				}
-				elseif ($session['account_type'] == 'CORPORATE') {
-					$this->createCompAdminNotificationPreregisterVisit($session['company_id'],$model->date_check_in);
-					$this->createCompAdminNotification20and28Visits($session['company_id']);
-				}
-				//clear the visit as it stored, fully
-				unset($session['visit_id']);
-				$this->redirect(array('preregistration/success'));
+			$model->company = $sessionVisit->attributes['company']; 
+			if(isset($session['is_listed']) && $session['is_listed'] == 0){
+				$model->is_listed = $session['is_listed'];
 			}
 
-		}
+			$visitor->attributes=$sessionVisitor->attributes;
 
+			if(!isset($session['vic_model']) || $session['vic_model'] == ''){
+				$visitor->photo=$session['photo'];
+			}
+			
+			if($visitor->company == null || $visitor->company == ""){
+				$visitor->company = $sessionVisit->attributes['company'];
+			}
+			if($visitor->visitor_type == null || $visitor->visitor_type == ""){
+				$visitor->visitor_type = $sessionVisit->attributes['visitor_type'];
+			}
+
+			if($visitor->save(false))
+			{
+				$model->visitor =  $visitor->id;
+				$session['visitor_id'] = $visitor->id;
+
+				if($visitor->profile_type == "VIC"){
+					$this->createVicNotificationIdentificationExpiry();
+				}
+				elseif($visitor->profile_type == "ASIC"){
+					$this->createAsicNotificationAsicExpiry();
+				}
+
+				if($model->save())
+				{	
+					unset($session['visitor_model']);unset($session['visit_model']);unset($session['vic_model']);
+					if($session['account_type'] == 'VIC')
+					{
+						$this->createVicNotificationPreregisterVisit($model->date_check_in);
+						$this->createVicNotification20and28Visits();
+					}
+					elseif ($session['account_type'] == 'CORPORATE') {
+						$this->createCompAdminNotificationPreregisterVisit($session['company_id'],$model->date_check_in);
+						$this->createCompAdminNotification20and28Visits($session['company_id']);
+					}
+
+					$asicModel = Registration::model()->findByPk($model->host);
+					$this->createAsicNotificationRequestedVerifications($asicModel,$model->id);
+
+					$this->redirect(array('preregistration/success'));
+				}
+			}else{
+				$msg = print_r($visitor->getErrors(),1);
+				throw new CHttpException(400,'Error in visitor saving because: '.$msg );
+			}
+		}
 		$this->render('visit-details' , array('model'=>$model) );
 	}
 
 	public function actionRegistration()
 	{
+
 		$session = new CHttpSession;
 
 		$session['stepTitle'] = 'CREATE AVMS LOGIN';
@@ -1056,9 +1021,7 @@ class PreregistrationController extends Controller
 				}
 
 			}
-	
 		}
-
 
 	}
 
@@ -1241,7 +1204,7 @@ class PreregistrationController extends Controller
 	    }
     }
 
-    public function createAsicNotificationRequestedVerifications($asic)
+    public function createAsicNotificationRequestedVerifications($asic,$visitId)
     {
     	//create VIC Notifications: 1. VIC Holder has requested ASIC Sponsor verification
 		$notification = Notification::model()->findByAttributes(array('subject'=>'VIC Holder has requested ASIC Sponsor verification'));
@@ -1264,6 +1227,7 @@ class PreregistrationController extends Controller
                 $notify->user_id = $asic->id;
                 $notify->notification_id = $notification->id;
                 $notify->has_read = 0; //Not Yet
+                $notify->verify_visit_id = $visitId;
                 $notify->save();
             }	
 		}
@@ -1294,6 +1258,7 @@ class PreregistrationController extends Controller
             $notify->user_id = $visit->host;
             $notify->notification_id = $notification->id;
             $notify->has_read = 0; //Not Yet
+            $notify->verify_visit_id = $visit->id;
             $notify->save();
 		}else{
 			$notification = new Notification();
@@ -1325,6 +1290,7 @@ class PreregistrationController extends Controller
                 $notify->user_id = $visit->host;
                 $notify->notification_id = $notification->id;
                 $notify->has_read = 0; //Not Yet
+                $notify->verify_visit_id = $visit->id;
                 $notify->save();
             }	
 		}
@@ -1753,7 +1719,7 @@ class PreregistrationController extends Controller
     	$this->unsetVariablesForGui();
     	$per_page = 10;
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
-        $condition = "t.is_deleted = 0 AND v.is_deleted=0 AND t.host != 'NULL' AND t.host !=''"; 
+        $condition = "t.is_listed = 1 AND t.is_deleted = 0 AND v.is_deleted=0 AND t.host != 'NULL' AND t.host !=''"; 
 
         if(isset(Yii::app()->user->account_type) && Yii::app()->user->account_type == "ASIC"){
         	$condition .= " AND t.host=".Yii::app()->user->id;

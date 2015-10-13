@@ -6,6 +6,20 @@ $arrSubject = array(
 	'Technical Support'	=>	'Technical Support',
 	'Administration Support'	=>	'Administration Support',
 );
+
+$session = new ChttpSession;
+$contact_persons = ContactPerson::model()->findAll("user_role = " . $session['role']);
+$contact_reasons = array();
+$contact_reason_names = array();
+foreach ($contact_persons as $contact_person) {
+    $reason = Reasons::model()->findByPk($contact_person->reason_id);
+    if(isset($reason))
+    {
+        if(!in_array($reason->reason_name, $contact_reason_names))
+            $contact_reasons[$contact_person->id] =  $reason->reason_name;
+        array_push($contact_reason_names, $reason->reason_name);
+    }  
+}
 ?>
 
 <h1>Contact Support</h1>
@@ -78,34 +92,33 @@ $arrSubject = array(
             <td><?php //echo $form->dropDownList($model, 'subject', $arrSubject); ?></td>
         </tr>
         
-        
-        <tr>
-            <td><?php echo $form->labelEx($model,'contact_person_name'); ?></td>
-            <td><?php echo $form->dropDownList(
-                            $model,
-                            'contact_person_name',
-                            CHtml::listData(ContactPerson::model()->findAll($tenant),
-                                    'id',
-                                    'contact_person_name'),
-                                    array('empty'=>'Select a person')
-                    );?>
-            </td>
-	</tr>
-        
         <tr>
             <td><?php echo $form->labelEx($model, 'reason'); ?></td>
             <td>
                 <?php echo $form->dropDownList(
                             $model,
                             'reason',
-                            CHtml::listData(Reasons::model()->findAll($tenant),
-                                    'nameFuncForReasons',
-                                    'nameFuncForReasons'),
+                            $contact_reasons,
                                     array('empty'=>'Select a reason')
                     );?>
             
             </td>
         </tr>
+        
+        <tr>
+            <td><?php echo $form->labelEx($model,'contact_person_name'); ?></td>
+            <td><?php echo $form->dropDownList(
+                            $model,
+                            'contact_person_name',
+                            CHtml::listData(ContactPerson::model()->findAll("user_role = " . $session['role']),
+                                    'id',
+                                    'contact_person_name'),
+                                    array('empty'=>'Select a person','readonly'  =>  'readonly',)
+                    );?>
+            </td>
+        </tr>
+        
+        
         
         
         <tr>
@@ -160,6 +173,12 @@ $arrSubject = array(
     var numberWithCommas = function(x, commas) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, commas);
     };
+
+    $(document).ready(function() {
+        $("#ContactForm_reason").change(function() {
+            $("#ContactForm_contact_person_name").val($(this).val());
+        });
+    });
 
     /*jQuery(function() {
         'use strict';

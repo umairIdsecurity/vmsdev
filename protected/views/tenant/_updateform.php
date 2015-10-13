@@ -130,6 +130,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 }
 ?>">
     <?php echo CHtml::button('Export', array('id' => 'export-button', 'class' => 'btn DeleteBtn actionForward complete')); ?>
+    <?php echo CHtml::button('Delete SQL', array('id' => 'deleteSql-button', 'class' => 'btn DeleteBtn actionForward complete')); ?>
     <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
     <?php if (isset($_GET['viewFrom'])) { ?>
 
@@ -229,12 +230,18 @@ if (isset($_GET['viewFrom'])) {
         $('#export-button').on('click', function() {
             exportTenant();
         });
+        $('#deleteSql-button').on('click', function() {
+            deleteSqlTenant();
+        });
 
 
     });
     function exportTenant()
     {
         window.location = '<?php echo $this->createUrl("tenantTransfer/export&tenant=".$model->tenant); ?>'
+    }
+    function deleteSqlTenant(){
+        window.location = '<?php echo $this->createUrl("tenantTransfer/deleteSql&tenant=".$model->tenant); ?>'
     }
 
 </script>

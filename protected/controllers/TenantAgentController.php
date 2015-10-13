@@ -144,7 +144,7 @@ class TenantAgentController extends Controller
             } catch (CException $ex){
 
                 $transaction->rollback();
-                Yii::app()->user->setFlash("error", "Sorry Unable to create new Tenant Agent: " + $ex->getMessage());
+                Yii::app()->user->setFlash("error", "Sorry Unable to create new Tenant Agent: " . $ex->getMessage());
                 $this->redirect(array("tenantAgent/create/&module=" . $_POST["for_module"]));
             }
         }
@@ -152,7 +152,7 @@ class TenantAgentController extends Controller
         $this->render("create", array("model" => $model, "allTenant" => $allTenant));
     }
 
-    function createCompany($companyModel)
+    function createCompany(&$companyModel)
     {
         $companyModel->company_type = 2; // tenant Agent company type
         $companyModel->name = $_POST['TenantForm']['tenant_agent_name'];
@@ -168,10 +168,10 @@ class TenantAgentController extends Controller
         $companyModel->code = substr($companyModel->name, 0, 3);
         $companyModel->scenario = "add_tenant_agent";
 
-        return $companyModel->validate() &&  $companyModel->save();
+        return  $companyModel->save();
     }
 
-    function createTenantAgent($tenantAgent,$companyModel)
+    function createTenantAgent(&$tenantAgent,$companyModel)
     {
         $tenantAgent->id = $companyModel->id;
         $tenantAgent->tenant_id = $companyModel->tenant;
@@ -180,10 +180,10 @@ class TenantAgentController extends Controller
         $tenantAgent->date_created = date("Y-m-d");
         $tenantAgent->for_module = $_POST["for_module"];
 
-        return $tenantAgent->validate() && $tenantAgent->save();
+        return  $tenantAgent->save();
     }
 
-    function createUser($userModel, $companyModel)
+    function createUser(&$userModel, $companyModel)
     {
         $isAvms = $_POST['for_module']=='avms';
         $photolastId = NULL;
@@ -225,7 +225,7 @@ class TenantAgentController extends Controller
 
     }
 
-    function createTenantAgentContact($agentContact,$companyModel,$userModel, $tenantAgent)
+    function createTenantAgentContact(&$agentContact,$companyModel,$userModel, $tenantAgent)
     {
 
         $agentContact->tenant_id = $companyModel->tenant;
@@ -239,7 +239,7 @@ class TenantAgentController extends Controller
      * @param array $post
      * @param int $tenant_id
      */
-    public function createTenantWorkstation($workstation, $tenantAgent, $user)
+    public function createTenantWorkstation(&$workstation, $tenantAgent, $user)
     {
 
         $workstation->name = $_POST["TenantForm"]["workstation"];

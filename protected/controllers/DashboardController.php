@@ -224,22 +224,23 @@ class DashboardController extends Controller {
             $model->attributes = $_POST['ContactForm'];
 
             if ($model->validate()) {
+                $contactPersonModel = ContactPerson::model()->findByPk($model->contact_person_name);
+                $reason = Reasons::model()->findByPk($contactPersonModel->reason_id);
 
                 $headers = "MIME-Version: 1.0" . "\r\n";
                 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
                 $headers .= "From: {$userModel->email}\r\nReply-To: {$userModel->email}";
 
-                $content = "Reason: ".$model->reason."<br><br>Message: ".$model->message . "<br><br>~This message was sent via Visitor Management System~";
+                $content = "Reason: ".$reason->reason_name."<br><br>Message: ".$model->message . "<br><br>~This message was sent via Visitor Management System~";
 
-                /*
-                 * contact_person_name is actually the Primary key of contact person
-                 */
-                $contactModel = ContactPerson::model()->findByPk($model->contact_person_name);
-                $contactModel->attributes=$contactModel;
-                $contactModel->contact_person_message=$model->message;
-		        $contactModel->save();
+                $contactModel = new ContactSupport;
+                $contactModel->contact_person_id = $contactPersonModel->id;
+                $contactModel->contact_reason_id = $reason->id;
+                $contactModel->user_id = $userModel->id;
+                $contactModel->contact_message = $model->message;
+                $contactModel->save();
 
-                mail($contactModel->contact_person_email, "Contact Support", $content, $headers);
+                mail($contactPersonModel->contact_person_email, "Contact Support", $content, $headers);
 
                 Yii::app()->user->setFlash(
                         'contact', 'Thank you for contacting us. We will respond to you as soon as possible.'

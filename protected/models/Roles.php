@@ -159,6 +159,35 @@ class Roles extends CActiveRecord {
 		);
 	}
 
+	public static function get_cavms_roles_name() {
+		return array(
+			self::ROLE_ISSUING_BODY_ADMIN     => 'Issuing Body Admin',
+			self::ROLE_AIRPORT_OPERATOR       => 'Airport Operator',
+			self::ROLE_AGENT_AIRPORT_ADMIN    => 'Agent Airport Admin',
+			self::ROLE_ADMIN                  => 'Administrator',
+			self::ROLE_AGENT_ADMIN            => 'Agent Administrator',
+			self::ROLE_OPERATOR               => 'Operator',
+			self::ROLE_STAFFMEMBER            => 'Host/Staff',
+		);
+	}
+
+	public static function get_avms_roles_name() {
+		return array(
+			self::ROLE_ISSUING_BODY_ADMIN     => 'Issuing Body Admin',
+			self::ROLE_AIRPORT_OPERATOR       => 'Airport Operator',
+			self::ROLE_AGENT_AIRPORT_ADMIN    => 'Agent Airport Admin',
+		);
+	}
+
+	public static function get_cvms_roles_name() {
+		return array(
+			self::ROLE_ADMIN                  => 'Administrator',
+			self::ROLE_AGENT_ADMIN            => 'Agent Administrator',
+			self::ROLE_OPERATOR               => 'Operator',
+			self::ROLE_STAFFMEMBER            => 'Host/Staff',
+		);
+	}
+
 	public static function get_admin_allowed_roles($should_filter) {
 		if ($should_filter) {
 			if (CHelper::is_avms_users_requested()) {

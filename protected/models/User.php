@@ -797,7 +797,7 @@ class User extends VmsActiveRecord {
 
     public function restorePassword($email)
     {
-        if($user = $this->findByAttributes(array('email' => $email,'tenant'=>$_SESSION['tenant']))){
+        if($user = $this->findByAttributes(array('email' => $email))){
             return PasswordChangeRequest::model()->generateResetLink($user);
         } else {
             return "Email address does not exist in system.";

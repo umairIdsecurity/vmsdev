@@ -29,7 +29,7 @@ class VisitController extends Controller {
                 'actions' => array('create',
                     'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
                     'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
-                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId', 'closeVisit'),
+                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId', 'closeVisit', 'visitResetById'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -542,7 +542,8 @@ class VisitController extends Controller {
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
                              $model->visit_closed_date = date("Y-m-d 23:59:59");
                              Visitor::model()->updateByPk($model->visitor, array("visitor_card_status" => Visitor::VIC_ASIC_PENDING));
-                             $model->reset_id = 1;
+                             if( is_null($model->parent_id))
+                                 $model->reset_id = 1;
                              
                             if ($visitParams['finish_date'] != NULL) {
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
@@ -1471,6 +1472,17 @@ class VisitController extends Controller {
         }
 
         $this->render('importVisitData', array('model' => $model));
+    }
+    /**
+     * Reset Count of a Visit
+     * 
+     * @return int
+     */
+    public function actionVisitResetById() {
+        $visit_id =  Yii::app()->request->getParam("id", 0);
+        if($visit_id != 0 )
+           Visit::model()->updateByPk($visit_id, array("reset_id" => 1));
+        return 1;
     }
 
 }

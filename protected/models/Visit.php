@@ -1333,7 +1333,7 @@ class Visit extends CActiveRecord {
         $visits = $this->with("visitor0")->findAll( $condition );  
       
         foreach( $visits as $v ) {
-           
+            
             $update = array();
             
             $dateNow = new DateTime("NOW");

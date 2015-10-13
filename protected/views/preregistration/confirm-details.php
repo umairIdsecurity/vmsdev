@@ -10,7 +10,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
 <div class="page-content">
 
-    <h3 class="text-primary">Personal Information</h3>
+    <a href="<?php echo Yii::app()->createUrl('preregistration/personalDetails'); ?>"><h3 class="text-primary">Personal Information</h3></a>
+
     <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
     
     <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
@@ -78,7 +79,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             ); ?>
         </div>
 
-        <div class="row">
+        <div class="row" id="new_asic_area">
             <div class="col-sm-4">
                 <div class="form-group">
                     <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm')); ?>
@@ -507,7 +508,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             $("#asic_table_wrapper").hide();
             $("#asic-notification").hide();
             $('#Registration_selected_asic_id').val("");
-            $('#new_asic_area').show();
+            //$('#new_asic_area').show();
         });
 
         $('#search_asic_btn').click(function(event) {
@@ -549,8 +550,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 "fnDrawCallback": function (oSettings) {
                                     $('.selected_asic').click(function() {
                                         $('#Registration_selected_asic_id').val($(this).val());
-                                        $('#Registration_contact_number').val("");
-                                        $('#Registration_email').val("");
+                                        /*$('#Registration_contact_number').val("");
+                                        $('#Registration_email').val("");*/
                                         $('#new_asic_area').empty();
                                     });
                                 }

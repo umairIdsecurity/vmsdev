@@ -67,13 +67,14 @@ class DatabaseIndexHelper
         switch($driverName) {
 
             case 'mysql';
+                //$databaseName = DatabaseIndexHelper::getValue("SELECT DATABASE()");
                 $sql = "SELECT constraint_name as name "
                         ."FROM information_schema.key_column_usage "
                         ."WHERE referenced_table_name = '$refTable' "
                         ."AND   referenced_column_name = '$refColumn' "
                         ."AND   table_name = '$table' "
-                        ."AND   column_name = '$column' ";
-                        //."AND   constraint_catalog = (SELECT DATABASE())";
+                        ."AND   column_name = '$column' "
+                        ."AND   constraint_catalog = (SELECT DATABASE())";
                 break;
 
             case 'mssql';
@@ -105,14 +106,19 @@ class DatabaseIndexHelper
 
         }
 
+        return DatabaseIndexHelper::getValue($sql);
+
+    }
+
+    private static function getValue($sql){
+
         $command = Yii::app()->db->createCommand($sql);
         $command->execute();
         $reader = $command->query();
         foreach($reader as $row){
-            return $row['name'];
+            return array_values($row)[0];
         }
         return null;
-
     }
 
     public static function getTableIndexes($excludePrimaryKeys = true)

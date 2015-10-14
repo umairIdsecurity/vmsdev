@@ -20,6 +20,11 @@
                         <td><b>VIC Holder Name</b></td>
                         <td><b>ASIC Sponsor Name</b></td>
                         <td><b>Status</b></td>
+
+                        <?php if(Yii::app()->user->account_type == "VIC"): ?>
+                            <td><b>Resend Verification</b></td>
+                        <?php endif; ?>    
+
                     </tr>
                 </thead>
                 <tbody>
@@ -40,6 +45,25 @@
                                     
 
                                     <td><?php echo $q['visit_prereg_status']; ?></td>
+
+                                    <?php if(Yii::app()->user->account_type == "VIC")
+                                        {
+                                            $asicModel = Registration::model()->findByPk($q['host']);
+                                            $asicId = $asicModel->id;
+                                            $visitId = $q['id'];
+                                     ?>
+                                        <td>
+                                            <?php 
+                                                    if($q['visit_prereg_status'] == 'Verified'){ 
+                                                        echo "<a id='resendNotifiPlaceholder$visitId' onclick='resendNotification($asicId,$visitId)' href='javascript:;' class='btn btn-primary btn-next' disabled>Resend</a>";
+                                                    }
+                                                    else{
+                                                        echo "<a id='resendNotifiPlaceholder$visitId' onclick='resendNotification($asicId,$visitId)' href='javascript:;' class='btn btn-primary btn-next'>Resend</a>";
+                                                    }
+                                            ?>
+                                        </td>
+                                    <?php } ?> 
+
                                 </tr>   
                     <?php 
                             }
@@ -96,3 +120,26 @@
     }
 ?>
 
+<script type="text/javascript">
+    function resendNotification(asicId,visitId){
+        if(asicId != "" && visitId != "")
+        {
+            $.ajax({
+                type: 'POST',
+                //url: '<?php echo Yii::app()->createUrl("preregistration/createAsicNotificationRequestedVerifications?asicId=' + asicId + '&visitId=' + visitId +'"); ?>',
+                url: '<?php echo Yii::app()->getBaseUrl(true)."/index.php/preregistration/createAsicNotificationRequestedVerifications?asicId=' + asicId + '&visitId=' + visitId +'";?>',
+                data: {},
+                success: function (response) {
+                    $("#resendNotifiPlaceholder"+visitId).attr("disabled","disabled").text("Sent");
+                    setInterval(function(){ 
+                        $("#resendNotifiPlaceholder"+visitId).removeAttr("disabled").text("Resend");
+                    }, 5000);
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+</script>

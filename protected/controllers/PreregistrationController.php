@@ -21,7 +21,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration'),
+				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration','createAsicNotificationRequestedVerifications'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -464,7 +464,8 @@ class PreregistrationController extends Controller
 					}
 
 					$asicModel = Registration::model()->findByPk($model->host);
-					$this->createAsicNotificationRequestedVerifications($asicModel,$model->id);
+					$asicId=$asicModel->id;
+					$this->createAsicNotificationRequestedVerifications($asicId,$model->id);
 
 					$this->redirect(array('preregistration/success'));
 				}
@@ -1204,15 +1205,16 @@ class PreregistrationController extends Controller
 	    }
     }
 
-    public function createAsicNotificationRequestedVerifications($asic,$visitId)
+    public function actionCreateAsicNotificationRequestedVerifications($asicId,$visitId)
     {
     	//create VIC Notifications: 1. VIC Holder has requested ASIC Sponsor verification
 		$notification = Notification::model()->findByAttributes(array('subject'=>'VIC Holder has requested ASIC Sponsor verification'));
 		if($notification){
 			$notify = new UserNotification;
-            $notify->user_id = $asic->id;
+            $notify->user_id = $asicId;
             $notify->notification_id = $notification->id;
             $notify->has_read = 0; //Not Yet
+            $notify->verify_visit_id = $visitId;
             $notify->save();
 		}else{
 			$notification = new Notification();
@@ -1224,7 +1226,7 @@ class PreregistrationController extends Controller
             $notification->role_id = 10;
             if($notification->save()){
             	$notify = new UserNotification;
-                $notify->user_id = $asic->id;
+                $notify->user_id = $asicId;
                 $notify->notification_id = $notification->id;
                 $notify->has_read = 0; //Not Yet
                 $notify->verify_visit_id = $visitId;

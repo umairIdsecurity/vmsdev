@@ -1,15 +1,10 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/6/15
- * Time: 2:31 PM
- */
 
-?>
 <div class="page-content">
-    <h3 class="text-primary">Requirements</h3>
-    <div class="privacy-info">
+
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+
+    <h3 class="text-primary subheading-size">Requirements</h3>
+    <div class="privacy-info text-size">
         To proceed you will need to provide details of the following:
         <br><br>
         <ol>
@@ -32,12 +27,12 @@
     </div>
     <div class="privacy-info">
 
-        <h3 class="text-primary">Important Information regarding the Visitor Identification Card - Perth Airport Privacy Policy</h3>
+        <h3 class="text-primary subheading-size">Important Information regarding the Visitor Identification Card - Perth Airport Privacy Policy</h3>
         <div class="bg-gray-lighter privacy-notice" style="height:360px !important;">
             <div>
 
-                <h4>PRIVACY NOTICE - What does Perth Airport do with your personal information?</h4>
-                <p>Information you provide on the VIC application includes personal information, the collection, use and disclosure of which is governed by the Privacy Act 1998 (Commonwealth). <br><br>
+                <h4 style="font-size: 14px; font-weight:bold">PRIVACY NOTICE - What does Perth Airport do with your personal information?</h4>
+                <p class="text-size">Information you provide on the VIC application includes personal information, the collection, use and disclosure of which is governed by the Privacy Act 1998 (Commonwealth). <br><br>
                     Perth Airport uses this information internally for the purposes of its functions under the Aviation Transport Security Act 2004 and Aviation Transport Security Regulations 2005. <br><br>
                     For example, Perth Airport will use this information to process VIC applications, to monitor compliance with the 28 day limit and to keep a register of every VIC issued. <br><br>
                     Perth Airport may also disclose this information to third parties. For example, personal information will be shared with our Authorised Agents (as approved in our Transport Security Program) who issue VICs. <br><br>
@@ -65,7 +60,7 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="form-group">
+            <div class="">
                 <div class="pull-left">
                     <a href="<?=Yii::app()->createUrl("preregistration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>

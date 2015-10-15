@@ -161,6 +161,19 @@ fieldset {
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em;
 }
+.heading-size{
+  font-size: 28px !important;
+}
+.subheading-size{
+    font-size: 18px;
+    /*font-weight: bold;*/
+}
+.text-size{
+  font-size: 12px !important;
+}
+.make-underline{
+  text-decoration: underline !important;
+}
 legend {
   border: 0;
   padding: 0;

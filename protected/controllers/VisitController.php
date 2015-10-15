@@ -140,7 +140,7 @@ class VisitController extends Controller {
             }
             $model->reset_id = NULL;
             if ($visitService->save($model, $session['id'])) {
-                if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
+                if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1' ){
                     $visitor = Visitor::model()->findByPk($model->visitor);
                     $host = Visitor::model()->findByPk($model->host);
 
@@ -239,7 +239,7 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
                 }
                 if($oldhost != $model->host){
-                    if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
+                    if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1' ){
                         $visitor = Visitor::model()->findByPk($model->visitor);
                         $host = Visitor::model()->findByPk($model->host);
                         $this->renderPartial('_email_asic_verify',array('visitor'=>$visitor,'host'=>$host));

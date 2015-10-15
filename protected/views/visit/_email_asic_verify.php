@@ -1,6 +1,6 @@
 <?php
 $mail = new YiiMailMessage;
-$mail->from = 'notify.vms@gmail.com';
+$mail->from = 'Admin <notify.vms@gmail.com>';
 $mail->addTo($host->email);
 $mail->subject = 'Request for verification of VIC profile ';
 $param = '<h3>Hi,</h3>';

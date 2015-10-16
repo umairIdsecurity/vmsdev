@@ -465,7 +465,7 @@ class PreregistrationController extends Controller
 
 					$asicModel = Registration::model()->findByPk($model->host);
 					$asicId=$asicModel->id;
-					$this->createAsicNotificationRequestedVerifications($asicId,$model->id);
+					$this->actionCreateAsicNotificationRequestedVerifications($asicId,$model->id);
 
 					$this->redirect(array('preregistration/success'));
 				}

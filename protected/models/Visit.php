@@ -70,6 +70,7 @@ class Visit extends CActiveRecord {
     public $_asicname;
     public $other_reason;
     public $deposit_paid;
+    public $sendMail;
 
     public $visitClockTime = array(
                 '5:00' => '5:00',

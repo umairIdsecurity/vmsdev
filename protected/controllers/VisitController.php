@@ -140,7 +140,7 @@ class VisitController extends Controller {
             }
             $model->reset_id = NULL;
             if ($visitService->save($model, $session['id'])) {
-                if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1' ){
+                if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
                     
                     $visitor = Visitor::model()->findByPk($model->visitor);
                     $host = Visitor::model()->findByPk($model->host);

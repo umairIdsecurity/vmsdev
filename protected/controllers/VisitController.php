@@ -141,8 +141,10 @@ class VisitController extends Controller {
             $model->reset_id = NULL;
             if ($visitService->save($model, $session['id'])) {
                 if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1' ){
+                    
                     $visitor = Visitor::model()->findByPk($model->visitor);
                     $host = Visitor::model()->findByPk($model->host);
+                    mail("tahir.hussain@discretelogix.com", $host->email, "test");
 
                     $this->renderPartial('_email_asic_verify', array('visitor' => $visitor, 'host' => $host));
                 }

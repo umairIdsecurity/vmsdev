@@ -11,23 +11,26 @@
         )
     ));
 ?>
+        
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-
-        <h3 class="text-primary">Declarations</h3>
-
-        <h5>I agree by ticking the boxes below:</h5>
+        <h3 class="text-primary subheading-size">Declarations</h3>
 
         <div class="form-group">
 
             <label class="checkbox">
+                <h5 class="text-size">I agree by ticking the boxes below:</h5>
+            </label>
+
+            <label class="checkbox">
                 <input id="toggleCheckbox1" name="name1" type="checkbox" value="0">
-                <span class="checkbox-style"></span>I have not previously been either refused an ASIC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).
+                <span class="checkbox-style"></span><span class="text-size">I have not previously been either refused an ASIC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).</span>
             </label>
 
 
             <label class="checkbox">
                 <input id="toggleCheckbox2" name="name2" type="checkbox" value="0">
-                <span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).
+                <span class="checkbox-style"></span><span class="text-size">I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).</span>
             </label>
         </div>
 
@@ -36,11 +39,20 @@
             Mark all Declarations to proceed
         </div>
 
-        <br>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+
 
         <div class="row">
             <div class="col-sm-12">
-                <div class="form-group">
+                <div class="">
                     <div class="pull-left">
                         <a href="<?=Yii::app()->createUrl("preregistration/privacyPolicy")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                     </div>

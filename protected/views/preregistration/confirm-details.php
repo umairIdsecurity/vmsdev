@@ -10,7 +10,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
 <div class="page-content">
 
-    <a href="<?php echo Yii::app()->createUrl('preregistration/personalDetails'); ?>"><h3 class="text-primary">Personal Information</h3></a>
+    <a href="<?php echo Yii::app()->createUrl('preregistration/personalDetails'); ?>"><h3 class="text-primary subheading-size">Personal Information</h3></a>
 
     <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
     
@@ -238,9 +238,16 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         </div>
 
 
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        
+
+
         <div class="row">
             <div class="col-sm-12">
-                <div class="form-group">
+                <div class="">
                     <div class="pull-left">
                         <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                     </div>

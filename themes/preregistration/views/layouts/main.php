@@ -133,8 +133,8 @@ $session = new CHttpSession;
 
 .standardLogo 
 {
-    margin:50px 10px 20px auto;
-    padding: 0;
+    /*margin: 7px 0 0;*/
+    /*padding: 0;*/
     width: 70px;
 }
 
@@ -149,7 +149,24 @@ $session = new CHttpSession;
     width: 100%; 
 }
 
+.group-2{
+    padding: 0 0 0 35px !important;
+}
+
+.responsiveTitle{
+    font-size:28px;
+}
+
+.fixedMargin{
+    margin-left:209px;
+}
 @media screen and (min-width: 300px)  and (max-width: 640px) {
+    .text-sizeWhere{
+        margin-left:10px;
+    }
+    .fixedMargin{
+        margin-left:0;
+    }
     .responsiveTitle{
         font-size: 18px;
         line-height: 22px;
@@ -201,12 +218,57 @@ $session = new CHttpSession;
     </head>
     <body class="first-page">
         <div id="header" class="relative">
-            <div class="container">
+            <div class="container-fluid">
+
+                <div class="row"><div class="col-sm-12 col-xs-12">&nbsp;</div></div>
+
+                <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8">
+                        <!-- ******************************************************************** -->
+                        <aside class="top_nav" style="margin-top:0px !important">
+                            <ul id="icons">
+                                <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
+                                    <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
+                                    <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
+                                <?php } ?> 
+                                <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
+                                        <li class="profile">
+                                            <a title="profile" href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">
+                                                My Profile
+                                            </a>
+                                        </li>
+                                        <li class="notifications dropdown">
+                                            <a title="notifications" href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>" class="dropdown-toggle" data-toggle="dropdown"> 
+                                                <?php $notifications = CHelper::get_unread_visitors_notifications();
+                                                   if($notifications) 
+                                                      echo '  <div class="notification-count"> '. count($notifications).'</div>';
+                                            ?></a>
+                                        </li>
+                                        <li class="help">
+                                            <a title="help" href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>">
+                                                Help
+                                            </a>
+                                        </li>
+                                        <li class="logout">
+                                            <a title="logout" href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>">
+                                                <span class="glyphicon glyphicon-log-out"></span>
+                                            </a>
+                                        </li>
+                                <?php
+                                      }
+                                ?>
+                            </ul>
+                        </aside>
+                        <!-- ******************************************************************** -->
+                    </div>
+                    <div class="col-sm-2"></div>
+                </div>
 
                 <div class="row">
                     
-                    <div class="col-sm-3">
-                        <div class="standardLogo">
+                    <div class="col-sm-2">
+                        <div class="standardLogo" style="margin-left:auto;margin-right:auto">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
                                 <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
                             <?php } else{ ?>
@@ -228,48 +290,10 @@ $session = new CHttpSession;
 
                     </div>
 
-                    <div class="col-sm-9" style="<?php if(isset($session['stepTitle'])){echo 'border-bottom: 3px solid #eee;margin-top:10px';}?>">
+                    <div class="col-sm-8" style="<?php if(isset($session['stepTitle'])){echo 'border-bottom: 3px solid #eee';}?>">
                         <div class="row">
+                            
                             <div class="col-sm-12">
-                                <!-- ******************************************************************** -->
-                                <aside class="top_nav" style="<?php if(isset($session['stepTitle'])){echo 'margin-top:-5px !important';}else{echo 'margin-top:65px !important';}?>">
-                                    <ul id="icons">
-                                        <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                            <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
-                                            <li class="group-2"><a style="text-decoration:underline; color:#428BCA;font-size:13px;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
-                                        <?php } ?> 
-                                        <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
-                                                <li class="profile">
-                                                    <a title="profile" href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">
-                                                        My Profile
-                                                    </a>
-                                                </li>
-                                                <li class="notifications dropdown">
-                                                    <a title="notifications" href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>" class="dropdown-toggle" data-toggle="dropdown"> 
-                                                        <?php $notifications = CHelper::get_unread_visitors_notifications();
-                                                           if($notifications) 
-                                                              echo '  <div class="notification-count"> '. count($notifications).'</div>';
-                                                    ?></a>
-                                                </li>
-                                                <li class="help">
-                                                    <a title="help" href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>">
-                                                        Help
-                                                    </a>
-                                                </li>
-                                                <li class="logout">
-                                                    <a title="logout" href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>">
-                                                        <span class="glyphicon glyphicon-log-out"></span>
-                                                    </a>
-                                                </li>
-                                        <?php
-                                              }
-                                        ?>
-                                    </ul>
-                                </aside>
-                                <!-- ******************************************************************** -->
-                            </div>
-
-                            <div class="col-sm-12" style="">
                                 <h2 class="text-primary title responsiveTitle"><?= $session['stepTitle'] ?></h2>
                                 <h6 class="text-primary title">
                                     <?php if(isset($session['step1Subtitle'])&&($session['step1Subtitle']!="")){echo $session['step1Subtitle'];}?>
@@ -283,20 +307,23 @@ $session = new CHttpSession;
                                 </h6>
                             </div>
 
-
                         </div>    
                     </div>
+
+                    <div class="col-sm-2"></div>
+
                 </div>    
 
 
 
                 <div class="row">
-                    <?php  if(isset($session['stepTitle'])){echo '<div class="col-sm-3"></div>';} ?>
-                    <div class="<?php if(isset($session['stepTitle'])){echo 'col-sm-9';}else{echo 'col-sm-12';}?>"
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8">
                         <div id="main">
                             <?php echo $content; ?>
                         </div>
                     </div>
+                    <div class="col-sm-2"></div>
                 </div>
 
                 

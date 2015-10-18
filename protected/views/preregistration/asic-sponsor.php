@@ -88,7 +88,7 @@ $session = new CHttpSession;
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-    <a href="<?php echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><span>Please provide details of the ASIC Sponsor who will be escorting the VIC holder</span></a>
+    <a href="<?php echo Yii::app()->createUrl('preregistration/addAsic'); ?>"><span  class="text-size" style="color:black">Please provide details of the ASIC Sponsor who will be escorting the VIC holder</span></a>
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
@@ -250,7 +250,7 @@ $session = new CHttpSession;
                     <input type="checkbox" name="Registration[is_asic_verification]" value="0" id="toggleCheckbox" />
                     <?php //echo $form->checkBox($model,'is_asic_verification'); ?>
                     <span class="checkbox-style"></span>
-                    <p class="text-success">
+                    <p  class="text-size">
                         Request ASIC Sponsor Verification
                     </p>
                 </label>
@@ -265,21 +265,37 @@ $session = new CHttpSession;
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
     <div class="row">
-        <div class="col-sm-12">
-            <div class="form-group">
+        <!-- <div class="col-sm-12">
+            <div class="">
                 <div class="pull-left">
-                    <a href="<?=Yii::app()->createUrl("preregistration/visitReason")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    <a href="<?php //echo Yii::app()->createUrl("preregistration/visitReason")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
                 <div class="pull-right">
                     <?php
-                        echo CHtml::tag('button', array(
+                        /*echo CHtml::tag('button', array(
                             'type'=>'submit',
                             'class' => 'btn btn-primary btn-next'
-                        ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                        ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');*/
                     ?>
                 </div>
             </div>
+        </div> -->
+
+        <div class="col-sm-6">
+            <a href="<?=Yii::app()->createUrl("preregistration/visitReason")?>" class="pull-left btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
         </div>
+
+        <div class="col-sm-6">
+            <?php
+                echo CHtml::tag('button', array(
+                    'type'=>'submit',
+                    'class' => 'pull-right btn btn-primary btn-next'
+                ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+            ?>
+        </div>
+
+
+
     </div>  
 
 

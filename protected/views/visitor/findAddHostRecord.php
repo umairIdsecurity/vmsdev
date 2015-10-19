@@ -871,8 +871,8 @@ $defaultKey = key($asicCardTypes);
     function sendHostForm() {
         if ($('#requestVerifyAsicSponsor').is(':checked') == true) {
             $("#visit_send_verfication_email").val("1"); // #id Exists in visitForm.php file
-            //var sendMail = $("<input type='hidden'  name='Visit[sendMail]' value='true'>");
-            //$("#register-host-patient-form").append(sendMail);
+         } else {
+            $("#visit_send_verfication_email").val("0"); // #id Exists in visitForm.php file
          }
         var hostform = $("#register-host-form").serialize();
 

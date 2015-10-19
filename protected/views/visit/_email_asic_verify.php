@@ -12,7 +12,7 @@ $param .= 'Link of VIC Profile: ' . $link;
 $param .= '<h3>Thanks,</h3>';
 $param .= '<h3>Admin</h3>';
 $mail->setBody($param, 'text/html');
-//Yii::app()->mail->send($mail);
+Yii::app()->mail->send($mail);
 
 /**
  * Test Email by custom

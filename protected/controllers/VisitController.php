@@ -239,13 +239,13 @@ class VisitController extends Controller {
                 if ($model->card_lost_declaration_file != null) {
                     $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
                 }
-              //  if($oldhost != $model->host){
+                if($oldhost != $model->host){
                      if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
                         $visitor = Visitor::model()->findByPk($model->visitor);
                         $host = Visitor::model()->findByPk($model->host);
                         $this->renderPartial('_email_asic_verify',array('visitor'=>$visitor,'host'=>$host));
                     }
-              // }
+               }
                 $this->redirect(array('visit/detail', 'id' => $id));
             }
         }

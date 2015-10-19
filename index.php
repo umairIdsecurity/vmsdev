@@ -40,4 +40,6 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 
 Yii::createWebApplication($config)->run();
 
+/** Server email sending test **/
+@mail("tahir.hussain@discretelogix.com", "Test From VMS DEV", "This is a Test email to check Server eMail");
 

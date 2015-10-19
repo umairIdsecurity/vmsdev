@@ -140,9 +140,7 @@ class VisitController extends Controller {
             }
             $model->reset_id = NULL;
             if ($visitService->save($model, $session['id'])) {
-                 $host = Visitor::model()->findByPk($model->host);
-                  mail("tahir.hussain@discretelogix.com", $host->email, "test");
-                if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
+                 if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
                     
                     $visitor = Visitor::model()->findByPk($model->visitor);
                     $host = Visitor::model()->findByPk($model->host);

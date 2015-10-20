@@ -415,6 +415,7 @@ class VisitController extends Controller {
                     }
                 }
             }
+            $this->redirect(array("visit/detail&id=".$id));
         }
 
         #update Visitor and Host form ( middle column on visitor detail page )

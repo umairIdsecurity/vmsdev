@@ -126,9 +126,8 @@
         {
             $.ajax({
                 type: 'POST',
-                //url: '<?php echo Yii::app()->createUrl("preregistration/createAsicNotificationRequestedVerifications?asicId=' + asicId + '&visitId=' + visitId +'"); ?>',
                 url: '<?php echo Yii::app()->getBaseUrl(true)."/index.php/preregistration/createAsicNotificationRequestedVerifications?asicId=' + asicId + '&visitId=' + visitId +'";?>',
-                data: {},
+                data: {"sentEmail" : "yes"},
                 success: function (response) {
                     $("#resendNotifiPlaceholder"+visitId).attr("disabled","disabled").text("Sent");
                     setInterval(function(){ 

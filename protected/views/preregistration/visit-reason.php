@@ -77,7 +77,7 @@ $session = new CHttpSession;
                     $list + $other,
                     array(
                         'class'=>'form-control input-sm' ,
-                        'empty' => 'Select Visit Reason')
+                        'empty' => 'Select Reason for Visit')
                 );
 
                 ?>

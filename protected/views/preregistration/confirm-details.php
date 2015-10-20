@@ -549,7 +549,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 "bFilter": false,
                                 "data": dataSet,
                                 "columns": [
-                                    { "title": "Select", "class":"selected_col"  },
+                                    { "title": "Select", "width": "3%"},
                                     { "title": "First Name" },
                                     { "title": "Last Name" },
                                     { "title": "Company" }

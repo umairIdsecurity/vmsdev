@@ -343,8 +343,8 @@ $defaultKey = key($asicCardTypes);
                             </tr>
                             <tr class="vic-host-fields">
                                 <td>
-                                    <label><input style="margin-top: 1px;" type="checkbox" id="requestVerifyAsicSponsor"/> Request ASIC Sponsor Verification </label>
-                                    <input type="hidden"  name="Visit[sendMail]" value="0" id="visit_send_verfication_email">
+                                    <label><input style="margin-top: 1px;" type="checkbox" id="requestVerifyAsicSponsor" name="requestVerifyAsicSponsor" value="1"/> Request ASIC Sponsor Verification </label>
+                                    
 <!--                                    <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>-->
                                 </td>
                             </tr>
@@ -870,9 +870,9 @@ $defaultKey = key($asicCardTypes);
 
     function sendHostForm() {
         if ($('#requestVerifyAsicSponsor').is(':checked') == true) {
-            $("#visit_send_verfication_email").val("1"); 
-            //var sendMail = $("<input type='hidden'  name='Visit[sendMail]' value='true'>");
-            //$("#register-host-patient-form").append(sendMail);
+            $("#visit_send_verfication_email").val("1"); // #id Exists in visitForm.php file
+         } else {
+            $("#visit_send_verfication_email").val("0"); // #id Exists in visitForm.php file
          }
         var hostform = $("#register-host-form").serialize();
 

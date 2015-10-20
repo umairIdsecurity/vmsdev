@@ -170,12 +170,12 @@ $session = new CHttpSession;
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Surname' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'last_name'); ?>
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'asic_no', array('maxlength' => 50, 'placeholder' => 'ASIC no.', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->textField($model, 'asic_no', array('maxlength' => 50, 'placeholder' => 'ASIC No.', 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'asic_no'); ?>
                 </div>
 
@@ -204,13 +204,13 @@ $session = new CHttpSession;
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Contact No.', 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'contact_number'); ?>
 
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'email', array('maxlength' => 50, 'placeholder' => 'Email', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->textField($model, 'email', array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'email'); ?>
                 </div>
 
@@ -250,7 +250,7 @@ $session = new CHttpSession;
                     <input type="checkbox" name="Registration[is_asic_verification]" value="0" id="toggleCheckbox" />
                     <?php //echo $form->checkBox($model,'is_asic_verification'); ?>
                     <span class="checkbox-style"></span>
-                    <p  class="text-size">
+                    <p class="text-size" style="line-height:25px">
                         Request ASIC Sponsor Verification
                     </p>
                 </label>

@@ -49,7 +49,7 @@
         <div class="form-group" id="privacy_notice">
 
 
-            <label class="checkbox"><input id="toggleCheckbox" name="name1" type="checkbox" value="0"><span class="checkbox-style"></span>I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.</label>
+            <label class="checkbox text-size"><input id="toggleCheckbox" name="name1" type="checkbox" value="0"><span class="checkbox-style"></span><span class=" text-size" style="line-height:21px">I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.</span></label>
             
             <div id="errorDiv" style="display:none;color:red;">
                 Please mark Privacy Notice

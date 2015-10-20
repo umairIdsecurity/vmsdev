@@ -62,6 +62,9 @@ class PreregistrationController extends Controller
 		$session['step1Subtitle'] = 'Preregister for a VIC';
 		unset($session['step2Subtitle']);unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
+		
+		unset($session['requsetForVerificationEmail']);
+
 		$model = new EntryPoint();
 		unset($session['workstation']);
 		if(isset($_POST['EntryPoint']))
@@ -237,7 +240,7 @@ class PreregistrationController extends Controller
 		$session['stepTitle'] = 'ASIC SPONSOR';
 		$session['step6Subtitle'] = ' > ASIC Sponsor';
 		unset($session['step7Subtitle']);unset($session['step8Subtitle']);
-		unset($session['is_listed']);
+		unset($session['is_listed']);unset($session['requsetForVerificationEmail']);
 		$model->scenario = 'preregistrationAsic';
 		
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
@@ -254,18 +257,7 @@ class PreregistrationController extends Controller
 				//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
 				if(isset($_POST['Registration']['is_asic_verification']) && $_POST['Registration']['is_asic_verification'] == 1)
 				{
-					$loggedUserEmail = 'Admin@perthairport.com.au';
-					$headers = "MIME-Version: 1.0" . "\r\n";
-					$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-					$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-					$to=$asicModel->email;
-					$subject="Request for verification of VIC profile";
-					$body = "<html><body>Hi,<br><br>".
-						"VIC Holder urgently requires your Verification of their visit.<br><br>".
-						"Link of the VIC profile<br>".
-						"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."</a><br>";
-					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-					mail($to, $subject, $body, $headers);
+					$session['requsetForVerificationEmail'] = "yes";
 				}else{
 					$session['is_listed'] = 0;
 				}
@@ -289,20 +281,7 @@ class PreregistrationController extends Controller
 						//***************** Send Email on Request ASIC SPONSOR VERIFICATION *************
 						if(isset($_POST['Registration']['is_asic_verification']) && $_POST['Registration']['is_asic_verification'] == 1)
 						{
-				
-							$loggedUserEmail = 'Admin@perthairport.com.au';
-							$headers = "MIME-Version: 1.0" . "\r\n";
-							$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-							$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-							$to=$model->email;
-							$subject="Request for verification of VIC profile";
-							$body = "<html><body>Hi,<br><br>".
-								"VIC Holder urgently requires your Verification of their visit.<br><br>".
-								"Link of the VIC profile<br>".
-								//"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
-								"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$session['visit_id']."</a><br>";
-							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-							mail($to, $subject, $body, $headers);
+							$session['requsetForVerificationEmail'] = "yes";
 						}
 						else{
 							$session['is_listed'] = 0;
@@ -322,6 +301,7 @@ class PreregistrationController extends Controller
 
 		$this->render('asic-sponsor' , array('model'=>$model,'companyModel'=>$companyModel) );
 	}
+
 
 	public function actionUploadPhoto()
 	{
@@ -463,9 +443,18 @@ class PreregistrationController extends Controller
 						$this->createCompAdminNotification20and28Visits($session['company_id']);
 					}
 
+
 					$asicModel = Registration::model()->findByPk($model->host);
 					$asicId=$asicModel->id;
 					$this->actionCreateAsicNotificationRequestedVerifications($asicId,$model->id);
+
+					if(isset($session['requsetForVerificationEmail']) && $session['requsetForVerificationEmail'] == "yes")
+					{
+						$visitId = $model->id;
+			    		$email = $asicModel->email;
+			    		$loggedUserEmail = 'Admin@perthairport.com.au';
+			    		$this->sendEmailToASIC($loggedUserEmail,$email,$visitId);
+					}
 
 					$this->redirect(array('preregistration/success'));
 				}
@@ -1207,6 +1196,12 @@ class PreregistrationController extends Controller
 
     public function actionCreateAsicNotificationRequestedVerifications($asicId,$visitId)
     {
+    	$emailFlag = ''; 
+    	if(isset($_POST['sentEmail']))
+    	{
+    		$emailFlag = $_POST['sentEmail'];
+    	}
+    	
     	//create VIC Notifications: 1. VIC Holder has requested ASIC Sponsor verification
 		$notification = Notification::model()->findByAttributes(array('subject'=>'VIC Holder has requested ASIC Sponsor verification'));
 		if($notification){
@@ -1216,6 +1211,13 @@ class PreregistrationController extends Controller
             $notify->has_read = 0; //Not Yet
             $notify->verify_visit_id = $visitId;
             $notify->save();
+            if(($emailFlag != "") && ($emailFlag == "yes"))
+	    	{
+	    		$asicModel = Registration::model()->findByPk($asicId);
+	    		$email = $asicModel->email;
+	    		$loggedUserEmail = 'Admin@perthairport.com.au';
+	    		$this->sendEmailToASIC($loggedUserEmail,$email,$visitId);
+	    	}
 		}else{
 			$notification = new Notification();
 			$notification->created_by = null;
@@ -1231,6 +1233,13 @@ class PreregistrationController extends Controller
                 $notify->has_read = 0; //Not Yet
                 $notify->verify_visit_id = $visitId;
                 $notify->save();
+                if(($emailFlag != "") && ($emailFlag == "yes"))
+		    	{
+		    		$asicModel = Registration::model()->findByPk($asicId);
+		    		$email = $asicModel->email;
+		    		$loggedUserEmail = 'Admin@perthairport.com.au';
+	    			$this->sendEmailToASIC($loggedUserEmail,$email,$visitId);
+		    	}
             }	
 		}
     }
@@ -1243,18 +1252,9 @@ class PreregistrationController extends Controller
 			//************** EMAIL SENDING *****************************
 			$loggedUserEmail = Yii::app()->user->email;
 			$asic = Registration::model()->findByPk($visit->host);
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-			$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-			$to=$asic->email;
-			$subject="Request for verification of VIC profile";
-			$body = "<html><body>Hi,<br><br>".
-				"VIC Holder urgently requires your Verification of their visit.<br><br>".
-				"Link of the VIC profile<br>".
-				//"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
-				"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."</a><br>";
-			$body .="<br>"."Thanks,"."</body></html>";
-			mail($to, $subject, $body, $headers);
+			$toEmail=$asic->email;
+			$visitId = $visit->id;
+			$this->sendEmailToASIC($loggedUserEmail,$toEmail,$visitId);
 			//***********************************************************	
 			$notify = new UserNotification;
             $notify->user_id = $visit->host;
@@ -1275,18 +1275,9 @@ class PreregistrationController extends Controller
             	//************** EMAIL SENDING *****************************
 				$loggedUserEmail = Yii::app()->user->email;
 				$asic = Registration::model()->findByPk($visit->host);
-				$headers = "MIME-Version: 1.0" . "\r\n";
-				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-				$to=$asic->email;
-				$subject="Request for verification of VIC profile";
-				$body = "<html><body>Hi,<br><br>".
-					"VIC Holder urgently requires your Verification of their visit.<br><br>".
-					"Link of the VIC profile<br>".
-					//"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=" .$asic->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$asic->id."&email=".$asic->email."&k_str=".$asic->key_string."</a><br>";
-					"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visit->id."</a><br>";
-				$body .="<br>"."Thanks,"."</body></html>";
-				mail($to, $subject, $body, $headers);
+				$toEmail=$asic->email;
+				$visitId = $visit->id;
+				$this->sendEmailToASIC($loggedUserEmail,$toEmail,$visitId);
 				//***********************************************************
             	$notify = new UserNotification;
                 $notify->user_id = $visit->host;
@@ -2131,6 +2122,21 @@ class PreregistrationController extends Controller
 		unset($session['step4Subtitle']);unset($session['step5Subtitle']);unset($session['step6Subtitle']);
 		unset($session['step7Subtitle']);unset($session['step8Subtitle']);
     }
+
+    public function sendEmailToASIC($loggedUserEmail,$email,$visitId)
+	{
+		$headers = "MIME-Version: 1.0" . "\r\n";
+		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+		$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+		$to=$email;
+		$subject="Request for verification of VIC profile";
+		$body = "<html><body>Hi,<br><br>".
+				"VIC Holder urgently requires your Verification of their visit.<br><br>".
+				"Link of the VIC profile<br>".
+				"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visitId."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visitId."</a><br>";
+		$body .="<br>"."Thanks,"."<br>Admin</body></html>";
+		mail($to, $subject, $body, $headers);
+	}
 
 }
 

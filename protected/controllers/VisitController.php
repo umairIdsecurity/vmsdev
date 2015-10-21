@@ -395,7 +395,12 @@ class VisitController extends Controller {
             if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
                 $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
             }
-
+            /**
+             * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
+             * Then Imemdialty Closed this visit
+             */
+            $this->closedAsicPending($model, $visitorModel);
+            
             $visitorModel->scenario = 'updateVic';
             if ($visitorModel->save()) {
                 // If visitor card status is VIC ASIC Issued then add new card status convert
@@ -410,6 +415,7 @@ class VisitController extends Controller {
                     }
                 }
             }
+            $this->redirect(array("visit/detail&id=".$id));
         }
 
         #update Visitor and Host form ( middle column on visitor detail page )
@@ -537,8 +543,12 @@ class VisitController extends Controller {
                 $model->visit_closed_date = date("Y-m-d");
                 $model->closed_by = Yii::app()->user->id;
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
-                    $model->visit_status = VisitStatus::AUTOCLOSED;
-
+                    // If Visitor card status is Asic Pending then CLose the visit otherwise AutoClose
+                    if( $model->card_type == CardType::VIC_CARD_EXTENDED && $visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING)
+                         $model->visit_status = VisitStatus::CLOSED;
+                    else
+                         $model->visit_status = VisitStatus::AUTOCLOSED;
+                    
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
                              $model->visit_closed_date = date("Y-m-d 23:59:59");
@@ -597,6 +607,23 @@ class VisitController extends Controller {
         ));
     }
 
+    /**
+      * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
+      * Then Imemdialty Closed this visit
+      * @param object $visitModel Visit model of an visit
+      * @param Object $visittorModel visitor record model
+      * 
+      */
+     public function closedAsicPending($visitModel, $visitorModel) {
+            if( $visitModel->visit_status = VisitStatus::AUTOCLOSED && 
+                    $visitModel->card_type == CardType::VIC_CARD_EXTENDED &&
+                        $visitorModel->visitor_card_status ==  Visitor::VIC_ASIC_PENDING )   {
+                // Close Visit on manual Update
+                Visit::model()->updateByPk($visitModel->id, array("visit_status" => VisitStatus::CLOSED, "visit_closed_date" => date("Y-m-d H:i:s")));
+            }
+            return;
+     }
+     
     public function actionCloseVisit($id) {
         $model = $this->loadModel($id);
 

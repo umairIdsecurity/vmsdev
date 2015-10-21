@@ -1349,16 +1349,15 @@ class PreregistrationController extends Controller
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
-		$model = Registration::model()->findByPk($session['visitor_id']);
-		//if he has not created a login, redirect to create login
-		if(!isset($model->password) || ($model->password =="") || ($model->password == null))
-		{
-			$this->render('success');
-		}
-		//if they are logged in, redirect to visit history page
-		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){
+
+		//$model = Registration::model()->findByPk($session['visitor_id']);
+		
+		if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)){//if they are logged in, redirect to visit history page
 			$this->redirect(array('preregistration/visitHistory'));
 		}
+		//elseif(!isset($model->password) || ($model->password =="") || ($model->password == null)){//if he has not created a login, redirect to create login
+			$this->render('success');
+		//}
 	}
 
 	public function actionAsicPass(){

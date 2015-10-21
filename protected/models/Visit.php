@@ -1317,8 +1317,7 @@ class Visit extends CActiveRecord {
      * Closed all Auto Closed visits of a tenant 
      * EVIC and 24 Hour Vic only
      * EVIC Auto Closed visits should get closed & VIC changes status to 'ASIC Pending'
-     * VIC card status will change from 'VIC Holder' to 'ASIC Pending' 
-     * and Total visit count becomes 0 and Auto Closed EVIC visit then change to 'Closed' immediately.
+     * and Total visit count becomes 0 and Auto Closed
      * Reference: CAVMS-1065
      */
     public function setClosedAutoClosedVisits( $id = "") {
@@ -1346,6 +1345,12 @@ class Visit extends CActiveRecord {
             if ( $dateDiff > 0 ) { 
                 $update["visit_closed_date"] = $dateNow->format("Y-m-d H:i:s");
                 $update["visit_status"] = VisitStatus::CLOSED;
+                // CLOSE and Reset Visit for the first time only
+                if ($v->card_type == CardType::VIC_CARD_EXTENDED && $v->visitor0["visitor_card_status"] == Visitor::VIC_ASIC_PENDING) {
+                     // Auto Reset a visit First Time only
+                     if( is_null( $v->parent_id ) )
+                        $update["reset_id"] = 1;
+                }
             } elseif ($dateDiff == 0 && $v->card_type == CardType::VIC_CARD_24HOURS) { 
                 // 24 Hour visit will be expired on the exact time when it was activated
                 if( ($dateNow->format("H") > $dateOut->format("H") ) || ($dateNow->format("H") == $dateOut->format("H") && $dateNow->format("i") > $dateOut->format("i"))) {
@@ -1354,22 +1359,6 @@ class Visit extends CActiveRecord {
                 }
             }
            
-            // Change (EVIC) VIC holder to Asic Pending  
-            if ($v->card_type == CardType::VIC_CARD_EXTENDED && $v->visitor0["visitor_card_status"] == Visitor::VIC_HOLDER) {
-                 Visitor::model()->updateByPk($v->visitor0["id"], array("visitor_card_status" => Visitor::VIC_ASIC_PENDING));
-                 // Total visit count becomes 0 and Auto Closed EVIC visit then change to 'Closed' immediately.
-                 $update["visit_closed_date"] = $dateNow->format("Y-m-d 23:59:59");
-                 
-                 // Auto Reset a visit First Time only
-                 if( is_null( $v->parent_id ) )
-                    $update["reset_id"] = 1;
-            }
-            
-             // Closed the Auto Closed EVIC visits at Midnight of the current Auto Closed date
-            if( CardType::VIC_CARD_EXTENDED && !is_null($v->visit_closed_date)  && time() >= strtotime($v->visit_closed_date)) {
-                $update["visit_status"] = VisitStatus::CLOSED;
-            }
-            
             // Update Visit Table
             if( count( $update ) ) {
                $this->updateByPk($v->id, $update);   

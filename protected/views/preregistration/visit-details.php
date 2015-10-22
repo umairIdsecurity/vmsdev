@@ -41,8 +41,8 @@ if ($model->time_in != '') {
         <div class="col-sm-8">
             <div class="">
                   <div class="row">
-                    <div class="col-sm-3">Date of Visit</div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-3" style="line-height:30px">Date of Visit</div>
+                    <div class="col-sm-6" style="line-height:30px">
                         <?php
                             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                 'model'       => $model,
@@ -54,7 +54,7 @@ if ($model->time_in != '') {
                             ));
                         ?>
                     </div>
-                    <div class="col-sm-3"><span class="glyphicon glyphicon-calendar"></span></div>
+                    <div class="col-sm-3"><span style="line-height:30px" class="glyphicon glyphicon-calendar"></span></div>
                   </div>
             </div>
 
@@ -64,7 +64,7 @@ if ($model->time_in != '') {
 
             <div class="">
                 <div class="row">
-                    <div class="col-sm-3">Time In</div>
+                    <div class="col-sm-3" style="line-height:30px">Time In</div>
                     <div class="col-sm-6">
                       <div class="row">
                         <div class="col-xs-6">

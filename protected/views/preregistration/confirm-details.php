@@ -177,7 +177,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         <?php echo $form->error($model, 'contact_street_no'); ?>
                     </div>
                 </div>
-                <div class="row form-group form-group-custom">
+                <div class="row form-group">
                     <div class="col-xs-6">
                         <?php echo $form->textField($model, 'contact_street_name', array('maxlength' => 50, 'placeholder' => 'Street Name', 'class'=>'form-control input-sm')); ?>
                         <?php echo $form->error($model, 'contact_street_name'); ?>
@@ -187,13 +187,13 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         <?php echo $form->error($model, 'contact_street_type'); ?>
                     </div>
                 </div>
-                <div class="form-group form-group-custom">
+                <div class="form-group">
                     <?php echo $form->textField($model, 'contact_suburb', array('maxlength' => 50, 'placeholder' => 'Suburb' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'contact_suburb'); ?>
                 </div>
 
 
-                <div class="form-group form-group-custom">
+                <div class="form-group">
                     <?php
                     echo $form->dropDownList($model, 'contact_country', $countryList,
                         array('prompt' => 'Select Country', 'class'=>'form-control input-sm',
@@ -202,7 +202,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <?php echo $form->error($model, 'contact_country'); ?>
                 </div>
 
-                <div class="row form-group form-group-custom">
+                <div class="row form-group">
 
                     <div id="stateDropdown" class="col-xs-6">
                         <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'Select State', 'class'=>'form-control input-sm')); ?>
@@ -219,16 +219,17 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     
                 </div>
 
-                <div class="row form-group form-group-custom">
+                <?php 
+                    if(isset($error_message) && !empty($error_message)){
+                ?>
+
+                <div class="row form-group">
                     <div class="col-xs-6">
-                        <?php 
-                            if(isset($error_message) && !empty($error_message)){
-                                echo '<span style="color:red">'.$error_message.'</span>';
-                            }
-                        ?>
-                        <?php //echo $form->error($model, 'contact_state'); ?>
+                        <?php  echo '<span style="color:red">'.$error_message.'</span>'; ?>
                     </div>
                 </div>
+
+                <?php } ?>
 
                 <div class="form-group">
                     <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Phone No.', 'class'=>'form-control input-sm')); ?>

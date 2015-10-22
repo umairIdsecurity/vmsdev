@@ -71,7 +71,7 @@ $session = new CHttpSession;
 
                 $list=CHtml::listData($vr,'id','reason');
 
-                $other = array('other'=>'other');
+                $other = array('Null'=>'other');
 
                 echo $form->dropDownList($model,'reason',
                     $list + $other,
@@ -412,7 +412,7 @@ $session = new CHttpSession;
         
         $('#other-reason').hide();
         $('#Visit_reason').change(function(e){
-            if ($('#Visit_reason').val() == 'other'){
+            if ($('#Visit_reason').val() == 'Null'){
                 $('#other-reason').show();
             }else{
                 $('#other-reason').hide();

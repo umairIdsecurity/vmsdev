@@ -197,11 +197,12 @@ class PreregistrationController extends Controller
 		{
 			$model->attributes    = $_POST['Visit'];
 			if($_POST['Visit']['other_reason'] != ""){
-				$reasonModel = new VisitReason();
+				/*$reasonModel = new VisitReason();
 				$reasonModel->reason  = $_POST['Visit']['other_reason'];
 				if($reasonModel->save(false)){
 					$model->reason  = $reasonModel->id;
-				}
+				}*/
+				$model->visit_reason  = $_POST['Visit']['other_reason'];
 			}
 			$model->card_type = 6; //VIC 24 hour Card
 			$model->created_by = $session['created_by'];
@@ -401,6 +402,12 @@ class PreregistrationController extends Controller
 			$model->date_check_out = date("Y-m-d", strtotime($model->date_check_in." +1 day"));
 			$model->host = $session['host'];
 			$model->company = $sessionVisit->attributes['company']; 
+
+			if($sessionVisit->attributes['reason'] == 'Null'){
+				$model->reason = NULL;
+				$model->visit_reason = $sessionVisit->attributes['visit_reason'];
+			}
+
 			if(isset($session['is_listed']) && $session['is_listed'] == 0){
 				$model->is_listed = $session['is_listed'];
 			}

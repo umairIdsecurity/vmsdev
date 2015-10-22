@@ -301,6 +301,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         <?php //if (!$asic) : ?>
         <?php //if ($model->card_type <= CardType::CONTRACTOR_VISITOR) : ?>
 
+
         <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
             <ul>
                 <li>
@@ -309,16 +310,20 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td width="110px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                             <?php
-                                $cond = '';
-                                if($model->card_type > 4){
-                                    $cond .= "t.module='AVMS'";
-                                }else{
-                                    $cond .= "t.module='CVMS'";
-                                }
+                                $checkReason = $model->reason;
 
-                                $reason = CHtml::listData(VisitReason::model()->findAll($cond), 'id', 'reason');
-                                $reason['Other'] = 'Other';
-                                echo $visitorForm->dropDownList($model, 'reason', $reason, ['onchange' => 'ifSelectedIsOtherShowAddReasonDiv(this)', 'empty' => 'Please select a reason']);
+                                if(($checkReason != NULL) && ($checkReason != ""))
+                                {
+                                    $cond = '';
+                                    if($model->card_type > 4){$cond .= "t.module='AVMS'";}else{$cond .= "t.module='CVMS'";}
+                                    $reason = CHtml::listData(VisitReason::model()->findAll($cond), 'id', 'reason');
+                                    $reason['Other'] = 'Other';
+                                    echo $visitorForm->dropDownList($model, 'reason', $reason, ['onchange' => 'ifSelectedIsOtherShowAddReasonDiv(this)', 'empty' => 'Please select a reason']);
+                                }
+                                else
+                                {
+                                    echo $visitorForm->textField($model,'visit_reason');
+                                }
                             ?>
                             <br />
                             <?php echo $visitorForm->error($model, 'reason'); ?>
@@ -334,6 +339,8 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                 </li>
             </ul>
         </li>
+
+
         <?php //endif; ?>
         <?php if (($visitorModel->profile_type == "ASIC") || ($visitorModel->profile_type == "VIC")) : ?>
         <li class='has-sub' id="asicDetailsLi">

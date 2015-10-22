@@ -71,6 +71,7 @@ class VisitController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
+
             $visitParams = Yii::app()->request->getPost('Visit');
 
             if (!isset($visitParams['date_check_in'])) {
@@ -126,7 +127,7 @@ class VisitController extends Controller {
 
             //check $reasonId has exist until add new.
             if ($model->reason == 'Other' || !$model->reason){
-                $newReason = new VisitReason();
+                /*$newReason = new VisitReason();
                 $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : 'Other');
                 $newReason->created_by = Yii::app()->user->id;
                 $newReason->tenant = Yii::app()->user->tenant;
@@ -136,9 +137,20 @@ class VisitController extends Controller {
                     $newReason->module = "CVMS";
                 if($newReason->save()){
                     $model->reason = $newReason->id;
+                }*/
+                if(isset($visitParams['reason_note'])){
+                    $model->visit_reason = $visitParams['reason_note'];
+                    $model->reason = NULL;
                 }
             }
             $model->reset_id = NULL;
+
+            /*echo "<pre>";
+                print_r($model->attributes);
+            
+            die;*/
+
+
             if ($visitService->save($model, $session['id'])) {
                  if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
                     
@@ -516,13 +528,21 @@ class VisitController extends Controller {
             }
         }
 
-        if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) {
+        if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) 
+        {
             $visitParams = Yii::app()->request->getPost('Visit');
+            
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
 
+            if (isset($_POST['Visit']['visit_reason']) && ($_POST['Visit']['visit_reason'] != "")) {
+                $model->visit_reason = $_POST['Visit']['visit_reason'];
+            }
+
             $model->attributes = $visitParams;
+
+            
             // If operator select other reason then save new one
             if (isset($_POST['VisitReason'])) {
                 $visitReasonModel             = new VisitReason;
@@ -535,7 +555,10 @@ class VisitController extends Controller {
                 }  else {
                     $model->reason = $newReasonID;
                 }
+            }else{
+                $model->reason = NULL;
             }
+
             
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {

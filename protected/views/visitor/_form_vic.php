@@ -1110,8 +1110,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     } else {
                         window.location = 'index.php?r=visitor/admin&vms=avms';
                     }
+                     
                 }else {
-                     //alert(data); 
+                     alert(data); 
                       return;
                 }
             },

@@ -190,8 +190,13 @@ class VisitorController extends Controller {
                                 echo $updateErrorMessage;
                         }
                     }
+                    /** 
+                     * CLOSE all Auto close visits of this visitor that is now having ASIC PENDING card status
+                     */
+                     Visit::model()->updateAll(array("visit_status"=>VisitStatus::CLOSED, "visit_closed_date"=>date("Y-m-d H:i:s") ), "visitor = ".$model->id." AND visit_status = ".VisitStatus::AUTOCLOSED);
                 } else {
                     echo $updateErrorMessage;
+                    return;
                 }
             } elseif (isset($visitorParams['visitor_card_status']) && in_array($visitorParams['visitor_card_status'], [Visitor::ASIC_ISSUED, Visitor::ASIC_APPLICANT, Visitor::ASIC_EXPIRED, Visitor::ASIC_DENIED]) && $model->profile_type == Visitor::PROFILE_TYPE_VIC) {
                 $model->attributes          = $visitorParams;

@@ -144,7 +144,7 @@ class HelpDeskGroup extends CActiveRecord {
             
             $session = new CHttpSession;
 
-            $role = $session['role'];
+           $role = $session['role'];
             $roles = HelpdeskGroupUserRole::model()->findAllByAttributes(array('role' => $role));
             $heldeskGroups = array();
             foreach ($roles as $role) {

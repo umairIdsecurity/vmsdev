@@ -573,12 +573,7 @@ class VisitController extends Controller {
                          $model->visit_status = VisitStatus::AUTOCLOSED;
                     
                     switch ($model->card_type) {
-                        case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                             $model->visit_closed_date = date("Y-m-d 23:59:59");
-                             Visitor::model()->updateByPk($model->visitor, array("visitor_card_status" => Visitor::VIC_ASIC_PENDING));
-                             if( is_null($model->parent_id))
-                                 $model->reset_id = 1;
-                             
+                        case CardType::VIC_CARD_EXTENDED: // VIC Extended                                 
                             if ($visitParams['finish_date'] != NULL) {
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
                             } else { 
@@ -641,8 +636,15 @@ class VisitController extends Controller {
             if( $visitModel->visit_status = VisitStatus::AUTOCLOSED && 
                     $visitModel->card_type == CardType::VIC_CARD_EXTENDED &&
                         $visitorModel->visitor_card_status ==  Visitor::VIC_ASIC_PENDING )   {
+                
                 // Close Visit on manual Update
-                Visit::model()->updateByPk($visitModel->id, array("visit_status" => VisitStatus::CLOSED, "visit_closed_date" => date("Y-m-d H:i:s")));
+                $update = array();
+                $update["visit_status"] = VisitStatus::CLOSED;
+                $update["visit_closed_date"] = date("Y-m-d H:i:s");
+                // Reset for the first time only
+                if( is_null( $visitModel->parent_id ) )
+                   $update["reset_id"] = 1;
+                Visit::model()->updateByPk($visitModel->id, $update);
             }
             return;
      }

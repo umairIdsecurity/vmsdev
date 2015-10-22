@@ -25,7 +25,8 @@ $session = new CHttpSession;
                 <td><select  name="HelpDesk[helpdesk_group_id]" style="width:500px;">
                         <option disabled value='' selected>Please select a Help Desk group</option>
                         <?php
-                        $helpdeskGroup = HelpDeskGroup::model()->getAllHelpDeskGroup();
+                        //$helpdeskGroup = HelpDeskGroup::model()->getAllHelpDeskGroup();
+                        $helpdeskGroup = HelpDeskGroup::model()->findAll("created_by = ".Yii::app()->user->id);
                         foreach ($helpdeskGroup as $key => $value) {
                             ?>
                             <option <?php  if ($model['helpdesk_group_id'] == $value['id']) echo "selected"; ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>

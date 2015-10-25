@@ -42,7 +42,7 @@ class HelpDeskGroupController extends Controller {
      */
     public function actionCreate() {
 		
-		$session = new CHttpSession;
+        $session = new CHttpSession;
         $model = new HelpDeskGroup;
         if(isset($_POST['HelpDeskGroup']))
 		{

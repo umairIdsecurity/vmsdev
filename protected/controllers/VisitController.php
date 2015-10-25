@@ -29,7 +29,7 @@ class VisitController extends Controller {
                 'actions' => array('create',
                     'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
                     'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
-                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId', 'closeVisit'),
+                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId', 'closeVisit', 'visitResetById'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -71,6 +71,7 @@ class VisitController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
+
             $visitParams = Yii::app()->request->getPost('Visit');
 
             if (!isset($visitParams['date_check_in'])) {
@@ -81,7 +82,7 @@ class VisitController extends Controller {
             if (!isset($visitParams['reason']) || empty($visitParams['reason'])) {
                 $visitParams['reason'] = NULL;
             }
-
+          
             $model->attributes = $visitParams;
 
             // If datepicker is disabled then date check out is empty
@@ -126,7 +127,7 @@ class VisitController extends Controller {
 
             //check $reasonId has exist until add new.
             if ($model->reason == 'Other' || !$model->reason){
-                $newReason = new VisitReason();
+                /*$newReason = new VisitReason();
                 $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : 'Other');
                 $newReason->created_by = Yii::app()->user->id;
                 $newReason->tenant = Yii::app()->user->tenant;
@@ -136,14 +137,26 @@ class VisitController extends Controller {
                     $newReason->module = "CVMS";
                 if($newReason->save()){
                     $model->reason = $newReason->id;
+                }*/
+                if(isset($visitParams['reason_note'])){
+                    $model->visit_reason = $visitParams['reason_note'];
+                    $model->reason = NULL;
                 }
             }
+            $model->reset_id = NULL;
+
+            /*echo "<pre>";
+                print_r($model->attributes);
+            
+            die;*/
+
 
             if ($visitService->save($model, $session['id'])) {
-                if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
+                 if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
+                    
                     $visitor = Visitor::model()->findByPk($model->visitor);
                     $host = Visitor::model()->findByPk($model->host);
-
+                   
                     $this->renderPartial('_email_asic_verify', array('visitor' => $visitor, 'host' => $host));
                 }
                 $this->redirect(array('visit/detail', 'id' => $model->id, 'new_created' => true));
@@ -184,7 +197,7 @@ class VisitController extends Controller {
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
 
-			if ($model->visitor_type == null) {
+		if ($model->visitor_type == null) {
                 $model->visitor_type = $oldVisitorType;
             }
             if ($model->reason == null) {
@@ -239,12 +252,12 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
                 }
                 if($oldhost != $model->host){
-                    if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
+                     if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
                         $visitor = Visitor::model()->findByPk($model->visitor);
                         $host = Visitor::model()->findByPk($model->host);
                         $this->renderPartial('_email_asic_verify',array('visitor'=>$visitor,'host'=>$host));
                     }
-                }
+               }
                 $this->redirect(array('visit/detail', 'id' => $id));
             }
         }
@@ -325,6 +338,10 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id, $new_created=NULL) {
+        
+        // set Close visit that are Auto Closed and will expire today.
+        Visit::model()->setClosedAutoClosedVisits($id);  
+        
         $session = new CHttpSession;
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
@@ -390,7 +407,12 @@ class VisitController extends Controller {
             if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
                 $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
             }
-
+            /**
+             * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
+             * Then Imemdialty Closed this visit
+             */
+            $this->closedAsicPending($model, $visitorModel);
+            
             $visitorModel->scenario = 'updateVic';
             if ($visitorModel->save()) {
                 // If visitor card status is VIC ASIC Issued then add new card status convert
@@ -405,6 +427,7 @@ class VisitController extends Controller {
                     }
                 }
             }
+            $this->redirect(array("visit/detail&id=".$id));
         }
 
         #update Visitor and Host form ( middle column on visitor detail page )
@@ -505,13 +528,21 @@ class VisitController extends Controller {
             }
         }
 
-        if (isset($_POST['Visit'])) {
+        if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) 
+        {
             $visitParams = Yii::app()->request->getPost('Visit');
+            
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
 
+            if (isset($_POST['Visit']['visit_reason']) && ($_POST['Visit']['visit_reason'] != "")) {
+                $model->visit_reason = $_POST['Visit']['visit_reason'];
+            }
+
             $model->attributes = $visitParams;
+
+            
             // If operator select other reason then save new one
             if (isset($_POST['VisitReason'])) {
                 $visitReasonModel             = new VisitReason;
@@ -524,7 +555,10 @@ class VisitController extends Controller {
                 }  else {
                     $model->reason = $newReasonID;
                 }
+            }else{
+                $model->reason = NULL;
             }
+
             
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
@@ -532,10 +566,14 @@ class VisitController extends Controller {
                 $model->visit_closed_date = date("Y-m-d");
                 $model->closed_by = Yii::app()->user->id;
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
-                    $model->visit_status = VisitStatus::AUTOCLOSED;
-
+                    // If Visitor card status is Asic Pending then CLose the visit otherwise AutoClose
+                    if( $model->card_type == CardType::VIC_CARD_EXTENDED && $visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING)
+                         $model->visit_status = VisitStatus::CLOSED;
+                    else
+                         $model->visit_status = VisitStatus::AUTOCLOSED;
+                    
                     switch ($model->card_type) {
-                        case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                        case CardType::VIC_CARD_EXTENDED: // VIC Extended                                 
                             if ($visitParams['finish_date'] != NULL) {
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
                             } else { 
@@ -587,6 +625,30 @@ class VisitController extends Controller {
         ));
     }
 
+    /**
+      * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
+      * Then Imemdialty Closed this visit
+      * @param object $visitModel Visit model of an visit
+      * @param Object $visittorModel visitor record model
+      * 
+      */
+     public function closedAsicPending($visitModel, $visitorModel) {
+            if( $visitModel->visit_status = VisitStatus::AUTOCLOSED && 
+                    $visitModel->card_type == CardType::VIC_CARD_EXTENDED &&
+                        $visitorModel->visitor_card_status ==  Visitor::VIC_ASIC_PENDING )   {
+                
+                // Close Visit on manual Update
+                $update = array();
+                $update["visit_status"] = VisitStatus::CLOSED;
+                $update["visit_closed_date"] = date("Y-m-d H:i:s");
+                // Reset for the first time only
+                if( is_null( $visitModel->parent_id ) )
+                   $update["reset_id"] = 1;
+                Visit::model()->updateByPk($visitModel->id, $update);
+            }
+            return;
+     }
+     
     public function actionCloseVisit($id) {
         $model = $this->loadModel($id);
 
@@ -616,6 +678,8 @@ class VisitController extends Controller {
         $session['lastPage'] = 'visitorrecords';
         //Archive Expired 48 Old Pre-registered Visits
         Visit::model()->archivePregisteredOldVisits();
+        // Auto Closed TO Closed the EVIC and 24 Hour Visits
+        Visit::model()->setClosedAutoClosedVisits();
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
@@ -1023,7 +1087,13 @@ class VisitController extends Controller {
         if ($type == 'backdate') {
             $model->visit_status = VisitStatus::CLOSED;
         }
-
+        
+        $model->reset_id = NULL;
+        $model->visit_closed_date = NULL;
+        // Parent ID if a EVIC visit is auto Closed
+        if ($model->card_type == CardType::VIC_CARD_EXTENDED )
+           $model->parent_id = $id; 
+            
         //update date checkout in case card 24h
         if (!empty($model) && empty($model->date_check_out)) {
             switch ($model->card_type) {
@@ -1455,6 +1525,17 @@ class VisitController extends Controller {
         }
 
         $this->render('importVisitData', array('model' => $model));
+    }
+    /**
+     * Reset Count of a Visit
+     * 
+     * @return int
+     */
+    public function actionVisitResetById() {
+        $visit_id =  Yii::app()->request->getParam("id", 0);
+        if($visit_id != 0 )
+           Visit::model()->updateByPk($visit_id, array("reset_id" => 1));
+        return 1;
     }
 
 }

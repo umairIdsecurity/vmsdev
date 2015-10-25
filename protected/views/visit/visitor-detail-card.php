@@ -106,8 +106,15 @@ $totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['t
 $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
     Total Visits at <?php //echo $companyName; ?>: <?php echo $totalCompanyVisit; ?>
-    <?php if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit == 28):?>
-        <span class="glyphicon glyphicons-refresh"></span>
+  <?php
+        /**
+         * EVIC only, ASIC_Pending(during Auto-closed), Show reset option if this is not the first time.
+         * The Auto Closed script actually reset it first time. 
+         */
+      if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit >= 28 &&
+                $model->card_type == CardType::VIC_CARD_EXTENDED && !is_null($model->parent_id)):   
+    ?>
+    <span class="glyphicon glyphicons-refresh" style="margin-left:8px" onclick="resetVisitCount('<?php echo $model->id; ?>');"> </span>
     <?php endif;?>
 
     </br>
@@ -432,6 +439,20 @@ $detailForm = $this->beginWidget('CActiveForm', [
 
     function populateVisitWorkstation(value) {
         $("#Visit_workstation").val(value.value);
+    }
+    /**
+    * Reset EVIC visit count when it is 28
+
+     * @param {type} visit_id
+     * @returns {undefined}     */
+    function resetVisitCount(visit_id) {
+          $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("/visit/visitResetById&id=")); ?>"+visit_id,
+            success: function (data) {
+                 location.reload();
+            }
+        });
     }
 </script>
 <!--POP UP FOR CROP PHOTO -->

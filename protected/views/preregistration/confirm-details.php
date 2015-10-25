@@ -10,7 +10,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
 <div class="page-content">
 
-    <h3 class="text-primary">Personal Information</h3>
+    <a href="<?php echo Yii::app()->createUrl('preregistration/personalDetails'); ?>"><h3 class="text-primary subheading-size">Personal Information</h3></a>
+
     <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
     
     <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
@@ -78,7 +79,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             ); ?>
         </div>
 
-        <div class="row">
+        <div class="row" id="new_asic_area">
             <div class="col-sm-4">
                 <div class="form-group">
                     <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm')); ?>
@@ -176,7 +177,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         <?php echo $form->error($model, 'contact_street_no'); ?>
                     </div>
                 </div>
-                <div class="row form-group form-group-custom">
+                <div class="row form-group">
                     <div class="col-xs-6">
                         <?php echo $form->textField($model, 'contact_street_name', array('maxlength' => 50, 'placeholder' => 'Street Name', 'class'=>'form-control input-sm')); ?>
                         <?php echo $form->error($model, 'contact_street_name'); ?>
@@ -186,13 +187,13 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         <?php echo $form->error($model, 'contact_street_type'); ?>
                     </div>
                 </div>
-                <div class="form-group form-group-custom">
+                <div class="form-group">
                     <?php echo $form->textField($model, 'contact_suburb', array('maxlength' => 50, 'placeholder' => 'Suburb' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'contact_suburb'); ?>
                 </div>
 
 
-                <div class="form-group form-group-custom">
+                <div class="form-group">
                     <?php
                     echo $form->dropDownList($model, 'contact_country', $countryList,
                         array('prompt' => 'Select Country', 'class'=>'form-control input-sm',
@@ -201,7 +202,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <?php echo $form->error($model, 'contact_country'); ?>
                 </div>
 
-                <div class="row form-group form-group-custom">
+                <div class="row form-group">
 
                     <div id="stateDropdown" class="col-xs-6">
                         <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'Select State', 'class'=>'form-control input-sm')); ?>
@@ -218,16 +219,17 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     
                 </div>
 
-                <div class="row form-group form-group-custom">
+                <?php 
+                    if(isset($error_message) && !empty($error_message)){
+                ?>
+
+                <div class="row form-group">
                     <div class="col-xs-6">
-                        <?php 
-                            if(isset($error_message) && !empty($error_message)){
-                                echo '<span style="color:red">'.$error_message.'</span>';
-                            }
-                        ?>
-                        <?php //echo $form->error($model, 'contact_state'); ?>
+                        <?php  echo '<span style="color:red">'.$error_message.'</span>'; ?>
                     </div>
                 </div>
+
+                <?php } ?>
 
                 <div class="form-group">
                     <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Phone No.', 'class'=>'form-control input-sm')); ?>
@@ -237,9 +239,16 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         </div>
 
 
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        
+
+
         <div class="row">
             <div class="col-sm-12">
-                <div class="form-group">
+                <div class="">
                     <div class="pull-left">
                         <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                     </div>
@@ -507,7 +516,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             $("#asic_table_wrapper").hide();
             $("#asic-notification").hide();
             $('#Registration_selected_asic_id').val("");
-            $('#new_asic_area').show();
+            //$('#new_asic_area').show();
         });
 
         $('#search_asic_btn').click(function(event) {
@@ -541,7 +550,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 "bFilter": false,
                                 "data": dataSet,
                                 "columns": [
-                                    { "title": "Select", "class":"selected_col"  },
+                                    { "title": "Select", "width": "3%"},
                                     { "title": "First Name" },
                                     { "title": "Last Name" },
                                     { "title": "Company" }
@@ -549,8 +558,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 "fnDrawCallback": function (oSettings) {
                                     $('.selected_asic').click(function() {
                                         $('#Registration_selected_asic_id').val($(this).val());
-                                        $('#Registration_contact_number').val("");
-                                        $('#Registration_email').val("");
+                                        /*$('#Registration_contact_number').val("");
+                                        $('#Registration_email').val("");*/
                                         $('#new_asic_area').empty();
                                     });
                                 }

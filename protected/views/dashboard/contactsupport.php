@@ -95,11 +95,13 @@ foreach ($contact_persons as $contact_person) {
         <tr>
             <td><?php echo $form->labelEx($model, 'reason'); ?></td>
             <td>
-                <?php echo $form->dropDownList(
+                <?php 
+                $reasonsAll = CHtml::listData(Reasons::model()->findAll("tenant = ".Yii::app()->user->tenant), 'id', 'reason_name');
+                echo $form->dropDownList(
                             $model,
                             'reason',
-                            $contact_reasons,
-                                    array('empty'=>'Select a reason')
+                             $reasonsAll,
+                             array('empty'=>'Select a reason')
                     );?>
             
             </td>
@@ -110,10 +112,10 @@ foreach ($contact_persons as $contact_person) {
             <td><?php echo $form->dropDownList(
                             $model,
                             'contact_person_name',
-                            CHtml::listData(ContactPerson::model()->findAll("user_role = " . $session['role']),
+                            CHtml::listData(ContactPerson::model()->findAll("tenant = " . Yii::app()->user->tenant),
                                     'id',
                                     'contact_person_name'),
-                                    array('empty'=>'Select a person','readonly'  =>  'readonly',)
+                                    array('empty'=>'Select a person')
                     );?>
             </td>
         </tr>

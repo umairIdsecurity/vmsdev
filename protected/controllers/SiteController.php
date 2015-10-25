@@ -91,7 +91,24 @@ class SiteController extends Controller {
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
 
-        if(isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg'){
+        if( (isset($_SERVER['HTTP_HOST']) && substr($_SERVER['HTTP_HOST'],0,5) =='vmspr' ) ||
+            (isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg') )
+        {
+            $airportCode  = isset($_GET['airportCode']) ?$_GET['airportCode'] : $_SESSION['airportcode'];
+            if(!$airportCode){
+                throw new CException("Airport code must be specified for preregistration.");
+            }
+            if(!isset($_SESSION['airportcode'])) {
+                $_SESSION['airportcode'] = $airportCode;
+                $tenantCompany = Company::model()->find("code='" . $airportCode . "' and company_type=1 and is_deleted=0");
+                if($tenantCompany!=null){
+                    $_SESSION['tenant'] = $tenantCompany->tenantId;
+                } else {
+                    throw new CException("Airport ".$airportCode." not found.");
+                }
+
+            }
+
 
             $this->redirect('index.php/preregistration');
 

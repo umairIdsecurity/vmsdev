@@ -112,7 +112,7 @@ date_default_timezone_set('Asia/Manila');
         </div>
 
     <?php } ?>
-
+    <input type="hidden"  name="Visit[sendMail]" value="0" id="visit_send_verfication_email">
     <div class="row buttons">
         <input type="submit" id="submitVisitForm" value="Add">
         <input type="button" value="Save and Continue" id="populateVisitFormFields" >

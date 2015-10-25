@@ -27,22 +27,41 @@ $session = new CHttpSession;
     </tr>
     <tr>
         <td>
-            <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 24; $i++): ?>
-                    <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
-                <?php endfor; ?>
+            
+            <?php
+                $hours = '';
+                $minutes = '';
+                if(!empty($model->time_check_in) && !is_null($model->time_check_in)) 
+                {   
+                    $hours = date("H",strtotime($model->time_check_in));
+                    $minutes = date("i",strtotime($model->time_check_in));
+                }
+            ?>
+            <!-- <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;"> -->
+            <select disabled style="width:70px;">
+                
+                <?php //for ($i = 1; $i <= 24; $i++): ?>
+
+                    <!-- <option value="<?php //echo $i; ?>"><?php //echo date("H", strtotime("$i:00")); ?></option> -->
+                    <option value="<?php echo $hours;//echo $i; ?>" ><?php echo $hours;//echo date("H", strtotime("$i:00")); ?></option>
+
+                <?php //endfor; ?>
+
             </select> :
-            <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 60; $i++): ?>
-                    <option value="<?= $i; ?>"><?php
-                        if ($i > 0 && $i < 10) {
+            <!-- <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;"> -->
+            <select disabled style="width:70px;">
+                <?php //for ($i = 1; $i <= 60; $i++): ?>
+                    <option value="<?php echo $minutes;//echo $i; ?>"><?php
+                        echo $minutes;
+                       /* if ($i > 0 && $i < 10) {
                             echo '0' . $i;
                         } else {
                             echo $i;
-                        };
+                        };*/
                         ?></option>
-                <?php endfor; ?>
+                <?php //endfor; ?>
             </select>
+
         </td>
     </tr>
 

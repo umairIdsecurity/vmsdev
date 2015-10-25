@@ -147,7 +147,7 @@ class TenantTransferController extends Controller
 
                     $transaction = Yii::app()->db->beginTransaction();
                     try {
-                        
+
                         foreach($targetTables as $tableName){
                         //foreach ($contents as $tableName => $content) {
 

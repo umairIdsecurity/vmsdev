@@ -1,6 +1,7 @@
 <?php
 $session = new CHttpSession;
-$visitor = Registration::model()->findByPk($session['visitor_id']);
+//$visitor = Registration::model()->findByPk($session['visitor_id']);
+$visitor = Registration::model()->findByPk(Yii::app()->user->id);
 $preImg = '';
 if(!empty($visitor->photo) && !is_null($visitor->photo)){
     $photoModel=Photo::model()->findByPk($visitor->photo);
@@ -21,8 +22,9 @@ else{
 <div class="page-content">
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-    <span>Please upload a photo head and shoulders picture with no glasses or hat, on a white background.</span>
+    <span class="text-size">Please upload a photo head and shoulders picture with no glasses or hat, on a white background.</span>
     
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
@@ -45,27 +47,22 @@ else{
 
     <div class="image-user">
         <img src="<?= $preImg ?>" alt="image user" id="preview" width="220" height="253">
-    </div>
-
-    <div class="form-group">
-        <div class="custom-file-button">
+        <br><br>
+        <div class="custom-file-button" style="width: 220px">
             <?php echo $form->fileField($model,'image'); ?>
-
         </div>
-        <p class="title"><?php echo $form->error($model,'image'); ?></p>
+
+        <h4 class="subheading-size" style="text-align:center;width: 220px">UPLOAD / EDIT PHOTO </h4>
+
     </div>
 
 
-    <h3 class="title">UPLOAD/ TAKE PHOTO </h3>
-    <p class="title text-danger">'Allowed Max size: 2.00 MB'</p>
-
-
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="form-group">
+            <div class="">
                 <div class="pull-left">
                     <a href="<?=Yii::app()->createUrl("preregistration/addAsic")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>

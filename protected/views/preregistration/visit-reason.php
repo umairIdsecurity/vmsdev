@@ -18,7 +18,7 @@ $session = new CHttpSession;
 
         <div class="col-sm-4">
             
-            <h4 class="text-primary">Reason for Visit</h4>
+            <h4 class="text-primary subheading-size">Reason for Visit</h4>
             
             <div class="form-group">
                 <?php
@@ -71,13 +71,13 @@ $session = new CHttpSession;
 
                 $list=CHtml::listData($vr,'id','reason');
 
-                $other = array('other'=>'other');
+                $other = array('Null'=>'other');
 
                 echo $form->dropDownList($model,'reason',
                     $list + $other,
                     array(
                         'class'=>'form-control input-sm' ,
-                        'empty' => 'Select Visit Reason')
+                        'empty' => 'Select Reason for Visit')
                 );
 
                 ?>
@@ -98,18 +98,19 @@ $session = new CHttpSession;
 
         <div class="col-sm-4">
 
-            <h4 class="text-primary">Company Information</h4>
+            <h4 class="text-primary subheading-size">Company Information</h4>
 
             <div class="form-group" id="addCompanyDiv">
                 <?php
-                    $visitor = Registration::model()->findByPk($session['visitor_id']);
+                    $visitor = Registration::model()->findByPk(Yii::app()->user->id);
+                    //$visitor = Registration::model()->findByPk($session['visitor_id']);
 
                     if(isset($visitor->tenant)){
                         echo $form->dropDownList($companyModel, 'name', CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
                     }
                     else
                     {
-                        echo $form->dropDownList($companyModel,'name',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
+                        echo $form->dropDownList($companyModel,'name',CHtml::listData(Company::model()->findAll('is_deleted=0'), 'id', 'name'),array('prompt'=>'Select Company','class'=>'form-control input-sm'));
                     }
                     
                 ?>
@@ -139,13 +140,22 @@ $session = new CHttpSession;
         </div>
     </div>
 
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    
 
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="form-group">
+            <div class="">
                 <div class="pull-left">
                     <a href="<?=Yii::app()->createUrl("preregistration/personalDetails")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
@@ -402,7 +412,7 @@ $session = new CHttpSession;
         
         $('#other-reason').hide();
         $('#Visit_reason').change(function(e){
-            if ($('#Visit_reason').val() == 'other'){
+            if ($('#Visit_reason').val() == 'Null'){
                 $('#other-reason').show();
             }else{
                 $('#other-reason').hide();

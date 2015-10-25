@@ -29,7 +29,7 @@ $asicEscort = new AddAsicEscort();
     
     if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
     <tr><td><div class="label label-warning" style=" width: 220px;word-wrap: break-word;white-space: pre;
-">Another visit can not be activated until this EVIC expires. Please reprint this EVIC if continuing visit.</div></td></tr>
+                 "> Another visit can not be activated <br> until this EVIC expires. Please reprint <br> this EVIC if continuing visit.</div></td></tr>
     <?php elseif(in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
     <tr><td><div class="label label-warning" style=" width: 220px;word-wrap: break-word;white-space: pre;">Another visit can not be activated until this card expires.</div></td></tr>
     <?php endif; ?>
@@ -85,32 +85,38 @@ $asicEscort = new AddAsicEscort();
     <tr>
         <td>
             <?php
-                /*$hours = '';
+                $hours = '';
                 $minutes = '';
                 if(!empty($model->time_check_in) && !is_null($model->time_check_in)) 
                 {   
-                    echo $model->id."<br>";
-                    echo $model->time_check_in."<br>";
-                    echo $hours = date("h",strtotime($model->time_check_in))."<br>";
-                    echo $minutes = date("i",strtotime($model->time_check_in));
-                }*/
+                    $hours = date("H",strtotime($model->time_check_in));
+                    $minutes = date("i",strtotime($model->time_check_in));
+                }
             ?>
 
-            <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 24; $i++): ?>
-                    <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
-                <?php endfor; ?>
+            <!-- <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;"> -->
+            <select disabled style="width:70px;">
+                
+                <?php //for ($i = 1; $i <= 24; $i++): ?>
+
+                    <!-- <option value="<?php //echo $i; ?>"><?php //echo date("H", strtotime("$i:00")); ?></option> -->
+                    <option value="<?php echo $hours;//echo $i; ?>" ><?php echo $hours;//echo date("H", strtotime("$i:00")); ?></option>
+
+                <?php //endfor; ?>
+
             </select> :
-            <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 60; $i++): ?>
-                    <option value="<?= $i; ?>"><?php
-                        if ($i > 0 && $i < 10) {
+            <!-- <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;"> -->
+            <select disabled style="width:70px;">
+                <?php //for ($i = 1; $i <= 60; $i++): ?>
+                    <option value="<?php echo $minutes;//echo $i; ?>"><?php
+                        echo $minutes;
+                       /* if ($i > 0 && $i < 10) {
                             echo '0' . $i;
                         } else {
                             echo $i;
-                        };
+                        };*/
                         ?></option>
-                <?php endfor; ?>
+                <?php //endfor; ?>
             </select>
             
         </td>

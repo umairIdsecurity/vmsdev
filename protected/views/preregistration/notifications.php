@@ -108,8 +108,13 @@
 			  	<div>
 			    	<p>
 			    		<?php 
-			    			foreach ($notifications[0] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>"><?= $notification['message'] ?></a> <br>
+			    			foreach ($notifications[0] as $key => $notification) {
+			    				if($notification['verify_visit_id']) {?>
+			    					<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifyVicholder?id=' . $notification['verify_visit_id']); ?>"><?= $notification['message'] ?></a> <br>
+			    				<?php }else{?>
+			    					<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>"><?= $notification['message'] ?></a> <br>
+			    				<?php } ?>
+			    				
 		    			<?php
 		    				}	 
 			    		?>
@@ -122,8 +127,13 @@
 				<div>
 					<p>
 			    		<?php 
-			    			foreach ($notifications[1] as $key => $notification) { ?>
-			    				<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>"><?= $notification['message'] ?></a> <br>
+			    			foreach ($notifications[1] as $key => $notification) {
+			    				if($notification['verify_visit_id']) {?>
+			    					<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifyVicholder?id=' . $notification['verify_visit_id']); ?>"><?= $notification['message'] ?></a> <br>
+			    				<?php }else{?>
+			    					<a class="title" href="<?php echo Yii::app()->createUrl('preregistration/verifications'); ?>"><?= $notification['message'] ?></a> <br>
+			    				<?php } ?>
+			    				
 		    			<?php
 		    				}	 
 			    		?>

@@ -132,6 +132,7 @@ return CMap::mergeArray(
             // this is used in contact page
             'photo_unique_filename' => 'test',
             'mandrillApiKey' => '49tRGdzmJDhovnkkygttuQ',
+
         ),
     ),
     require(dirname(__FILE__).'/environment.php')

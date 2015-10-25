@@ -436,7 +436,7 @@ class TenantTransferController extends Controller
 
             'contact_person'                    =>['WHERE tenant = '.$tenant],
 
-            'contact_support'                   =>['JOIN '.$userTable.' ON user.id = contact_support.user_id '.$default_condition],
+            //'contact_support'                   =>['JOIN '.$userTable.' ON user.id = contact_support.user_id '.$default_condition],
 
             'audit_trail'                       =>['JOIN '.$userTable.' ON user.id = audit_trail.user_id '.$default_condition],
 

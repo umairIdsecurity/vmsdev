@@ -94,15 +94,25 @@ class SiteController extends Controller {
         if( (isset($_SERVER['HTTP_HOST']) && substr($_SERVER['HTTP_HOST'],0,5) =='vmspr' ) ||
             (isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg') )
         {
-            $airportCode  = isset($_GET['airportCode']) ?$_GET['airportCode'] : $_SESSION['airportcode'];
-            if(!$airportCode){
+            $airportCode=null;
+            if(isset(Yii::app()->params['on_premises_airport_code'])){
+                $airportCode=Yii::app()->params['on_premises_airport_code'];
+            } else if(isset($_GET['airportcode'])){
+                $airportCode=$_GET['airportcode'];
+            } else if(isset($_SESSION['airportcode'])){
+                $airportCode=$_SESSION['airportcode'];
+            } else {
                 throw new CException("Airport code must be specified for preregistration.");
             }
-            if(!isset($_SESSION['airportcode'])) {
+
+            if(!isset($_SESSION['airportcode']) || !isset($_SESSION['tenant'])) {
+
                 $_SESSION['airportcode'] = $airportCode;
+
                 $tenantCompany = Company::model()->find("code='" . $airportCode . "' and company_type=1 and is_deleted=0");
+
                 if($tenantCompany!=null){
-                    $_SESSION['tenant'] = $tenantCompany->tenantId;
+                    $_SESSION['tenant'] = $tenantCompany->tenant;
                 } else {
                     throw new CException("Airport ".$airportCode." not found.");
                 }

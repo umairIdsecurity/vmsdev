@@ -129,8 +129,12 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
     echo "text-align:right;";
 }
 ?>">
-    <?php echo CHtml::button('Export', array('id' => 'export-button', 'class' => 'btn DeleteBtn actionForward complete')); ?>
-    <?php echo CHtml::button('Delete SQL', array('id' => 'deleteSql-button', 'class' => 'btn DeleteBtn actionForward complete')); ?>
+
+    <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+        <?php echo CHtml::button('Export', array('id' => 'export-button', 'class' => 'btn DeleteBtn actionForward complete')); ?>
+        <?php echo CHtml::button('Delete SQL', array('id' => 'deleteSql-button', 'class' => 'btn DeleteBtn actionForward complete')); ?>
+    <?php } ?>
+
     <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
     <?php if (isset($_GET['viewFrom'])) { ?>
 

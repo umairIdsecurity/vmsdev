@@ -46,14 +46,19 @@
             <div class="col-sm-4 fixedMargin">
                 
                 <?php
+                $ws='';
+                if(isset($_SESSION['tenant']) && ($_SESSION['tenant']!="")){
                     $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.$_SESSION['tenant']);
-                    $list=CHtml::listData($ws,'id','name');
-                    echo $form->dropDownList($model,'entrypoint',
-                        $list,
-                        array(
-                            'class'=>'form-control input-sm' ,
-                            'empty' => 'Chose your entry point')
-                    );
+                }else{
+                     $ws=Workstation::model()->findAll('is_deleted=0');
+                }
+                $list=CHtml::listData($ws,'id','name');
+                echo $form->dropDownList($model,'entrypoint',
+                    $list,
+                    array(
+                        'class'=>'form-control input-sm' ,
+                        'empty' => 'Chose your entry point')
+                );
                 ?>
                 
                 <?php echo $form->error($model,'entrypoint'); ?>

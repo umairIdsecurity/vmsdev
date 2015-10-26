@@ -890,7 +890,7 @@ class Visit extends CActiveRecord {
             ),
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
-            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+            //'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
 
@@ -1437,31 +1437,29 @@ class Visit extends CActiveRecord {
      * * Set status as Closed of the VIC 24Hours visit only if date/time checkout reached current date/time.
      * @return type
      */
-    public function afterFind() {
-        
+    public function afterFind() 
+    {
          $session = new CHttpSession;
-
-         /*this is the hack to prevent from stopping/breaking the script */
+         // this is the hack to prevent from stopping/breaking the script 
          if(isset($session["timezone"]) && !empty($session["timezone"])){
             $timezone = $session["timezone"]; 
          }else{
             $timezone = 'Australia/Perth';
          }
-  
-         
         // Set closed visit if time-checkout reached current time.   
          $dateIn  = new DateTime($this->date_check_in);
          $dateOut = new DateTime($this->date_check_out);
          $dateNow = new DateTime("NOW" , new DateTimeZone($timezone)); 
+
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
                  
         if( $isExpired > 0 && $this->visit_status == VisitStatus::ACTIVE ) {
             
             $status = "";
-            /* 
-             * VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
-             * Also instead of 'Expired' will have 'Closed' status for Auto Closed EVIC & 24 hour when the check out date exceeds current date. *
-            */
+             
+             // * VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
+             // * Also instead of 'Expired' will have 'Closed' status for Auto Closed EVIC & 24 hour when the check out date exceeds current date. *
+            
             if( ($this->card_type == CardType::VIC_CARD_24HOURS || $this->card_type == CardType::VIC_CARD_EXTENDED) && 
                     $this->visit_status == VisitStatus::AUTOCLOSED ) {
                 $status = VisitStatus::CLOSED;
@@ -1487,9 +1485,8 @@ class Visit extends CActiveRecord {
                         
                         $this->updateByPk( $this->id, $insertArr );           
                      }
-             }
-        } 
-         
+            }
+        }
         return parent::afterFind();
     }
 

@@ -21,7 +21,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','asicRegistration','companyAdminRegistration','createAsicNotificationRequestedVerifications'),
+				'actions' => array('uploadProfilePhoto','forgot','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','compAdminPrivacyPolicy','asicRegistration','companyAdminRegistration','createAsicNotificationRequestedVerifications'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -81,7 +81,6 @@ class PreregistrationController extends Controller
 				$this->redirect(array('preregistration/privacyPolicy'));
 			}
 		}
-
 		$this->render('index',array('model'=>$model));
 	}
 
@@ -548,15 +547,10 @@ class PreregistrationController extends Controller
 			}
 			else
 			{
-				$this->redirect(array('preregistration/companyAdminRegistration'));
-
+				$this->redirect(array('preregistration/compAdminPrivacyPolicy'));
 			}
-
-
 			$this->redirect(array('preregistration/personalDetails'));
-
 		}
-
 		$preModel = new PreregLogin();
 		$this->render('registration', array('model' => $model,'preModel' => $preModel));
 	}
@@ -565,7 +559,7 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 
-		$session['stepTitle'] = 'ASIC SPONSOR CREATE LOGIN';
+		$session['stepTitle'] = 'ASIC SPONSOR DETAILS';
 
 		$session['step3Subtitle'] = ' > ASIC Sponsor Details';
 		unset($session['step4Subtitle']);unset($session['step5Subtitle']);
@@ -1965,6 +1959,15 @@ class PreregistrationController extends Controller
 		unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 		$this->render('asic-privacy-policy');
+	}
+
+	public function actionCompAdminPrivacyPolicy(){
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'COMPANY ADMINISTRATOR CREATE LOGIN';
+		$session['step2Subtitle'] = ' > Privacy Policy';
+		unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
+		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
+		$this->render('compadmin-privacy-policy');
 	}
 
 	public function actionDetails(){

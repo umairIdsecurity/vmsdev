@@ -343,9 +343,10 @@ class VisitController extends Controller {
         Visit::model()->setClosedAutoClosedVisits($id);  
         
         $session = new CHttpSession;
+
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
-
+        
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
             return $this->redirect(Yii::app()->createUrl('visit/view'));

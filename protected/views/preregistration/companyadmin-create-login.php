@@ -1,6 +1,7 @@
 
 <div class="page-content">
-    <h3 class="text-primary title">Company Information</h3>
+
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
     <?php
         foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -61,6 +62,9 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <a style="float: left;" href="#addCompanyModal" role="button" data-toggle="modal" class="btn btn-primary">Add Company</a>
+                    </div>
 
                     <div class="row form-group">
                         <div class="col-md-8">
@@ -71,22 +75,22 @@
 
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Last Name', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Surname', 'class'=>'form-control input-sm')); ?>
                             <?php echo $form->error($model, 'last_name'); ?>
                         </div>    
                     </div>
 
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($model, 'email', array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm')); ?>
-                            <?php echo $form->error($model, 'email'); ?>
+                            <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Contact No.', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->error($model, 'contact_number'); ?>
                         </div>    
                     </div>
-
+                    
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($model, 'contact_number', array('maxlength' => 50, 'placeholder' => 'Contact Number', 'class'=>'form-control input-sm')); ?>
-                            <?php echo $form->error($model, 'contact_number'); ?>
+                            <?php echo $form->textField($model, 'email', array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->error($model, 'email'); ?>
                         </div>    
                     </div>
 
@@ -95,11 +99,21 @@
         </div>
     </div>        
 
+
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+
     <div class="row">
         <div class="col-sm-12">
-            <div class="form-group">
+            <div class="">
                 <div class="pull-left">
-                    <a href="<?=Yii::app()->createUrl("preregistration/registration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    <a href="<?=Yii::app()->createUrl("preregistration/compAdminPrivacyPolicy")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
                 <div class="pull-right">
                     <?php
@@ -111,16 +125,185 @@
                 </div>
             </div>
         </div>
-    </div>  
-
-
-</div>
+    </div> 
 
 <?php $this->endWidget(); ?>
 
+<!-- ************************************************ -->
+<!-- ************************************** -->
+<!-- -Add Company Modal- -->
+<div class="modal fade" id="addCompanyModal" tabindex="-1" role="dialog" aria-labelledby="addCompanyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content login-modal">
+            <div class="modal-header login-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="addCompanyModalLabel">Add COMPANY</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div role="tabpanel" class="login-tab">
+                        <!-- Nav tabs -->
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active text-center" id="home">
+                                
+                                <div class="clearfix"></div>
+                                
+                                <?php 
+                                    $form=$this->beginWidget('CActiveForm', array(
+                                        'id'=>'company-form',
+                                        'enableAjaxValidation'=>true,
+                                        'enableClientValidation'=>true,
+                                        //'action' => array('company/addCompany'),
+                                        'clientOptions'=>array(
+                                            'validateOnSubmit'=>true,
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'onsubmit'=>"return false;",/* Disable normal form submit */
+                                            'class'=>"form-create-login"
+                                        )
+                                    ));
+                                ?>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <?php
+
+                                            $ws=Workstation::model()->findAll('is_deleted=0');
+
+                                            $list=CHtml::listData($ws,'id','name');
+
+                                            /*echo $form->dropDownList($companyModel,'visitor_workstation',
+                                                $list,
+                                                array(
+                                                    'class'=>'form-control input-lg',
+                                                    'id'=>'WorkstationDropdownPopup',
+                                                    'empty' => 'Chose your entry point')
+                                            );*/
+                                            ?>
+
+                                            <select id="companyWorkstation" name="Company[workstation]" class="form-control input-lg">
+                                                <option value="">Chose your entry point</option>
+                                                <?php foreach ($list as $key => $value) {?>
+                                                    <option value="<?= $key ?>"><?= $value ?></option>
+                                                <?php } ?>
+                                            </select>
+
+                                        </div>
+                                        <?php //echo $form->error($model,'visitor_workstation'); ?>
+                                        <div id="entryPointErr" class="errorMessage" style="display:none;float: left;">Please chose your entry point</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                            <?php echo $form->textField($companyModel, 'name', array('placeholder' => 'Company Name','class'=>'form-control input-lg')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
+                                    </div>
+
+                                    
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span>Company Contact</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                    </div>
+
+                                    
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
+                                        </div>
+                                        <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                    </div>
+
+
+                                    <?php //echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
+                                    
+                                    <?php echo CHtml::submitButton('Add Company',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
+
+
+                                <?php $this->endWidget(); ?>
+
+                            </div>
+                          
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+       </div>
+    </div>
+<!-- - Add Company Model Ends Here -->
+<!-- ************************************** -->
+<!-- ************************************************ -->
+
+</div>
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $("#addCompanyBtn").unbind("click").click(function(event){
+            var workstation = $("#companyWorkstation").val();
+            if(workstation != ""){
+                var data=$("#company-form").serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo Yii::app()->createUrl('company/addCompany');?>",
+                    data: data,
+                    success: function (data) {
+                        var data = JSON.parse(data);
+                        console.log(data);
+                        if (data.decision == 0)
+                        {
+                            console.log("errors got");
+                        }
+                        else
+                        {
+                            $("#Registration_company").append(data.dropDown);
+                            $("#addCompanyModal").modal('hide');
+                        }  
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+                $("#entryPointErr").hide();
+            }
+            else{
+                $("#entryPointErr").show();
+            }
+        });
+
+
+
         $("#WorkstationDropdown").change(function() {
             var workstationId = $(this).val();
             if(workstationId != "" && workstationId != null){

@@ -46,7 +46,7 @@
             <div class="col-sm-4 fixedMargin">
                 
                 <?php
-                    $ws=Workstation::model()->findAll('is_deleted=0');
+                    $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.$_SESSION['tenant']);
                     $list=CHtml::listData($ws,'id','name');
                     echo $form->dropDownList($model,'entrypoint',
                         $list,

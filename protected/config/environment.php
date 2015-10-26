@@ -8,6 +8,9 @@
                 'username' => 'user_vms',
                 'password' => 'HFz7c9dHrmPqwNGr',
             )
+        ),
+        'params' => array(
+            'on_premises_airport_code' => 'TAG',
         )
     );
     

@@ -166,9 +166,9 @@ class HelpDeskGroup extends CActiveRecord {
             $criteria->addInCondition('id', $heldeskGroups);
             
             if(!empty($session['created_by'])){
-                $criteria->addCondition ('created_by = '.$session['created_by']);
+                $criteria->addCondition ('created_by = '.$session['created_by'], "OR");
             }else{
-                $criteria->addCondition ('created_by = '.Yii::app()->user->id);
+                $criteria->addCondition ('created_by = '.Yii::app()->user->id, "OR");
             }
             
 

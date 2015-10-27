@@ -6,7 +6,7 @@ class m151011_164000_fix_tenant_agent_constraint_on_visit_table extends CDbMigra
 	{
 
 		//$transaction = $this->dbConnection->beginTransaction();
-		try {
+		//try {
 
 			$name = DatabaseIndexHelper::getForeignKeyName('visit', 'tenant_agent', 'user', 'id');
 			if($name!=null) {
@@ -18,7 +18,7 @@ class m151011_164000_fix_tenant_agent_constraint_on_visit_table extends CDbMigra
 				$this->dropForeignKey($name, 'visitor');
 			}
 			//	$transaction->commit();
-		}
+			//}
 	}
 
 	public function safeDown()

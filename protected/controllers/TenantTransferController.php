@@ -43,6 +43,7 @@ class TenantTransferController extends Controller
         ['table_name'=>'tenant_agent_contact','column_name'=>'tenant_id','referenced_table_name'=>'tenant','referenced_column_name'=>'id'],
         ['table_name'=>'tenant_agent_contact','column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'tenant_agent_contact','column_name'=>'tenant_agent_id','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
+        ['table_name'=>'user','column_name'=>'tenant_agent','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
 
 
     ];
@@ -272,8 +273,10 @@ class TenantTransferController extends Controller
         if($tableName=='company'){
             if($row['company_type']==1) {
                 $sql[] = "UPDATE company SET tenant = id where id=" . $row['id'];
+                $idMappings['tenant'][$oldId] = $row['id'];
             } else if($row['company_type']==2) {
                 $sql[] = "UPDATE company SET tenant_agent = id where id=" . $row['id'];
+                $idMappings['tenant_agent'][$oldId] = $row['id'];
             }
         }
 
@@ -369,7 +372,7 @@ class TenantTransferController extends Controller
     {
         $userTable = Yii::app()->db->quoteTableName('user');
 
-        $default_condition = 'WHERE (tenant='.$tenant.' AND is_deleted=0) ';
+        $default_condition = 'WHERE (tenant='.$tenant.') ';
 
 
         return [
@@ -380,12 +383,12 @@ class TenantTransferController extends Controller
             'company_laf_preferences'           =>['JOIN company ON company_laf_preferences.id = company.company_laf_preferences '.
                                                     $default_condition],
 
-            'company'                           =>[$default_condition." OR (id=".$tenant." AND is_deleted=0) "],
+            'company'                           =>[$default_condition." OR (id=".$tenant.") "],
 
 
-            'tenant'                            =>['WHERE id='.$tenant.' AND is_deleted=0'],
+            'tenant'                            =>['WHERE id='.$tenant.''],
 
-            'tenant_agent'                      =>['WHERE tenant_id='.$tenant.' AND is_deleted=0'],
+            'tenant_agent'                      =>['WHERE tenant_id='.$tenant.''],
 
             'user'                              =>[$default_condition],
 

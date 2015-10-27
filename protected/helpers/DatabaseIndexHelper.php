@@ -110,6 +110,39 @@ class DatabaseIndexHelper
 
     }
 
+    public static function getPrimaryKeyName($tableName){
+
+        $driverName = Yii::app()->db->driverName;
+        $sql = null;
+
+
+        switch($driverName) {
+
+            case 'mssql';
+            case 'sqlsrv';
+
+
+                $sql = "SELECT CONSTRAINT_NAME as name
+                        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                        WHERE CONSTRAINT_TYPE = 'PRIMARY KEY'
+                        AND TABLE_NAME = '$tableName'";
+                break;
+
+            case 'mysql';
+
+                $sql = "SELECT CONSTRAINT_NAME as name
+                        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                        WHERE CONSTRAINT_TYPE = 'PRIMARY KEY'
+                        AND CONSTRAINT_SCHEMA = (SELECT DATABASE())
+                        AND TABLE_NAME = '$tableName'";
+
+                break;
+
+        }
+
+        return DatabaseIndexHelper::getValue($sql);
+    }
+
     private static function getValue($sql){
 
         $command = Yii::app()->db->createCommand($sql);

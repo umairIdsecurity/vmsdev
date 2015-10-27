@@ -28,10 +28,11 @@ class m151025_203700_indexes_on_tenant_agent_table extends CDbMigration
         }
 
         $this->alterColumn('tenant_agent','user_id','BIGINT NULL');
-
         $this->alterColumn('tenant_agent','id','BIGINT NOT NULL');
-		$this->dropPrimaryKey('PRIMARY','tenant_agent');
-        $this->addPrimaryKey('PRIMARY','tenant_agent','id');
+
+        $pkName = DatabaseIndexHelper::getPrimaryKeyName('tenant_agent');
+		$this->dropPrimaryKey($pkName,'tenant_agent');
+        $this->addPrimaryKey($pkName,'tenant_agent','id');
 
         $this->addForeignKey('fk_tenant_agent_tenant','tenant_agent','tenant_id','tenant','id');
         //$this->addForeignKey('fk_tenant_agent_company_id','tenant_agent','id','customer','id');

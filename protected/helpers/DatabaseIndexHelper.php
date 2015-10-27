@@ -74,7 +74,7 @@ class DatabaseIndexHelper
                         ."AND   referenced_column_name = '$refColumn' "
                         ."AND   table_name = '$table' "
                         ."AND   column_name = '$column' "
-                        ."AND   constraint_catalog = (SELECT DATABASE())";
+                        ."AND   constraint_schema = (SELECT DATABASE())";
                 break;
 
             case 'mssql';

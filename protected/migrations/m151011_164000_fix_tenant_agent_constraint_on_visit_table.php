@@ -18,6 +18,7 @@ class m151011_164000_fix_tenant_agent_constraint_on_visit_table extends CDbMigra
 				$this->dropForeignKey($name, 'visitor');
 			}
 			//	$transaction->commit();
+		}
 	}
 
 	public function safeDown()

@@ -76,7 +76,7 @@ class VisitorController extends Controller {
 
                     $passwordRequire= intval($model->password_option);
 
-                    if($passwordRequire == 1){
+                    if($passwordRequire == 1 && empty($model->password)){
                         $loggedUserEmail = Yii::app()->user->email;
                         $headers = "MIME-Version: 1.0" . "\r\n";
                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -191,10 +191,14 @@ class VisitorController extends Controller {
                         }
                     }
                     /** 
-                     * CLOSE all Auto close visits of this visitor that is now having ASIC PENDING card status
+                     * CLOSE all Auto close EVIC visits of this visitor that is now having ASIC PENDING 
+                     * card status and Reset if first visit
                      */
-                     Visit::model()->updateAll(array("visit_status"=>VisitStatus::CLOSED, "visit_closed_date"=>date("Y-m-d H:i:s") ), "visitor = ".$model->id." AND visit_status = ".VisitStatus::AUTOCLOSED);
-                } else {
+                    if( $model->visitor_card_status == Visitor::VIC_ASIC_PENDING ) {
+                        $this->closeAsicPendingAndReset( $model );
+                    }
+                        
+                    } else {
                     echo $updateErrorMessage;
                     return;
                 }
@@ -267,7 +271,33 @@ class VisitorController extends Controller {
    
     
     }
-
+    /**
+     * Close all auto Close EVIC visits if Changed to ASIC Pending
+     * And Reset visit if its first visit of the Visitor
+     * @param type $visitor
+     */
+    protected function closeAsicPendingAndReset( $visitor ) {
+        $update = array();
+        $update["visit_status"] = VisitStatus::CLOSED;
+        $update["visit_closed_date"] = date("Y-m-d H:i:s");
+        /**
+         * Get all EVIC Auto Closed Visits now
+         */
+        $criteria = new CDbCriteria();
+        $criteria->addCondition("visitor = ".$visitor->id);
+        $criteria->addCondition("visit_status = ".VisitStatus::AUTOCLOSED);
+        $criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED);
+                
+        $visits = Visit::model()->findAll($criteria);
+        foreach( $visits as $v ) {
+            if( is_null( $v["parent_id"]) ) {
+                $update["reset_id"] = 1;
+                
+                Visit::model()->updateByPk($v["id"], $update);
+            }
+        }
+         return;               
+    }
     /* Visitor detail page */
 
     /**

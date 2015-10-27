@@ -40,6 +40,10 @@ class TenantTransferController extends Controller
         ['table_name'=>'visit','column_name'=>'asic_escort','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'visit','column_name'=>'closed_by','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'visitor','column_name'=>'tenant_agent','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
+        ['table_name'=>'tenant_agent_contact','column_name'=>'tenant_id','referenced_table_name'=>'tenant','referenced_column_name'=>'id'],
+        ['table_name'=>'tenant_agent_contact','column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
+        ['table_name'=>'tenant_agent_contact','column_name'=>'tenant_agent_id','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
+
 
     ];
 
@@ -438,7 +442,7 @@ class TenantTransferController extends Controller
 
             //'contact_support'                   =>['JOIN '.$userTable.' ON user.id = contact_support.user_id '.$default_condition],
 
-            'audit_trail'                       =>['JOIN '.$userTable.' ON user.id = audit_trail.user_id '.$default_condition],
+            //'audit_trail'                       =>['JOIN '.$userTable.' ON user.id = audit_trail.user_id '.$default_condition],
 
         ];
     }

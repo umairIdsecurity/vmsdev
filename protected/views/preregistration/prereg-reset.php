@@ -1,13 +1,7 @@
 
-
-<div style="text-align:center;" id="usercontent">
+<div class="page-content" id="usercontent">
+    
     <?php
-    foreach(Yii::app()->user->getFlashes() as $key => $message) {
-        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-    }
-    ?>
-    <div class="form">
-        <?php
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'password-reset-form',
             'enableClientValidation' => true,
@@ -15,38 +9,39 @@
             'clientOptions' => array(
                 'validateOnSubmit' => false,
             ),
+            'htmlOptions'=>array(
+                'class'=>"form-create-login"
+            )
         ));
+    ?>
+
+        <div class="form-group">
+            <h1 class="text-primary title">RESET PASSWORD</h1>
+        </div>
+
+        <?php
+            foreach(Yii::app()->user->getFlashes() as $key => $message) {
+                echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+            }
         ?>
 
-        <table class="reset-password-area" style="border-collapse: none !important; width: 420px">
-            <tr>
-                <td><?php echo $form->labelEx($model, 'password'); ?></td>
-                <td><?php echo $form->passwordField($model, 'password'); ?></td>
 
-            </tr>
-            <tr>
-                <td ></td>
-                <td colspan="2"><?php echo $form->error($model,'password'); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo $form->labelEx($model, 'passwordConfirmation'); ?></td>
-                <td><?php echo $form->passwordField($model, 'passwordConfirmation'); ?></td>
+        <div class="form-group">
+            <span class="glyphicon glyphicon-asterisk"></span>
+            <?php //echo $form->labelEx($model, 'password'); ?>
+            <?php echo $form->passwordField($model,'password',array('placeholder' => 'New Password','class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model,'password'); ?>
+        </div>
 
-            </tr>
-            <tr>
-                <td ></td>
-                <td colspan="2"><?php echo $form->error($model,'passwordConfirmation'); ?></td>
-            </tr>
+        <div class="form-group">
+            <span class="glyphicon glyphicon-asterisk"></span>
+            <?php //echo $form->labelEx($model, 'passwordConfirmation'); ?>
+            <?php echo $form->passwordField($model,'passwordConfirmation',array('placeholder' => 'Confirm New Password','class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model,'passwordConfirmation'); ?>
+        </div>
 
-            <tr>
-                <td></td>
-                <td colspan="2">
-                    <?php echo CHtml::submitButton('Set new password'); ?>
-                </td>
-            </tr>
+        <?php echo CHtml::submitButton('Set New Password',array('class'=>'btn btn-primary btn-next')); ?>
 
-        </table>
 
-        <?php $this->endWidget()?>
-    </div><!-- form -->
+    <?php $this->endWidget()?>
 </div>

@@ -17,8 +17,8 @@ class DatabaseIndexHelper
 
             case 'mysql';
                 $sql =  "SELECT table_name, column_name, referenced_table_name, referenced_column_name "
-                        ."FROM  information_schema.key_column_usage ";
-                        //."WHERE constraint_catalog =  DATABASE()";
+                        ."FROM  information_schema.key_column_usage "
+                        ."WHERE constraint_schema =  (SELECT DATABASE())";
                 break;
 
             case 'mssql';
@@ -74,7 +74,7 @@ class DatabaseIndexHelper
                         ."AND   referenced_column_name = '$refColumn' "
                         ."AND   table_name = '$table' "
                         ."AND   column_name = '$column' "
-                        ."AND   constraint_catalog = (SELECT DATABASE())";
+                        ."AND   constraint_schema = (SELECT DATABASE())";
                 break;
 
             case 'mssql';
@@ -108,6 +108,39 @@ class DatabaseIndexHelper
 
         return DatabaseIndexHelper::getValue($sql);
 
+    }
+
+    public static function getPrimaryKeyName($tableName){
+
+        $driverName = Yii::app()->db->driverName;
+        $sql = null;
+
+
+        switch($driverName) {
+
+            case 'mssql';
+            case 'sqlsrv';
+
+
+                $sql = "SELECT CONSTRAINT_NAME as name
+                        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                        WHERE CONSTRAINT_TYPE = 'PRIMARY KEY'
+                        AND TABLE_NAME = '$tableName'";
+                break;
+
+            case 'mysql';
+
+                $sql = "SELECT CONSTRAINT_NAME as name
+                        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                        WHERE CONSTRAINT_TYPE = 'PRIMARY KEY'
+                        AND CONSTRAINT_SCHEMA = (SELECT DATABASE())
+                        AND TABLE_NAME = '$tableName'";
+
+                break;
+
+        }
+
+        return DatabaseIndexHelper::getValue($sql);
     }
 
     private static function getValue($sql){

@@ -40,7 +40,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
      * @throws Exception
      * @throws Mandrill_Error
      */
-    public function generateResetLink(Visitor $visitor)
+    public function generateResetLink(Registration $visitor)
     {
         $generatedRequestsCount = $this->count($this->getAlreadyGeneratedUnexpiredUnusedCriteria($visitor));
 
@@ -63,7 +63,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
 
         $templateParams = array(
             'email' => $visitor->email,
-            'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php?r=site/reset/hash/' . $request->hash,
+            'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php/preregistration/reset/hash/' . $request->hash,
         );
 
         $emailTransport = new EmailTransport();
@@ -76,7 +76,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
      * @param visitor $visitor
      * @return string
      */
-    public function getHash(Visitor $visitor)
+    public function getHash(Registration $visitor)
     {
         return md5(time() . $visitor->id . $visitor->email . 'Some salt 9ht3ldjnhuy)jnt47thlJ&');
     }
@@ -85,7 +85,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
      * @param visitor $visitor
      * @return CDbCriteria
      */
-    public function getAlreadyGeneratedUnexpiredUnusedCriteria(Visitor $visitor)
+    public function getAlreadyGeneratedUnexpiredUnusedCriteria(Registration $visitor)
     {
         $date = $this->getStartOfExpiredPeriod();
 
@@ -140,7 +140,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
         return $asString ? $date->format('Y-m-d H:i:s') : $date;
     }
 
-    public function markAsUsed(Visitor $visitor)
+    public function markAsUsed(Registration $visitor)
     {
         $this->is_used = self::IS_USED_YES;
         $this->save(false, 'is_used');
@@ -158,7 +158,6 @@ class PreregPasswordChangeRequest extends CActiveRecord
     public function behaviors()
     {
         return array(
-
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
         );

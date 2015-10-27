@@ -4,8 +4,10 @@ $session = new CHttpSession;
 
 <div class="page-content">
 
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-    <h5>Please select your user Preference</h5>
+    <h5 class="text-size text-sizeWhere">Please select your User Preference</h5>
     
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'preregistration-form',
@@ -19,25 +21,25 @@ $session = new CHttpSession;
     <div class="row">
         <div class="col-lg-6">
             <div class="form-create-login">
-                <div class="form-group">
+                <div class="">
                     <div class="radio">
-                        <label>
+                        <label class="text-size">
                             <?php echo $form->radioButton($model,'account_type',array('value'=>'VIC','uncheckValue'=>null, 'checked'=>true)); ?>
                             <span class="radio-style"></span>
-                            VIC or ASIC Applicant
+                            VIC Applicant
                         </label>
                     </div>
                     
                     <div class="radio">
-                        <label>
+                        <label class="text-size">
                             <?php echo $form->radioButton($model,'account_type',array('value'=>'ASIC','uncheckValue'=>null)); ?>
                             <span class="radio-style"></span>
-                            ASIC sponsor
+                            ASIC Sponsor
                         </label>
                     </div>
 
                     <div class="radio">
-                        <label>
+                        <label class="text-size">
                             <?php echo $form->radioButton($model,'account_type',array('value'=>'CORPORATE','uncheckValue'=>null)); ?>
                             <span class="radio-style"></span>
                             Company Administrator (multiple VIC's or ASIC's)
@@ -45,79 +47,67 @@ $session = new CHttpSession;
                     </div>
                 </div>
 
-
-                <div class="form-group">
-                    <span class="glyphicon glyphicon-user"></span>
-
-                    <?php   echo $form->textField($model,'username',
-                                                    array(
-                                                        'placeholder' => 'Username or Email',
-                                                        'class'=>'form-control input-lg',
-                                                        'data-validate-input'
-                                                    )
-                            ); 
-                    ?>
-                    <?php echo $form->error($model,'username'); ?>
+                <div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-user" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->textField($model,'username',array('style'=>'padding-left: 27px','placeholder' => 'Username or Email','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <?php echo $form->error($model,'username'); ?>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <span class="glyphicon glyphicon-user"></span>
-
-                    <?php echo $form->textField($model,'username_repeat',
-                        array(
-                            'placeholder' => 'Repeat Username or Email',
-                            'class'=>'form-control input-lg',
-                            'data-validate-input'
-                        )); ?>
-                    <?php echo $form->error($model,'username_repeat'); ?>
+                <div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-user" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->textField($model,'username_repeat',array('style'=>'padding-left: 27px','placeholder' => 'Repeat Username or Email Address','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <?php echo $form->error($model,'username_repeat'); ?>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <span class="glyphicon glyphicon-asterisk"></span>
-
-                    <?php echo $form->passwordField($model,'password',
-                        array(
-                            'placeholder' => 'Password',
-                            'class'=>'form-control input-lg',
-                            'data-validate-input'
-                        )); ?>
-                    <?php echo $form->error($model,'password'); ?>
+                
+                <div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-asterisk" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->passwordField($model,'password',array('style'=>'padding-left: 27px','placeholder' => 'Password','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <?php echo $form->error($model,'password'); ?>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <span class="glyphicon glyphicon-asterisk"></span>
-
-                    <?php echo $form->passwordField($model,'password_repeat',
-                        array(
-                            'placeholder' => 'Repeat Password',
-                            'class'=>'form-control input-lg',
-                            'data-validate-input'
-                        )); ?>
-                    <?php echo $form->error($model,'password_repeat'); ?>
+                <div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-asterisk" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->passwordField($model,'password_repeat',array('style'=>'padding-left: 27px','placeholder' => 'Repeat Password','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <?php echo $form->error($model,'password_repeat'); ?>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
 
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    
     <div class="row">
-        <div class="col-lg-6">
-            <div class="form-create-login">
-                <div class="form-group">
-                    <div class="pull-left">
-                        <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
-                    </div>
-                    <div class="pull-right">
-                        <?php
+        <div class="col-sm-12">
+            <div class="">
+                <div class="pull-left">
+                    <a href="<?=Yii::app()->createUrl("preregistration/index")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                </div>
+                <div class="pull-right">
+                    <?php
                         echo CHtml::tag('button', array(
                             'type'=>'submit',
                             'class' => 'btn btn-primary btn-next'
                         ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-                        ?>
-                    </div>
+                    ?>
                 </div>
-            </div>    
+            </div>
         </div>
-    </div>           
+    </div>             
 
 
 

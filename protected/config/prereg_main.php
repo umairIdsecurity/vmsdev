@@ -100,15 +100,6 @@ return CMap::mergeArray(
                     //'preregistration/index'       => 'preregistration/index',
                 ),
             ),
-
-            'db' => array(
-                'connectionString' => 'mysql:host=localhost;dbname=vms',
-                'username' => 'user_vms',
-                'password' => 'HFz7c9dHrmPqwNGr',
-                'charset' => 'utf8',
-                'enableParamLogging' => true,
-                'enableProfiling' => true,
-            ),
             'errorHandler' => array(
                 // use 'site/error' action to display errors
                 'errorAction' => 'preregistration/error',
@@ -141,6 +132,7 @@ return CMap::mergeArray(
             // this is used in contact page
             'photo_unique_filename' => 'test',
             'mandrillApiKey' => '49tRGdzmJDhovnkkygttuQ',
+
         ),
     ),
     require(dirname(__FILE__).'/environment.php')

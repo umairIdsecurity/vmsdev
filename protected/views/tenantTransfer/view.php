@@ -1,15 +1,39 @@
+<?php $this->renderPartial('//importHosts/buttonstyle', null, false); ?>
+<h1> Import Visit History </h1>
+<br>
+    <ol>
+
+        <li> Select a tenant file to import.</li>
+    </ol>
+<br>
+
+<div class="form">
+
 <?php
-/* @var $this TenantTransferInfoController */
-/* @var $model TenantTransferForm */
+$form = $this->beginWidget('CActiveForm', array(
+    'id'=>'importtenant-form',
+    'enableAjaxValidation'=>false,
+    'method'=>'post',
+    'htmlOptions'=>array(
+        'enctype'=>'multipart/form-data'
+    )
+)); ?>
 
 
-?>
+    <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>">
+        <label class="myLabel" for="ImportTenantForm_file" style="width: 70px;">
+            <?php echo $form->fileField($model,'file'); ?>
+            <span>Browse File</span>
+        </label>
 
-<h1>Transfer Tenant</h1>
-<?php
-foreach(Yii::app()->user->getFlashes() as $key => $message) {
-    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-}
+        <div class="row message-no-margin">
+            <?php echo $form->error($model,'file'); ?>
+        </div>
+    </div>
+    <div class="row">
+        <?php echo CHtml::submitButton('Upload File', array("class"=>"completeButton")); ?>
+    </div>
 
-?>
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php $this->endWidget(); ?>
+
+</div>

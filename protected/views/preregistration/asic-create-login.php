@@ -3,8 +3,10 @@ $session = new CHttpSession;
 ?>
 
 <div class="page-content">
-    <h3 class="text-primary title">ASIC Sponsor Information</h3>
 
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+
+    <h3 class="text-primary subheading-size">ASIC Sponsor Information</h3>
 
     <?php
         foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -35,7 +37,7 @@ $session = new CHttpSession;
                 <div id="new_asic_area">
                     <div class="row form-group">
                         <div class="col-md-8">
-                            <?php echo $form->textField($model, 'asic_no', array('maxlength' => 50, 'placeholder' => 'ASIC no.', 'class'=>'form-control input-sm')); ?>
+                            <?php echo $form->textField($model, 'asic_no', array('maxlength' => 50, 'placeholder' => 'ASIC No.', 'class'=>'form-control input-sm')); ?>
                             <?php echo $form->error($model, 'asic_no'); ?>
                         </div>    
                     </div>
@@ -129,11 +131,21 @@ $session = new CHttpSession;
         </div>
     </div>        
 
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+   
+
     <div class="row">
         <div class="col-sm-12">
-            <div class="form-group">
+            <div class="">
                 <div class="pull-left">
-                    <a href="<?=Yii::app()->createUrl("preregistration/visitReason")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    <a href="<?=Yii::app()->createUrl("preregistration/asicPrivacyPolicy")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
                 <div class="pull-right">
                     <?php
@@ -145,13 +157,12 @@ $session = new CHttpSession;
                 </div>
             </div>
         </div>
-    </div>  
+    </div> 
 
 
  <?php $this->endWidget(); ?>
 
-    <!-- ************************************************ -->
-
+<!-- ************************************************ -->
 <!-- ************************************** -->
 <!-- -Add Company Modal- -->
 <div class="modal fade" id="addCompanyModal" tabindex="-1" role="dialog" aria-labelledby="addCompanyModalLabel" aria-hidden="true">
@@ -283,11 +294,9 @@ $session = new CHttpSession;
             </div>
        </div>
     </div>
-    <!-- - Login Model Ends Here -->
-
-
+<!-- - Add Company Model Ends Here -->
 <!-- ************************************** -->
-    <!-- ************************************************ -->
+<!-- ************************************************ -->
 </div>
 
 
@@ -323,8 +332,6 @@ $session = new CHttpSession;
             else{
                 $("#entryPointErr").show();
             }
-
-
         });
 
         $("#WorkstationDropdown").change(function() {

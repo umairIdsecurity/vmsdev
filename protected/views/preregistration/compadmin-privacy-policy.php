@@ -1,18 +1,7 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/6/15
- * Time: 2:31 PM
- */
-
-?>
 <div class="page-content">
-
     <!-- <div class="row"><div class="col-sm-12">&nbsp;</div></div> -->
-
     <div class="privacy-info">
-        <h3 class="text-primary subheading-size">Perth Airport ASIC Sponsor Privacy Notice</h3>
+        <h3 class="text-primary subheading-size">Perth Airport Company Administrator Privacy Notice</h3>
 
         <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
@@ -71,7 +60,7 @@
     $("#toggleCheckbox").on("click",function(e){
         if(this.checked){
             $(this).val(1);
-            $("#nextLink").attr("href","<?php echo Yii::app()->createUrl('preregistration/asicRegistration')?>");
+            $("#nextLink").attr("href","<?php echo Yii::app()->createUrl('preregistration/companyAdminRegistration')?>");
             $("#errorDiv").hide();
         }else{
             $(this).val(0);

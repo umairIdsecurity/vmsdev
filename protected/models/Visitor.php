@@ -827,12 +827,4 @@ class Visitor extends CActiveRecord {
         return Company::model()->findByPk($this->company);
     }
 
-    public function restorePassword($email)
-    {
-        if($visitor = $this->findByAttributes(array('email' => $email))){
-            return PreregPasswordChangeRequest::model()->generateResetLink($visitor);
-        } else {
-            return "Email address does not exist in system.";
-        }
-    }
 }

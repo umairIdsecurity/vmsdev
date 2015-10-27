@@ -642,6 +642,16 @@ class Registration extends CActiveRecord {
         }
     }
 
+
+    public function restorePassword($email)
+    {
+        if($visitor = $this->findByAttributes(array('email' => $email))){
+            return PreregPasswordChangeRequest::model()->generateResetLink($visitor);
+        } else {
+            return "Email address does not exist in system.";
+        }
+    }
+
     public function behaviors()
     {
         return array(

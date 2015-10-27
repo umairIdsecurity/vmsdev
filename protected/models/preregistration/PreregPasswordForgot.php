@@ -31,14 +31,14 @@ class PreregPasswordForgot extends CFormModel {
     }
 
     public function isEmailExist($attribute) {
-        if(!$model = Visitor::model()->findByAttributes(array('email' => $this->$attribute))){
+        if(!$model = Registration::model()->findByAttributes(array('email' => $this->$attribute))){
             $this->addError($attribute, 'Email address does not exist in system.');
         }
     }
 
     public function restore()
     {
-        $error = Visitor::model()->restorePassword($this->email);
+        $error = Registration::model()->restorePassword($this->email);
 
         if (!is_null($error)) {
             Yii::app()->user->setFlash('error', $error);

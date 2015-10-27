@@ -133,7 +133,7 @@ class DatabaseIndexHelper
                 $sql = "SELECT CONSTRAINT_NAME as name
                         FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
                         WHERE CONSTRAINT_TYPE = 'PRIMARY KEY'
-                        AND CONSTRAINT_CATALOG = (SELECT DATABASE())
+                        AND CONSTRAINT_SCHEMA = (SELECT DATABASE())
                         AND TABLE_NAME = '$tableName'";
 
                 break;

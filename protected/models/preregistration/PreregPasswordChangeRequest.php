@@ -63,7 +63,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
 
         $templateParams = array(
             'email' => $visitor->email,
-            'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php?r=site/reset/hash/' . $request->hash,
+            'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php/preregistration/reset/hash/' . $request->hash,
         );
 
         $emailTransport = new EmailTransport();

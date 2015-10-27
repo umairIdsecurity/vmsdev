@@ -1455,6 +1455,47 @@ class PreregistrationController extends Controller
         $this->render('forgot', array('model' => $model));
     }
 
+    /**
+     * Reset password
+     */
+    public function actionReset() {
+
+        $model = new PreregPasswordResetForm();
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'password-reset-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        $hash = Yii::app()->request->getParam('hash');
+
+        /** @var PreregPasswordChangeRequest $passwordRequest */
+        $passwordRequest = PreregPasswordChangeRequest::model()->findByAttributes(array('hash' => $hash));
+
+        if (!$passwordRequest) {
+            Yii::app()->user->setFlash('error', "Reset password hash '$hash' not found. Looks like your reset password link is broken.");
+        }
+
+        if ($error = $passwordRequest->checkPasswordRequestByHash()) {
+            Yii::app()->user->setFlash('error', $error);
+            $this->redirect(array('preregistration/forgot'));
+        }
+
+        if (isset($_POST['PreregPasswordResetForm'])) {
+            $model->attributes = $_POST['PreregPasswordResetForm'];
+            if ($model->validate()) {
+                /** @var User $user */
+                $visitor = Registration::model()->findByPk($passwordRequest->visitor_id);
+                $visitor->changePassword($model->password);
+                $passwordRequest->markAsUsed($visitor);
+                Yii::app()->user->setFlash('success', "Your password has been changed successfully");
+                $this->redirect(array('preregistration/login'));
+            }
+        }
+
+        $this->render('prereg-reset', array('model' => $model));
+    }
+
 
     public function actionProfile($id)
     {

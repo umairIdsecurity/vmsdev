@@ -652,6 +652,12 @@ class Registration extends CActiveRecord {
         }
     }
 
+    public function changePassword($newPassword)
+    {
+        $this->password = $newPassword;
+        $this->save(false, 'password');
+    }
+
     public function behaviors()
     {
         return array(

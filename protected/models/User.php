@@ -112,6 +112,10 @@ class User extends VmsActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
 
+        if (Yii::app()->controller->action->id == 'delete'){
+            return array();
+        }
+
         if($this->scenario == 'add_company_contact') {
             return array(
 
@@ -128,6 +132,7 @@ class User extends VmsActiveRecord {
             );
 			
         }
+
 
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(

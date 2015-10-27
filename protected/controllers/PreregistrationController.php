@@ -2165,6 +2165,7 @@ class PreregistrationController extends Controller
         //}
     }
 
+
     public function unsetVariablesForGui(){
     	$session = new CHttpSession;
     	unset($session['stepTitle']);

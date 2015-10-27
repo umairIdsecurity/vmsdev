@@ -28,8 +28,6 @@ else{
     else
         $config = require(dirname(__FILE__) . '/protected/config/api_main.php');
 
-
-
 }
 
 

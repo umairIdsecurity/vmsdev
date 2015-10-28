@@ -213,7 +213,7 @@ class Registration extends CActiveRecord {
 
             array('old_password,new_password,repeat_password','length','min'=>5,'on' => 'preregistrationPass'),
             array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistrationPass'),
-            array('date_of_birth,identification_document_no,identification_document_expiry', 'required' ,'on' => 'preregistrationPass', 'message'=>'Please enter {attribute}'),
+            array('date_of_birth,identification_document_no,identification_document_expiry,company', 'required' ,'on' => 'preregistrationPass', 'message'=>'Please enter {attribute}'),
             
             array('date_of_birth,identification_document_no,identification_document_expiry,old_password,new_password,repeat_password','safe','on' => 'preregistrationPass'),
             /*array('old_password, new_password, repeat_password', 'required', 'on' => 'preregistrationPass'),

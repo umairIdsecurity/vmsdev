@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 7/7/15
- * Time: 7:05 PM
- */
-?>
 
 <div class="page-content">
 

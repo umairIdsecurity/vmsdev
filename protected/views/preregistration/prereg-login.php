@@ -1,12 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/8/15
- * Time: 6:00 PM
- */
-
-?>
 <div class="page-content">
 
     <?php $form=$this->beginWidget('CActiveForm', array(

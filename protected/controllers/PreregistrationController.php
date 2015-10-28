@@ -1517,10 +1517,7 @@ class PreregistrationController extends Controller
         if ($cond) 
         {	
         	$model->attributes = $_POST['Registration'];
-
         	if(isset($companyModel)){$companyModel->attributes = $_POST['Company'];}
-
-           	
             if( $_POST['Registration']['old_password'] =="" && $_POST['Registration']['new_password'] =="" && $_POST['Registration']['repeat_password']=="")
             {	
             	//**********************************************************************************
@@ -1541,10 +1538,8 @@ class PreregistrationController extends Controller
 		            /*
 					* This removes Integrity Constraint Issue
 		            */
-		            if(!empty($_POST['Registration']['photo'])){
-						$model->photo = $_POST['Registration']['photo'];             	
-		            }else{
-		            	$model->photo = NULL;             	
+		            if($model->photo == null){
+						$model->photo = NULL;               	
 		            }
 
 		            if(isset($companyModel)){

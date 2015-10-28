@@ -256,7 +256,7 @@ class DashboardController extends Controller {
     }
 
     public function actionHelpDesk() {
-	   $helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup();
+	$helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup(true);
         $session = new CHttpSession;
         $this->render('helpdesk', array(
             'helpDeskGroupRecords' => $helpDeskGroupRecords

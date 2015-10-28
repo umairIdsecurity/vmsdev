@@ -1163,7 +1163,7 @@ class Visit extends CActiveRecord {
 
                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
                 if( $isExpired < 0 ) 
-                    $totalCount = $dateOut->diff($dateIn)->days + 1;
+                    $totalCount = $dateOut->diff($dateIn)->days;
                 else
                     $totalCount = $dateIn->diff($dateNow)->days + 1;
                 return $totalCount + $oldVisitsCount;
@@ -1288,7 +1288,7 @@ class Visit extends CActiveRecord {
         $criteria->addCondition(" ( id != ".$current_visit_id." ) AND "
                 . " tenant = ".Yii::app()->user->tenant." "
                 . " AND (visit_status != ".VisitStatus::SAVED." AND visit_status != ".VisitStatus::PREREGISTERED."  ) "
-                . " AND visitor = " . $this->visitor. " AND is_deleted = 0 AND reset_id != 1");
+                . " AND visitor = " . $this->visitor. " AND is_deleted = 0 AND reset_id IS NULL");
         $visits = $this->findAll($criteria);
        if( $visits ) {
            $visitCount  = 0;

@@ -352,12 +352,8 @@ $asicEscort = new AddAsicEscort();
                 }
 
                 $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
-
-                function updateTextVisitButton(text, id, val) {
-                    $("#registerNewVisit").text(text).val(val);
-                }
-                
-                var currentDate2  =   new Date(d.getFullYear() + '-0' + (d.getMonth() + 1) + '-' +d.getDate()); 
+                              
+                var currentDate2  =   new Date(); 
                 var sD= selectedDate.split("-");
                 var dSelected     =   new Date(sD[2] + '-' + sD[1] + '-' + sD[0]);
                 if (dSelected >= currentDate2) {
@@ -410,6 +406,9 @@ $asicEscort = new AddAsicEscort();
 
     });
 
+   function updateTextVisitButton(buttonText, id, vall) {
+     $("#registerNewVisit").text(buttonText).val(vall);
+   }
     function refreshToCurrentTime() {
         var refresh = 1000; // Refresh rate in milli seconds
         mytime = setTimeout('refreshTimeIn()', refresh)

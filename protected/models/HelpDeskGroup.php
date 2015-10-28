@@ -140,10 +140,10 @@ class HelpDeskGroup extends CActiveRecord {
      * Returns the all records 
       * @return HelpDeskGroup the static model class
      */
-	public function getAllHelpDeskGroup() {
+	public function getAllHelpDeskGroup($isFrontDisplay = false) {
             
             $session = new CHttpSession;
-
+            
            $role = $session['role'];
             $roles = HelpdeskGroupUserRole::model()->findAllByAttributes(array('role' => $role));
             $heldeskGroups = array();
@@ -168,7 +168,10 @@ class HelpDeskGroup extends CActiveRecord {
             if(!empty($session['created_by'])){
                 $criteria->addCondition ('created_by = '.$session['created_by'], "OR");
             }else{
-                $criteria->addCondition ('created_by = '.Yii::app()->user->id, "OR");
+                if( !$isFrontDisplay )
+                    $criteria->addCondition ('created_by = '.Yii::app()->user->id, "OR");
+                else
+                    $criteria->addCondition ('created_by = '.Yii::app()->user->id);
             }
             
 

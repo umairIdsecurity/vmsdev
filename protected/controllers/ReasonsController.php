@@ -28,11 +28,11 @@ class ReasonsController extends Controller
 	{
             return array(
                     array('allow', // allow admin user to perform actions
-                        'actions' => array('admin','delete','create','update','index','view'),
+                        'actions' => array('admin','delete','create','update','index','view', 'loadContactPersons'),
                         'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN_DASHBOARD)',
                     ),
                     array('allow', // allow admin user to perform actions
-                        'actions' => array('admin','delete','create','update','index','view'),
+                        'actions' => array('admin','delete','create','update','index','view', 'loadContactPersons'),
                         'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION_DASHBOARD)',
                     ),
                     array('deny',  // deny all users
@@ -171,4 +171,18 @@ class ReasonsController extends Controller
 			Yii::app()->end();
 		}
 	}
+        
+        /**
+         * Ajax call to fill Contact Person dropdown on Contact Page.
+         * 
+         */
+        public function actionLoadContactPersons() {
+            
+            $data = ContactPerson::model()->findAll("reason_id = " . $_POST['id'] ." AND user_role = ". Yii::app()->user->role );
+            $data=CHtml::listData($data,'id','contact_person_name');
+
+            echo "<option value=''>Select Contact Person</option>";
+            foreach($data as $value=>$person)
+            echo CHtml::tag('option', array('value'=>$value),CHtml::encode($person),true);
+        }
 }

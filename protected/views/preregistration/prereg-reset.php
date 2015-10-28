@@ -40,7 +40,7 @@
             <?php echo $form->error($model,'passwordConfirmation'); ?>
         </div>
 
-        <?php echo CHtml::submitButton('Set New Password',array('class'=>'btn btn-primary btn-next')); ?>
+        <?php echo CHtml::submitButton('Reset Password',array('class'=>'btn btn-primary btn-next')); ?>
 
 
     <?php $this->endWidget()?>

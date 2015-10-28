@@ -39,7 +39,6 @@ class PreregPasswordForgot extends CFormModel {
     public function restore()
     {
         $error = Registration::model()->restorePassword($this->email);
-
         if (!is_null($error)) {
             Yii::app()->user->setFlash('error', $error);
             return false;

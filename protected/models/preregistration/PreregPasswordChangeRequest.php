@@ -66,7 +66,6 @@ class PreregPasswordChangeRequest extends CActiveRecord
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-        $to=$email;
         $subject="Request for reset password";
         $body = "<html><body>Hi,<br><br>".
                 "Please click on below link to reset you password.<br><br>".
@@ -163,7 +162,6 @@ class PreregPasswordChangeRequest extends CActiveRecord
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-        $to=$email;
         $subject="Reset password confirmation";
         $body = "<html><body>Hi,<br><br>".
                 "Your password was reset using the email address ".$visitor->email.".<br>";

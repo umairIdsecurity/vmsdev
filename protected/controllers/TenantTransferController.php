@@ -194,6 +194,10 @@ class TenantTransferController extends Controller
 
                                     if (!$cols) {
                                         $cols = array_keys($row);
+                                        $colsQuoted = [];
+                                        foreach($cols as $col){
+                                            $colsQuoted[] = Yii::app()->db->quoteColumnName($col);
+                                        }
                                     }
                                     $vals = array();
                                     foreach ($row as $columnName => $value) {
@@ -207,7 +211,7 @@ class TenantTransferController extends Controller
 
                                     $quotedTableName = Yii::app()->db->quoteTableName($tableName);
 
-                                    $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $cols) . ") VALUES (" . implode(', ', $vals) . ")";
+                                    $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
 
                                     //TODO: RUN SQL
                                     echo $sql . "<br>";

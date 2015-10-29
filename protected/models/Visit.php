@@ -178,7 +178,7 @@ class Visit extends CActiveRecord {
          switch( $this->card_type) {
              case CardType::VIC_CARD_SAMEDATE:
              case CardType::SAME_DAY_VISITOR:  
-                 $this->time_check_in = $this->time_in = date("H:i:s");
+             
                  $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  $this->date_check_out = $this->date_check_in;
@@ -189,13 +189,13 @@ class Visit extends CActiveRecord {
              case CardType::MANUAL_VISITOR:
              case CardType::MULTI_DAY_VISITOR:
              case CardType::CONTRACTOR_VISITOR: 
-                 $this->time_check_in = $this->time_in = date("H:i:s");
+             
                  $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  break;
              
               case CardType::VIC_CARD_MANUAL:
-                 $this->time_check_in = $this->time_in = date("H:i:s");
+             
                  $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
@@ -204,7 +204,7 @@ class Visit extends CActiveRecord {
                   break;
               
              case CardType::VIC_CARD_24HOURS:
-                 $this->time_check_in = $this->time_in = date("H:i:s");
+             
                  $this->time_check_out = $this->time_out = $this->time_check_in;
                  $this->finish_time = $this->time_check_in;
                  if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {

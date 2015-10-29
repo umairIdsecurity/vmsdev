@@ -101,7 +101,14 @@ foreach ($contact_persons as $contact_person) {
                             $model,
                             'reason',
                              $reasonsAll,
-                             array('empty'=>'Select a reason')
+                              array(
+                                'prompt'=>'Select a Reason',
+                                'ajax' => array(
+                                'type'=>'POST', 
+                                'url'=>Yii::app()->createUrl('reasons/loadContactPersons'),  
+                                'update'=>'#ContactForm_contact_person_name', //or 'success' => 'function(data){...handle the data in the way you want...}',
+                              'data'=>array('id'=>'js:this.value'),
+                              )) 
                     );?>
             
             </td>
@@ -112,10 +119,8 @@ foreach ($contact_persons as $contact_person) {
             <td><?php echo $form->dropDownList(
                             $model,
                             'contact_person_name',
-                            CHtml::listData(ContactPerson::model()->findAll("tenant = " . Yii::app()->user->tenant),
-                                    'id',
-                                    'contact_person_name'),
-                                    array('empty'=>'Select a person')
+                             array(),
+                                    array('empty'=>'Select Contact Person')
                     );?>
             </td>
         </tr>
@@ -175,12 +180,7 @@ foreach ($contact_persons as $contact_person) {
     var numberWithCommas = function(x, commas) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, commas);
     };
-
-    $(document).ready(function() {
-        $("#ContactForm_reason").change(function() {
-            $("#ContactForm_contact_person_name").val($(this).val());
-        });
-    });
+ 
 
     /*jQuery(function() {
         'use strict';

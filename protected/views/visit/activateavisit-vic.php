@@ -368,7 +368,8 @@ $asicEscort = new AddAsicEscort();
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
                 } else {
-                    if (cardType == <?php echo CardType::VIC_CARD_MANUAL; ?>) {
+                     
+                    if (cardType == '<?php echo CardType::VIC_CARD_MANUAL; ?>' && dSelected.getDate() < currentDate2.getDate()) {
                         updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
                     } else {
                         updateTextVisitButton("Activate Visit", "registerNewVisit", "active");

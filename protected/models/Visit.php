@@ -177,8 +177,9 @@ class Visit extends CActiveRecord {
          //if($this->visit_status == VisitStatus::ACTIVE)
          switch( $this->card_type) {
              case CardType::VIC_CARD_SAMEDATE:
-             case CardType::SAME_DAY_VISITOR:    
-                 $this->time_check_out = '23:59:59';
+             case CardType::SAME_DAY_VISITOR:  
+                 $this->time_check_in = $this->time_in = date("H:i:s");
+                 $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  $this->date_check_out = $this->date_check_in;
                  break;
@@ -187,13 +188,15 @@ class Visit extends CActiveRecord {
              case CardType::VIC_CARD_EXTENDED:             
              case CardType::MANUAL_VISITOR:
              case CardType::MULTI_DAY_VISITOR:
-             case CardType::CONTRACTOR_VISITOR:    
-                 $this->time_check_out = '23:59:59';
+             case CardType::CONTRACTOR_VISITOR: 
+                 $this->time_check_in = $this->time_in = date("H:i:s");
+                 $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  break;
              
               case CardType::VIC_CARD_MANUAL:
-                 $this->time_check_out = '23:59:59';
+                 $this->time_check_in = $this->time_in = date("H:i:s");
+                 $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
                     $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
@@ -201,7 +204,8 @@ class Visit extends CActiveRecord {
                   break;
               
              case CardType::VIC_CARD_24HOURS:
-                 $this->time_check_out = $this->time_check_in;
+                 $this->time_check_in = $this->time_in = date("H:i:s");
+                 $this->time_check_out = $this->time_out = $this->time_check_in;
                  $this->finish_time = $this->time_check_in;
                  if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
                     $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
@@ -1298,8 +1302,12 @@ class Visit extends CActiveRecord {
                $dateNow = new DateTime("NOW");
 
                // For the current Year Only
-               if( $dateNow->format("Y") == $dateIn->format("Y") )
-                  $visitCount += ($dateIn->diff($dateOut)->days + 1);
+               if( $dateNow->format("Y") == $dateIn->format("Y")) {
+                  if ( $v->card_type != CardType::VIC_CARD_MANUAL )  
+                    $visitCount += ($dateIn->diff($dateOut)->days + 1);
+                else  
+                    $visitCount += $dateIn->diff($dateOut)->days;
+               }
                
                 if($v["card_type"] == CardType::VIC_CARD_24HOURS && $dateIn->diff($dateOut)->days >= 1)
                     $visitCount =  $visitCount - 1;

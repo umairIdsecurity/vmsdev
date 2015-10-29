@@ -170,8 +170,7 @@ class HelpDeskGroup extends CActiveRecord {
             }else{
                 if( !$isFrontDisplay )
                     $criteria->addCondition ('created_by = '.Yii::app()->user->id, "OR");
-                else
-                    $criteria->addCondition ('created_by = '.Yii::app()->user->id);
+                 
             }
             
 

@@ -24,7 +24,7 @@ else{
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-    <span class="text-size">Please upload a photo head and shoulders picture with no glasses or hat, on a white background.</span>
+    <span class="text-size">Please upload a photo head and shoulders picture with no glasses or hat, on a white background. A Photo is not required if your visit is less than 24 hours.</span>
     
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
@@ -44,18 +44,20 @@ else{
     )); ?>
 
 
-
-    <div class="image-user">
-        <img src="<?= $preImg ?>" alt="image user" id="preview" width="220" height="253">
-        <br><br>
-        <div class="custom-file-button" style="width: 220px">
-            <?php echo $form->fileField($model,'image'); ?>
+    <div class="row">
+        <div class="col-sm-4">&nbsp;</div>
+        <div class="col-sm-4">
+            <div class="image-user">
+                <img src="<?= $preImg ?>" alt="image user" id="preview" width="220" height="253">
+                <br><br>
+                <div class="custom-file-button" style="width: 220px">
+                    <?php echo $form->fileField($model,'image'); ?>
+                </div>
+                <h4 class="subheading-size" style="text-align:center;width: 220px">UPLOAD / EDIT PHOTO </h4>
+            </div>
         </div>
-
-        <h4 class="subheading-size" style="text-align:center;width: 220px">UPLOAD / EDIT PHOTO </h4>
-
+        <div class="col-sm-4">&nbsp;</div>
     </div>
-
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
     <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>

@@ -22,7 +22,17 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 		'validateOnSubmit'=>true,
 	),
 )); ?>
+
+
     <table class="login-area" style="border-collapse: none !important;">
+        <tr>
+            <td align="center" class="form-group"><span style="color:#428bca;font-size:27px">VMS LOGIN</span></td>
+        </tr>
+
+        <tr>
+            <td align="center" class="form-group">&nbsp;</td>
+        </tr>
+
         <tr>
             <td align="center" class="form-group"><span class="add-on"><i class="b-account"></i></span><?php echo $form->textField($model,'username', array('placeholder' => 'Username or Email')); ?></td>
 

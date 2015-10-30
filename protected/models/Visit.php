@@ -1171,7 +1171,7 @@ class Visit extends CActiveRecord {
                 if( $isExpired < 0 ) 
                     $totalCount = $dateOut->diff($dateIn)->days;
                 else
-                    $totalCount = $dateIn->diff($dateNow)->days;
+                    $totalCount = $dateIn->diff($dateNow)->days +1;
                 return $totalCount + $oldVisitsCount;
                 break;
 

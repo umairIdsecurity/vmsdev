@@ -420,7 +420,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             if( !existsVisit ) {
                 return false;
             } 
-            
+           
            // Check Deposit Paid for EVIC only
             if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
@@ -493,12 +493,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 <?php endif; ?>
             }
 
-            if ($this.val() == 'backdate') {
-                // Close a visit if card type is manual and operator select check in date less then current date
-                closeVisit();
-                return false;
-            }
-
+//            if ($this.val() == 'backdate') {
+//                // Close a visit if card type is manual and operator select check in date less then current date
+//                closeVisit();
+//                return false;
+//            }
+//
             if ($this.val() == 'preregister') {
                 activeVisit();
                 return false;

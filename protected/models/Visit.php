@@ -174,6 +174,8 @@ class Visit extends CActiveRecord {
     */
      public function beforeSave() { 
        
+         $checkin = new DateTime($this->date_check_in);
+         $currendDate = new DateTime("NOW");
          //if($this->visit_status == VisitStatus::ACTIVE)
          switch( $this->card_type) {
              case CardType::VIC_CARD_SAMEDATE:
@@ -195,7 +197,16 @@ class Visit extends CActiveRecord {
                  break;
              
               case CardType::VIC_CARD_MANUAL:
-             
+                    
+                    $diffDate = $checkin->diff($currendDate)->format("%r%a");
+                    //BackDate visit
+                    if( $diffDate >= 1) {
+                        $this->visit_status = VisitStatus::CLOSED; 
+                        $this->visit_closed_date =  $currendDate->format("Y-m-d");
+                        $this->closed_by = Yii::app()->user->id;
+                        $this->date_check_out = $this->date_check_in;
+                    }
+                  
                  $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
                  if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
@@ -220,6 +231,11 @@ class Visit extends CActiveRecord {
         if(!empty($this->finish_date)){$this->finish_date = date("Y-m-d",strtotime($this->finish_date));} else {$this->finish_date = $this->date_check_out;}
         if(!empty($this->card_returned_date)){$this->card_returned_date = date("Y-m-d",strtotime($this->card_returned_date));}else{$this->card_returned_date = NULL;}
         
+        // fOR Preregister a Visit if check In date is greater than the current
+        $PDate = $currendDate->diff($checkin)->format("%r%a");
+        if($PDate > 1) {
+            $this->visit_status = VisitStatus::PREREGISTERED;
+        }
         return parent::beforeSave();
      }
  

@@ -359,9 +359,14 @@ $asicEscort = new AddAsicEscort();
                 if (dSelected >= currentDate2) {
                     if (sD[2] == d.getFullYear() && sD[1] == (d.getMonth() + 1) && sD[0] == d.getDate()) {
                         updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
+                        // Preregistered visits can be activated if someone selects todays date to activate
+                        $("#registerNewVisit").removeAttr("disabled");
                     } else {
-                        updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
-                        $("#card_no_manual").hide();
+                        updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");        
+                         var status = "<?php echo $model->visit_status; ?>";
+                        if ( status == "<?php echo VisitStatus::PREREGISTERED; ?>" ) 
+                            $("#registerNewVisit").attr("disabled", "disabled");
+                        //$("#card_no_manual").hide();
                     }
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', checkInSelectedDate);
@@ -373,6 +378,7 @@ $asicEscort = new AddAsicEscort();
                         updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
                     } else {
                         updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
+                         $("#registerNewVisit").removeAttr("disabled");
                     }
                     $('#card_no_manual').show();
                 }

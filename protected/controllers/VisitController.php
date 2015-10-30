@@ -590,7 +590,7 @@ class VisitController extends Controller {
                 }
 
             } 
-
+                    
             // save visit model
             if ($model->save()) {
                 // if has file upload then upload and save

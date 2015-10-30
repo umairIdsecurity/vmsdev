@@ -269,7 +269,9 @@ $session = new CHttpSession;
                     <div class="col-sm-2">
                         <div class="standardLogo" style="margin-left:auto;margin-right:auto">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
+                                <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
+                                </a>
                             <?php } else{ ?>
                                 <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
                                     <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
@@ -279,7 +281,9 @@ $session = new CHttpSession;
 
                         <div class="mobileLogo">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logoOld.png" alt="Pre registration"/>
+                                <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logoOld.png" alt="Pre registration"/>
+                                </a>
                             <?php } else{ ?>
                                 <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
                                     <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logoOld.png" alt="Pre registration"/>

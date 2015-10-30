@@ -54,14 +54,85 @@ class Avms7DataTransformer
     }
 
     public function getTenant($code){
-        $result = ['company'=>[],'tenant'=>[],'user'=>[],'tenant_contact'=>[]];
-        $tenantCompany =$this->getTenantCompany($code);
-        $result['company'][] = $tenantCompany;
-        $result['user'][] = $this->getTenantUsers($code);
-        $result['tenant_agent'] = $this->getTenantAgents($code);
-        $result['visitor'] = $this->getTenantVisitors($code);
 
-        return $result;
+        $default_condition = "";
+        $tenant = "";
+        $userTable = "";
+
+        return [
+
+            'photo'                             =>"SELECT photoID as id, filename as unique_filename,null as relativepath,null as db_image) "
+                                                    ."FROM users_photo "
+                                                    ." JOIN users on users.Id = users_photo.UserID AND `Default` = 1;" ,
+
+            'company_laf_preferences'           =>['JOIN company ON company_laf_preferences.id = company.company_laf_preferences '.
+                $default_condition],
+
+            'company'                           =>[$default_condition." OR (id=".$tenant.") "],
+
+
+            'tenant'                            =>['WHERE id='.$tenant.''],
+
+            'tenant_agent'                      =>['WHERE tenant_id='.$tenant.''],
+
+            'user'                              =>[$default_condition],
+
+
+            'contact_person'                    =>['WHERE tenant='.$tenant],
+
+            'reasons'                            =>['WHERE tenant='.$tenant],
+
+            'password_change_request'           =>['JOIN '.$userTable.' ON '.$userTable.'.id = password_change_request.user_id '.
+                $default_condition],
+
+            'tenant_agent_contact'              =>['WHERE tenant_id='.$tenant],
+
+            'tenant_contact'                    =>['WHERE tenant='.$tenant],
+
+            'user_notification'                 =>['JOIN '.$userTable.' ON '.$userTable.'.id = user_notification.user_id '.
+                $default_condition],
+
+            'notification'                      =>['JOIN user_notification ON user_notification.user_id = user_notification.user_id '.
+                'JOIN '.$userTable.' ON '.$userTable.'.id = user_notification.user_id '.
+                $default_condition],
+
+            'workstation'                       =>[$default_condition],
+
+            'workstation_card_type'             =>["JOIN workstation ON workstation.id = workstation_card_type.workstation ".
+                $default_condition],
+
+            'user_workstation'                  =>['JOIN '.$userTable.' ON '.$userTable.'.id = user_workstation.user_id '.
+                $default_condition],
+
+            'visitor_type'                      =>[$default_condition],
+            'visit_reason'                      =>[$default_condition],
+
+            'visitor'                           =>[$default_condition],
+
+            'card_generated'                    =>["WHERE tenant=".$tenant],
+
+            'visit'                             =>[$default_condition],
+
+            'visitor_type_card_type'            =>[$default_condition],
+
+            'visitor_password_change_request'   =>['JOIN visitor ON visitor.id = visitor_password_change_request.visitor_id '.
+                $default_condition],
+
+
+
+            'reset_history'                     =>['JOIN visitor ON visitor.id = reset_history.visitor_id '.
+                $default_condition],
+
+            'cardstatus_convert'                =>['JOIN visitor ON visitor.id = cardstatus_convert.visitor_id '.
+                $default_condition],
+
+            'contact_person'                    =>['WHERE tenant = '.$tenant],
+
+            //'contact_support'                   =>['JOIN '.$userTable.' ON user.id = contact_support.user_id '.$default_condition],
+
+            //'audit_trail'                       =>['JOIN '.$userTable.' ON user.id = audit_trail.user_id '.$default_condition],
+
+        ];
 
     }
     public function getTenantVisitors($code){

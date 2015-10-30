@@ -185,7 +185,7 @@ $session = new CHttpSession;
                                         <!-- <span class="help-block has-error" id="password-error"></span> -->
                                     </div>
 
-                                    <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-block bt-login')); ?>
+                                    <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-primary bt-login','style'=>'float:left')); ?>
                                     <!-- <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In....">Login</button> -->
                                     
                                     <div class="clearfix"></div>
@@ -279,16 +279,18 @@ $session = new CHttpSession;
 }
 
 .login-modal-header {
-    background: #27ae60;
+    /*background: #27ae60;*/
     color: #fff;
 }
 
 .login-modal-header .modal-title {
-    color: #fff;
+    /*color: #fff;*/
+     color: #428BCA;
 }
 
 .login-modal-header .close {
-    color: #fff;
+    /*color: #fff;*/
+    color: #000;
 }
 
 .login-modal i {

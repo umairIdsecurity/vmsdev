@@ -59,22 +59,25 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 		$session['stepTitle'] = 'PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)';
-
 		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration'>Preregister for a VIC</a>";
-		
-		unset($session['step2Subtitle']);unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
-		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 		
 		unset($session['requsetForVerificationEmail']);
 
-		$model = new EntryPoint();
-		unset($session['workstation']);
+		$model = '';
+		if(isset($session['workstation']) && $session['workstation'] != ''){
+			$model = $session['workstation_model'];
+		}
+		else{
+			$model = new EntryPoint();
+		}
+
 		if(isset($_POST['EntryPoint']))
 		{
 			$model->attributes=$_POST['EntryPoint'];
 			if($model->validate())
 			{
 				$workstation = Workstation::model()->findByPk($model->entrypoint);
+				$session['workstation_model'] = $model;
 				//these will be used to ensure the nothing left in flow
 				$session['workstation'] = $workstation->id;
 				$session['created_by'] = $workstation->created_by;
@@ -90,12 +93,7 @@ class PreregistrationController extends Controller
 	{
 		$session = new CHttpSession;
 		$session['stepTitle'] = 'VIC REQUIREMENTS';
-
 		$session['step2Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/privacyPolicy'>Requirements</a>";
-		
-		unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
-		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
-
 		$this->render('privacy-policy');
 	}
 
@@ -104,8 +102,7 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 		$session['stepTitle'] = 'DECLARATIONS';
 		$session['step3Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/privacyPolicy'>Declarations</a>";
-		unset($session['step4Subtitle']);unset($session['step5Subtitle']);
-		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
+		
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
@@ -118,8 +115,6 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 		$session['stepTitle'] = 'PERSONAL INFORMATION';
 		$session['step4Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/personalDetails'>Personal Information</a>";
-		unset($session['step5Subtitle']);
-		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 		
 		unset($session['vic_model']);
 
@@ -181,7 +176,7 @@ class PreregistrationController extends Controller
 		}
 		$session['stepTitle'] = 'REASON FOR VISIT';
 		$session['step5Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/visitReason'>Reason for Visit</a>";
-		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
+		
 
 		$model = '';
 		if(isset($session['visit_model']) && $session['visit_model'] != ''){
@@ -242,7 +237,6 @@ class PreregistrationController extends Controller
 		}
 		$session['stepTitle'] = 'ASIC SPONSOR';
 		$session['step6Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/addAsic'>ASIC Sponsor</a>";
-		unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 		unset($session['is_listed']);unset($session['requsetForVerificationEmail']);
 		$model->scenario = 'preregistrationAsic';
 		
@@ -315,7 +309,7 @@ class PreregistrationController extends Controller
 		}
 		$session['stepTitle'] = 'PHOTO';
 		$session['step7Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/uploadPhoto'>Photo</a>";
-		unset($session['step8Subtitle']);
+		
 		$model = new UploadForm();
 		if(isset($_POST['UploadForm']))
 		{
@@ -416,7 +410,9 @@ class PreregistrationController extends Controller
 			$visitor->attributes=$sessionVisitor->attributes;
 
 			if(!isset($session['vic_model']) || $session['vic_model'] == ''){
-				$visitor->photo=$session['photo'];
+				if(isset($session['photo']) && $session['photo'] != ''){
+					$visitor->photo=$session['photo'];
+				}
 			}
 			
 			if($visitor->company == null || $visitor->company == ""){
@@ -463,7 +459,7 @@ class PreregistrationController extends Controller
 			    		$loggedUserEmail = 'Admin@perthairport.com.au';
 			    		$this->sendEmailToASIC($loggedUserEmail,$email,$visitId);
 					}
-
+					$this->unsetVariablesForGui();
 					$this->redirect(array('preregistration/success'));
 				}
 			}else{
@@ -2165,7 +2161,7 @@ class PreregistrationController extends Controller
     	unset($session['stepTitle']);
 		unset($session['step1Subtitle']);unset($session['step2Subtitle']);unset($session['step3Subtitle']);
 		unset($session['step4Subtitle']);unset($session['step5Subtitle']);unset($session['step6Subtitle']);
-		unset($session['step7Subtitle']);unset($session['step8Subtitle']);
+		unset($session['step7Subtitle']);unset($session['step8Subtitle']);unset($session['workstation']);
     }
 
     public function sendEmailToASIC($loggedUserEmail,$email,$visitId)

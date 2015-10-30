@@ -258,8 +258,7 @@ class TenantAgentController extends Controller
             $userWorkstation->createdBy = Yii::app()->user->id;
             $userWorkstation->is_primary = 1;
 
-            $userWorkstation->save();
-            return true;
+            return $userWorkstation->save();
         }
         return false;
     }

@@ -420,7 +420,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             if( !existsVisit ) {
                 return false;
             } 
-            
+           
            // Check Deposit Paid for EVIC only
             if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
@@ -493,12 +493,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 <?php endif; ?>
             }
 
-            if ($this.val() == 'backdate') {
-                // Close a visit if card type is manual and operator select check in date less then current date
-                closeVisit();
-                return false;
-            }
-
+//            if ($this.val() == 'backdate') {
+//                // Close a visit if card type is manual and operator select check in date less then current date
+//                closeVisit();
+//                return false;
+//            }
+//
             if ($this.val() == 'preregister') {
                 activeVisit();
                 return false;
@@ -794,7 +794,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_check_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
             dataType: 'json',
-            success: function (r) {
+            success: function (r) { 
                 $.each(r.data, function (index, value) {
                     if (value.isConflicting == 1) {
                         alert("Visit cannot be activated. Please close previous active visit.");

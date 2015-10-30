@@ -573,17 +573,11 @@ class VisitController extends Controller {
                     else
                          $model->visit_status = VisitStatus::AUTOCLOSED;
                     
-                    switch ($model->card_type) {
-                        case CardType::VIC_CARD_EXTENDED: // VIC Extended                                 
-                            if ($visitParams['finish_date'] != NULL) {
+                          if ( $visitParams['finish_date'] ) {
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
                             } else { 
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['date_check_out']));
                             }
-                            break;
-                        case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                            break;
-                    }
                 }
 
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
@@ -596,7 +590,7 @@ class VisitController extends Controller {
                 }
 
             } 
-
+                    
             // save visit model
             if ($model->save()) {
                 // if has file upload then upload and save

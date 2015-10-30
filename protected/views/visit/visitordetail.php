@@ -473,7 +473,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id + "&preCardNo=" + preCardNo,
             data: cardForm,
             success: function(data) {
-            	window.location = "index.php?r=visit/detail&id=" + id;
+               window.location = "index.php?r=visit/detail&id=" + id;
             }
         });
     }

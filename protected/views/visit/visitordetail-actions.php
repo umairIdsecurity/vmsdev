@@ -794,7 +794,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_check_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
             dataType: 'json',
-            success: function (r) {
+            success: function (r) { 
                 $.each(r.data, function (index, value) {
                     if (value.isConflicting == 1) {
                         alert("Visit cannot be activated. Please close previous active visit.");

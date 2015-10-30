@@ -214,9 +214,11 @@ class Visit extends CActiveRecord {
              default :
                  break;
          }
-
+        // Date Format to YYYY-MM-DD for MSSQL
         if(!empty($this->date_check_in)){$this->date_check_in = date("Y-m-d",strtotime($this->date_check_in));}else{$this->date_check_in = NULL;}
         if(!empty($this->date_check_out)){$this->date_check_out = date("Y-m-d",strtotime($this->date_check_out));}else{$this->date_check_out = NULL;}
+        if(!empty($this->finish_date)){$this->finish_date = date("Y-m-d",strtotime($this->finish_date));} else {$this->finish_date = $this->date_check_out;}
+        if(!empty($this->card_returned_date)){$this->card_returned_date = date("Y-m-d",strtotime($this->card_returned_date));}else{$this->card_returned_date = NULL;}
         
         return parent::beforeSave();
      }
@@ -1169,7 +1171,7 @@ class Visit extends CActiveRecord {
                 if( $isExpired < 0 ) 
                     $totalCount = $dateOut->diff($dateIn)->days;
                 else
-                    $totalCount = $dateIn->diff($dateNow)->days + 1;
+                    $totalCount = $dateIn->diff($dateNow)->days;
                 return $totalCount + $oldVisitsCount;
                 break;
 

@@ -607,7 +607,7 @@ CREATE TABLE IF NOT EXISTS `tenant` (
 DROP TABLE IF EXISTS `tenant_agent`;
 CREATE TABLE IF NOT EXISTS `tenant_agent` (
   `id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL DEFAULT '0',
+  `user_id` bigint(20) NULL,
   `tenant_id` bigint(20) NOT NULL DEFAULT '0',
   `for_module` varchar(20) DEFAULT NULL,
   `is_deleted` bigint(20) DEFAULT NULL,

@@ -422,6 +422,32 @@ class Company extends CActiveRecord {
         return $aArray;
     }
 
+    public function findAllTenantCompanies(){
+        $aArray = array();
+        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+            $company = Yii::app()->db->createCommand()
+                ->selectdistinct('*')
+                ->from('company')
+                ->where("id != 1 and tenant=" . Yii::app()->user->tenant . " AND is_deleted = 0 " )
+                ->queryAll();
+        } else {
+            $company = Yii::app()->db->createCommand()
+                ->selectdistinct('*')
+                ->from('company')
+                ->where('id != 1 AND is_deleted = 0')
+                ->queryAll();
+        }
+
+        foreach ($company as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
+    }
+
     public function findAllCompanyWithSameTenant($tenant) {
         $aArray = array();
         $session = new CHttpSession;

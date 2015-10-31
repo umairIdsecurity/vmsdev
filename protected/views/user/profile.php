@@ -140,14 +140,14 @@ if (isset($_GET['id'])) {
                     User::$USER_ROLE_LIST,
                     array('disabled' => 'disabled')
                 ); ?>
-                <?php echo $model->isRequired('company'); ?>
+                <?php echo $model->isRequired('role'); ?>
             </td>
-            <td><?php echo $form->error($model, 'company'); ?></td>
+            <td><?php echo $form->error($model, 'role'); ?></td>
         </tr>
         <tr>
             <td>
                 <?php echo $form->dropDownList($model, 'company',
-                    $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name')
+                    $companyList = CHtml::listData(Company::model()->findAllTenantCompanies(), 'id', 'name')
                    ,array('disabled'=>'disabled')); ?>
                 <?php echo $model->isRequired('company');  ?>
             </td>

@@ -74,7 +74,7 @@ $this->pageTitle=Yii::app()->name . ' - Login';
             <td colspan="3" class="form-group" ><span class="add-on"><i class="b-password"></i></span><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password','style'=>'height: 47px')); ?></td>
             
         </tr>
-        
+
         <?php //echo $form->hiddenField($model,'timezone'); ?>
         
         <?php echo CHtml::hiddenField('timezone' , 'value', array('id' => 'LoginForm_timezone')); ?>

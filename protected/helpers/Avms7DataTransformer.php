@@ -61,9 +61,9 @@ class Avms7DataTransformer
 
         return [
 
-            'photo'                             =>"SELECT photoID as id, filename as unique_filename,null as relativepath,null as db_image) "
+            'photo'                             =>["SELECT photoID as id, filename as unique_filename,null as relativepath,null as db_image) "
                                                     ."FROM users_photo "
-                                                    ." JOIN users on users.Id = users_photo.UserID AND `Default` = 1;" ,
+                                                    ." JOIN users on users.Id = users_photo.UserID AND `Default` = 1;"] ,
 
             'company_laf_preferences'           =>['JOIN company ON company_laf_preferences.id = company.company_laf_preferences '.
                 $default_condition],

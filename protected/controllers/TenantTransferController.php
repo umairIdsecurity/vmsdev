@@ -44,6 +44,9 @@ class TenantTransferController extends Controller
         ['table_name'=>'tenant_agent_contact','column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'tenant_agent_contact','column_name'=>'tenant_agent_id','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
         ['table_name'=>'user','column_name'=>'tenant_agent','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
+        ['table_name'=>'workstation','column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'workstation','column_name'=>'tenant_agent','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+
 
 
     ];
@@ -214,7 +217,7 @@ class TenantTransferController extends Controller
 
                                     $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
 
-                                    //TODO: RUN SQL
+                                    //RUN SQL
                                     echo $sql . "<br>";
                                     Yii::app()->db->createCommand($sql)->execute();
 
@@ -262,6 +265,9 @@ class TenantTransferController extends Controller
     }
 
     function beforeInsertRow($tableName, &$row,$oldId){
+        if($tableName=='user' and $row['first_name']=='Kris'){
+            echo 'found kris';
+        }
         if($tableName=='company'){
             if($row['company_type']==1){
                 $row['tenant'] = NULL;
@@ -282,10 +288,10 @@ class TenantTransferController extends Controller
 
         if($tableName=='company'){
             if($row['company_type']==1) {
-                $sql[] = "UPDATE company SET tenant = id where id=" . $row['id'];
+                //$sql[] = "UPDATE company SET tenant = id where id=" . $row['id'];
                 $idMappings['tenant'][$oldId] = $row['id'];
             } else if($row['company_type']==2) {
-                $sql[] = "UPDATE company SET tenant_agent = id where id=" . $row['id'];
+                //$sql[] = "UPDATE company SET tenant_agent = id where id=" . $row['id'];
                 $idMappings['tenant_agent'][$oldId] = $row['id'];
             }
         }
@@ -293,15 +299,14 @@ class TenantTransferController extends Controller
         if($tableName=="reset_history" && isset($this->visit_resets[$oldId]))
         {
             $visit_id = $idMappings['visit'][$this->visit_resets[$oldId]];
-            $sql = "UPDATE visit SET reset_id = ".$row['id']." WHERE id = ".$visit_id;
+            $sql[] = "UPDATE visit SET reset_id = ".$row['id']." WHERE id = ".$visit_id;
             echo $sql;
-            Yii::app()->db->createCommand($sql)->execute();
         }
 
 
         foreach($sql as $statement){
-            //Yii::app()->db->createCommand($statement)->execute();
             echo $statement."<br>";
+            Yii::app()->db->createCommand($statement)->execute();
         }
 
     }

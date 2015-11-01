@@ -672,7 +672,7 @@ class Visitor extends CActiveRecord {
         $Criteria = new CDbCriteria();
 
         if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].")  and (id != 1 and id != " . $tenantId. ")";                        
+            $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].") and company_type = 3  and (id != 1 and id != " . $tenantId. ")";
         }
         
         $result =  Company::model()->findAll($Criteria);

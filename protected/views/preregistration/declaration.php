@@ -24,7 +24,7 @@
 
             <label class="checkbox">
                 <input id="toggleCheckbox1" name="name1" type="checkbox" value="0">
-                <span class="checkbox-style"></span><span class="text-size">I have not previously been either refused an ASIC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).</span>
+                <span class="checkbox-style"></span><span class="text-size">I have not previously been either refused an ASIC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Moorabin Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).</span>
             </label>
 
 

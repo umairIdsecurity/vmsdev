@@ -254,7 +254,7 @@ $form = $this->beginWidget('CActiveForm', array(
                     if ($model->tenant == $value['id']) {
                         echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
                     }
-                    ?> value="<?php echo $value['id']; ?>"><?php echo $value["id0"]['name']; ?></option>
+                    ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                 <?php
                 }
                 ?>

@@ -406,7 +406,7 @@ class TenantTransferController extends Controller
                                                     'JOIN '.$userTable.' ON '.$userTable.'.photo = photo.id '.$default_condition],
 
             'company_laf_preferences'           =>['JOIN company ON company_laf_preferences.id = company.company_laf_preferences '.
-                                                    $default_condition],
+                                                    "WHERE (tenant = $tenant or company.id = ".$tenant.")"],
 
             'company'                           =>[$default_condition." OR (id=".$tenant.") "],
 

@@ -46,7 +46,8 @@ class TenantTransferController extends Controller
         ['table_name'=>'user','column_name'=>'tenant_agent','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
         ['table_name'=>'workstation','column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'workstation','column_name'=>'tenant_agent','referenced_table_name'=>'company','referenced_column_name'=>'id'],
-
+        ['table_name'=>'visitor_type','column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visitor_type','column_name'=>'tenant_agent','referenced_table_name'=>'company','referenced_column_name'=>'id'],
 
 
     ];

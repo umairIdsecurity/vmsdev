@@ -124,25 +124,10 @@ class UserWorkstations extends CActiveRecord {
 
         $user = User::model()->findByPk($currentlyEditedUser);
         $currentlyLoggedInUser = User::model()->findByPK(Yii::app()->user->id);
-        switch ($currentSessionRole) {
-            case Roles::ROLE_ADMIN:
-                $queryCondition = "tenant=" . $currentlyLoggedInUser->tenant . "";
-                if ($user->role == Roles::ROLE_OPERATOR) {
-                    $queryCondition = "tenant= " . $user->tenant . " and tenant_agent IS NULL";
-                } else {
-                    $queryCondition = "tenant= " . $currentlyLoggedInUser->tenant;
-                }
-                break;
-            case Roles::ROLE_AGENT_ADMIN:
-                $queryCondition = "tenant= " . $currentlyLoggedInUser->tenant . " and tenant_agent = " . $currentlyLoggedInUser->tenant_agent;
-
-                break;
-            default:
-                if ($user->role == Roles::ROLE_OPERATOR) {
-                    $queryCondition = "tenant = " . $user->tenant . " and tenant_agent IS NULL";
-                } else {
-                    $queryCondition = "tenant = " . $user->tenant . " and tenant_agent = " . $user->tenant_agent;
-                }
+        if (in_array($user->role,Roles::getTenantRoles())) {
+            $queryCondition = "tenant= " . $user->tenant . " and tenant_agent IS NULL";
+        } else {
+            $queryCondition = "tenant = " . $user->tenant . " and tenant_agent = " . $user->tenant_agent;
         }
 
         $Criteria = new CDbCriteria();

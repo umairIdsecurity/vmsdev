@@ -246,7 +246,7 @@ $form = $this->beginWidget('CActiveForm', array(
             <select id="User_tenant" name="User[tenant]">
                 <option value='' selected>Please select a tenant</option>
                 <?php
-                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                $allTenantCompanyNames = Company::model()->findAllTenants();
                 foreach ($allTenantCompanyNames as $key => $value) {
                     ?>
 

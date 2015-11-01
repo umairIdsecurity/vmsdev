@@ -576,7 +576,7 @@ class User extends VmsActiveRecord {
 
     public function findAllCompanyTenant() {
         $criteria = new CDbCriteria();
-        $criteria->condition = "user0.is_deleted = 0 AND id0.is_deleted = 0";
+        //$criteria->condition = "user0.is_deleted = 0 AND id0.is_deleted = 0";
         return $tenant = Tenant::model()->with("user0", "id0")->findAll( $criteria );
     }
 

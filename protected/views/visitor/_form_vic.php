@@ -249,7 +249,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             
                                             $condition = '';
                                             if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                                $condition .= "created_by =".Yii::app()->user->id." and t.tenant =".Yii::app()->user->tenant." and ";                          
+                                                $condition .= "t.tenant =".Yii::app()->user->tenant." and ";
                                             }
 
                                             $condition .= "module ='AVMS'";

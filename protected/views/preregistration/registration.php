@@ -101,8 +101,9 @@ $session = new CHttpSession;
                     <?php
                         echo CHtml::tag('button', array(
                             'type'=>'submit',
+                            'id' => 'btnSubmit',
                             'class' => 'btn btn-primary btn-next'
-                        ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                        ),  'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
                     ?>
                 </div>
             </div>
@@ -228,7 +229,7 @@ $session = new CHttpSession;
             //if he has not created a login, but email is present serve this page as reset password 
             //and donot ask for login as he has no password
             if(isset($session['visitor_id']) && $session['visitor_id'] != ""){
-                $model = Visitor::model()->findByPk($session['visitor_id']);
+                $model = Registration::model()->findByPk($session['visitor_id']);
                 if(!isset($model->password) || ($model->password =="") || ($model->password == null))
         {?>
                     $("#CreateLogin_username").val("<?php echo $model->email; ?>");
@@ -247,8 +248,30 @@ $session = new CHttpSession;
                 dataType: 'json',
                 data: {"email":email},
                 success: function (r) {
-                    $.each(r.data, function (index, value) {
-                        if (value.isTaken == 1) { //if taken
+                    if (r.data[0].isTaken == 1) { //if taken
+                        $("#PreregLogin_username").val(email);
+                        $("#loginModal").modal({
+                            show : true,
+                            keyboard: false,
+                            backdrop: 'static'
+                        });
+                        $("#login_fail").show();
+                    }
+                }
+            });
+        });
+        //when submit button is clicked check for already registered email
+        $("#preregistration-form").submit(function(e){
+            var email = $("#CreateLogin_username").val();var repeatEmail = $("#CreateLogin_username_repeat").val();var password = $("#CreateLogin_password").val();var repeatPassword = $("#CreateLogin_password_repeat").val();
+            if(email != "" && repeatEmail != "" && email == repeatEmail && password !="" && repeatPassword !="" && password == repeatPassword)
+            {
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo Yii::app()->createUrl('preregistration/checkEmailIfUnique');?>",
+                    dataType: 'json',
+                    data: {"email":email},
+                    success: function (r) {
+                        if (r.data[0].isTaken == 1) { //if taken
                             $("#PreregLogin_username").val(email);
                             $("#loginModal").modal({
                                 show : true,
@@ -256,12 +279,19 @@ $session = new CHttpSession;
                                 backdrop: 'static'
                             });
                             $("#login_fail").show();
+                        }else{
+                            $("#preregistration-form").submit();
+                            $("#preregistration-form").unbind("submit");
                         }
-                    });
-                    //e.prevenDefault();
-                }
-            });
+                    }
+                });
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                return false;
+            }
         });
+        //******************************************************************************************************
+        //******************************************************************************************************
     }); 
 </script>
 

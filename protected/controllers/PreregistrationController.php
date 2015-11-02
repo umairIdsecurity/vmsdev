@@ -1342,9 +1342,10 @@ class PreregistrationController extends Controller
 	{	
 		$session = new CHttpSession;
 		$session['stepTitle'] = 'CREATE LOGIN';
-		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+		
+		/*if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
-		}
+		}*/
 
 		//$model = Registration::model()->findByPk($session['visitor_id']);
 		
@@ -2018,7 +2019,7 @@ class PreregistrationController extends Controller
 		if(isset($_POST['email'])){$email = $_POST['email'];}
 		if(!empty($email))
 		{
-			if(Visitor::model()->findByAttributes(array("email"=>$email)))
+			if(Registration::model()->findByAttributes(array("email"=>$email)))
 			{
 				$aArray[] = array(
 		        	'isTaken' => 1,

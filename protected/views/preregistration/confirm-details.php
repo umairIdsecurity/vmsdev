@@ -396,14 +396,10 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
         //lose focus from email and check the already entered email
         $("#Registration_email").blur(function(){
-
             //If it is already logged in, don't want to check and ask for to be logged in again
             <?php if ( isset(Yii::app()->user->id) ) { ?>
-
                 return;
-
             <?php } ?>
-
             var email = $(this).val();
             $.ajax({
                 type: 'POST',
@@ -411,45 +407,48 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 dataType: 'json',
                 data: {"email":email},
                 success: function (r) {
-                    $.each(r.data, function (index, value) {
-                        if (value.isTaken == 1) { //if taken
-                            $("#PreregLogin_username").val(email);
-                            $("#loginModal").modal({
-                                show : true,
-                                keyboard: false,
-                                backdrop: 'static'
-                            });
-                            $("#login_fail").empty();
-                            $("#login_fail").append('A User Profile already exists for this email address. Please Login to AVMS or use another email address.');
-                            $("#login_fail").show();
-                        }
-                    });
+                    if (r.data[0].isTaken == 1) { //if taken
+                        $("#PreregLogin_username").val(email);
+                        $("#loginModal").modal({
+                            show : true,
+                            keyboard: false,
+                            backdrop: 'static'
+                        });
+                        $("#login_fail").empty();
+                        $("#login_fail").append('A User Profile already exists for this email address. Please Login to AVMS or use another email address.');
+                        $("#login_fail").show();
+                    }
                 }
             });
         });
 
         //when submit button is clicked check for already registered email
-        $("#btnSubmit").submit(function(e){
-
+        $("#confirm-details-form").submit(function(e){
             //If it is already logged in, don't want to check and ask for to be logged in again
             <?php if ( isset(Yii::app()->user->id) ) {?>
-
                 return;
-
             <?php } ?>
 
             var email = $("#Registration_email").val();
-
+            var fName = $("#Registration_first_name").val();var lName = $("#Registration_last_name").val();
+            var dob = $("#Registration_date_of_birth").val();var idenType = $("#Registration_identification_type").val();
+            var docNo = $("#Registration_identification_document_no").val();var idenCountry = $("#Registration_identification_country_issued").val();
+            var docExp = $("#Registration_identification_document_expiry").val();var streetNo = $("#Registration_contact_street_no").val();
+            var streetName = $("#Registration_contact_street_name").val();var streetType = $("#Registration_contact_street_type").val();
+            var suburb = $("#Registration_contact_suburb").val();var conCountry = $("#Registration_contact_country").val();
+            var state = $("#Registration_contact_state").val();var postcode = $("#Registration_contact_postcode").val();
+            var conNo = $("#Registration_contact_number").val();
+            
             if(email != ""){
-
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo Yii::app()->createUrl('preregistration/checkEmailIfUnique');?>",
-                    dataType: 'json',
-                    data: {"email":email},
-                    success: function (r) {
-                        $.each(r.data, function (index, value) {
-                            if (value.isTaken == 1) { //if taken
+                if(fName != "" && lName != "" && dob != "" && idenType !="" && docNo !="" && idenCountry != "" && docExp != "" && streetNo != "" && streetName != "" && streetType != "" && suburb != "" && conCountry != "" && state != "" && postcode != "" && conNo != "")
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo Yii::app()->createUrl('preregistration/checkEmailIfUnique');?>",
+                        dataType: 'json',
+                        data: {"email":email},
+                        success: function (r) {
+                            if (r.data[0].isTaken == 1) { //if taken
                                 $("#PreregLogin_username").val(email);
                                 $("#loginModal").modal({
                                     show : true,
@@ -459,13 +458,17 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 $("#login_fail").empty();
                                 $("#login_fail").append('A User Profile already exists for this email address. Please Login to AVMS or use another email address.');
                                 $("#login_fail").show();
+                            }else{
+                                $("#confirm-details-form").submit();
+                                $("#confirm-details-form").unbind("submit");
                             }
-                        });
-                        //prevent form from submitting as email already registered
-                        e.preventDefault();
-                    }
-                });
-
+                        }
+                    });
+                    //prevent form from submitting as email already registered
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
             }
             else
             {
@@ -475,17 +478,16 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
                 if(fName != "" && lName != "" && dob !="")
                 {
-                    var newdob = dob.split("-").reverse().join("-");
-
-                    $.ajax({
-                        type: 'POST',
-                        url: "<?php echo Yii::app()->createUrl('preregistration/checkUserProfile');?>",
-                        dataType: 'json',
-                        data: {"firstname": fName, "lastname": lName, "dob": newdob},
-                        success: function (r) {
-
-                            $.each(r.data, function (index, value) {
-                                if (value.isTaken == 1) { //if taken
+                     if(email != "" && idenType !="" && docNo !="" && idenCountry != "" && docExp != "" && streetNo != "" && streetName != "" && streetType != "" && suburb != "" && conCountry != "" && state != "" && postcode != "" && conNo != "")
+                    {
+                        var newdob = dob.split("-").reverse().join("-");
+                        $.ajax({
+                            type: 'POST',
+                            url: "<?php echo Yii::app()->createUrl('preregistration/checkUserProfile');?>",
+                            dataType: 'json',
+                            data: {"firstname": fName, "lastname": lName, "dob": newdob},
+                            success: function (r) {
+                                if (r.data[0].isTaken == 1) { //if taken
                                     $("#PreregLogin_username").val(email);
                                     $("#loginModal").modal({
                                         show : true,
@@ -496,15 +498,21 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                     $("#login_fail").append('A User Profile already exists for these credentials. Please Login to AVMS.');
                                     $("#login_fail").show();
                                 }
-                            });
-                            //prevent form from submitting as email already registered
-                            e.preventDefault();
-                        },
-                        error: function(err){
-                            console.log('get error');
-                            console.log(err);
-                        }
-                    });
+                                else{
+                                    $("#confirm-details-form").submit();
+                                    $("#confirm-details-form").unbind("submit");
+                                }
+                            },
+                            error: function(err){
+                                console.log('get error');
+                                console.log(err);
+                            }
+                        });
+                        //prevent form from submitting as email already registered
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        return false;
+                    }
                 }
             }
         });

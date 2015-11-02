@@ -47,8 +47,8 @@
                 
                 <?php
                 $ws='';
-                if(isset($_SESSION['tenant']) && ($_SESSION['tenant']!="")){
-                    $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.$_SESSION['tenant']);
+                if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+                    $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
                 }else{
                      $ws=Workstation::model()->findAll('is_deleted=0');
                 }

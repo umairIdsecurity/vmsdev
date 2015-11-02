@@ -223,6 +223,26 @@ class Roles extends CActiveRecord {
 			);
 		}
 	}
+	public static function getTenantRoles(){
+		return [
+			self::ROLE_ADMIN                  ,
+			self::ROLE_OPERATOR               ,
+			self::ROLE_STAFFMEMBER            ,
+			self::ROLE_ISSUING_BODY_ADMIN     ,
+			self::ROLE_AIRPORT_OPERATOR       ,
+			self::ROLE_VISITOR                ,
+			self::ROLE_SUPERADMIN
+		];
+	}
+	public static function getAgentRoles(){
+		return [
+			self::ROLE_AGENT_ADMIN            ,
+			self::ROLE_AGENT_AIRPORT_ADMIN    ,
+			self::ROLE_AGENT_OPERATOR         ,
+			self::ROLE_AGENT_AIRPORT_OPERATOR ,
+		];
+	}
+
 
 	public static function get_agent_admin_allowed_roles($should_filter) {
 		if ($should_filter) {

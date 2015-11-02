@@ -533,7 +533,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- Ends Notifications -->
             
             <!-- REASONS -->
-            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
+            <?php if (in_array($session['role'],[Roles::ROLE_SUPERADMIN,$session['role'],Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN])) { ?>
                 <li class='has-sub'>
                     <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('contactPerson/admin'); ?>'><span>Contact Support</span></a>
                     

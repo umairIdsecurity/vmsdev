@@ -402,7 +402,7 @@ $model->identification_country_issued = 13;
                                         
                                         //$list = VisitorType::model()->findAll('created_by = :c and tenant = :t and module = :m', [':c' => Yii::app()->user->id,':t' => Yii::app()->user->tenant, ':m' => CHelper::get_module_focus()]);
 
-                                        $list = array();
+                                        $list = VisitorType::model()->findAll('tenant='.$_SESSION['tenant']);
                                         echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                         echo CHtml::tag('option', array('value' => ''), 'Select Visitor Type', true);
                                         foreach( $list as $val ) {

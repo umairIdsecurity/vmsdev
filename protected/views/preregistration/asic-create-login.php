@@ -102,7 +102,7 @@ $session = new CHttpSession;
                                 if(isset($model->visitor_workstation) && ($model->visitor_workstation != "" && $model->visitor_workstation != null)){
                                     $worsktation = Workstation::model()->findByPk($model->visitor_workstation);
                                     $Criteria = new CDbCriteria();
-                                    $Criteria->condition = "tenant = ".$worsktation->tenant." and is_deleted = 0";
+                                    $Criteria->condition = "tenant = ".$worsktation->tenant." and company_type = 3 and is_deleted = 0";
                                     $companies = Company::model()->findAll($Criteria);
                                     echo $form->dropDownList($model, 'company', CHtml::listData($companies, 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
                                 }else{

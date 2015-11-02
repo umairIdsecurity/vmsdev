@@ -672,7 +672,7 @@ class Visitor extends CActiveRecord {
         $Criteria = new CDbCriteria();
 
         if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].")  and (id != 1 and id != " . $tenantId. ")";                        
+            $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].") and company_type = 3  and (id != 1 and id != " . $tenantId. ")";
         }
         
         $result =  Company::model()->findAll($Criteria);
@@ -681,10 +681,11 @@ class Visitor extends CActiveRecord {
 
     public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantAgentId) {
         $aArray = array();
-        $user = User::model()->findByPk($id);
-        $tenantagent = Company::model()->findByPk($tenantAgentId);
+        //$user = User::model()->findByPk($id);
+        //$tenantagent = Company::model()->findByPk($tenantAgentId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$user->tenant."') and id !='".$tenantagent->company."'";
+        //$Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$user->tenant."') and id !='".$tenantagent->company."'";
+        $Criteria->condition = "tenant = $id and tenant_agent= $tenantAgentId ";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

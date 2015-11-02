@@ -12,9 +12,10 @@ if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
     $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 }
 
-$tenant = User::model()->findByPk($visitorModel->tenant);
+$tenant = Company::model()->findByPk($visitorModel->tenant);
 if ($tenant) {
-    $company = Company::model()->findByPk($tenant->company);
+    //$company = Company::model()->findByPk($tenant->company);
+    $company = $tenant;
     if ($company) {
         $companyName = $company->name;
         $companyLogoId = $company->logo;
@@ -25,11 +26,11 @@ if ($tenant) {
         $companyCode = "N/A";
     }
 
-    $companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE,$tenant->company);
+    $companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE,$tenant->id);
     $userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model->visitor);
 
 } else {
-    throw new CHttpException(404, 'Company not found for this User.');
+    throw new CHttpException(404, 'Company not found for this User......');
 }
 $card = CardGenerated::model()->findByPk($model->card);
 if ($card) {

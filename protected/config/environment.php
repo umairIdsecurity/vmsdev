@@ -10,7 +10,7 @@
             )
         ),
         'params' => array(
-            'on_premises_airport_code' => 'TAG',
+            'on_premises_airport_code' => 'MBW',
         )
     );
     

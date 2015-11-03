@@ -90,34 +90,31 @@ $session = new CHttpSession;
                     <div class="row form-group" id="addCompanyDiv">
                          <div class="col-md-8">
                             <?php
-                                /*$visitor = Registration::model()->findByPk($session['visitor_id']);
-
-                                if(isset($visitor->tenant)){
-                                    echo $form->dropDownList($model, 'company', CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
-                                }
-                                else
-                                {
-                                    echo $form->dropDownList($model,'company',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
-                                }*/
+                                $companies = array();
                                 if(isset($model->visitor_workstation) && ($model->visitor_workstation != "" && $model->visitor_workstation != null)){
                                     $worsktation = Workstation::model()->findByPk($model->visitor_workstation);
                                     $Criteria = new CDbCriteria();
                                     $Criteria->condition = "tenant = ".$worsktation->tenant." and company_type = 3 and is_deleted = 0";
                                     $companies = Company::model()->findAll($Criteria);
-                                    echo $form->dropDownList($model, 'company', CHtml::listData($companies, 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
-                                }else{
-                                     echo $form->dropDownList($model,'company',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
-                                }
-                            ?>
-                            <?php
-                                /*$this->widget('application.extensions.select2.Select2', array(
+
+                                    $this->widget('application.extensions.select2.Select2', array(
                                         'model' => $model,
                                         'attribute' => 'company',
-                                        'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'),
-                                        'selectedItems' => array(), // Items to be selected as default
-                                        'placeHolder' => 'Please select a company',        
-                                ));*/
+                                        'items' => CHtml::listData($companies,'id','name'),
+                                        //'selectedItems' => array(), // Items to be selected as default
+                                        'placeHolder' => 'Select Company',
+                                    ));
+                                }else{
+                                     $this->widget('application.extensions.select2.Select2', array(
+                                        'model' => $model,
+                                        'attribute' => 'company',
+                                        'items' => CHtml::listData($companies, 'id', 'name'),
+                                        //'selectedItems' => array(), // Items to be selected as default
+                                        'placeHolder' => 'Select Company',
+                                    ));
+                                }
                             ?>
+
                             <?php echo $form->error($model,'company'); ?>
                         </div>
                     </div>
@@ -201,18 +198,8 @@ $session = new CHttpSession;
                                     <div class="form-group">
                                         <div class="input-group">
                                             <?php
-
-                                            $ws=Workstation::model()->findAll('is_deleted=0');
-
-                                            $list=CHtml::listData($ws,'id','name');
-
-                                            /*echo $form->dropDownList($companyModel,'visitor_workstation',
-                                                $list,
-                                                array(
-                                                    'class'=>'form-control input-lg',
-                                                    'id'=>'WorkstationDropdownPopup',
-                                                    'empty' => 'Chose your entry point')
-                                            );*/
+                                                $ws=Workstation::model()->findAll('is_deleted=0');
+                                                $list=CHtml::listData($ws,'id','name');
                                             ?>
 
                                             <select id="companyWorkstation" name="Company[workstation]" class="form-control input-lg">
@@ -232,57 +219,58 @@ $session = new CHttpSession;
                                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
                                             <?php echo $form->textField($companyModel, 'name', array('placeholder' => 'Company Name','class'=>'form-control input-lg')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyNameErr" style="display:none;float:left"></div>
                                     </div>
 
                                     
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <span>Company Contact</span>
+                                        <div class="input-group" style="float:left">
+                                            <a class="btn btn-default" href="javascript:;" role="button" id="addComp">+</a> Add Company Contact
+                                            <input type="hidden" id="is_user_field_comp" name="is_user_field_comp" value="0">
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
+                                    <div style="display:none" id="compDiv">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
+                                            </div>
+                                            <div class="errorMessage" id="companyFirstnameErr" style="display:none;float:left"></div>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
+                                            </div>
+                                            <div class="errorMessage" id="companyLastnameErr" style="display:none;float:left"></div>
+                                        </div>
+
+                                        
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
+                                            </div>
+                                            <div class="errorMessage" id="companyEmailErr" style="display:none;float:left"></div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
+                                            </div>
+                                            <div class="errorMessage" id="companyContactNumberErr" style="display:none;float:left"></div>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
-                                        </div>
-                                        <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                    <div class="modal-footer">
+                                        <button class="btn neutral" data-dismiss="modal" aria-hidden="true">Close</button>
+                                        <?php echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn neutral')); ?>
                                     </div>
-
-                                    
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
-                                        </div>
-                                        <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
-                                        </div>
-                                        <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
-                                    </div>
-
-
-                                    <?php //echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
-                                    
-                                    <?php echo CHtml::submitButton('Add Company',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
-
 
                                 <?php $this->endWidget(); ?>
-
                             </div>
                           
                             </div>
@@ -302,7 +290,24 @@ $session = new CHttpSession;
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $("#addComp").click(function(event){
+            event.preventDefault();
+            var is_user_field_comp = parseInt($("#is_user_field_comp").val());
+            if(is_user_field_comp == 1)
+            {
+                $("#compDiv").hide();
+                $('#is_user_field_comp').val("0");
+            }
+            else{
+                $("#compDiv").show();
+                $('#is_user_field_comp').val("1");
+            }
+        });
+
+
         $("#addCompanyBtn").unbind("click").click(function(event){
+            $("#compDiv").show();
             var workstation = $("#companyWorkstation").val();
             if(workstation != ""){
                 var data=$("#company-form").serialize();
@@ -315,11 +320,68 @@ $session = new CHttpSession;
                         console.log(data);
                         if (data.decision == 0)
                         {
-                            console.log("errors got");
+                            if(data.errors){//console.log(data.errors);
+                                if(data.errors.name)
+                                {
+                                    if($('#Company_name').val() == ""){
+                                        if($('#companyNameErr').is(':empty')){
+                                            $("#companyNameErr").append("<p>"+data.errors.name+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyNameErr").empty().hide();
+                                }
+
+                                if(data.errors.user_first_name)
+                                {
+                                    if($('#Company_user_first_name').val() == ""){
+                                        if($('#companyFirstnameErr').is(':empty')){
+                                            $("#companyFirstnameErr").append("<p>"+data.errors.user_first_name+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyFirstnameErr").empty().hide();
+                                }
+
+                                if(data.errors.user_last_name)
+                                {
+                                    if($('#Company_user_last_name').val() == ""){
+                                        if($('#companyLastnameErr').is(':empty')){
+                                            $("#companyLastnameErr").append("<p>"+data.errors.user_last_name+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyLastnameErr").empty().hide();
+                                }
+
+                                if(data.errors.user_email)
+                                {
+                                    if($('#Company_user_email').val() == ""){
+                                        if($('#companyEmailErr').is(':empty')){
+                                            $("#companyEmailErr").append("<p>"+data.errors.user_email+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyEmailErr").empty().hide();
+                                }
+
+                                if(data.errors.user_contact_number)
+                                {
+                                    if($('#Company_user_contact_number').val() == ""){
+                                        if($('#companyContactNumberErr').is(':empty')){
+                                            $("#companyContactNumberErr").append("<p>"+data.errors.user_contact_number+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyContactNumberErr").empty().hide();
+                                }
+                            }
                         }
                         else
                         {
+                            //$("#WorkstationDropdown").($("#companyWorkstation").val());
                             $("#Registration_company").append(data.dropDown);
+                            //$('.select2-selection__rendered').text(data.compName);
                             $("#addCompanyModal").modal('hide');
                         }  
                     },
@@ -345,12 +407,13 @@ $session = new CHttpSession;
                     success: function (res) {
                         if (res.data == "") {
                             $("#Registration_company").empty();
-                            $("#Registration_company").append("<option value=''>Select Company</option>");
+                            $("#Registration_company").append("<option value=''>No results found. Please add company</option>");
+                            $('.select2-selection__rendered').text("No results found. Please add company");
                         }
                         else
                         {
                             $("#Registration_company").empty();
-                            $("#Registration_company").append("<option value=''>Select Company</option>");
+                            $('.select2-selection__rendered').text(res.data[0].name);
                             $.each(res.data,function(index,element) {
                                 $("#Registration_company").append("<option value='"+element.id+"'>"+element.name+"</option>");
                             }); 
@@ -362,7 +425,7 @@ $session = new CHttpSession;
                 });
             }else{
                 $("#Registration_company").empty();
-                $("#Registration_company").append("<option value=''>Select Company</option>");
+                $("#Registration_company").append("<option value=''>No results found. Please add company</option>");
             }
         });
     });

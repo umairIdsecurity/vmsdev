@@ -249,7 +249,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             
                                             $condition = '';
                                             if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                                $condition .= "created_by =".Yii::app()->user->id." and t.tenant =".Yii::app()->user->tenant." and ";                          
+                                                $condition .= "t.tenant =".Yii::app()->user->tenant." and ";
                                             }
 
                                             $condition .= "module ='AVMS'";
@@ -258,15 +258,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             
                                             $list = VisitorType::model()->findAll($condition);    
                                             
-                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                                echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                                foreach( $list as $val ) {
-                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
-                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    } else {
-                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                    }
-                                                } echo "</select>";
+                                            echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                            echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                            foreach( $list as $val ) {
+                                                if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
+                                                    echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                } else {
+                                                    echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                }
+                                            } echo "</select>";
 
                                             /*}  else {
 

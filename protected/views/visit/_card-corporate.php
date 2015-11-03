@@ -1,7 +1,8 @@
 <?php
-$tenant = User::model()->findByPk($visitorModel->created_by);
+$tenant = Company::model()->findByPk($visitorModel->tenant);
 if ($tenant) {
-    $company = Company::model()->findByPk($tenant->company);
+    //$company = Company::model()->findByPk($tenant->company);
+    $company = $tenant;
     if ($company) {
         $companyName = $company->name;
         $companyLogoId = $company->logo;
@@ -24,7 +25,7 @@ if ($tenant) {
          $companyLogo = 'data:image/'.pathinfo($photo->filename, PATHINFO_EXTENSION).';base64,'.$photo->db_image;
     }
 } else {
-    throw new CHttpException(404, 'Company not found for this User.');
+    throw new CHttpException(404, 'Company not found for this User...');
 }
 $card = CardGenerated::model()->findByPk($model->card);
 if ($card) {

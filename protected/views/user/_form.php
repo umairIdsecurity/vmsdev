@@ -246,7 +246,7 @@ $form = $this->beginWidget('CActiveForm', array(
             <select id="User_tenant" name="User[tenant]">
                 <option value='' selected>Please select a tenant</option>
                 <?php
-                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                $allTenantCompanyNames = Company::model()->findAllTenants();
                 foreach ($allTenantCompanyNames as $key => $value) {
                     ?>
 
@@ -254,7 +254,7 @@ $form = $this->beginWidget('CActiveForm', array(
                     if ($model->tenant == $value['id']) {
                         echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
                     }
-                    ?> value="<?php echo $value['id']; ?>"><?php echo $value["id0"]['name']; ?></option>
+                    ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                 <?php
                 }
                 ?>

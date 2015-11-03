@@ -49,6 +49,7 @@ if ($model->time_in != '') {
                                 'attribute'   => 'date_in',
                                 'htmlOptions' => array(
                                     'placeholder' => 'DD-MM-YYYY',
+                                    'value'=>date("d-m-Y"),
                                     'class'=>'form-control input-sm from_date',
                                 ),
                             ));

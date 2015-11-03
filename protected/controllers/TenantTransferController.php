@@ -9,6 +9,7 @@
 class TenantTransferController extends Controller
 {
 
+    private $visit_resets = [];
     private $unmappedRefs = [
         ['table_name'=>'tenant', 'column_name'=>'id','referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'user_workstation', 'column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
@@ -35,7 +36,6 @@ class TenantTransferController extends Controller
         ['table_name'=>'user','column_name'=>'photo','referenced_table_name'=>'photo','referenced_column_name'=>'id'],
         ['table_name'=>'user_notification','column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'user_notification','column_name'=>'notification_id','referenced_table_name'=>'notification','referenced_column_name'=>'id'],
-        ['table_name'=>'visit','column_name'=>'reset_id','referenced_table_name'=>'reset_history','referenced_column_name'=>'id'],
         ['table_name'=>'visit','column_name'=>'tenant_agent','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
         ['table_name'=>'visit','column_name'=>'asic_escort','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'visit','column_name'=>'closed_by','referenced_table_name'=>'user','referenced_column_name'=>'id'],
@@ -44,9 +44,14 @@ class TenantTransferController extends Controller
         ['table_name'=>'tenant_agent_contact','column_name'=>'user_id','referenced_table_name'=>'user','referenced_column_name'=>'id'],
         ['table_name'=>'tenant_agent_contact','column_name'=>'tenant_agent_id','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
         ['table_name'=>'user','column_name'=>'tenant_agent','referenced_table_name'=>'tenant_agent','referenced_column_name'=>'id'],
+        ['table_name'=>'workstation','column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'workstation','column_name'=>'tenant_agent','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visitor_type','column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visitor_type','column_name'=>'tenant_agent','referenced_table_name'=>'company','referenced_column_name'=>'id'],
 
 
     ];
+
 
     public function filters() {
         return array(
@@ -186,8 +191,8 @@ class TenantTransferController extends Controller
                                         }
                                     }
 
-                                    // masage the data in out of the ordinary circumstances
-                                    $this->beforeInsertRow($tableName,$row);
+                                    // massage the data in out of the ordinary circumstances
+                                    $this->beforeInsertRow($tableName,$row,$oldId);
 
                                     // populate referencing columns
                                     $this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables);
@@ -213,7 +218,7 @@ class TenantTransferController extends Controller
 
                                     $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
 
-                                    //TODO: RUN SQL
+                                    //RUN SQL
                                     echo $sql . "<br>";
                                     Yii::app()->db->createCommand($sql)->execute();
 
@@ -260,13 +265,21 @@ class TenantTransferController extends Controller
         
     }
 
-    function beforeInsertRow($tableName, &$row){
+    function beforeInsertRow($tableName, &$row,$oldId){
+        if($tableName=='user' and $row['first_name']=='Kris'){
+            echo 'found kris';
+        }
         if($tableName=='company'){
             if($row['company_type']==1){
                 $row['tenant'] = NULL;
             } else if($row['company_type']==2){
                 $row['tenant_agent'] = NULL;
             }
+        }
+
+        if($tableName=='visit' && isset($row['reset_id'])){
+            $this->visit_resets[$row['reset_id']] = $oldId;
+            $row['reset_id'] = null;
         }
     }
 
@@ -276,17 +289,25 @@ class TenantTransferController extends Controller
 
         if($tableName=='company'){
             if($row['company_type']==1) {
-                $sql[] = "UPDATE company SET tenant = id where id=" . $row['id'];
+                //$sql[] = "UPDATE company SET tenant = id where id=" . $row['id'];
                 $idMappings['tenant'][$oldId] = $row['id'];
             } else if($row['company_type']==2) {
-                $sql[] = "UPDATE company SET tenant_agent = id where id=" . $row['id'];
+                //$sql[] = "UPDATE company SET tenant_agent = id where id=" . $row['id'];
                 $idMappings['tenant_agent'][$oldId] = $row['id'];
             }
         }
 
+        if($tableName=="reset_history" && isset($this->visit_resets[$oldId]))
+        {
+            $visit_id = $idMappings['visit'][$this->visit_resets[$oldId]];
+            $sql[] = "UPDATE visit SET reset_id = ".$row['id']." WHERE id = ".$visit_id;
+            echo $sql;
+        }
+
+
         foreach($sql as $statement){
-            //Yii::app()->db->createCommand($statement)->execute();
             echo $statement."<br>";
+            Yii::app()->db->createCommand($statement)->execute();
         }
 
     }
@@ -381,11 +402,11 @@ class TenantTransferController extends Controller
 
         return [
 
-            'photo'                             =>[ 'JOIN company ON company.logo = photo.id '.$default_condition,
+            'photo'                             =>[ "JOIN company ON company.logo = photo.id WHERE (tenant = $tenant or company.id = ".$tenant.")",
                                                     'JOIN '.$userTable.' ON '.$userTable.'.photo = photo.id '.$default_condition],
 
             'company_laf_preferences'           =>['JOIN company ON company_laf_preferences.id = company.company_laf_preferences '.
-                                                    $default_condition],
+                                                    "WHERE (tenant = $tenant or company.id = ".$tenant.")"],
 
             'company'                           =>[$default_condition." OR (id=".$tenant.") "],
 
@@ -409,24 +430,29 @@ class TenantTransferController extends Controller
             'tenant_contact'                    =>['WHERE tenant='.$tenant],
 
             'user_notification'                 =>['JOIN '.$userTable.' ON '.$userTable.'.id = user_notification.user_id '.
-                $default_condition],
+                                                    $default_condition],
 
             'notification'                      =>['JOIN user_notification ON user_notification.user_id = user_notification.user_id '.
-                'JOIN '.$userTable.' ON '.$userTable.'.id = user_notification.user_id '.
-                $default_condition],
+                                                    'JOIN '.$userTable.' ON '.$userTable.'.id = user_notification.user_id '.
+                                                    $default_condition],
 
             'workstation'                       =>[$default_condition],
 
             'workstation_card_type'             =>["JOIN workstation ON workstation.id = workstation_card_type.workstation ".
-                $default_condition],
+                                                    $default_condition],
 
             'user_workstation'                  =>['JOIN '.$userTable.' ON '.$userTable.'.id = user_workstation.user_id '.
-                $default_condition],
+                                                    $default_condition],
 
             'visitor_type'                      =>[$default_condition],
+
             'visit_reason'                      =>[$default_condition],
 
             'visitor'                           =>[$default_condition],
+
+            'reset_history'                     =>['JOIN visitor ON visitor.id = reset_history.visitor_id '.
+                                                    $default_condition],
+
 
             'card_generated'                    =>["WHERE tenant=".$tenant],
 
@@ -435,15 +461,10 @@ class TenantTransferController extends Controller
             'visitor_type_card_type'            =>[$default_condition],
 
             'visitor_password_change_request'   =>['JOIN visitor ON visitor.id = visitor_password_change_request.visitor_id '.
-                $default_condition],
-
-
-
-            'reset_history'                     =>['JOIN visitor ON visitor.id = reset_history.visitor_id '.
-                $default_condition],
+                                                    $default_condition],
 
             'cardstatus_convert'                =>['JOIN visitor ON visitor.id = cardstatus_convert.visitor_id '.
-                $default_condition],
+                                                    $default_condition],
 
             'contact_person'                    =>['WHERE tenant = '.$tenant],
 

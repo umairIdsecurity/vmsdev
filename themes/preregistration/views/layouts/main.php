@@ -270,11 +270,11 @@ $session = new CHttpSession;
                         <div class="standardLogo" style="margin-left:auto;margin-right:auto">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
                                 <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 120px" alt="Pre registration"/>
                                 </a>
                             <?php } else{ ?>
                                 <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.jpg" alt="Pre registration"/>
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
                                 </a>
                             <?php } ?>
                         </div>
@@ -282,11 +282,11 @@ $session = new CHttpSession;
                         <div class="mobileLogo">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
                                 <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logoOld.png" alt="Pre registration"/>
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
                                 </a>
                             <?php } else{ ?>
                                 <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logoOld.png" alt="Pre registration"/>
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
                                 </a>
                             <?php } ?>
                         </div>

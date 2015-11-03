@@ -13,18 +13,19 @@ if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
     $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 }
 
-$tenant = User::model()->findByPk($visitorModel->created_by);
+$tenant = Company::model()->findByPk($visitorModel->tenant);
 if ($tenant) {
-    $company = Company::model()->findByPk($tenant->company);
+    //$company = Company::model()->findByPk($tenant->company);
+    $company = $tenant;
     if ($company) {
         $companyName = $company->name;
         $companyLogoId = $company->logo;
         $companyCode = $company->code;
     } else {
-        throw new CHttpException(404, 'Company not found for this User.');
+        throw new CHttpException(404, 'Company not found for this User.....');
     }
 } else {
-    throw new CHttpException(404, 'Company not found for this User.');
+    throw new CHttpException(404, 'Company not found for this User....');
 }
 // $company = Company::model()->findByPk($visitorModel->company);
 // if ($company) {

@@ -242,10 +242,10 @@ if (isset($_GET['viewFrom'])) {
     });
     function exportTenant()
     {
-        window.location = '<?php echo $this->createUrl("tenantTransfer/export&tenant=".$model->tenant); ?>'
+        window.location = '<?php echo $this->createUrl("tenantTransfer/export&tenant=".$model->id); ?>'
     }
     function deleteSqlTenant(){
-        window.location = '<?php echo $this->createUrl("tenantTransfer/deleteSql&tenant=".$model->tenant); ?>'
+        window.location = '<?php echo $this->createUrl("tenantTransfer/deleteSql&tenant=".$model->id); ?>'
     }
 
 </script>

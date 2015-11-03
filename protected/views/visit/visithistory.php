@@ -62,7 +62,7 @@ $session = new CHttpSession;
                 array(
                     'name' => 'date_check_in',
                     'type' => 'html',
-                //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
+                   'value' => 'Yii::app()->dateFormatter->format("dd-MM-y",strtotime($data->date_check_in))',
                 ),
                 array(
                     'header' => ($card_type > CardType::CONTRACTOR_VISITOR) ? "ASIC Sponsor" : "Host",
@@ -72,7 +72,7 @@ $session = new CHttpSession;
                 array(
                     'name' => 'date_check_out',
                     'type' => 'html',
-                //  'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_out))',
+                   'value' => 'Yii::app()->dateFormatter->format("dd-MM-y",strtotime($data->date_check_out))',
                 ),
                 array(
                     'name' => 'time_check_out',
@@ -92,18 +92,18 @@ $session = new CHttpSession;
                      'value' => '!is_null($data->visit_closed_date)?date("d-m-Y", strtotime($data->visit_closed_date)):""',
                 ),
                 
-                array(
-                    'header' => 'Actions',
-                    'class' => 'CButtonColumn',
-                    'template' => '{delete}',
-                    'buttons' => array(
-                        'delete' => array(//the name {reply} must be same
-                            'label' => 'Delete', // text label of the button
-                            'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                            'visible' => 'isRoleAllowedToDelete()',
-                        ),
-                    ),
-                ),
+//                array(
+//                    'header' => 'Actions',
+//                    'class' => 'CButtonColumn',
+//                    'template' => '{delete}',
+//                    'buttons' => array(
+//                        'delete' => array(//the name {reply} must be same
+//                            'label' => 'Delete', // text label of the button
+//                            'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+//                            'visible' => 'isRoleAllowedToDelete()',
+//                        ),
+//                    ),
+//                ),
             ),
         ));
         ?>

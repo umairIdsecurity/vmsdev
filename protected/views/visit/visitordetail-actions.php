@@ -153,13 +153,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : 
                               $disabled = ''; $dateIn = new DateTime($model->date_check_in); $dateNow = new DateTime("NOW");
                                if($model->visit_status == VisitStatus::PREREGISTERED &&  $dateIn->format("Y-m-d") > $dateNow->format("Y-m-d") ) {
-                                    $disabled = 'disabled';
+                                   // $disabled = 'disabled';
                                 }
                           ?>
-                            <!--  issue: CAV-794 onclick="checkIfActiveVisitConflictsWithAnotherVisit()" -->
-                            <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
                             
-                            <div style="display:inline;font-size:12px;">
+                             <div style="display:none;" id="visit_cannot_be_activate" class="errorMessage">VIC can not be activated in the future</div>
+                            <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
+                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
                                 <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED])) : ?>
                                     <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
@@ -421,12 +421,27 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             } 
            
+           // Check if user tries to activate visit with future date
+            var isFuture = CheckIfThisWithFutureDate();
+            if( isFuture ) {
+                 //alert("VIC can not be activated in the future");
+                 $("#visit_cannot_be_activate").show();
+                 return false;
+            }
+            
            // Check Deposit Paid for EVIC only
             if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
                    return false;
             }
-
+            
+            // Check if Visit Reason Checkbox is ticked
+            if( $("#reasonActiveVisit").is(":checked") == false) {
+                    $("#visit_reason_checkbox_error").show();
+                    return false;
+            }
+            
+            
             // Check ASIC Sponsor
             if ( $("#asicSponsorActiveVisitLink").length && !$("#asicSponsorActiveVisitLink").is(":checked")) {
                    alert("Please verify ASIC Sponsor/Escort to activate the visit.");
@@ -838,6 +853,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
         return flag;
+    }
+    // Check if user tries to activate it with future dates
+    function CheckIfThisWithFutureDate() {
+         var checkInDate = $("#Visit_date_check_in").datepicker('getDate');
+         checkInDate = new Date(checkInDate);
+         var currentDate = new Date();
+         var visitStatus = "<?php echo $model->visit_status?>";
+         if((visitStatus == "<?php echo VisitStatus::PREREGISTERED?>" && (checkInDate.getDate() > currentDate.getDate() ||  checkInDate.getMonth() > currentDate.getMonth()) )) {
+             return true;
+        } else {
+            return false;
+        }
+             
     }
 </script>
 

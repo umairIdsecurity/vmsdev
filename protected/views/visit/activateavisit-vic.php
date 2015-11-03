@@ -58,8 +58,9 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit vic-active-verification"/>
-            <a href="javascript:void(0)" style="text-decoration: none !important;">Visit Reason</a>
+            <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" id="reasonActiveVisit" class="vic-active-visit vic-active-verification"/>
+            <a href="javascript:void(0)" style="text-decoration: none !important;">Visit Reason</a> <br>
+            <div style="display:none; margin-top: 4px" id="visit_reason_checkbox_error" class="errorMessage">Please tick Visit Reason</div>
         </td>
     </tr>
     <tr>
@@ -374,7 +375,7 @@ $asicEscort = new AddAsicEscort();
 
                 } else {
                      
-                    if (cardType == '<?php echo CardType::VIC_CARD_MANUAL; ?>' && dSelected.getDate() < currentDate2.getDate()) {
+                    if (cardType == '<?php echo CardType::VIC_CARD_MANUAL; ?>' && (dSelected.getDate() < currentDate2.getDate() ||  dSelected.getMonth() < currentDate2.getMonth() ) ){
                         updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
                     } else {
                         updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
@@ -785,4 +786,23 @@ $asicEscort = new AddAsicEscort();
             $("#asicSponsorModal").modal("show");
         });
     });
+    
+    /**
+    * Checkbox: Visit Reason
+    * A visit reason must be selected before checking this checkbox
+     */
+   $("#reasonActiveVisit").change(function() {
+        if( $(this).is(":checked") ) {
+            if($("#Visit_reason").val() == "") {
+                alert("Please Select a Visit Reason First");
+                $("#visit_reason_dropdown_error").show();
+                $(this).prop("checked", false);
+                $("#Visit_reason").focus();
+                return false;
+            } else {
+                $("#visit_reason_dropdown_error").hide();
+            }
+        }
+     });
+     
 </script>

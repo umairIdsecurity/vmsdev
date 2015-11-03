@@ -344,4 +344,12 @@ class CHelper
         return $givenDate->modify("+1 day")->format("d-m-Y");
                 
     }
+    
+    /**
+     * Date formate to Autralian DD-MM-YYYY
+     */
+    public static function formatDate($date) {
+        $datenew = new DateTime($date);
+        return $datenew->format("d-m-Y");
+    }
 }

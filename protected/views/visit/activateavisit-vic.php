@@ -159,7 +159,7 @@ $asicEscort = new AddAsicEscort();
             }*/
             
              // Checkin date for Closed and Auto Closed should be Next day from the checkOut date
-            if($model->visit_status == VisitStatus::CLOSED || $model->visit_status == VisitStatus::AUTOCLOSED) {
+            if( ($model->visit_status == VisitStatus::CLOSED || $model->visit_status == VisitStatus::AUTOCLOSED ) && $model->card_type != CardType::VIC_CARD_MANUAL ) {
                 $model->date_check_in = CHelper::getNextDate($model->date_check_out);
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -320,6 +320,7 @@ $asicEscort = new AddAsicEscort();
             changeMonth: true,
             changeYear: true,
             showOn: "button",
+            showButtonPanel: true,
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
@@ -365,9 +366,7 @@ $asicEscort = new AddAsicEscort();
                     } else {
                         updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");        
                          var status = "<?php echo $model->visit_status; ?>";
-                        if ( status == "<?php echo VisitStatus::PREREGISTERED; ?>" ) 
-                            $("#registerNewVisit").attr("disabled", "disabled");
-                        //$("#card_no_manual").hide();
+                        
                     }
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', checkInSelectedDate);
@@ -385,7 +384,7 @@ $asicEscort = new AddAsicEscort();
                 }
             }
         });
-
+  
 
         $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
 
@@ -393,6 +392,7 @@ $asicEscort = new AddAsicEscort();
             changeMonth: true,
             changeYear: true,
             showOn: "button",
+            showButtonPanel: true,
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
@@ -410,8 +410,14 @@ $asicEscort = new AddAsicEscort();
                 $('#CardGenerated_date_expiration').val(selectedDate);
             }
         });
-
-
+        // Enable Today button to select and auto enter Todays date
+        var _gotoToday = jQuery.datepicker._gotoToday;
+        jQuery.datepicker._gotoToday = function(a){
+            var target = jQuery(a);
+            var inst = this._getInst(target[0]);
+            _gotoToday.call(this, a);
+            jQuery.datepicker._selectDate(a, jQuery.datepicker._formatDate(inst,inst.selectedDay, inst.selectedMonth, inst.selectedYear));
+        };
     });
 
    function updateTextVisitButton(buttonText, id, vall) {

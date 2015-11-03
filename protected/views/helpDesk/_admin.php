@@ -9,7 +9,7 @@ function assignedHelpDeskGroups(){
 }
 ?>
 
-<h1>Manage Help Desk Groups</h1>
+<h1>Help Desk Questions</h1>
 
 
 <?php

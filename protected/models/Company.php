@@ -496,5 +496,10 @@ class Company extends CActiveRecord {
 
     }
 
+    public function getModelName()
+    {
+        return __CLASS__;
+    }
+
 
 }

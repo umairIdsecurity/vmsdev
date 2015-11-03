@@ -204,49 +204,52 @@
 
                                     
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <span>Company Contact</span>
+                                        <div class="input-group" style="float:left">
+                                            <a class="btn btn-default" href="javascript:;" role="button" id="addComp">+</a> Add Company Contact
+                                            <input type="hidden" id="is_user_field_comp" name="is_user_field_comp" value="0">
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
+                                    <div style="display:none" id="compDiv">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
+                                            </div>
+                                            <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
-                                    </div>
 
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
+                                            </div>
+                                            <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
-                                    </div>
 
+                                        
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
+                                            </div>
+                                            <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                                <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
+                                            </div>
+                                            <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                        </div>
+                                    </div>
                                     
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
-                                        </div>
-                                        <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                    <div class="modal-footer">
+                                        <button class="btn neutral" data-dismiss="modal" aria-hidden="true">Close</button>
+                                        <?php echo CHtml::submitButton('Add',array('id'=>'addCompanyBtn','class'=>'btn neutral')); ?>
                                     </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
-                                        </div>
-                                        <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
-                                    </div>
-
-
-                                    <?php //echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
                                     
-                                    <?php echo CHtml::submitButton('Add Company',array('id'=>'addCompanyBtn','class'=>'btn btn-block bt-login')); ?>
-
 
                                 <?php $this->endWidget(); ?>
 
@@ -270,7 +273,22 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        $("#addComp").click(function(event){
+            event.preventDefault();
+            var is_user_field_comp = parseInt($("#is_user_field_comp").val());
+            if(is_user_field_comp == 1)
+            {
+                $("#compDiv").hide();
+                $('#is_user_field_comp').val("0");
+            }
+            else{
+                $("#compDiv").show();
+                $('#is_user_field_comp').val("1");
+            }
+        });
+
         $("#addCompanyBtn").unbind("click").click(function(event){
+            $("#compDiv").show();
             var workstation = $("#companyWorkstation").val();
             if(workstation != ""){
                 var data=$("#company-form").serialize();
@@ -283,11 +301,13 @@
                         console.log(data);
                         if (data.decision == 0)
                         {
-                            console.log("errors got");
+                            console.log(data.errors);
                         }
                         else
                         {
+                            //$("#WorkstationDropdown").($("#companyWorkstation").val());
                             $("#Registration_company").append(data.dropDown);
+                            //$('.select2-selection__rendered').text(data.compName);
                             $("#addCompanyModal").modal('hide');
                         }  
                     },
@@ -315,15 +335,16 @@
                     success: function (res) {
                         if (res.data == "") {
                             $("#Registration_company").empty();
-                            $("#Registration_company").append("<option value=''>Select Company</option>");
+                            $("#Registration_company").append("<option value=''>No results found. Please add company</option>");
+                            $('.select2-selection__rendered').text("No results found. Please add company");
                         }
                         else
                         {
                             $("#Registration_company").empty();
-                            $("#Registration_company").append("<option value=''>Select Company</option>");
+                            $('.select2-selection__rendered').text(res.data[0].name);
                             $.each(res.data,function(index,element) {
                                 $("#Registration_company").append("<option value='"+element.id+"'>"+element.name+"</option>");
-                            }); 
+                            });
                         }
                     },
                     error: function(error){
@@ -332,7 +353,7 @@
                 });
             }else{
                 $("#Registration_company").empty();
-                $("#Registration_company").append("<option value=''>Select Company</option>");
+                $("#Registration_company").append("<option value=''>No results found. Please add company</option>");
             }
         });
     });

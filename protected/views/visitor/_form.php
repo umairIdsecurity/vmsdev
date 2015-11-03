@@ -500,7 +500,7 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
                         </tr>
 
                         <tr>
-                            <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
+                            <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" checked/>
                                 &nbsp;Send User Invitation</td>
                         </tr>
                     </table>

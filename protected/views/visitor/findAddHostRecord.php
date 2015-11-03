@@ -205,7 +205,7 @@ $defaultKey = key($asicCardTypes);
 
                             <tr class="vic-host-fields">
                                 <td>
-                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', [Visitor::ASIC_ISSUED => Visitor::ASIC_ISSUED_LABEL, Visitor::ASIC_EXPIRED => Visitor::ASIC_EXPIRED_LABEL], array('empty' => 'Card Status', 'options' => array( $defaultKey => array('selected' => 'selected')))); ?>
+                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', [Visitor::ASIC_ISSUED => Visitor::ASIC_ISSUED_LABEL, Visitor::ASIC_EXPIRED => Visitor::ASIC_EXPIRED_LABEL], array('empty' => 'Card Status', 'options' => array( Visitor::ASIC_ISSUED => array("selected"  => true )))); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($asicModel, 'visitor_card_status'); ?>
                                 </td>

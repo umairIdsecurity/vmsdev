@@ -181,14 +181,12 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 
             $condition = $model->card_type > 4? "module='AVMS'": "module='CVMS'";
             $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
-            foreach ($reasons as $key => $item) {
-                $results[$key] = 'Reason: ' . $item;
-            }
-            if( isset($results) && count($results))
-                echo $detailForm->dropDownList($model, 'reason', $results);
+            echo $detailForm->dropDownList($model, 'reason', $reasons, array("empty"=>"Select Visit Reason"));
             echo "<br />";
         //}
-
+          ?> 
+         <div style="display:none;" id="visit_reason_dropdown_error" class="errorMessage">Please Select Visit Reason</div>
+        <?php
         $cardTypeOptions = [];
         if ($model->visit_status == VisitStatus::AUTOCLOSED) {
             $cardTypeOptions['disabled'] = 'disabled';

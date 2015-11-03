@@ -168,7 +168,7 @@ date_default_timezone_set('Asia/Manila');
         } else {*/
             $("#Visit_patient").val("");
             $("#Visit_host").val($("#hostId").val());
-            $("#submitVisitForm").delay(1000).click();
+            $("#submitVisitForm").delay(100).click();
         //}
     }
 

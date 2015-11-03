@@ -167,7 +167,7 @@ foreach ($workstationList as $workstation) {
                     'filter'=>CHtml::activeTextField($model, 'date_check_in', array('placeholder'=>'Check In Date')),
                     'type' => 'html',
                     'htmlOptions'=>array('width'=>'100px'),
-                //  'value' => 'formatDate($data->date_in)',
+                    'value' => 'CHelper::formatDate($data->date_check_in)',
                 ),
                 array(
                     'name' => 'time_check_in',
@@ -181,7 +181,7 @@ foreach ($workstationList as $workstation) {
                     'filter'=>CHtml::activeTextField($model, 'date_check_out', array('placeholder'=>'Check Out Date')),
                     'type' => 'html',
                     'htmlOptions'=>array('width'=>'110px'),
-                //    'value' => 'formatDate($data->date_out)',
+                    'value' => 'CHelper::formatDate($data->date_check_out)',
                 ),
             ),
         ));

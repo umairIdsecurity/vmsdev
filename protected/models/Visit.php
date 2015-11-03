@@ -199,20 +199,19 @@ class Visit extends CActiveRecord {
               case CardType::VIC_CARD_MANUAL:
                     
                     $diffDate = $checkin->diff($currendDate)->format("%r%a");
-                    //BackDate visit
+               //   BackDate visit
                     if( $diffDate >= 1) {
                         $this->visit_status = VisitStatus::CLOSED; 
-                        $this->visit_closed_date =  $currendDate->format("Y-m-d");
+                        $this->visit_closed_date =  $this->card_returned_date = $currendDate->format("Y-m-d");
                         $this->closed_by = Yii::app()->user->id;
                         $this->date_check_out = $this->date_check_in;
                     }
                   
                  $this->time_check_out = $this->time_out = '23:59:59';
                  $this->finish_time = '23:59:59';
-                 if( (empty($this->date_check_out) || $this->date_check_out == "0000-00-00" ) && $this->date_check_in != "0000-00-00") {
-                    $this->date_check_out = date("Y-m-d" , ((3600*24) + strtotime($this->date_check_in)) );
-                  }
-                  break;
+             //  IMPORTANT - Check Out date for Manual VIC should be set to SAME DATE
+                 $this->date_check_out = $this->date_check_in;
+                 break;
               
              case CardType::VIC_CARD_24HOURS:
              
@@ -1184,7 +1183,7 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_MANUAL:
 
                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
-                if( $isExpired < 0 ) 
+                if( $isExpired <= 0 ) 
                     $totalCount = $dateOut->diff($dateIn)->days;
                 else
                     $totalCount = $dateIn->diff($dateNow)->days +1;
@@ -1307,7 +1306,7 @@ class Visit extends CActiveRecord {
      */
     public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id) {
         $criteria = new CDbCriteria;
-        $criteria->addCondition(" ( id != ".$current_visit_id." ) AND "
+        $criteria->addCondition(" ( id != ".$current_visit_id."  OR (id = ".$current_visit_id." AND visit_status = ". VisitStatus::CLOSED.") ) AND "
                 . " tenant = ".Yii::app()->user->tenant." "
                 . " AND (visit_status != ".VisitStatus::SAVED." AND visit_status != ".VisitStatus::PREREGISTERED."  ) "
                 . " AND visitor = " . $this->visitor. " AND is_deleted = 0 AND reset_id IS NULL");
@@ -1317,18 +1316,27 @@ class Visit extends CActiveRecord {
            foreach( $visits as $key => $v ) {
                $dateIn  = new DateTime($v["date_check_in"]);
                $dateOut = new DateTime($v["date_check_out"]);
+               $dateClosed = new DateTime($v["visit_closed_date"]);
                $dateNow = new DateTime("NOW");
 
                // For the current Year Only
                if( $dateNow->format("Y") == $dateIn->format("Y")) {
-                  if ( $v->card_type != CardType::VIC_CARD_MANUAL )  
+                 
+                // Dont add 1 for Manual visits   
+                if ( $v->card_type != CardType::VIC_CARD_MANUAL )  
                     $visitCount += ($dateIn->diff($dateOut)->days + 1);
                 else  
                     $visitCount += $dateIn->diff($dateOut)->days;
-               }
                
+               // 24 hour visit count will be always 1
                 if($v["card_type"] == CardType::VIC_CARD_24HOURS && $dateIn->diff($dateOut)->days >= 1)
                     $visitCount =  $visitCount - 1;
+                
+                 // If a visit is opened and closed on the same day the visit should only count as one.
+                if(  $dateIn->diff($dateOut)->days == 0) {
+                     $visitCount += 1;
+                }
+              }
            }
            return $visitCount;
            

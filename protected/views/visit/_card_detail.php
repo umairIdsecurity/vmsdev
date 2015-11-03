@@ -48,7 +48,10 @@ if ($card) {
                 if ($model->card_type == CardType::VIC_CARD_24HOURS) {     
                         echo date('d M y', strtotime($model->date_check_in . '+ 1 DAY'));
                   } else {
+                      if($model->visit_status != VisitStatus::SAVED )  
                         echo date('d M y', strtotime($model->date_check_out));
+                    else  
+                       echo date('d M y'); 
                 }
             ?>
             <br><span style="font-size:18px; margin-left:43px"> <?php if($model->card_type == CardType::VIC_CARD_24HOURS && $model->time_check_in != "00:00:00") echo substr($model->time_check_in, 0, 5); ?></span>

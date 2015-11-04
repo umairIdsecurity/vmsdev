@@ -34,7 +34,7 @@ $session = new ChttpSession;
 	    ?>
     
     	<ul id="group_<?php echo $value['id']; ?>" class="help-desk-group">
-			<li class="help-desk-title"><h2><?php echo $value['name']; ?></h2></li>
+<!--			<li class="help-desk-title"><h2><?php //echo $value['name']; ?></h2></li>-->
                <?php   
 			   
 			   foreach ($helpDeskRecords as $keyhelpdesk => $valuehelpdesk) {	  ?>

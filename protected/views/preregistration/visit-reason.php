@@ -1,6 +1,13 @@
 <?php
 $session = new CHttpSession;
 ?>
+
+<style type="text/css">
+    .select2{
+        width:100% !important;
+    }
+</style>
+
 <div class="page-content">
     
     <?php $form=$this->beginWidget('CActiveForm', array(
@@ -13,76 +20,61 @@ $session = new CHttpSession;
     )); ?>
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
-
     <div class="row">
-
         <div class="col-sm-4">
-            
             <h4 class="text-primary subheading-size">Reason for Visit</h4>
-            
             <div class="form-group">
                 <?php
-                $account=(isset(Yii::app()->user->account_type)) ? Yii::app()->user->account_type : "";
-                $vt = '';
-                if($account == 'CORPORATE'){
-                    $vt = Yii::app()->db->createCommand()
-                            ->select("t.id,t.name") 
-                            ->from("visitor_type t")
-                            ->where('t.module = "CVMS" and t.is_deleted =0')
-                            ->queryAll();
-                    //$vt = VisitorType::model()->findAll('module = :m', [':m' => "CVMS"]);
-                }elseif(($account == 'VIC') || ($account == 'ASIC')){
-                    $vt = Yii::app()->db->createCommand()
-                            ->select("t.id,t.name") 
-                            ->from("visitor_type t")
-                            ->where('t.module = "AVMS" and t.is_deleted =0')
-                            ->queryAll();
-                    //$vt = VisitorType::model()->findAll('module = :m', [':m' => "AVMS"]);
-                }else{
-                    $vt = Yii::app()->db->createCommand()
-                            ->select("t.id,t.name") 
-                            ->from("visitor_type t")
-                            ->where("t.is_deleted =0")
-                            ->queryAll();
-                    //$vt = VisitorType::model()->findAll('module = :m', [':m' => "AVMS"]);
-                }
-
-                $list=CHtml::listData($vt,'id','name');
-
-                echo $form->dropDownList($model,'visitor_type',
-                    $list,
-                    array(
-                        'class'=>'form-control input-sm' ,
-                        'empty' => 'Select Visitor Type')
-                );
-
+                    $account=(isset(Yii::app()->user->account_type)) ? Yii::app()->user->account_type : "";
+                    $vt = '';$vr='';
+                    if($account == 'CORPORATE'){
+                        if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "CVMS" and tenant = '.Yii::app()->user->tenant);
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "cvms" and tenant = '.Yii::app()->user->tenant);
+                        }else{
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "CVMS"');
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "cvms"');
+                        }
+                        
+                    }elseif(($account == 'VIC') || ($account == 'ASIC')){
+                        if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "AVMS" and tenant = '.Yii::app()->user->tenant);
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "avms" and tenant = '.Yii::app()->user->tenant);
+                        }else{
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "AVMS"');
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "avms"');
+                        }                   
+                    }else{
+                        if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
+                        }else{
+                            $vt=VisitorType::model()->findAll('is_deleted=0');
+                            $vr=VisitReason::model()->findAll('is_deleted=0');
+                        } 
+                    }                
+                    $list=CHtml::listData($vt,'id','name');
+                    echo $form->dropDownList($model,'visitor_type',
+                        $list,
+                        array(
+                            'class'=>'form-control input-sm' ,
+                            'empty' => 'Select Visitor Type')
+                    );
                 ?>
                 <?php echo $form->error($model, 'visitor_type'); ?>
             </div>
             <div class="form-group">
                 <?php
-
-                $vr = Yii::app()->db->createCommand()
-                            ->select("t.id,t.reason") 
-                            ->from("visit_reason t")
-                            ->where('t.is_deleted =0')
-                            ->queryAll();
-                //$vr=VisitReason::model()->findAll();
-
-                $list=CHtml::listData($vr,'id','reason');
-
-                $other = array('Null'=>'other');
-
-                echo $form->dropDownList($model,'reason',
-                    $list + $other,
-                    array(
-                        'class'=>'form-control input-sm' ,
-                        'empty' => 'Select Reason for Visit')
-                );
-
+                    $list=CHtml::listData($vr,'id','reason');
+                    $other = array('Null'=>'other');
+                    echo $form->dropDownList($model,'reason',
+                        $list + $other,
+                        array(
+                            'class'=>'form-control input-sm' ,
+                            'empty' => 'Select Reason for Visit')
+                    );
                 ?>
                 <?php echo $form->error($model, 'reason'); ?>
-
             </div>
 
             <div class="form-group" id="other-reason">

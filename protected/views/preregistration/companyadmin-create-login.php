@@ -1,4 +1,10 @@
 
+<style type="text/css">
+    .select2{
+        width:100% !important;
+    }
+</style>
+
 <div class="page-content">
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
@@ -48,16 +54,31 @@
                     <div class="row form-group" id="addCompanyDiv">
                          <div class="col-md-8">
                             <?php
+                                $companies = array();
                                 if(isset($model->visitor_workstation) && ($model->visitor_workstation != "" && $model->visitor_workstation != null)){
                                     $worsktation = Workstation::model()->findByPk($model->visitor_workstation);
                                     $Criteria = new CDbCriteria();
-                                    $Criteria->condition = "tenant = ".$worsktation->tenant." and is_deleted = 0";
+                                    $Criteria->condition = "tenant = ".$worsktation->tenant." and company_type = 3 and is_deleted = 0";
                                     $companies = Company::model()->findAll($Criteria);
-                                    echo $form->dropDownList($model, 'company', CHtml::listData($companies, 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
+
+                                    $this->widget('application.extensions.select2.Select2', array(
+                                        'model' => $model,
+                                        'attribute' => 'company',
+                                        'items' => CHtml::listData($companies,'id','name'),
+                                        //'selectedItems' => array(), // Items to be selected as default
+                                        'placeHolder' => 'Select Company',
+                                    ));
                                 }else{
-                                     echo $form->dropDownList($model,'company',array(''=>'Select Company'),array('class'=>'form-control input-sm'));
+                                     $this->widget('application.extensions.select2.Select2', array(
+                                        'model' => $model,
+                                        'attribute' => 'company',
+                                        'items' => CHtml::listData($companies, 'id', 'name'),
+                                        //'selectedItems' => array(), // Items to be selected as default
+                                        'placeHolder' => 'Select Company',
+                                    ));
                                 }
                             ?>
+
                             <?php echo $form->error($model,'company'); ?>
                         </div>
                     </div>
@@ -199,7 +220,8 @@
                                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
                                             <?php echo $form->textField($companyModel, 'name', array('placeholder' => 'Company Name','class'=>'form-control input-lg')); ?>
                                         </div>
-                                        <?php echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
+                                        <?php //echo $form->error($companyModel,'name',array('style' =>'float:left')); ?>
+                                        <div class="errorMessage" id="companyNameErr" style="display:none;float:left"></div>
                                     </div>
 
                                     
@@ -216,7 +238,8 @@
                                                 <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                                 <?php echo $form->textField($companyModel, 'user_first_name', array('class'=>'form-control input-lg','placeholder'=>'First Name')); ?>
                                             </div>
-                                            <?php echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                            <?php //echo $form->error($companyModel,'user_first_name',array('style' =>'float:left')); ?>
+                                            <div class="errorMessage" id="companyFirstnameErr" style="display:none;float:left"></div>
                                         </div>
 
                                         <div class="form-group">
@@ -224,7 +247,8 @@
                                                 <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                                 <?php echo $form->textField($companyModel, 'user_last_name', array('class'=>'form-control input-lg','placeholder'=>'Last Name')); ?>
                                             </div>
-                                            <?php echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                            <?php //echo $form->error($companyModel,'user_last_name',array('style' =>'float:left')); ?>
+                                            <div class="errorMessage" id="companyLastnameErr" style="display:none;float:left"></div>
                                         </div>
 
                                         
@@ -233,7 +257,8 @@
                                                 <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                                 <?php echo $form->textField($companyModel, 'user_email', array('class'=>'form-control input-lg','placeholder'=>'Email Address')); ?>
                                             </div>
-                                            <?php echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                            <?php //echo $form->error($companyModel,'user_email',array('style' =>'float:left')); ?>
+                                            <div class="errorMessage" id="companyEmailErr" style="display:none;float:left"></div>
                                         </div>
 
                                         <div class="form-group">
@@ -241,13 +266,14 @@
                                                 <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                                 <?php echo $form->textField($companyModel, 'user_contact_number', array('class'=>'form-control input-lg','placeholder'=>'Contact Number')); ?>
                                             </div>
-                                            <?php echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                            <?php //echo $form->error($companyModel,'user_contact_number',array('style' =>'float:left')); ?>
+                                            <div class="errorMessage" id="companyContactNumberErr" style="display:none;float:left"></div>
                                         </div>
                                     </div>
                                     
                                     <div class="modal-footer">
                                         <button class="btn neutral" data-dismiss="modal" aria-hidden="true">Close</button>
-                                        <?php echo CHtml::submitButton('Add',array('id'=>'addCompanyBtn','class'=>'btn neutral')); ?>
+                                        <?php echo CHtml::Button('Add',array('id'=>'addCompanyBtn','class'=>'btn neutral')); ?>
                                     </div>
                                     
 
@@ -301,13 +327,68 @@
                         console.log(data);
                         if (data.decision == 0)
                         {
-                            console.log(data.errors);
+                            if(data.errors){//console.log(data.errors);
+                                if(data.errors.name)
+                                {
+                                    if($('#Company_name').val() == ""){
+                                        if($('#companyNameErr').is(':empty')){
+                                            $("#companyNameErr").append("<p>"+data.errors.name+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyNameErr").empty().hide();
+                                }
+
+                                if(data.errors.user_first_name)
+                                {
+                                    if($('#Company_user_first_name').val() == ""){
+                                        if($('#companyFirstnameErr').is(':empty')){
+                                            $("#companyFirstnameErr").append("<p>"+data.errors.user_first_name+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyFirstnameErr").empty().hide();
+                                }
+
+                                if(data.errors.user_last_name)
+                                {
+                                    if($('#Company_user_last_name').val() == ""){
+                                        if($('#companyLastnameErr').is(':empty')){
+                                            $("#companyLastnameErr").append("<p>"+data.errors.user_last_name+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyLastnameErr").empty().hide();
+                                }
+
+                                if(data.errors.user_email)
+                                {
+                                    if($('#Company_user_email').val() == ""){
+                                        if($('#companyEmailErr').is(':empty')){
+                                            $("#companyEmailErr").append("<p>"+data.errors.user_email+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyEmailErr").empty().hide();
+                                }
+
+                                if(data.errors.user_contact_number)
+                                {
+                                    if($('#Company_user_contact_number').val() == ""){
+                                        if($('#companyContactNumberErr').is(':empty')){
+                                            $("#companyContactNumberErr").append("<p>"+data.errors.user_contact_number+"</p>").show();
+                                        }
+                                    }
+                                }else{
+                                    $("#companyContactNumberErr").empty().hide();
+                                }
+                            }
                         }
                         else
                         {
-                            //$("#WorkstationDropdown").($("#companyWorkstation").val());
+                            $("#WorkstationDropdown").val(workstation);
+                            $('.select2-selection__rendered').text(data.compName);
                             $("#Registration_company").append(data.dropDown);
-                            //$('.select2-selection__rendered').text(data.compName);
                             $("#addCompanyModal").modal('hide');
                         }  
                     },
@@ -354,6 +435,7 @@
             }else{
                 $("#Registration_company").empty();
                 $("#Registration_company").append("<option value=''>No results found. Please add company</option>");
+                $('.select2-selection__rendered').text("Select Company");
             }
         });
     });

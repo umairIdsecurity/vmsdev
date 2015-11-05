@@ -56,7 +56,7 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 
     <table class="login-area inputSize" style="border-collapse: none !important;">
         <tr>
-            <td align="center" class="form-group"><span style="color:#428bca;font-size:27px">VMS LOGIN</span></td>
+            <td align="center" class="form-group"><span style="color:#428bca;font-size:27px">OPERATOR LOGIN</span></td>
         </tr>
 
         <tr>

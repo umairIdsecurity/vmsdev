@@ -1,15 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: streetcoder
- * Date: 6/6/15
- * Time: 12:16 PM
- */
-
 class EntryPoint extends CFormModel{
-
     public $entrypoint;
-
     /**
      * Declares the validation rules.
      */
@@ -21,7 +12,6 @@ class EntryPoint extends CFormModel{
 
         );
     }
-
     /**
      * Declares customized attribute labels.
      * If not declared here, an attribute would have a label that is
@@ -33,5 +23,4 @@ class EntryPoint extends CFormModel{
             'entrypoint'=>'Entry Point',
         );
     }
-
 }

@@ -1,21 +1,18 @@
-<div class="page-content">
-
-
+<!-- <div class="page-content"> -->
+        <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+        
         <?php
-        $form=$this->beginWidget('CActiveForm', array(
-            'id'=>'entry-point-form',
-            'enableClientValidation'=>true,
-            'clientOptions'=>array(
-                'validateOnSubmit'=>true,
-            ),
-            'htmlOptions'=>array(
-                //'class'=>'form-select-gate'
-            )
-        ));
+            $form=$this->beginWidget('CActiveForm', array(
+                'id'=>'entry-point-form',
+                'enableClientValidation'=>true,
+                'clientOptions'=>array(
+                    'validateOnSubmit'=>true,
+                ),
+                'htmlOptions'=>array(
+                    'style' => 'height:100%;position:relative'
+                )
+            ));
         ?>
-
-        <div class="row"><div class="col-sm-12">&nbsp;</div></div>
-        <div class="row"><div class="col-sm-12">&nbsp;</div></div>
         
         <div class="row">
             <div class="col-sm-12">
@@ -46,19 +43,19 @@
             <div class="col-sm-4 fixedMargin">
                 
                 <?php
-                $ws='';
-                if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
-                    $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
-                }else{
-                     $ws=Workstation::model()->findAll('is_deleted=0');
-                }
-                $list=CHtml::listData($ws,'id','name');
-                echo $form->dropDownList($model,'entrypoint',
-                    $list,
-                    array(
-                        'class'=>'form-control input-sm' ,
-                        'empty' => 'Chose your entry point')
-                );
+                    $ws='';
+                    if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+                        $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
+                    }else{
+                         $ws=Workstation::model()->findAll('is_deleted=0');
+                    }
+                    $list=CHtml::listData($ws,'id','name');
+                    echo $form->dropDownList($model,'entrypoint',
+                        $list,
+                        array(
+                            'class'=>'form-control input-sm' ,
+                            'empty' => 'Chose your entry point')
+                    );
                 ?>
                 
                 <?php echo $form->error($model,'entrypoint'); ?>
@@ -79,22 +76,22 @@
         <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
         <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
         
+
+
         <div class="row">
             <div class="col-sm-12">
-                <div class="">
-                    <div class="pull-right">
-                        <?php
-                            echo CHtml::tag('button', array(
-                                'type'=>'submit',
-                                'class' => 'btn btn-primary btn-next'
-                            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
-                        ?>
-                    </div>
+                <div class="pull-right">
+                    <?php
+                        echo CHtml::tag('button', array(
+                            'type'=>'submit',
+                            'class' => 'btn btn-primary btn-next'
+                        ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+                    ?>
                 </div>
             </div>
         </div>  
 
     <?php $this->endWidget(); ?>
 
-</div>
+<!-- </div> -->
 

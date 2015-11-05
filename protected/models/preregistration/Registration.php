@@ -219,7 +219,7 @@ class Registration extends CActiveRecord {
             /*array('old_password, new_password, repeat_password', 'required', 'on' => 'preregistrationPass'),
             array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistrationPass'),*/
 
-            //array('company', 'required' ,'on' => 'preregistrationCompanyAdmin', 'message'=>'Please select a Comapny'),
+            array('company', 'required' ,'on' => 'preregistrationCompanyAdmin', 'message'=>'Please select a Comapny'),
             
 
             //array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),

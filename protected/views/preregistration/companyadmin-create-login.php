@@ -43,7 +43,7 @@
                                 array(
                                     'class'=>'form-control input-sm',
                                     'id'=>'WorkstationDropdown',
-                                    'empty' => 'Chose your entry point')
+                                    'empty' => 'Select Workstation')
                             );
                             ?>
                         </div>
@@ -204,7 +204,7 @@
                                             ?>
 
                                             <select id="companyWorkstation" name="Company[workstation]" class="form-control input-lg">
-                                                <option value="">Chose your entry point</option>
+                                                <option value="">Select Workstation</option>
                                                 <?php foreach ($list as $key => $value) {?>
                                                     <option value="<?= $key ?>"><?= $value ?></option>
                                                 <?php } ?>
@@ -212,7 +212,7 @@
 
                                         </div>
                                         <?php //echo $form->error($model,'visitor_workstation'); ?>
-                                        <div id="entryPointErr" class="errorMessage" style="display:none;float: left;">Please chose your entry point</div>
+                                        <div id="entryPointErr" class="errorMessage" style="display:none;float: left;">Please select workstation</div>
                                     </div>
 
                                     <div class="form-group">

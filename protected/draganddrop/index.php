@@ -249,7 +249,7 @@ if (isset($_GET['viewFrom'])) {
             showStatusAfterSuccess: false,
             onSuccess: function(files, data, xhr)
             {
-
+                
                 if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit' ) {
                     var logo = document.getElementById('photoPreview');
                 } else if( $("#controllerId").val() == 'companyLafPreferences') {

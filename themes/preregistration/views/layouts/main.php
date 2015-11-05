@@ -200,6 +200,13 @@ $session = new CHttpSession;
     }
 }
 
+.viewportDiv{
+    background: #6cf none repeat scroll 0 0;
+    bottom: 20%;
+    position: absolute;
+    width: 100%;
+}
+
 
     </style>
 
@@ -215,145 +222,120 @@ $session = new CHttpSession;
 
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
     </head>
-    <body class="first-page">
-        <div id="header" class="relative">
-            <div class="container-fluid">
-
-                <div class="row"><div class="col-sm-12 col-xs-12">&nbsp;</div></div>
-
-                <div class="row">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-8">
-                        <!-- ******************************************************************** -->
-                        <aside class="top_nav" style="margin-top:0px !important">
-                            <ul id="icons">
-                                <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                    <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
-                                    <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
-                                <?php } ?> 
-                                <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
-                                        <li class="profile">
-                                            <a title="profile" href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">
-                                                My Profile
-                                            </a>
-                                        </li>
-                                        <li class="notifications dropdown">
-                                            <a title="notifications" href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>" class="dropdown-toggle" data-toggle="dropdown"> 
-                                                <?php $notifications = CHelper::get_unread_visitors_notifications();
-                                                   if($notifications) 
-                                                      echo '  <div class="notification-count"> '. count($notifications).'</div>';
-                                            ?></a>
-                                        </li>
-                                        <li class="help">
-                                            <a title="help" href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>">
-                                                Help
-                                            </a>
-                                        </li>
-                                        <li class="logout">
-                                            <a title="logout" href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>">
-                                                <span class="glyphicon glyphicon-log-out"></span>
-                                            </a>
-                                        </li>
-                                <?php
-                                      }
-                                ?>
-                            </ul>
-                        </aside>
-                        <!-- ******************************************************************** -->
-                    </div>
-                    <div class="col-sm-2"></div>
-                </div>
-
-                <div class="row">
-                    
-                    <div class="col-sm-2">
-                        <div class="standardLogo" style="margin-left:auto;margin-right:auto">
+    <body>
+        <div class="container-fluid" style=" height: 100%;">
+            <div class="row"><div class="col-sm-12 col-xs-12">&nbsp;</div></div>
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8">
+                    <!-- ******************************************************************** -->
+                    <aside class="top_nav" style="margin-top:0px !important">
+                        <ul id="icons">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 120px" alt="Pre registration"/>
-                                </a>
-                            <?php } else{ ?>
-                                <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
-                                </a>
-                            <?php } ?>
-                        </div>
-
-                        <div class="mobileLogo">
-                            <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
-                                </a>
-                            <?php } else{ ?>
-                                <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
-                                </a>
-                            <?php } ?>
-                        </div>
-
-                    </div>
-
-                    <div class="col-sm-8" style="<?php if(isset($session['stepTitle'])){echo 'border-bottom: 3px solid #eee';}?>">
-                        <div class="row">
-                            
-                            <div class="col-sm-12">
-                                <h2 class="text-primary title responsiveTitle"><?= $session['stepTitle'] ?></h2>
-                                <h6 class="text-primary title">
-                                    <?php if(isset($session['step1Subtitle'])&&($session['step1Subtitle']!="")){echo $session['step1Subtitle'];}?>
-                                    <?php if(isset($session['step2Subtitle'])&&($session['step2Subtitle']!="")){echo $session['step2Subtitle'];}?>
-                                    <?php if(isset($session['step3Subtitle'])&&($session['step3Subtitle']!="")){echo $session['step3Subtitle'];}?>
-                                    <?php if(isset($session['step4Subtitle'])&&($session['step4Subtitle']!="")){echo $session['step4Subtitle'];}?>
-                                    <?php if(isset($session['step5Subtitle'])&&($session['step5Subtitle']!="")){echo $session['step5Subtitle'];}?>
-                                    <?php if(isset($session['step6Subtitle'])&&($session['step6Subtitle']!="")){echo $session['step6Subtitle'];}?>
-                                    <?php if(isset($session['step7Subtitle'])&&($session['step7Subtitle']!="")){echo $session['step7Subtitle'];}?>
-                                    <?php if(isset($session['step8Subtitle'])&&($session['step8Subtitle']!="")){echo $session['step8Subtitle'];}?>
-                                </h6>
-                            </div>
-
-                        </div>    
-                    </div>
-
-                    <div class="col-sm-2"></div>
-
-                </div>    
-
-
-
-                <div class="row">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-8">
-                        <div id="main">
-                            <?php echo $content; ?>
-                        </div>
-                    </div>
-                    <div class="col-sm-2"></div>
+                                <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
+                                <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
+                            <?php } ?> 
+                            <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
+                                    <li class="profile">
+                                        <a title="profile" href="<?php echo Yii::app()->createUrl('preregistration/profile?id=' . $session['id']); ?>">
+                                            My Profile
+                                        </a>
+                                    </li>
+                                    <li class="notifications dropdown">
+                                        <a title="notifications" href="<?php echo Yii::app()->createUrl('preregistration/notifications'); ?>" class="dropdown-toggle" data-toggle="dropdown"> 
+                                            <?php $notifications = CHelper::get_unread_visitors_notifications();
+                                               if($notifications) 
+                                                  echo '  <div class="notification-count"> '. count($notifications).'</div>';
+                                        ?></a>
+                                    </li>
+                                    <li class="help">
+                                        <a title="help" href="<?php echo Yii::app()->createUrl('preregistration/helpdesk'); ?>">
+                                            Help
+                                        </a>
+                                    </li>
+                                    <li class="logout">
+                                        <a title="logout" href="<?php echo Yii::app()->createUrl('preregistration/logout'); ?>">
+                                            <span class="glyphicon glyphicon-log-out"></span>
+                                        </a>
+                                    </li>
+                            <?php
+                                  }
+                            ?>
+                        </ul>
+                    </aside>
+                    <!-- ******************************************************************** -->
                 </div>
+                <div class="col-sm-2"></div>
+            </div>
 
+            <div class="row">
                 
+                <div class="col-sm-2">
+                    <div class="standardLogo" style="margin-left:auto;margin-right:auto">
+                        <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
+                            <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
+                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 120px" alt="Pre registration"/>
+                            </a>
+                        <?php } else{ ?>
+                            <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
+                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
+                            </a>
+                        <?php } ?>
+                    </div>
 
-            </div>
-        </div>
-        
-        <!-- <div class="header-bottom">
-            <div class="container"></div>
-        </div>
-         -->
-       
-<!--         <br>
+                    <div class="mobileLogo">
+                        <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
+                            <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
+                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
+                            </a>
+                        <?php } else{ ?>
+                            <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
+                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
+                            </a>
+                        <?php } ?>
+                    </div>
 
-        <div id="container">
-            <div class="container">
-                <div id="main">
-                    <?php //echo $content; ?>
                 </div>
-            </div>
-        </div> -->
 
-        <!-- <div id="footer">
-            <div class="container">
+                <div class="col-sm-8" style="<?php if(isset($session['stepTitle'])){echo 'border-bottom: 3px solid #eee';}?>">
+                    <div class="row">
+                        
+                        <div class="col-sm-12">
+                            <h2 class="text-primary title responsiveTitle"><?= $session['stepTitle'] ?></h2>
+                            <h6 class="text-primary title">
+                                <?php if(isset($session['step1Subtitle'])&&($session['step1Subtitle']!="")){echo $session['step1Subtitle'];}?>
+                                <?php if(isset($session['step2Subtitle'])&&($session['step2Subtitle']!="")){echo $session['step2Subtitle'];}?>
+                                <?php if(isset($session['step3Subtitle'])&&($session['step3Subtitle']!="")){echo $session['step3Subtitle'];}?>
+                                <?php if(isset($session['step4Subtitle'])&&($session['step4Subtitle']!="")){echo $session['step4Subtitle'];}?>
+                                <?php if(isset($session['step5Subtitle'])&&($session['step5Subtitle']!="")){echo $session['step5Subtitle'];}?>
+                                <?php if(isset($session['step6Subtitle'])&&($session['step6Subtitle']!="")){echo $session['step6Subtitle'];}?>
+                                <?php if(isset($session['step7Subtitle'])&&($session['step7Subtitle']!="")){echo $session['step7Subtitle'];}?>
+                                <?php if(isset($session['step8Subtitle'])&&($session['step8Subtitle']!="")){echo $session['step8Subtitle'];}?>
+                            </h6>
+                        </div>
 
+                    </div>    
+                </div>
+
+                <div class="col-sm-2"></div>
+
+            </div>    
+
+
+
+            <div class="row" style="height:100%;">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8"  style="height:100%;">
+                    <?php echo $content; ?>
+                </div>
+                <div class="col-sm-2"></div>
             </div>
-        </div> -->
+
+            
+
+        </div>
+
+        
 
         <!-- for developer -->
         <!--<script src="<?php /*echo Yii::app()->theme->baseUrl; */?>/js/libs.js"></script>-->

@@ -674,7 +674,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
     function switchIdentification() {
 
-        if ($('#Visitor_alternative_identification').attr('checked')) {
+        if ($('#Visitor_alternative_identification').is(':checked')) {
             $('.primary-identification-require').hide();
             $('.alternate-identification-require').show();
             $('.row_document_name_number').show('slow');

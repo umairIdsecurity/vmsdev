@@ -1,7 +1,7 @@
 
-<div class="page-content">
+<!-- <div class="page-content"> -->
 
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div>
+    <!-- <div class="row"><div class="col-sm-12">&nbsp;</div></div> -->
 
     <h3 class="text-primary subheading-size">Requirements</h3>
     <div class="privacy-info text-size">
@@ -71,7 +71,7 @@
         </div>
     </div>  
     
-</div>
+<!-- </div> -->
 
 <script>
     $("#toggleCheckbox").on("click",function(e){
@@ -94,6 +94,4 @@
             $("#errorDiv").hide();
         }
     });
-
-
 </script>

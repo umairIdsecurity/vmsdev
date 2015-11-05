@@ -2,6 +2,10 @@
 $session = new CHttpSession;
 ?>
 <style type="text/css">
+    .select2{
+        width:100% !important;
+    }
+
     table.dataTable.no-footer{
         border-bottom: 0px solid #111 !important;
     }

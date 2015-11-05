@@ -1,11 +1,13 @@
 <?php
 $session = new CHttpSession;
 ?>
-
+<style type="text/css">
+    .select2{
+        width:100% !important;
+    }
+</style>
 <div class="page-content">
-
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
-
     <h3 class="text-primary subheading-size">ASIC Sponsor Information</h3>
 
     <?php
@@ -79,7 +81,7 @@ $session = new CHttpSession;
                                 array(
                                     'class'=>'form-control input-sm',
                                     'id'=>'WorkstationDropdown',
-                                    'empty' => 'Chose your entry point')
+                                    'empty' => 'Select Workstation')
                             );
                             ?>
                         </div>
@@ -203,7 +205,7 @@ $session = new CHttpSession;
                                             ?>
 
                                             <select id="companyWorkstation" name="Company[workstation]" class="form-control input-lg">
-                                                <option value="">Chose your entry point</option>
+                                                <option value="">Select Workstation</option>
                                                 <?php foreach ($list as $key => $value) {?>
                                                     <option value="<?= $key ?>"><?= $value ?></option>
                                                 <?php } ?>
@@ -211,7 +213,7 @@ $session = new CHttpSession;
 
                                         </div>
                                         <?php //echo $form->error($model,'visitor_workstation'); ?>
-                                        <div id="entryPointErr" class="errorMessage" style="display:none;float: left;">Please chose your entry point</div>
+                                        <div id="entryPointErr" class="errorMessage" style="display:none;float: left;">Please select workstation</div>
                                     </div>
 
                                     <div class="form-group">
@@ -309,7 +311,8 @@ $session = new CHttpSession;
         $("#addCompanyBtn").unbind("click").click(function(event){
             $("#compDiv").show();
             var workstation = $("#companyWorkstation").val();
-            if(workstation != ""){
+            if(workstation != "")
+            {
                 var data=$("#company-form").serialize();
                 $.ajax({
                     type: 'POST',
@@ -379,9 +382,9 @@ $session = new CHttpSession;
                         }
                         else
                         {
-                            //$("#WorkstationDropdown").($("#companyWorkstation").val());
+                            $("#WorkstationDropdown").val(workstation);
+                            $('.select2-selection__rendered').text(data.compName);
                             $("#Registration_company").append(data.dropDown);
-                            //$('.select2-selection__rendered').text(data.compName);
                             $("#addCompanyModal").modal('hide');
                         }  
                     },
@@ -426,6 +429,7 @@ $session = new CHttpSession;
             }else{
                 $("#Registration_company").empty();
                 $("#Registration_company").append("<option value=''>No results found. Please add company</option>");
+                $('.select2-selection__rendered').text("Select Company");
             }
         });
     });

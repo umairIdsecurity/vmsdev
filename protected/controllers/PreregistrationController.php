@@ -89,27 +89,38 @@ class PreregistrationController extends Controller
 	public function actionPrivacyPolicy()
 	{
 		$session = new CHttpSession;
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
 		$session['stepTitle'] = 'VIC REQUIREMENTS';
 		$session['step2Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/privacyPolicy'>Requirements</a>";
-		
+
 		$this->render('privacy-policy');
 	}
 
 	public function actionDeclaration()
 	{
 		$session = new CHttpSession;
-		$session['stepTitle'] = 'DECLARATIONS';
-		$session['step3Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/declaration'>Declarations</a>";
-		
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
 		}
+		if(!isset($session['privacyPolicy']) && $session['privacyPolicy'] == ""){$session['privacyPolicy'] = 'checked';}
+
+		$session['stepTitle'] = 'DECLARATIONS';
+		$session['step3Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/declaration'>Declarations</a>";
+		
 		$this->render('declaration');
 	}
 
 	public function actionPersonalDetails()
 	{
 		$session = new CHttpSession;
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
+		if(!isset($session['declarationCheck1']) && $session['declarationCheck1'] == ""){$session['declarationCheck1'] = 'checked';}
+		if(!isset($session['declarationCheck2']) && $session['declarationCheck2'] == ""){$session['declarationCheck2'] = 'checked';}
+
 		$session['stepTitle'] = 'PERSONAL INFORMATION';
 		$session['step4Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/personalDetails'>Personal Information</a>";
 		unset($session['vic_model']);
@@ -167,26 +178,26 @@ class PreregistrationController extends Controller
 		}
 		$session['stepTitle'] = 'REASON FOR VISIT';
 		$session['step5Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/visitReason'>Reason for Visit</a>";
-		$model = '';
+		$model = '';$companyModel = '';
 		if(isset($session['visit_model']) && $session['visit_model'] != ''){
 			$model = $session['visit_model'];
 		}
-		else
-		{
+		else{
 			$model = new Visit();
 		}
-		$companyModel = new Company();
+		if(isset($session['company_model']) && $session['company_model'] != ''){
+			$companyModel = $session['company_model'];
+		}
+		else{
+			$companyModel = new Company();
+		}
 		$companyModel->scenario = 'preregistration';
 		$model->scenario = 'preregistration';
 		if (isset($_POST['Visit'])) 
 		{
 			$model->attributes    = $_POST['Visit'];
+			$companyModel->attributes    = $_POST['Company'];
 			if($_POST['Visit']['other_reason'] != ""){
-				/*$reasonModel = new VisitReason();
-				$reasonModel->reason  = $_POST['Visit']['other_reason'];
-				if($reasonModel->save(false)){
-					$model->reason  = $reasonModel->id;
-				}*/
 				$model->visit_reason  = $_POST['Visit']['other_reason'];
 			}
 			$model->card_type = 6; //VIC 24 hour Card
@@ -198,6 +209,7 @@ class PreregistrationController extends Controller
 			if($model->validate())
 			{
 				$session['visit_model'] = $model;
+				$session['company_model'] = $companyModel;
 				$session['company_id'] =  $_POST['Company']['name'];
 				$this->redirect(array('preregistration/addAsic'));
 			}
@@ -213,6 +225,10 @@ class PreregistrationController extends Controller
 
 	public function actionAddAsic(){
 		$session = new CHttpSession;
+		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
+			$this->redirect(array('preregistration/index'));
+		}
+
 		if(isset(Yii::app()->user->id,$session['account_type']) &&($session['account_type'] != "") && ($session['account_type'] == "ASIC")){
 			$model = Registration::model()->findByPk(Yii::app()->user->id,"profile_type=:param",array(":param"=>"ASIC"));
 		}else{
@@ -317,9 +333,6 @@ class PreregistrationController extends Controller
 						if (file_exists($fullImgSource)) {
 				            unlink($fullImgSource);
 				        }
-						//$visitorModel = Registration::model()->findByPk($session['visitor_id']);
-				        //$visitorModel->photo = $photoModel->id;
-				        //$visitorModel->save(true,array('photo'));
 				        $session['photo'] = $photoModel->id;
 						$session['imgName'] = $newName;
 						$this->redirect(array('preregistration/visitDetails'));

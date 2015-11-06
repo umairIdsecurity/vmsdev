@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Created by PhpStorm.
  * User: geoffstewart
@@ -8,6 +9,9 @@
  */
 class TenantTransferController extends Controller
 {
+
+
+    public $layout = '//layouts/column2';
 
     private $visit_resets = [];
     private $unmappedRefs = [
@@ -118,150 +122,163 @@ class TenantTransferController extends Controller
     }
 
 
-
     public function actionImport()
     {
-
         $model = new ImportTenantForm();
         $session = new CHttpSession;
-        if (isset($_POST['ImportTenantForm']))
+        if (isset($_POST['ImportTenantForm'])) {
+            $model->attributes = $_POST['ImportTenantForm'];
+            $this->importTenant($model);
+            $this->importAvms7Data($model);
+
+        }
+        return $this->render("importTenant", array("model" => $model));
+
+    }
+
+    private function importAvms7Data()
+    {
+        $name  = $_FILES['ImportTenantForm']['name']['avms7File'];
+        if(!empty($name)) {
+
+        }
+    }
+
+    private function importTenant($model)
+    {
+
+        $name  = $_FILES['ImportTenantForm']['name']['tenantFile'];
+        if(!empty($name))
         {
-            $model->attributes = $_POST['ImportTenantForm']; 
-            //****************************************************************
-            $name  = $_FILES['ImportTenantForm']['name']['file'];
-            if(!empty($name)) 
+            $model->file=CUploadedFile::getInstance($model,'$tenantFile');
+            $fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$name;
+
+            // get database foriegn keys
+            $foreignKeys = $this->getForeignKeys();
+
+
+            if($model->file->saveAs($fullImgSource))
             {
-                $model->file=CUploadedFile::getInstance($model,'file');
-                $fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$name;
 
-                // get database foriegn keys
-                $foreignKeys = $this->getForeignKeys();
+                $data=file_get_contents($fullImgSource);
+                $obj = json_decode($data);
+                /*** cast the object to array ***/
+                $contents = (array) $obj;
 
+                // create a mappings array
+                $idMappings = [];
 
-                if($model->file->saveAs($fullImgSource))
-                {
+                // add super admin to mappings
+                $idMappings['user'][1]=1;
+                $idMappings['company'][1]=1;
 
-                    $data=file_get_contents($fullImgSource);
-                    $obj = json_decode($data);
-                    /*** cast the object to array ***/
-                    $contents = (array) $obj;
+                $targetTables = $this->getTargetTableNames();
 
-                    // create a mappings array
-                    $idMappings = [];
+                $transaction = Yii::app()->db->beginTransaction();
+                try {
 
-                    // add super admin to mappings
-                    $idMappings['user'][1]=1;
-                    $idMappings['company'][1]=1;
+                    foreach($targetTables as $tableName){
+                    //foreach ($contents as $tableName => $content) {
 
-                    $targetTables = $this->getTargetTableNames();
+                        if(!isset($contents[$tableName]))
+                            continue;
 
-                    $transaction = Yii::app()->db->beginTransaction();
-                    try {
+                        $content = $contents[$tableName];
 
-                        foreach($targetTables as $tableName){
-                        //foreach ($contents as $tableName => $content) {
+                        if (!empty($content)) // if table has data, then create insert statements otherwise neglect it
+                        {
+                            // initialise mappings for table
+                            if (!isset($idMappings[$tableName])) {
+                                $idMappings[$tableName] = [];
+                            }
 
-                            if(!isset($contents[$tableName]))
-                                continue;
+                            $rows = (array)$content;
+                            $cols = array();
+                            $sql = '';
 
-                            $content = $contents[$tableName];
+                            $isAutoIncrement = sizeof($rows) > 0 && isset($rows[0]->id) && Yii::app()->db->schema->tables[$tableName]->columns['id']->autoIncrement;
 
-                            if (!empty($content)) // if table has data, then create insert statements otherwise neglect it
-                            {
-                                // initialise mappings for table
-                                if (!isset($idMappings[$tableName])) {
-                                    $idMappings[$tableName] = [];
+                            foreach ($rows as $rowKey => $row) {
+                                $row = (array)$row;
+
+                                // remember the old id for mapping later
+                                $oldId = null;
+                                if (isset($row['id'])) {
+                                    $oldId = $row['id'];
+                                    if ($isAutoIncrement) {
+                                        unset($row['id']);
+                                    }
                                 }
 
-                                $rows = (array)$content;
-                                $cols = array();
-                                $sql = '';
+                                // massage the data in out of the ordinary circumstances
+                                $this->beforeInsertRow($tableName,$row,$oldId);
 
-                                $isAutoIncrement = sizeof($rows) > 0 && isset($rows[0]->id) && Yii::app()->db->schema->tables[$tableName]->columns['id']->autoIncrement;
+                                // populate referencing columns
+                                $this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables);
 
-                                foreach ($rows as $rowKey => $row) {
-                                    $row = (array)$row;
-
-                                    // remember the old id for mapping later
-                                    $oldId = null;
-                                    if (isset($row['id'])) {
-                                        $oldId = $row['id'];
-                                        if ($isAutoIncrement) {
-                                            unset($row['id']);
-                                        }
+                                if (!$cols) {
+                                    $cols = array_keys($row);
+                                    $colsQuoted = [];
+                                    foreach($cols as $col){
+                                        $colsQuoted[] = Yii::app()->db->quoteColumnName($col);
+                                    }
+                                }
+                                $vals = array();
+                                foreach ($row as $columnName => $value) {
+                                    if ($value == '') {
+                                        $vals[] = 'NULL';
+                                    } else {
+                                        $vals[] = $this->quoteValue($tableName, $columnName, $value);
                                     }
 
-                                    // massage the data in out of the ordinary circumstances
-                                    $this->beforeInsertRow($tableName,$row,$oldId);
+                                }
 
-                                    // populate referencing columns
-                                    $this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables);
+                                $quotedTableName = Yii::app()->db->quoteTableName($tableName);
 
-                                    if (!$cols) {
-                                        $cols = array_keys($row);
-                                        $colsQuoted = [];
-                                        foreach($cols as $col){
-                                            $colsQuoted[] = Yii::app()->db->quoteColumnName($col);
-                                        }
-                                    }
-                                    $vals = array();
-                                    foreach ($row as $columnName => $value) {
-                                        if ($value == '') {
-                                            $vals[] = 'NULL';
-                                        } else {
-                                            $vals[] = $this->quoteValue($tableName, $columnName, $value);
-                                        }
+                                $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
 
-                                    }
+                                //RUN SQL
+                                echo $sql . "<br>";
+                                Yii::app()->db->createCommand($sql)->execute();
 
-                                    $quotedTableName = Yii::app()->db->quoteTableName($tableName);
+                                if ($isAutoIncrement) {
 
-                                    $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
+                                    //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
+                                    $row['id'] = Yii::app()->db->getLastInsertID();
 
-                                    //RUN SQL
-                                    echo $sql . "<br>";
-                                    Yii::app()->db->createCommand($sql)->execute();
+                                }
 
-                                    if ($isAutoIncrement) {
+                                $this->afterInsertRow($tableName,$row,$idMappings,$oldId);
 
-                                        //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
-                                        $row['id'] = Yii::app()->db->getLastInsertID();
-
-                                    }
-
-                                    $this->afterInsertRow($tableName,$row,$idMappings,$oldId);
-
-                                    if (isset($row['id'])) {
-                                        $idMappings[$tableName][$oldId] = $row['id'];
-                                        echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
-                                    }
-                                    echo "<br><br>";
+                                if (isset($row['id'])) {
+                                    $idMappings[$tableName][$oldId] = $row['id'];
+                                    echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
                                 }
                                 echo "<br><br>";
                             }
+                            echo "<br><br>";
                         }
-
-                        $transaction->commit();
-
-                    } catch (CException $e) {
-
-                        $transaction->rollback();
-                        echo "<br><br>";
-                        echo $e->getMessage();
-                        die();
                     }
 
-                    if (file_exists($fullImgSource)) 
-                    {
-                        unlink($fullImgSource);
-                    }
+                    $transaction->commit();
+
+                } catch (CException $e) {
+
+                    $transaction->rollback();
+                    echo "<br><br>";
+                    echo $e->getMessage();
                     die();
                 }
-            }
-            //****************************************************************
-        }
 
-        return $this->render("view", array("model" => $model));
+                if (file_exists($fullImgSource))
+                {
+                    unlink($fullImgSource);
+                }
+                die();
+            }
+        }
+        //****************************************************************
+
         
     }
 

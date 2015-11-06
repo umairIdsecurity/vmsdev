@@ -99,10 +99,10 @@ class HelpDesk extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         
         $module = CHelper::get_allowed_module();        
-        if( $module == "CVMS" )
-           $criteria->addCondition ('helpdesk_group_id IN (4, 6)');
-        if( $module == "AVMS" )
-           $criteria->addCondition ('helpdesk_group_id IN (2, 5, 7)');
+//        if( $module == "CVMS" )
+//           $criteria->addCondition ('helpdesk_group_id IN (4, 6)');
+//        if( $module == "AVMS" )
+//           $criteria->addCondition ('helpdesk_group_id IN (2, 5, 7)');
             
          $criteria->addCondition ('created_by = '.Yii::app()->user->id);
         return new CActiveDataProvider($this, array(

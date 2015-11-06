@@ -17,7 +17,13 @@ class ImportTenantForm extends CFormModel
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('file', 'file', 'types'=>'tenant', 'maxSize'=>1024 * 1024 * 20, // 30MB
+            array('tenantFile', 'file', 'types'=>'tenant', 'maxSize'=>1024 * 1024 * 20, // 30MB
+                'tooLarge'=>'The file was larger than 20MB. Please upload a smaller file.',
+                'allowEmpty' => false,
+                'message' => 'Please upload a file.',
+                'wrongType' => 'Only tenant files are allowed.'
+            ),
+            array('avms7File', 'file', 'types'=>'csv', 'maxSize'=>1024 * 1024 * 20, // 30MB
                 'tooLarge'=>'The file was larger than 20MB. Please upload a smaller file.',
                 'allowEmpty' => false,
                 'message' => 'Please upload a file.',
@@ -32,7 +38,8 @@ class ImportTenantForm extends CFormModel
     public function attributeLabels()
     {
         return array(
-            'file' => 'Tenant file',
+            'tenantFile' => 'Tenant file',
+            'avms7File' => 'AVMS 7 file',
         );
     }
 }

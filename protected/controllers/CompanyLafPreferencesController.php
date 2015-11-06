@@ -149,25 +149,37 @@ class CompanyLafPreferencesController extends Controller {
 
     public function actionAjaxCrop() {
         $jpeg_quality = 90;
-
-        $src = $_REQUEST['imageUrl'];
+         
+        //$src = $_REQUEST['imageUrl']; 
+         $photo = Photo::model()->findByPk($_REQUEST["logo_id"]);
+       echo  $src = $photo->relative_path;
+          
+        $file = fopen($src,"w");
+        fwrite($file, base64_decode($photo->db_image));
+        fclose($file);
+ 
         $img_r = imagecreatefromjpeg($src);
         $dst_r = imagecreatetruecolor(184, 114);
         $usernameHash = hash('adler32', "visitor");
-        $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";
+        $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".jpg";
         imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x1'], $_REQUEST['y1'], 184, 114, $_REQUEST['width'], $_REQUEST['height']);
-        if (file_exists($src)) {
-            unlink($src);
-        }
+      
         header('Content-type: image/jpeg');
         imagejpeg($dst_r, "uploads/company_logo/" . $uniqueFileName, $jpeg_quality);
 
-
+        // Now convert the same croped image into blob for save
+        $cropedImage = file_get_contents("uploads/company_logo/" . $uniqueFileName);
+        $saveImage = base64_encode($cropedImage);
+        
         Photo::model()->updateByPk($_REQUEST['photoId'], array(
             'unique_filename' => $uniqueFileName,
             'relative_path' => "uploads/company_logo/" . $uniqueFileName,
+            'db_image' => $saveImage,
         ));
-
+        
+          if (file_exists($src)) {
+           // unlink($src);
+        }
 
         exit;
         return true;

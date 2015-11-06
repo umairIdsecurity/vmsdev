@@ -24,7 +24,11 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
 ?>
-
+<style>
+    div.form label {
+        display: inline !important;
+    }
+    </style>
 <div class="form" data-ng-app="PwordForm">
 
     <?php
@@ -178,12 +182,29 @@ if ($this->action->id == 'update') {
                         </tr>
                     </table><!--Company Contact field-->
                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -370px; max-width: 275px !important; display: block;">
-                    <table>
+                    <table width="100%">
                         <tbody >
                         <tr>
                             <td><strong>Password Options</strong></td>
                         </tr>
-                        <tr>
+                        
+                 <tr>
+                    <td>
+                        <?php
+                        if (!isset($model->password_requirement)) {
+                            $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                        }
+
+                        echo $form->radioButtonList($model, 'password_requirement',
+                            array(
+                                PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
+                                PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
+                            ), array('class' => 'password_requirement form-label'));
+                        ?>
+                        <?php echo $form->error($model, 'password_requirement'); ?>
+                    </td>
+                </tr>
+                        <tr class="show_password_fields" style=" display:none;">
                             <td>
                                 <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
                                     <tr>
@@ -336,6 +357,18 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+$(document).ready(function() {
+   $(".password_requirement").click(function() {
+
+   if( $(".password_requirement:checked").val() == 2 ) {
+        $(".show_password_fields").show();
+    }
+    else {
+        $(".show_password_fields").hide();
+    }
+    
+   }); 
+});
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();

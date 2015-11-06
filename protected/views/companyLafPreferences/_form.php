@@ -589,7 +589,8 @@ $company = Company::model()->findByPk($session['company']);
                     width: $("#width").val(),
                     height: $("#height").val(),
                     imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
-                    photoId: $('#Host_photo').val()
+                    photoId: $('#Host_photo').val(),
+                    logo_id: $('#CompanyLafPreferences_logo').val()
                 },
                 dataType: 'json',
                 success: function (r) {

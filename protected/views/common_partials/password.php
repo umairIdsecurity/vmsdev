@@ -11,9 +11,25 @@ if (isset($company) && !empty($company)) {
         <tr>
             <td><strong>Password Options</strong></td>
         </tr>
-        <tr>
+            <tr>
+                    <td>
+                        <?php
+                        if (!isset($model->password_requirement)) {
+                            $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                        }
+
+                        echo $form->radioButtonList($model, 'password_requirement',
+                            array(
+                                PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
+                                PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
+                            ), array('class' => 'password_requirement form-label', 'separator' => ''));
+                        ?>
+                        <?php echo $form->error($model, 'password_requirement'); ?>
+                    </td>
+                </tr>
+        <tr class="show_password_fields" style=" display:none;">
             <td>
-                <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
+                <table style="width:253px; border-left-style:none; border-top-style:none">
                     <tr>
                         <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                     </tr>
@@ -89,6 +105,19 @@ if (isset($company) && !empty($company)) {
 
  <!-- password-border -->
 <script>
+
+$(document).ready(function() {
+   $(".password_requirement").click(function() {
+
+   if( $(".password_requirement:checked").val() == 2 ) {
+        $(".show_password_fields").show();
+    }
+    else {
+        $(".show_password_fields").hide();
+    }
+    
+   }); 
+});
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();

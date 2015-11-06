@@ -152,12 +152,12 @@ class CompanyLafPreferencesController extends Controller {
          
         //$src = $_REQUEST['imageUrl']; 
          $photo = Photo::model()->findByPk($_REQUEST["logo_id"]);
-         $src = Yii::getPathOfAlias('webroot')."/".$photo->relative_path;
+       echo  $src = $photo->relative_path;
           
         $file = fopen($src,"w");
         fwrite($file, base64_decode($photo->db_image));
         fclose($file);
-
+ 
         $img_r = imagecreatefromjpeg($src);
         $dst_r = imagecreatetruecolor(184, 114);
         $usernameHash = hash('adler32', "visitor");
@@ -178,7 +178,7 @@ class CompanyLafPreferencesController extends Controller {
         ));
         
           if (file_exists($src)) {
-            unlink($src);
+           // unlink($src);
         }
 
         exit;

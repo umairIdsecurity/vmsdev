@@ -50,5 +50,7 @@
     <a class="btn btn-link" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create AVMS Login</a>
     <br><br>
     <a style="margin-left: -12px" class="btn btn-link" href="<?php echo Yii::app()->createUrl('preregistration/forgot'); ?>">Forgot password?</a>
+    
+    <a style="margin-left: -15px" class="btn btn-link" href='<?php echo Yii::app()->getBaseUrl(true)."?r=index.php/site/login";?>'>Go to Operator Login</a>
     <?php $this->endWidget(); ?>
 </div>

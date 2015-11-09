@@ -1,6 +1,5 @@
 <?php
 $session = new CHttpSession;
-
 $session['count'] = 1;
 //date_default_timezone_set('Asia/Manila'); remove hard code
 //$tenant = User::model()->findByPk($visitorModel->tenant);
@@ -179,7 +178,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
             //}
                 
-            $condition = $model->card_type > 4? "module='AVMS'": "module='CVMS'";
+            $condition = $model->card_type > 4 ? "module='AVMS'": "module='CVMS'";
             $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
             echo $detailForm->dropDownList($model, 'reason', $reasons, array("empty"=>"Select Visit Reason"));
             echo "<br />";
@@ -191,21 +190,33 @@ $detailForm = $this->beginWidget('CActiveForm', [
         if ($model->visit_status == VisitStatus::AUTOCLOSED) {
             $cardTypeOptions['disabled'] = 'disabled';
         }
-        $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
-        foreach ($cardTypes as $key => $item) {
-
         
-        
-            //$cardList = ($asic) ? CardType::$VIC_CARD_TYPE_LIST : CardType::$CORPORATE_CARD_TYPE_LIST;
-
-            $cardList = ($model->card_type > CardType::CONTRACTOR_VISITOR) ? CardType::$VIC_CARD_TYPE_LIST : CardType::$CORPORATE_CARD_TYPE_LIST;
-            
-            if($item == 'Multiday Visitor'){$item="MultiDay";}
-            if($item == 'Same Day Visitor'){$item="Same Day";}
-            if (in_array($key, $cardList)) {
-                $cardTypeResults[$key] = 'Card Type: ' . $item;
+        //$cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
+        $workstationCards = Yii::app()->db->createCommand()
+                ->select("c.id,c.name") 
+                ->from("card_type c")
+                ->join("workstation_card_type wc","c.id=wc.card_type")
+                ->join("workstation w","w.id=wc.workstation")
+                ->where("w.id=".$session['workstation'])
+                ->queryAll();
+        $cardTypes = CHtml::listData($workstationCards, 'id', 'name');
+        $cardTypeResults = array();
+        if(!empty($cardTypes))
+        {
+            foreach ($cardTypes as $key => $item) 
+            {
+                $cardList = ($model->card_type > CardType::CONTRACTOR_VISITOR) ? CardType::$VIC_CARD_TYPE_LIST : CardType::$CORPORATE_CARD_TYPE_LIST;
+                if($item == 'Multiday Visitor'){$item="MultiDay";}
+                if($item == 'Same Day Visitor'){$item="Same Day";}
+                if (in_array($key, $cardList)) 
+                {
+                    $cardTypeResults[$key] = 'Card Type: ' . $item;
+                }
             }
         }
+        else{
+            $cardTypeResults[] = "No assigned Card Types";
+        }    
         echo $detailForm->dropDownList($model, 'card_type', $cardTypeResults, $cardTypeOptions);
         echo '<br />';
 

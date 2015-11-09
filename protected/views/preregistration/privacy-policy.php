@@ -1,4 +1,6 @@
-
+<?php
+$session = new CHttpSession;
+?>
 <!-- <div class="page-content"> -->
 
     <!-- <div class="row"><div class="col-sm-12">&nbsp;</div></div> -->
@@ -49,7 +51,7 @@
         <div class="form-group" id="privacy_notice">
 
 
-            <label class="checkbox text-size"><input id="toggleCheckbox" name="name1" type="checkbox" value="0"><span class="checkbox-style"></span><span class=" text-size" style="line-height:21px">I consent to Moorabin Airport using and disclosing my personal information in accordance with the Airport’s privacy notice.</span></label>
+            <label class="checkbox text-size"><input <?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? "checked":""; ?> id="toggleCheckbox" name="name1" type="checkbox" value="<?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? '1':'0';?>"><span class="checkbox-style"></span><span class=" text-size" style="line-height:21px">I consent to Moorabin Airport using and disclosing my personal information in accordance with the Airport’s privacy notice.</span></label>
             
             <div id="errorDiv" style="display:none;color:red;">
                 Please mark Privacy Notice
@@ -62,10 +64,11 @@
         <div class="col-sm-12">
             <div class="">
                 <div class="pull-left">
-                    <a href="<?=Yii::app()->createUrl("preregistration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    <a href="<?php echo Yii::app()->createUrl("preregistration"); ?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
                 <div class="pull-right">
-                    <a id="nextLink" href="javascript:;" class="btn btn-primary btn-next">NEXT <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <?php (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? $link = Yii::app()->createUrl("preregistration/declaration"):$link = 'javascript:;';?>
+                    <a id="nextLink" href="<?= $link ?>" class="btn btn-primary btn-next">NEXT <span class="glyphicon glyphicon-chevron-right"></span></a>
                 </div>
             </div>
         </div>
@@ -94,4 +97,5 @@
             $("#errorDiv").hide();
         }
     });
+
 </script>

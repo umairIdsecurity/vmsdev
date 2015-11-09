@@ -446,6 +446,8 @@ class PreregistrationController extends Controller
 			    		$this->sendEmailToASIC($loggedUserEmail,$email,$visitId);
 					}
 					$this->unsetVariablesForGui();
+
+					$session['date_of_visit'] = $model->date_check_in;
 					$this->redirect(array('preregistration/success'));
 				}
 			}else{

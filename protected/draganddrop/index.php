@@ -346,6 +346,7 @@ if (isset($_GET['viewFrom'])) {
                                     document.getElementById('photoCropPreview').src =  "data:image;base64,"+ value.db_image;
                                     document.getElementById('photoPreview').src =  "data:image;base64,"+ value.db_image;
                                     $(".companylogopreview").attr("src", "data:image;base64,"+ value.db_image);
+                                    $('.companyPhotoDiv img').attr("src", "data:image;base64,"+ value.db_image);
                                 }
                             });
                             if ($("#viewFrom").val() == '1') {

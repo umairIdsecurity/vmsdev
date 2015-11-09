@@ -1181,7 +1181,6 @@ class Visit extends CActiveRecord {
          
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
-
                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
                 if( $isExpired <= 0 ) 
                     $totalCount = $dateOut->diff($dateIn)->days;
@@ -1189,7 +1188,18 @@ class Visit extends CActiveRecord {
                     $totalCount = $dateIn->diff($dateNow)->days +1;
                 return $totalCount + $oldVisitsCount;
                 break;
-
+           
+            case CardType::MANUAL_VISITOR:    
+                $isExpired = $dateNow->diff($dateOut)->format("%r%a");
+                if( $isExpired == 0 ) 
+                    $totalCount = $dateOut->diff($dateIn)->days;
+                 elseif( $isExpired < 0 ) 
+                    $totalCount = $dateOut->diff($dateIn)->days +1;
+                else
+                    $totalCount = $dateIn->diff($dateNow)->days +1;
+                return $totalCount + $oldVisitsCount;
+                break;
+                
             case CardType::VIC_CARD_SAMEDATE:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
                     // return 1;
@@ -1220,6 +1230,7 @@ class Visit extends CActiveRecord {
                 break;
 
             case CardType::VIC_CARD_MULTIDAY:
+            case CardType::MULTI_DAY_VISITOR:
                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
                 if( $isExpired < 0 ) 
                     $totalCount = $dateOut->diff($dateIn)->days;
@@ -1323,7 +1334,7 @@ class Visit extends CActiveRecord {
                if( $dateNow->format("Y") == $dateIn->format("Y")) {
                  
                 // Dont add 1 for Manual visits   
-                if ( $v->card_type != CardType::VIC_CARD_MANUAL )  
+                if ( $v->card_type != CardType::VIC_CARD_MANUAL && $v->card_type != CardType::MANUAL_VISITOR)  
                     $visitCount += ($dateIn->diff($dateOut)->days + 1);
                 else  
                     $visitCount += $dateIn->diff($dateOut)->days;

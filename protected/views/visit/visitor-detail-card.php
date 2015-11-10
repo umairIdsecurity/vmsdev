@@ -148,7 +148,10 @@ $detailForm = $this->beginWidget('CActiveForm', [
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
-
+            elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_CORPORATE) {
+                $profileType = Visitor::PROFILE_TYPE_CORPORATE;
+            }
+            if( count(Visitor::$VISITOR_CARD_TYPE_LIST[$profileType]) )
             echo $detailForm->dropDownList($visitorModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
         //}

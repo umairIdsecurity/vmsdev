@@ -304,23 +304,30 @@ $defaultKey = key($asicCardTypes);
                                 </td>
                             </tr>
                             
-                            <tr>
+<!--                            <tr>
                                 <td id="userCompanyRow">
                                     <div style="margin-bottom: 5px;">
-                                        <?php
+                                        <?php 
+                                        /* 
+                                         * Add Host does not require Add Company as the Host is always an internal staff Member. 
+                                         * Remove Add Company for Log Visit > Add Host
+                                         *
                                             $this->widget('application.extensions.select2.Select2', array(
                                             'model' => $userModel,
                                             'attribute' => 'company',
                                             'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),
                                             'selectedItems' => array(), // Items to be selected as default
                                             'placeHolder' => 'Please select a company'
-                                        ));
+                                            
+                                        ));*/
                                         ?>
                                         <span class="required">*</span>
-                                        <?php echo $form->error($userModel, 'company', array("style" => "margin-top:0px")); ?>
+                                        <?php //echo $form->error($userModel, 'company', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
-                            </tr>
+                            </tr>-->
+                            <input type="hidden" id="User_company">
+                            
                             <tr>
                                 <td>
                                     <div style="margin-bottom: 5px;" id="userStaffRow"></div>

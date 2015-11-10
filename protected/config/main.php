@@ -47,6 +47,7 @@ $result = CMap::mergeArray(
                 'application.service.*',
                 'application.helpers.*',
                 'application.extensions.*',
+                'application.extensions.EHttpClient.*',
                 'application.extensions.yii-mail.YiiMailMessage',
                 'application.models.preregistration.*',
             ),

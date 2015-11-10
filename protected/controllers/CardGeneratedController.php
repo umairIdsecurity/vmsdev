@@ -262,7 +262,8 @@ class CardGeneratedController extends Controller {
         if ($model->card_type > 4) {
             $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
         } else {
-            $html2pdf->WriteHTML($this->renderPartial('_card-corporate', $data, true));
+            //$html2pdf->WriteHTML($this->renderPartial('_card-corporate', $data, true));
+             $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
         }
 
 

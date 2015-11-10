@@ -195,14 +195,20 @@ $detailForm = $this->beginWidget('CActiveForm', [
         }
         
         //$cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
-        $workstationCards = Yii::app()->db->createCommand()
-                ->select("c.id,c.name") 
-                ->from("card_type c")
-                ->join("workstation_card_type wc","c.id=wc.card_type")
-                ->join("workstation w","w.id=wc.workstation")
-                ->where("w.id=".$session['workstation'])
-                ->queryAll();
-        $cardTypes = CHtml::listData($workstationCards, 'id', 'name');
+        $cardTypes = array();
+        if(isset($session['workstation']) && $session['workstation'] != ""){
+            $workstationCards = Yii::app()->db->createCommand()
+                    ->select("c.id,c.name") 
+                    ->from("card_type c")
+                    ->join("workstation_card_type wc","c.id=wc.card_type")
+                    ->join("workstation w","w.id=wc.workstation")
+                    ->where("w.id=".$session['workstation'])
+                    ->queryAll();
+            $cardTypes = CHtml::listData($workstationCards, 'id', 'name');
+        }else{
+            $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
+        }
+
         $cardTypeResults = array();
         if(!empty($cardTypes))
         {
@@ -284,11 +290,10 @@ $detailForm = $this->beginWidget('CActiveForm', [
         $('.btnUpdateVisitorDetailForm').on('click', function (e) {
             var checkWorkStation1 = checkWorkstation();
             var checkVisitorType1 = checkVisitorType();
-
             if(checkVisitorType1 == true && checkWorkStation1 == true) {
                 var checkCardStatus1 = checkCardStatus();
                 if(checkCardStatus1 == true){
-                    $('#update-visitor-detail-form').submit();
+                    //$('#update-visitor-detail-form').submit();
                 }else {
                     return false;
                 }

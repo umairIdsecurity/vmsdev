@@ -596,7 +596,11 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
 
-            } 
+            }
+
+            if(!isset($model->visit_status) || $model->visit_status != "") {
+                $model->visit_status = $oldStatus;
+            }
                     
             // save visit model
             if ($model->save()) {

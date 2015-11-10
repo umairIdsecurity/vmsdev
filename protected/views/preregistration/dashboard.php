@@ -31,8 +31,8 @@ if(Yii::app()->user->hasState('account')){
         <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/addCompanyContact'); ?>">Add Company Contact</a></li>
     <?php endif; ?>
     
-    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/renewApplyAsic'); ?>">Apply for or Renew an ASIC</a></li>
-    <li class="btn btn-lg btn-block"><a href="<?php echo Yii::app()->createUrl('preregistration/applicationStatus'); ?>">ASIC Application Status</a></li>
+    <li class="btn btn-lg btn-block"><a href="<?php //echo Yii::app()->createUrl('preregistration/renewApplyAsic'); ?>">Apply for or Renew an ASIC</a></li>
+    <li class="btn btn-lg btn-block"><a href="<?php //echo Yii::app()->createUrl('preregistration/applicationStatus'); ?>">ASIC Application Status</a></li>
     <?php
         /*if($account==='ASIC'){
             echo '<li class="btn btn-lg btn-block"><a href="#">ASIC sponsor verifications</a></li>';

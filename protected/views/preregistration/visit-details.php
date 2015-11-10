@@ -1,10 +1,11 @@
 <?php
 
-$timeIn = explode(":", '00:00:00');
+/*$timeIn = explode(":", '00:00:00');
 if ($model->time_in != '') {
     $timeIn = explode(":", $model->time_in);
-}
-
+}*/
+$timeIn[0] = date("H");
+$timeIn[1] = date("i");
 
 ?>
 

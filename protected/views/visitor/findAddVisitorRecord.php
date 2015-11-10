@@ -514,8 +514,8 @@ $model->identification_country_issued = 13;
                             <?php if (!in_array($session['role'], [Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_AGENT_AIRPORT_OPERATOR])): ?>
                             <tr class="vic-visitor-fields">
                                 <td>
-                                    <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
-                                    <label for="Visitor_alternative_identification" id="alternative_identification_label" class="form-label">
+                                    <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;', 'onclick'=>"switchIdentification();")); ?>
+                                    <label for="Visitor_alternative_identification" id="alternative_identification_label" class="form-label" onclick="switchIdentification();">
                                         Applicant does not have one of the above identifications
                                     </label>
                                 </td>
@@ -887,7 +887,7 @@ $model->identification_country_issued = 13;
     }
 
     function switchIdentification() {
-        if ($('#Visitor_alternative_identification').attr('checked')) {
+         if ($('#Visitor_alternative_identification').is(':checked')) {
             $('.primary-identification-require').hide();
             $('.alternate-identification-require').show();
             $('.row_document_name_number').show('slow');

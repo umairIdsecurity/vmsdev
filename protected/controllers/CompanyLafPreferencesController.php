@@ -152,7 +152,7 @@ class CompanyLafPreferencesController extends Controller {
          
         //$src = $_REQUEST['imageUrl']; 
          $photo = Photo::model()->findByPk($_REQUEST["logo_id"]);
-       echo  $src = $photo->relative_path;
+         $src = $photo->relative_path;
           
         $file = fopen($src,"w");
         fwrite($file, base64_decode($photo->db_image));
@@ -178,7 +178,7 @@ class CompanyLafPreferencesController extends Controller {
         ));
         
           if (file_exists($src)) {
-           // unlink($src);
+           unlink($src);
         }
 
         exit;

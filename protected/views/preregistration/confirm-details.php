@@ -105,6 +105,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             'model'       => $model,
                             'attribute'   => 'date_of_birth',
                             'options'     => array(
+                                'maxDate'=>'-1',
                                 'dateFormat' => 'dd-mm-yy',
                                 'changeMonth' => true,
                                 'changeYear' => true,
@@ -121,7 +122,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'identification_type'); ?>
 
                 </div>
@@ -145,12 +146,14 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             'model'       => $model,
                             'attribute'   => 'identification_document_expiry',
                             'options'     => array(
+                                'minDate'=>'0',
                                 'dateFormat' => 'dd-mm-yy',
+                                'changeMonth' => true,
+                                'changeYear' => true
                             ),
                             'htmlOptions' => array(
                                 'maxlength'   => '10',
                                 'placeholder' => 'Expiry',
-                                /*'style'       => 'width: 80px;',*/
                                 'class' => 'form-control input-sm'
                             ),
                         ));

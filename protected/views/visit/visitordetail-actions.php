@@ -434,13 +434,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
                    return false;
             }
-            
+           
             // Check if Visit Reason Checkbox is ticked
-            if( $("#reasonActiveVisit").is(":checked") == false) {
+            if( $("#reasonActiveVisit").length && $("#reasonActiveVisit").is(":checked") == false) {
                     $("#visit_reason_checkbox_error").show();
                     return false;
             }
-            
             
             // Check ASIC Sponsor
             if ( $("#asicSponsorActiveVisitLink").length && !$("#asicSponsorActiveVisitLink").is(":checked")) {

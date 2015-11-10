@@ -129,7 +129,7 @@ class TenantTransferController extends Controller
         if (isset($_POST['ImportTenantForm'])) {
             $model->attributes = $_POST['ImportTenantForm'];
             $this->importTenant($model);
-            $this->importAvms7Data($model);
+            //$this->importAvms7Data($model);
 
         }
         return $this->render("importTenant", array("model" => $model));
@@ -193,70 +193,8 @@ class TenantTransferController extends Controller
                             }
 
                             $rows = (array)$content;
-                            $cols = array();
-                            $sql = '';
 
-                            $isAutoIncrement = sizeof($rows) > 0 && isset($rows[0]->id) && Yii::app()->db->schema->tables[$tableName]->columns['id']->autoIncrement;
-
-                            foreach ($rows as $rowKey => $row) {
-                                $row = (array)$row;
-
-                                // remember the old id for mapping later
-                                $oldId = null;
-                                if (isset($row['id'])) {
-                                    $oldId = $row['id'];
-                                    if ($isAutoIncrement) {
-                                        unset($row['id']);
-                                    }
-                                }
-
-                                // massage the data in out of the ordinary circumstances
-                                $this->beforeInsertRow($tableName,$row,$oldId);
-
-                                // populate referencing columns
-                                $this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables);
-
-                                if (!$cols) {
-                                    $cols = array_keys($row);
-                                    $colsQuoted = [];
-                                    foreach($cols as $col){
-                                        $colsQuoted[] = Yii::app()->db->quoteColumnName($col);
-                                    }
-                                }
-                                $vals = array();
-                                foreach ($row as $columnName => $value) {
-                                    if ($value == '') {
-                                        $vals[] = 'NULL';
-                                    } else {
-                                        $vals[] = $this->quoteValue($tableName, $columnName, $value);
-                                    }
-
-                                }
-
-                                $quotedTableName = Yii::app()->db->quoteTableName($tableName);
-
-                                $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
-
-                                //RUN SQL
-                                echo $sql . "<br>";
-                                Yii::app()->db->createCommand($sql)->execute();
-
-                                if ($isAutoIncrement) {
-
-                                    //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
-                                    $row['id'] = Yii::app()->db->getLastInsertID();
-
-                                }
-
-                                $this->afterInsertRow($tableName,$row,$idMappings,$oldId);
-
-                                if (isset($row['id'])) {
-                                    $idMappings[$tableName][$oldId] = $row['id'];
-                                    echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
-                                }
-                                echo "<br><br>";
-                            }
-                            echo "<br><br>";
+                            $this->importTable($tableName,$rows,$foreignKeys,$targetTables,$idMappings);
                         }
                     }
 
@@ -280,6 +218,73 @@ class TenantTransferController extends Controller
         //****************************************************************
 
         
+    }
+
+    function importTable($tableName,$rows,$foreignKeys,$targetTables,$idMappings){
+
+        $cols = [];
+
+        $isAutoIncrement = sizeof($rows) > 0 && isset($rows[0]->id) && Yii::app()->db->schema->tables[$tableName]->columns['id']->autoIncrement;
+
+        foreach ($rows as $rowKey => $row) {
+            $row = (array)$row;
+
+            // remember the old id for mapping later
+            $oldId = null;
+            if (isset($row['id'])) {
+                $oldId = $row['id'];
+                if ($isAutoIncrement) {
+                    unset($row['id']);
+                }
+            }
+
+            // massage the data in out of the ordinary circumstances
+            $this->beforeInsertRow($tableName,$row,$oldId);
+
+            // populate referencing columns
+            $this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables);
+
+            if (!$cols) {
+                $cols = array_keys($row);
+                $colsQuoted = [];
+                foreach($cols as $col){
+                    $colsQuoted[] = Yii::app()->db->quoteColumnName($col);
+                }
+            }
+            $vals = array();
+            foreach ($row as $columnName => $value) {
+                if ($value == '') {
+                    $vals[] = 'NULL';
+                } else {
+                    $vals[] = $this->quoteValue($tableName, $columnName, $value);
+                }
+
+            }
+
+            $quotedTableName = Yii::app()->db->quoteTableName($tableName);
+
+            $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
+
+            //RUN SQL
+            echo $sql . "<br>";
+            Yii::app()->db->createCommand($sql)->execute();
+
+            if ($isAutoIncrement) {
+
+                //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
+                $row['id'] = Yii::app()->db->getLastInsertID();
+
+            }
+
+            $this->afterInsertRow($tableName,$row,$idMappings,$oldId);
+
+            if (isset($row['id'])) {
+                $idMappings[$tableName][$oldId] = $row['id'];
+                echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
+            }
+            echo "<br><br>";
+        }
+        echo "<br><br>";
     }
 
     function beforeInsertRow($tableName, &$row,$oldId){
@@ -364,7 +369,7 @@ class TenantTransferController extends Controller
                 // get the reference
                 $ref = $foreignKeys[$tableName][$columnName];
 
-                // check that wee need to update
+                // check that we need to update
                 if(in_array($ref['referenced_table_name'],$targetTables)) {
 
 

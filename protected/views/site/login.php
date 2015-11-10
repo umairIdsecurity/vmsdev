@@ -90,8 +90,8 @@ $this->pageTitle=Yii::app()->name . ' - Login';
         <tr class="">
             <td colspan="2">
                 <a class="forgotLink" style="padding:0" class="btn btn-link" href="<?=$this->createUrl('site/forgot')?>">Forgot password?</a>
-                &nbsp;&nbsp;&nbsp;
-                <a class="forgotLink" style="padding:0" class="btn btn-link" href='<?php echo Yii::app()->getBaseUrl(true)."/index.php/preregistration";?>'>Go to Preregistration</a>
+                <!-- &nbsp;&nbsp;&nbsp;
+                <a class="forgotLink" style="padding:0" class="btn btn-link" href='<?php //echo Yii::app()->getBaseUrl(true)."/index.php/preregistration";?>'>Go to Preregistration</a> -->
             </td>
         </tr>
         

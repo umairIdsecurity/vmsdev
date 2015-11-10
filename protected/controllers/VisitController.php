@@ -346,6 +346,7 @@ class VisitController extends Controller {
 
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
+
         
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
@@ -401,8 +402,8 @@ class VisitController extends Controller {
 
         // Update visitor detail form ( left column on visitor detail page )
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) {
-            $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
 
+            $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
 
             if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
@@ -414,6 +415,12 @@ class VisitController extends Controller {
              */
             $this->closedAsicPending($model, $visitorModel);
             
+            //update card type as well
+            if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {
+                $model->card_type = $_POST['Visit']['card_type'];
+                $model->save();
+            }
+
             $visitorModel->scenario = 'updateVic';
             if ($visitorModel->save()) {
                 // If visitor card status is VIC ASIC Issued then add new card status convert

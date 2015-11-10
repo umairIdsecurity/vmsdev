@@ -637,7 +637,7 @@ class VisitorController extends Controller {
              if (empty($model->tenant)) {
                 $model->tenant = $session['tenant'];
             }
-           
+            
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 // Add company contact for this visitor if profile is ASIC
                 if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {

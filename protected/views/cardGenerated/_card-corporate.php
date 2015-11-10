@@ -1,4 +1,5 @@
 <?php
+
 if (array_key_exists($model->card_type, CardType::$CARD_TYPE_LIST)) {
     $cardType = !empty($model->card_type) ? CardType::$CARD_TYPE_LIST[$model->card_type] : NULL;
 }
@@ -73,6 +74,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     $host_first_name = $host->first_name;
     $host_last_name = $host->last_name;
 }
+/** this code giving error that image not found **/
 if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
     $vertical_image = "http://".$_SERVER['HTTP_HOST'].Yii::app()->getBaseUrl()."/images/contractor.png";
 }else{

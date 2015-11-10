@@ -51,8 +51,25 @@ class UserServiceImpl implements UserService {
         if (!($user->save())) {
             return false;
         }else{
-            if ($user->password_option==2)
-                User::model()->restorePassword($user['email']);
+            /*if ($user->password_option==2)
+                User::model()->restorePassword($user['email']);*/
+            #Send mail
+            if ($user->password_option == PasswordRequirement::PASSWORD_IS_REQUIRED) 
+            {
+                $workstationObj = Workstation::model()->findByPk($workstation);
+                $loggedUserEmail = "admin@identitysecurity.com.au";
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+                $to=$user['email'];
+                $subject = "Invitation to Aviation Visitor Management System";
+                $body = "<html><body>Hi,<br><br>".
+                        $workstationObj->name." has requested a user account to be created for ".$user['email']."<br><br>".
+                        "Please click the following link to create your password:<br>".
+                        "http://vmsdev.identitysecurity.com.au/index.php?r=site/forgot<br>";
+                $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+                mail($to, $subject, $body, $headers);
+            }
 
             if (is_object($workstation)) {
                 User::model()->saveWorkstation($user->id, $workstation->id, $userLoggedIn->id);

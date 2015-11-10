@@ -75,7 +75,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
 <div style="clear: both;"></div>
 
 <div class="dropdown" style="margin-left: 21px; text-align: left;">
-<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
+<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, cardType::MANUAL_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
 
     <button class="btn btn-info printCardBtn dropdown-toggle actionForward" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
@@ -293,7 +293,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             if(checkVisitorType1 == true && checkWorkStation1 == true) {
                 var checkCardStatus1 = checkCardStatus();
                 if(checkCardStatus1 == true){
-                    //$('#update-visitor-detail-form').submit();
+                    $('#update-visitor-detail-form').submit();
                 }else {
                     return false;
                 }

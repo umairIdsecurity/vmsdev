@@ -1191,10 +1191,8 @@ class Visit extends CActiveRecord {
            
             case CardType::MANUAL_VISITOR:    
                 $isExpired = $dateNow->diff($dateOut)->format("%r%a");
-                if( $isExpired == 0 ) 
-                    $totalCount = $dateOut->diff($dateIn)->days;
-                 elseif( $isExpired < 0 ) 
-                    $totalCount = $dateOut->diff($dateIn)->days +1;
+                if( $isExpired <= 0 ) 
+                    $totalCount = $dateOut->diff($dateIn)->days + 1;
                 else
                     $totalCount = $dateIn->diff($dateNow)->days +1;
                 return $totalCount + $oldVisitsCount;

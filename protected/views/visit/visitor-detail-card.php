@@ -293,7 +293,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             if(checkVisitorType1 == true && checkWorkStation1 == true) {
                 var checkCardStatus1 = checkCardStatus();
                 if(checkCardStatus1 == true){
-                    //$('#update-visitor-detail-form').submit();
+                    $('#update-visitor-detail-form').submit();
                 }else {
                     return false;
                 }

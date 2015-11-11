@@ -84,6 +84,7 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
+        
         $model = new User;
         $userService = new UserServiceImpl();
         $session = new CHttpSession;

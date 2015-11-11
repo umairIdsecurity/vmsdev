@@ -709,6 +709,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         }
 
         $('#fromDay').on('change', function () {
+            
             var dt = new Date();
 
             if(dt.getFullYear()< $("#fromYear").val()) {

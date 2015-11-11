@@ -267,7 +267,7 @@ class VisitorController extends Controller {
             $this->render('update', array(
                 'model' => $model,
             ));
-    }
+        }
    
     
     }

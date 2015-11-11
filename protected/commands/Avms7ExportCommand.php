@@ -182,28 +182,32 @@ class Avms7ExportCommand extends CConsoleCommand
             $row = $data['visitor'][$i];
             if(isset($row['photo']) && $row['photo'] > ''){
                 $url = "https://avms7.idsecurity.com.au/store/files_thumb/".$row['photo'];
-                $client = new EHttpClient($url, array(
-                    'maxredirects' => 0,
-                    'timeout'      => 30));
-
                 echo "\r\n Downloading photo $url";
-                $response = $client->request();
-                if($response->isSuccessful())
-                {
-                    $image = $response->getRawBody();
+                try {
+                    $client = new EHttpClient($url, array(
+                        'maxredirects' => 0,
+                        'timeout' => 30));
 
-                    try {
-                        $photo = new PhotoImport;
-                        $photo->filename =$row['photo'];
-                        $photo->db_image =$image;
-                        $photo->save();
-                        $data['visitor'][$i]['photo'] = $photo->id;
+                    $response = $client->request();
+                    if ($response->isSuccessful()) {
+                        $image = $response->getRawBody();
 
-                    } catch(CException $e)
-                    {
-                        echo "\r\n".$e->getMessage();
+                        try {
+                            $photo = new PhotoImport;
+                            $photo->filename = $row['photo'];
+                            $photo->db_image = $image;
+                            $photo->save();
+                            $data['visitor'][$i]['photo'] = $photo->id;
+
+                        } catch (CException $e) {
+                            echo "\r\n" . $e->getMessage();
+                        }
+
+                    } else {
+                        $data['visitor'][$i]['photo'] = null;
                     }
-                } else {
+                } catch (CException $e){
+                    echo "\r\n".$e->getMessage();
                     $data['visitor'][$i]['photo'] = null;
                 }
 
@@ -266,7 +270,7 @@ class Avms7ExportCommand extends CConsoleCommand
     public function mapExistingData($tenant,$data,&$idMappings,$vms)
     {
         $idMappings['company'] = [];
-        $idMappings['company'][$data['tenant'][0]['ID']] = $tenant['id'];
+        $idMappings['company'][$tenant['code']] = $tenant['id'];
 
 
         foreach($data['tenant_agent'] as $agent){
@@ -368,7 +372,6 @@ class Avms7ExportCommand extends CConsoleCommand
                 v.Country as contact_country,
                 ad.asic_number as asic_no,
                 ad.asic_expiry as asic_expiry,
-
                 idA.DocumentType as identification_type,
                 idA.CountryIssue as identification_country_issued,
                 idA.Number as identification_document_no,
@@ -379,84 +382,90 @@ class Avms7ExportCommand extends CConsoleCommand
                 idC.DocumentType as identification_alternate_document_name2,
                 idC.Number as identification_alternate_document_no2,
                 idC.Expiry as identification_alternate_document_expiry2,
-                t.id as tenant,
-                ta.id as tenant_agent
+                oc.AirportCode as tenant,
+                IFNULL(g.id,a.id) as tenant_agent
 
-                from users t
-                  left join users ta on ta.ownerid = t.id and ta.level = 6
-                  join users v on v.ownerid in (t.ID,ta.ID) and v.level in (5,10)
-                  left join asic_data ad on ad.UserID = v.id
-                  left join identifications idA
-                               on v.id = idA.UserId
+                from users v
+                    join oc_set oc on v.id = oc.UserId and AirportCode = '$airportCode'
+                    left join agent_set on agent_set.ocid = oc.id
+                    left join users a on a.id = agent_set.AgentId
+                    left join agent on agent.UserId = agent_set.agentid
+                    left join users g on g.id  = agent.agentId
+                    left join asic_data ad on ad.UserID = v.id
+                    left join identifications idA
+                                               on v.id = idA.UserId
                                and idA.documenttype > ''
                                and idA.id = (select idAA.id
-                                               from identifications idAA
-                                               where idAA.UserID = v.id
-                                               order by id desc
-                                               limit 1)
+                                             from identifications idAA
+                                             where idAA.UserID = v.id
+                                             order by id desc
+                                             limit 1)
                   left join identifications idB
                                on v.id = idB.UserId
                                and idB.documenttype > ''
                                and idB.id = (select idBB.id
-                                               from identifications idBB
-                                               where idBB.UserID = v.id
-                                               order by id desc
-                                               limit 1,1)
+                                             from identifications idBB
+                                             where idBB.UserID = v.id
+                                             order by id desc
+                                             limit 1,1)
                    left join identifications idC
                                on v.id = idC.UserId
                                and idC.documenttype > ''
                                and idC.id = (select idCC.id
-                                               from identifications idCC
-                                               where idCC.UserID = v.id
-                                               order by id desc
-                                               limit 2,1)
-                where t.IBCode = '$airportCode'
+                                             from identifications idCC
+                                             where idCC.UserID = v.id
+                                             order by id desc
+                                             limit 2,1)
                 ",
 
             'visit' =>
-                "select v.id as id,
-                       v.visitorid as visitor,
+                "select l.id as id,
+                       l.visitorid as visitor,
                        9 as card_type,
-                       ct.ID as card,
-                       ct.visitor_type as visitor_type,
-                       v.ReasonNo as reason,
+                       t.ID as card,
+                       t.visitor_type as visitor_type,
+                       l.ReasonNo as reason,
                        1 as visitor_status,
                        c.UserID as host,
                        c.UserID as created_by,
-                       v.Date as date_in,
-                       v.Time as time_in,
+                       l.Date as date_in,
+                       l.Time as time_in,
                        c.Date as date_out,
                        c.Time as time_out,
-                       v.Date as date_check_in,
-                       v.Time as time_check_in,
+                       l.Date as date_check_in,
+                       l.Time as time_check_in,
                        c.Date as date_check_out,
                        c.Time as time_check_out,
                        case
-                        when v.IsClosed = 0 then 1
+                        when l.IsClosed = 0 then 1
                         else 0
                        end as visit_status,
                        null as workstaton,
-                       t.id as tenant,
-                       a.id as tenant_agent,
+                       oc.AirportCode as tenant,
+                       IFNULL(g.id,a.id) as tenant_agent,
                        0 as is_deleted,
                        c.Date as finish_date,
                        c.Time as finish_time,
                        c.DateCardReturned as card_returned_date,
                        n.Reason as negate_reason,
                        c.Date as visit_closed_date,
-                       v.UserID as closed_by,
+                       l.UserID as closed_by,
                        1 as asic_declaration,
                        1 as asic_verification,
                        null as company,
                        1 as is_listed
-                from users t
-                    left join users a on a.ownerid = t.id and a.level = 6 and t.ibcode = '$airportCode'
-                    join users vu on vu.ownerId in (t.id,a.id) and vu.level = 5
-                    join log_visit v on v.VisitorId = vu.Id
-                    join oc_set oc on v.SetID = oc.Id and oc.AirportCode = '$airportCode'
-                    join card_type ct on ct.ID = oc.CID
-                    left join close_visit c on v.ID = c.LoggedId
-                    left join log_negate n on c.Id = n.closedid",
+                from users v
+                    join oc_set oc on v.id = oc.UserId and AirportCode = '$airportCode'
+                    left join agent_set on agent_set.ocid = oc.id
+                    left join users a on a.id = agent_set.AgentId
+                    left join agent on agent.UserId = agent_set.agentid
+                    left join users g on g.id  = agent.agentId
+                    join log_visit l on l.VisitorId = v.Id
+                    join card_type t on t.ID = oc.CID
+                    left join close_visit c on l.ID = c.LoggedId
+                    left join log_negate n on l.Id = n.closedid
+
+                ",
             //        left join company_visitors vc on v.id = vc.visitorId
             //",
 

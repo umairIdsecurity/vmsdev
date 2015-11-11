@@ -321,37 +321,37 @@ class Avms7ExportCommand extends CConsoleCommand
                 limit 1
             ",
             'tenant_agent' => "
-                select a.*
-                from users t
-                      join users a on a.OwnerId = t.id
-                              and t.level = 3
-                              and a.level = 6
-                              and t.ibcode = '$airportCode'
-                              and a.ibcode = '$airportCode'
+                select distinct AirportCode as tenant, IFNULL(agent.AgentId,Agent_set.AgentId) as tenant_agent
+                from oc_set oc
+                    join agent_set on agent_set.ocid = oc.id and oc.AirportCode = 'MBW'
+                    left join agent on agent.UserId = agent_set.agentid
             ",
             "company" => "
                 select distinct c.id as id,
-                  c.company as name,
-                  c.company as trading_name,
-                  CONCAT_WS(' ',c.FirstName, c.LastName)  as contact,
-                  CONCAT_WS(' ',c.Unit,c.StreetNo,c.Street,c.StreetType,c.Suburb,c.State,c.PostCode) as billing_address,
-                  c.EmailAddress as email_address,
-                  c.Telephone as office_number,
-                  c.Mobile as mobile_number,
-                  1 as created_by_user,
-                  1 as created_by_visitor,
-                  t.id as tenant,
-                  a.id as tenant_agent,
-                  0 as is_deleted,
-                  3 as company_type
-                from  operational_need n
-                    join log_visit l on l.id = n.id
-                    join oc_set oc on oc.id = l.setid and oc.AirportCode = 'MBW'
-                    join users c on (c.id = n.CompanyId or c.emailAddress = n.ContactEmail or c.CompanyName = n.company) and c.level = 4
+                     min(c.company) as name,
+                     min(c.company) as trading_name,
+                     max(CONCAT_WS(' ',c.FirstName, c.LastName))  as contact,
+                     max(CONCAT_WS(' ',c.Unit,c.StreetNo,c.Street,c.StreetType,c.Suburb,c.State,c.PostCode)) as billing_address,
+                     max(c.EmailAddress) as email_address,
+                     max(c.Telephone) as office_number,
+                     max(c.Mobile) as mobile_number,
+                     1 as created_by_user,
+                     1 as created_by_visitor,
+                     oc.AirportCode as tenant,
+                     IFNULL(agent.AgentId,agent_set.AgentId) as tenant_agent,
+                     0 as is_deleted,
+                     3 as company_type
+                   from  operational_need n
+                       join log_visit l on l.id = n.id
+                       join oc_set oc on oc.id = l.setid and oc.AirportCode = '$airportCode'
+                       join users c on (c.id = n.CompanyId or c.emailAddress = n.ContactEmail) and c.level = 4
+                       left join agent_set on agent_set.ocid = oc.id
+                       left join agent on agent.UserId = agent_set.agentid
+                  group by c.id,oc.AirportCode, IFNULL(agent.AgentId,agent_set.AgentId)
 
             ",
             'visitor' =>
-                "select v.ID as id,
+                "select distinct v.ID as id,
                 v.FirstName as first_name,
                 v.MiddleName as middle_name,
                 v.LastName as last_name,
@@ -415,6 +415,7 @@ class Avms7ExportCommand extends CConsoleCommand
                                              where idCC.UserID = v.id
                                              order by id desc
                                              limit 2,1)
+                  order by v.id
                 ",
 
             'visit' =>

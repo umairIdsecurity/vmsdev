@@ -16,8 +16,7 @@ class Avms7ExportCommand extends CConsoleCommand
         ['table_name'=>'visitor', 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'visit'        ,'referenced_table_name'=>'visitor','referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'visit'        ,'referenced_table_name'=>'visitor','referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'workstation'   ,'referenced_table_name'=>'workstation','referenced_column_name'=>'id'],
 
     ];
 
@@ -331,7 +330,7 @@ class Avms7ExportCommand extends CConsoleCommand
                               and a.ibcode = '$airportCode'
             ",
             "company" => "
-                select c.id as id,
+                select distinct c.id as id,
                   c.company as name,
                   c.company as trading_name,
                   CONCAT_WS(' ',c.FirstName, c.LastName)  as contact,
@@ -345,11 +344,11 @@ class Avms7ExportCommand extends CConsoleCommand
                   a.id as tenant_agent,
                   0 as is_deleted,
                   3 as company_type
-                from users t
-                    left join users a on a.ownerid = t.id and a.level = 6 and a.ibcode = 'MBW'
-                    join users c on c.ownerid in (t.id,a.id) and c.level = 4
-                where t.ibcode = 'MBW'
-                and t.level = 3
+                from  operational_need n
+                    join log_visit l on l.id = n.id
+                    join oc_set oc on oc.id = l.setid and oc.AirportCode = 'MBW'
+                    join users c on (c.id = n.CompanyId or c.emailAddress = n.ContactEmail or c.CompanyName = n.company) and c.level = 4
+
             ",
             'visitor' =>
                 "select v.ID as id,

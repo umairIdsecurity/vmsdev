@@ -429,10 +429,91 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 
     ?>
 
-   
-      <?php $this->renderPartial("/common_partials/password", array("model"=>$model, "session"=>$session, "form"=>$form)); ?>
-           
-      <!-- password-border -->
+    <div class="password-border" style="margin-top:10px;">
+        <table>
+            <tbody >
+            <tr>
+                <td><strong>Password Options</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
+                        <tr>
+                            <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
+                        </tr>
+
+
+
+                        <tr id="third_option" class='hiddenElement'>
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <?php echo $form->hiddenField($model, 'password_option'); ?>
+                                <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
+                                &nbsp;Create Password
+                            </td>
+
+                            <?php echo "<br>". $form->error($model,'password_option'); ?>
+                        </tr>
+                        <tr>
+
+                            <td>
+                                <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                                       'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
+                                       type="password" id="Visitor_password" name="Visitor[password]">
+                                <span class="required">*</span>
+                                <?php  echo $form->error($model,'password'); ?>
+
+                            </td>
+                        </tr>
+
+                        <tr >
+                            <td >
+                                <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                       id="Visitor_repeatpassword" data-match="user.passwords"
+                                       name="Visitor[repeatpassword]"/>
+                                <span class="required">*</span>
+
+                                <div style='font-size:0.9em;color:red;position: static;'
+                                     data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does
+                                    not match with Repeat <br> Password.
+                                </div>
+                                <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td align="center">
+                                <div class="row buttons" style="margin-left:23.5px;">
+
+                                    <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                    <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" checked/>
+                                &nbsp;Send User Invitation</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div> <!-- password-border -->
  <div style="float:right; margin-right: 35px"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
 <?php } ?>
 

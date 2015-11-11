@@ -5,6 +5,11 @@ if (isset($company) && !empty($company)) {
     $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 }
 ?>
+<style>
+    input[type=radio] {
+        float:left;
+    }
+    </style>
 <div class="password-border" style="margin-top:10px;">
     <table>
         <tbody >

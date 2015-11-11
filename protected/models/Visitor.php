@@ -50,6 +50,7 @@ class Visitor extends CActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     public $repeatpassword;
+    public $password;
     public $password_option;
     public $password_requirement;
     public $alternative_identification;
@@ -238,6 +239,7 @@ class Visitor extends CActiveRecord {
                 visitor_card_status,
                 visitor_type,
                 visitor_workstation,
+                password,
                 repeatpassword,
                 password_option,
                 password_requirement,
@@ -291,7 +293,7 @@ class Visitor extends CActiveRecord {
             'except' => ['u18Rule', 'updateVic', 'delete']
         );
 
-
+  
         if (Yii::app()->controller->id === 'visitor') {
             if (Yii::app()->controller->action->id == 'addvisitor') {
                 $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state, contact_country', 'DropDown');

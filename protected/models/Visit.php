@@ -591,12 +591,12 @@ class Visit extends CActiveRecord {
 
             case Roles::ROLE_AGENT_ADMIN:
             case Roles::ROLE_AGENT_AIRPORT_ADMIN:
-            case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
+            case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
                 if (!empty($workstations)) {
                     $text = "";
@@ -813,12 +813,12 @@ class Visit extends CActiveRecord {
 
             case Roles::ROLE_AGENT_ADMIN:
             case Roles::ROLE_AGENT_AIRPORT_ADMIN:
-            case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
             case Roles::ROLE_OPERATOR:
-            case Roles::ROLE_AGENT_OPERATOR:
+            case Roles::ROLE_AGENT_OPERATOR:            
+            case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
                 if (!empty($workstations)) {
                     $text = "";

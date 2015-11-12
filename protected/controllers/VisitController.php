@@ -687,6 +687,7 @@ class VisitController extends Controller {
         // Auto Closed TO Closed the EVIC and 24 Hour Visits
         Visit::model()->setClosedAutoClosedVisits();
         $model = new Visit('search');
+
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];

@@ -3,7 +3,7 @@ $session = new CHttpSession;
 /* @var $this VisitController */
 /* @var $model Visit */
 $session = new CHttpSession();
-if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR) {
+if ($session['role'] == Roles::ROLE_AGENT_AIRPORT_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR) {
     echo "<h1>" . Workstation::model()->findByPk($session['workstation'])->name . "</h1>";
 } else {
     echo "<h1>Dashboard</h1>";

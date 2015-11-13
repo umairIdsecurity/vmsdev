@@ -15,10 +15,15 @@ class VisitorServiceImpl implements VisitorService {
 
     public function save($visitor, $visitReason, $sessionId) {
         $visitor->created_by = $sessionId;
-        if(!empty($visitor->birthdayYear) )
+
+        $visitor->date_of_birth = date("Y-m-d",strtotime($visitor->date_of_birth));
+
+        /*if(!empty($visitor->birthdayYear) )
             $visitor->date_of_birth = date('Y-m-d', strtotime($visitor->birthdayYear . '-' . $visitor->birthdayMonth . '-' . $visitor->birthdayDay));
         else
-            $visitor->date_of_birth = NULL;
+            $visitor->date_of_birth = NULL;*/
+
+
         // Change date formate from d-m-Y to Y-m-d
         if( !empty($visitor->identification_document_expiry))
             $visitor->identification_document_expiry = date("Y-m-d", strtotime($visitor->identification_document_expiry));

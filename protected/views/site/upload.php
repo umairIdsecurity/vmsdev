@@ -38,9 +38,6 @@ if (isset($_FILES["myfile"])) {
 
         //temporay uploaded -- will be deleted after saving in DB
         move_uploaded_file($_FILES["myfile"]["tmp_name"], $output_dir . $uniqueFileName);
-        
-        //save in database
-        
 
         //save image in db as diretced by Geoff
         $uploadedFile = $output_dir.$uniqueFileName;

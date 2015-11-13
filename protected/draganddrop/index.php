@@ -236,9 +236,7 @@ if (isset($_GET['viewFrom'])) {
 <script>
     $(document).ready(function()
     {
-
         $("a.active").parents('li').css("property", "value");
-
         $("#fileuploader").uploadFile({
             url: "<?php echo Yii::app()->createUrl('site/upload&id=' . $this->id . '&companyId=' . $dataId . '&actionId=' . $this->action->id); ?>",
             allowedTypes: "png,jpg,jpeg",
@@ -249,23 +247,19 @@ if (isset($_GET['viewFrom'])) {
             showStatusAfterSuccess: false,
             onSuccess: function(files, data, xhr)
             {
-                
                 if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit' ) {
                     var logo = document.getElementById('photoPreview');
                 } else if( $("#controllerId").val() == 'companyLafPreferences') {
                     var logo = document.getElementById('companyLogo');
                 }
-
                 var currentAction = $("#actionUpload").val();
-                
                 if (currentAction == 'update' && $("#controllerId").val() != 'visitor' )
                 {
                     /*logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
                     $(".companyLogoDiv").show();*/
-
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + data,
+                        url: "<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>" + data,
                         dataType: 'json',
                         data: $('#Host_photo').val(),
                         success: function(r) {
@@ -277,21 +271,19 @@ if (isset($_GET['viewFrom'])) {
                                     $(".companyLogoDiv").show();
 */
                                     logo.src = "data:image;base64,"+ value.db_image;
-                                    
                                     $(".companyLogoDiv").show();
                                 
                             });
                         }
                     });
 
-                } else {
+                } 
+                else {
                     //id of photo
-
                     if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
-
-                        $("#Visitor_photo").val(data);
-                                                
-                    } else if ($("#controllerId").val() == 'companyLafPreferences')
+                        $("#Visitor_photo").val(data);                          
+                    } 
+                    else if ($("#controllerId").val() == 'companyLafPreferences')
                     {
                         $("#CompanyLafPreferences_logo").val(data);
                     } else {
@@ -300,14 +292,13 @@ if (isset($_GET['viewFrom'])) {
 
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + data,
+                        url: "<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>" + data,
                         dataType: 'json',
                         data: data,
                         success: function(r) {
-
                             $.each(r.data, function(index, value) {
-                                if (($("#actionUpload").val() == 'update' || $("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') &&  $("#controllerId").val() == 'visitor')   ) {
-                                     
+                                if ((currentAction == 'update' || currentAction == 'addvisitor' || (currentAction == 'create') &&  $("#controllerId").val() == 'visitor')   ) {
+                                    
                                     //showing image from DB as saved in DB -- image is not present in folder                                    
                                     var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
                                    // if(  $("#controllerId").val() != 'visit') &&  )
@@ -316,10 +307,11 @@ if (isset($_GET['viewFrom'])) {
                                     $(".photo_visitor").src = "data:image;base64,"+ value.db_image;
                                     
                                     $("#Visitor_photo").val(data);
-                                    } else {
+                                }
+                                else {
                                       $(".photoDiv").show();
                                       // Visit Detail Page
-                                      if($("#actionUpload").val() == 'detail')
+                                      if(currentAction == 'detail')
                                         $(".photo_visitor").attr("src","data:image;base64,"+ value.db_image); 
                                         $("#Visitor_photo").val(data);
                                 }
@@ -339,7 +331,7 @@ if (isset($_GET['viewFrom'])) {
                                 } else if ($("#controllerId").val() == 'visitor') {
                                     $("#cropImageBtn").show();
                                 }
-                                if ($("#actionUpload").val() == 'customisation') {
+                                if (currentAction == 'customisation') {
                                     $("#Host_photo").val(data);
                                     $("#cropImageBtn").show();
                                     /*document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
@@ -357,6 +349,7 @@ if (isset($_GET['viewFrom'])) {
                 }
             }
         });
+
         if ($("#actionUpload").val() == 'detail') {
             $(".uploadnotetext").html('');
         }

@@ -1,7 +1,8 @@
 <?php
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 
 $session = new CHttpSession;
 
@@ -61,6 +62,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
     .required {
         padding-left: 10px;
+    }
+
+    .date_of_birth_class{
+        width: 71.5px !important;
     }
 
 </style>
@@ -304,18 +309,18 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td class="birthdayDropdown">
-                                <span>Date of Birth</span> <br/>
-                                <input type="hidden" id="dateofBirthBreakdownValueYear"
-                                       value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                                       value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueDay"
-                                       value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                                <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
-                                <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
-                                <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
-                                <?php //echo $form->dropDownList($model, 'birthdayYear',array(), array('class' => 'yearSelect')) ;?>
+                               <span>Date of Birth</span> <br/>
+                                <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
+                                <script>
+                                    $(function(){
+                                        $('#Visitor_date_of_birth').combodate({
+                                            minYear: (new Date().getFullYear()-100),
+                                            maxYear: (new Date().getFullYear()-10),
+                                            smartDays: true,
+                                            customClass: 'date_of_birth_class'
+                                        });
+                                    });
+                                </script>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
@@ -600,8 +605,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <script>
 
     function afterValidate(form, data, hasError) {
-        var dt = new Date();
-        if(dt.getFullYear()< $("#fromYear").val()) {
+       /* 
+       var dt = new Date();
+       if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
@@ -614,7 +620,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
-        }
+        }*/
 
         if ($('#u18_identification:hidden').length != 1) {
             if (!$('#Visitor_is_under_18').is(':checked')) {
@@ -708,7 +714,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             });
         }
 
-        $('#fromDay').on('change', function () {
+        /*$('#fromDay').on('change', function () {
             
             var dt = new Date();
 
@@ -775,7 +781,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
-
+*/
 
 //        $('#User_workstation').on('change', function () {
 //            var workstation = $("#User_workstation").val();
@@ -854,7 +860,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             e.preventDefault();
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                url: "<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>",
                 data: {
                     x1: $("#x1").val(),
                     x2: $("#x2").val(),
@@ -869,7 +875,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 success: function (r) {
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
+                        url: "<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>" + $('#Visitor_photo').val(),
                         dataType: 'json',
                         success: function (r) {
                             $.each(r.data, function (index, value) {
@@ -885,11 +891,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
                                 $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
-                            
-                                
                             });
-
-
                             $("#closeCropPhoto").click();
                             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
                             ias.cancelSelection();
@@ -897,7 +899,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     });
                 }
             });
-
             $("#closeCropPhoto").click(function() {
                 var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
                 ias.cancelSelection();

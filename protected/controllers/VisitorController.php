@@ -168,7 +168,6 @@ class VisitorController extends Controller {
         $visitorParams = Yii::app()->request->getPost('Visitor');
 
         if (isset($visitorParams)) {
-            
             $currentCardStatus = $model->visitor_card_status;
             if (isset($visitorParams['visitor_card_status']) && $currentCardStatus != $visitorParams['visitor_card_status'] && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
                 $activeVisit = $model->activeVisits;
@@ -609,9 +608,9 @@ class VisitorController extends Controller {
             unlink($uploadedFile);
         }
 
-
+        echo json_encode("exit");
         exit;
-        return true;
+        //return true;
     }
 
     public function actionAddVisitor() {
@@ -626,10 +625,11 @@ class VisitorController extends Controller {
 		
         if (isset($_POST['Visitor'])) {
                 
+            $model->attributes = $_POST['Visitor'];
+           
             if (isset($_POST['Visitor']['profile_type'])) {
                 $model->profile_type = $_POST['Visitor']['profile_type'];
             }
-            $model->attributes = $_POST['Visitor'];
 
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];

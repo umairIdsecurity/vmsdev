@@ -1,7 +1,8 @@
 <?php
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 
 $session = new CHttpSession;
 
@@ -58,6 +59,10 @@ if ($this->action->id == 'update') {
 
     .required {
         padding-left: 10px;
+    }
+
+    .date_of_birth_class{
+        width: 71.5px !important;
     }
 
 </style>
@@ -378,17 +383,18 @@ if ($this->action->id == 'update') {
                         <tr>
                         <tr>
                             <td class="birthdayDropdown">
-                                <span>Date of Birth</span> <br/>
-                                <input type="hidden" id="dateofBirthBreakdownValueYear"
-                                       value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                                       value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueDay"
-                                       value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                                <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
-                                <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
-                                <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                               <span>Date of Birth</span> <br/>
+                                <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
+                                <script>
+                                    $(function(){
+                                        $('#Visitor_date_of_birth').combodate({
+                                            minYear: (new Date().getFullYear()-100),
+                                            maxYear: (new Date().getFullYear()-10),
+                                            smartDays: true,
+                                            customClass: 'date_of_birth_class'
+                                        });
+                                    });
+                                </script>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
@@ -540,7 +546,7 @@ if ($this->action->id == 'update') {
 
     function afterValidate(form, data, hasError) {
 
-        var dt = new Date();
+/*        var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
@@ -553,7 +559,7 @@ if ($this->action->id == 'update') {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
-        }
+        }*/
 
         var companyValue = $("#Visitor_company").val();
         var passwordConfirmed = false;
@@ -646,7 +652,7 @@ if ($this->action->id == 'update') {
             changeMonth: true
         });
 
-        $('#fromDay').on('change', function () {
+        /*$('#fromDay').on('change', function () {
             var dt = new Date();
 
             if(dt.getFullYear()< $("#fromYear").val()) {
@@ -702,7 +708,7 @@ if ($this->action->id == 'update') {
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
             }
-        });
+        });*/
 
         if ($("#currentAction").val() == 'update') {
 

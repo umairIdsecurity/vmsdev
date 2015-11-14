@@ -344,7 +344,7 @@ class Avms7ExportCommand extends CConsoleCommand
                    from  operational_need n
                        join log_visit l on l.id = n.id
                        join oc_set oc on oc.id = l.setid and oc.AirportCode = '$airportCode'
-                       join users c on (c.id = n.CompanyId or c.emailAddress = n.ContactEmail) and c.level = 4
+                       join users c on c.id = n.CompanyId and c.level = 4
                        left join agent_set on agent_set.ocid = oc.id
                        left join agent on agent.UserId = agent_set.agentid
                   group by c.id,oc.AirportCode, IFNULL(agent.AgentId,agent_set.AgentId)

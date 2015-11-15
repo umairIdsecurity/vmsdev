@@ -297,10 +297,10 @@ class Avms7ExportCommand extends CConsoleCommand
                 $data['visitor'][$i]['company'] = $id;
                 $data['company'][] = $this->companyFromReferenceData($company,$id,$data['visitor'][$i]);
             }
-
         }
-
     }
+
+
     public function companyFromVisitor($visitor){
         return [
             'companyId'         => null,
@@ -321,7 +321,7 @@ class Avms7ExportCommand extends CConsoleCommand
                 'trading_name'      => $company['company_name'],
                 'contact'           => $company['contact_person'],
                 'email_address'     => $company['email_address'],
-                'mobile_number  '   => $company['phone_number'],
+                'mobile_number'   => $company['phone_number'],
                 'created_by_user'   => 1,
                 'tenant'            => $visitor['tenant'],
                 'tenant_agent'      => $visitor['tenant_agent'],
@@ -370,7 +370,7 @@ class Avms7ExportCommand extends CConsoleCommand
                 if ($refernceData['operator_owners'][$operatorId]['agentLevel'] == 6) {
                     $data[$tableName][$i]['tenant_agent'] = $refernceData['operator_owners'][$operatorId]['agentId'];
                 }
-                unset($data[$tableName]['operator']);
+                unset($data[$tableName][$i]['operator']);
             }
         }
 
@@ -587,7 +587,7 @@ class Avms7ExportCommand extends CConsoleCommand
                       when c.id is null then 3
                       when c.id is not null and c.DateCardReturned is null then 4
                     end as card_status,
-                    l.UserId as created_by,
+                    1 as created_by,
                     oc.AirportCode as tenant,
                     l.userId as operator,
                     1 as print_count
@@ -620,7 +620,7 @@ class Avms7ExportCommand extends CConsoleCommand
                         when l.IsClosed = 0 then 1
                         else 0
                        end as visit_status,
-                       null as workstaton,
+                       null as workstation,
                        oc.AirportCode as tenant,
                        l.UserId as operator,
                        0 as is_deleted,

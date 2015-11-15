@@ -8,7 +8,8 @@
  */
 class ImportTenantForm extends CFormModel
 {
-    public $file;
+    public $tenantFile;
+    public $avms7File;
     /**
      * @return array validation rules for model attributes.
      */

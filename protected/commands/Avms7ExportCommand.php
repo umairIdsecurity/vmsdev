@@ -37,7 +37,7 @@ class Avms7ExportCommand extends CConsoleCommand
 
         $referenceData = $this->getReferenceData($airportCode,$avms7);
         $this->setTenantAgents($data,$referenceData);
-        $this->setVisitorCompanies($data,$referenceData);
+        $this->setVisitorCompanies($data,$referenceData,$avms7);
 
         $idMappings = [];
         $this->importImages($data);
@@ -53,7 +53,7 @@ class Avms7ExportCommand extends CConsoleCommand
         try {
 
             foreach ($data as $table => $rows) {
-                $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation'], $idMappings,$vms);
+                $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation','card_generated'], $idMappings,$vms);
             }
 
             $transaction->commit();
@@ -66,7 +66,7 @@ class Avms7ExportCommand extends CConsoleCommand
     }
 
 
-    function importTable($tableName,$rows,$foreignKeys,$targetTables,$idMappings,$vms){
+    function importTable($tableName,$rows,$foreignKeys,$targetTables,&$idMappings,$vms){
 
         $cols = [];
 
@@ -90,15 +90,10 @@ class Avms7ExportCommand extends CConsoleCommand
             // populate referencing columns
             if($this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables)) {
 
-                if (!$cols) {
-                    $cols = array_keys($row);
-                    $colsQuoted = [];
-                    foreach ($cols as $col) {
-                        $colsQuoted[] = Yii::app()->db->quoteColumnName($col);
-                    }
-                }
-                $vals = array();
+                $vals =[];
+                $colsQuoted = [];
                 foreach ($row as $columnName => $value) {
+                    $colsQuoted[] = Yii::app()->db->quoteColumnName($columnName);
                     if ($value == '') {
                         $vals[] = 'NULL';
                     } else {
@@ -248,7 +243,7 @@ class Avms7ExportCommand extends CConsoleCommand
         foreach($row as $columnName=>$value){
 
             // if there is a foriegn key reference
-            if($value != null && $value!=0 && isset($foreignKeys[$tableName][$columnName])){
+            if($value != null && $value!='0' && isset($foreignKeys[$tableName][$columnName])){
 
                 // get the reference
                 $ref = $foreignKeys[$tableName][$columnName];
@@ -276,8 +271,92 @@ class Avms7ExportCommand extends CConsoleCommand
 
     }
 
-    public function manageVisitorCompany(&$data,$referenceData){
-        
+    public function setVisitorCompanies(&$data,$referenceData,$avms7){
+
+        for($i=0;$i<sizeof($data['visitor']);$i++){
+            $company = null;
+            if(!isset($referenceData['visitor_company'][$data['visitor'][$i]['id']])){
+                $company = $this->companyFromVisitor($data['visitor'][$i]);
+            } else {
+                $company = $referenceData['visitor_company'][$data['visitor'][$i]['id']];
+            }
+
+            $existingCompany = $this->findCompanyFromData($data,$company);
+            if($existingCompany!=null){
+                if($existingCompany['tenant_agent']==$data['visitor'][$i]['tenant_agent'])
+                {
+                    $data['visitor'][$i]['company'] = $existingCompany['id'];
+                } else {
+                    $id = $this->getLastCompanyIdFromData($data)+1;
+                    $data['visitor'][$i]['company'] = $id;
+                    $existingCompany['tenant_agent'] = $data['visitor'][$i]['tenant_agent'];
+                    $data['company'][] = $existingCompany;
+                }
+            } else {
+                $id = $this->getLastCompanyIdFromData($data)+1;
+                $data['visitor'][$i]['company'] = $id;
+                $data['company'][] = $this->companyFromReferenceData($company,$id,$data['visitor'][$i]);
+            }
+
+        }
+
+    }
+    public function companyFromVisitor($visitor){
+        return [
+            'companyId'         => null,
+            'contact_person'    => $visitor['first_name'].' '.$visitor['last_name'],
+            'email_address'     => $visitor['email'],
+            'phone_number'      => $visitor['contact_number'],
+            'company_name'      => $visitor['company']>''?$visitor['company']:'Unknown Company '.$visitor['id'],
+            'tenant'            => $visitor['tenant'],
+            'tenant_agent'      => $visitor['tenant_agent']
+        ];
+    }
+    public function companyFromReferenceData($company,$id,$visitor){
+
+        return
+            [
+                'id'                => $id,
+                'name'              => $company['company_name'],
+                'trading_name'      => $company['company_name'],
+                'contact'           => $company['contact_person'],
+                'email_address'     => $company['email_address'],
+                'mobile_number  '   => $company['phone_number'],
+                'created_by_user'   => 1,
+                'tenant'            => $visitor['tenant'],
+                'tenant_agent'      => $visitor['tenant_agent'],
+                'company_type'      => 3,
+                'is_deleted'        => 0
+            ];
+    }
+    public function getLastCompanyIdFromData($data){
+        $id = 0;
+        foreach($data['company'] as $existingCompany){
+            if(intval($existingCompany['id']) > $id){
+                $id = intval($existingCompany['id']);
+            }
+        }
+        return $id;
+    }
+
+    public function findCompanyFromData($data,$company){
+        foreach($data['company'] as $existingCompany){
+
+            if($company['companyId']>0){
+                if($existingCompany['id'] == $company['companyId']){
+                    return $existingCompany;
+                }
+            } else {
+
+                // match on company name or email address
+                if(($existingCompany['name']==$company['company_name'] && $company['company_name'] > '')
+                    or ($existingCompany['email_address']==$company['email_address'] && $company['email_address'] > ''))
+                {
+                    return $existingCompany;
+                }
+            }
+        }
+        return null;
     }
 
     public function setTenantAgents(&$data, $refernceData){
@@ -285,6 +364,9 @@ class Avms7ExportCommand extends CConsoleCommand
         foreach(['visit','card_generated'] as $tableName) {
          for ($i = 0; $i < sizeof($data[$tableName]); $i++) {
                 $operatorId = $data[$tableName][$i]['operator'];
+                if(!isset($refernceData['operator_owners'][$operatorId])){
+                    echo "cant find operator ".$operatorId;
+                }
                 if ($refernceData['operator_owners'][$operatorId]['agentLevel'] == 6) {
                     $data[$tableName][$i]['tenant_agent'] = $refernceData['operator_owners'][$operatorId]['agentId'];
                 }
@@ -303,22 +385,29 @@ class Avms7ExportCommand extends CConsoleCommand
         foreach($data['tenant_agent'] as $agent){
 
             // match the agent
-            $vmsAgent = $vms->getFirstRow("SELECT * FROM company where tenant = ".$tenant['id']." and company_type=2 and (email_address='".$agent['EmailAddress']."' or name='".$agent['Company']."')");
+            $vmsAgent = $vms->getFirstRow("SELECT * FROM company
+                                            where tenant = ".$tenant['id']."
+                                            and company_type=2
+                                            and is_deleted=0
+                                            and (email_address='".$agent['EmailAddress']."'
+                                                or name='".$agent['Company']."')"
+                                        );
             if($vmsAgent==null){
                 echo "\r\nWARNING: Cant find agent ".$agent['EmailAddress']." : ".$agent['Company'];
                 continue;
             }
-            $idMappings['company'][$agent['ID']] = $vmsAgent['id'];
+            $idMappings['company'][$agent['tenant_agent']] = $vmsAgent['id'];
 
             // map the workstation
-            $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE is_deleted=0 and tenant_agent=".$vmsAgent['id']." ORDER BY id ASC");
+
+            $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE  tenant_agent=".$vmsAgent['id']." ORDER BY id ASC");
             if($workstation==null) {
                 echo "\r\nWARNING: Cant find workstation for agent ".$agent['EmailAddress']." : ".$agent['Company'];
                 continue;
             };
 
 
-            $idMappings['workstation'][$agent['ID']] = $workstation['id'];
+            $idMappings['workstation'][$agent['tenant_agent']] = $workstation['id'];
         }
 
     }
@@ -348,7 +437,6 @@ class Avms7ExportCommand extends CConsoleCommand
                                                 or o.id = a.id
                                             )
                                 where o.ibcode = '$airportCode'
-                                and exists (select * from log_visit where UserId = o.id)
                               ",
             "visitor_company"=> "select oc.userid as visitor_id, min(c.id) as companyId, max(n.CompanyName) as company_name, max(n.ContactEmail) as email_address, max(n.ContactPerson) as contact_person, max(n.ContactPhone) phone_number
                                 from oc_set oc
@@ -389,10 +477,11 @@ class Avms7ExportCommand extends CConsoleCommand
                 limit 1
             ",
             'tenant_agent' => "
-                select distinct AirportCode as tenant, IFNULL(agent.AgentId,Agent_set.AgentId) as tenant_agent
+                select distinct AirportCode as tenant, IFNULL(agent.AgentId,Agent_set.AgentId) as tenant_agent, a.EmailAddress, a.Company
                 from oc_set oc
                     join agent_set on agent_set.ocid = oc.id and oc.AirportCode = '$airportCode'
                     left join agent on agent.UserId = agent_set.agentid
+                    left join users a on a.id = ifnull(agent.agentid,agent_set.agentid)
             ",
             "company" => "
                 select distinct c.id as id,
@@ -450,7 +539,7 @@ class Avms7ExportCommand extends CConsoleCommand
                     idC.Number as identification_alternate_document_no2,
                     idC.Expiry as identification_alternate_document_expiry2,
                     oc.AirportCode as tenant,
-                    IFNULL(g.id,a.id) as tenant_agent
+                    IFNULL(agent.agentid,agent_set.agentid) as tenant_agent
 
                 from users v
                     join oc_set oc on v.id = oc.UserId and AirportCode = '$airportCode'
@@ -498,9 +587,9 @@ class Avms7ExportCommand extends CConsoleCommand
                       when c.id is null then 3
                       when c.id is not null and c.DateCardReturned is null then 4
                     end as card_status,
-                    t.UserId as created_by,
+                    l.UserId as created_by,
                     oc.AirportCode as tenant,
-                    t.userId as operator,
+                    l.userId as operator,
                     1 as print_count
                 from oc_set oc
                     join log_visit l on l.setid = oc.Id and  oc.AirportCode = 'MBW'
@@ -565,7 +654,9 @@ class Avms7ExportCommand extends CConsoleCommand
             if(!isset($referencedTables[$row['table_name']])){
                 $referencedTables[$row['table_name']]=[];
             }
-            $referencedTables[$row['table_name']][$row['column_name']]=['referenced_table_name'=>$row['referenced_table_name'],'referenced_column_name'=>$row['referenced_column_name']];
+            if($row['referenced_table_name']>'') {
+                $referencedTables[$row['table_name']][$row['column_name']] = ['referenced_table_name' => $row['referenced_table_name'], 'referenced_column_name' => $row['referenced_column_name']];
+            }
         }
         return $referencedTables;
     }

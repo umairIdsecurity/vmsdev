@@ -37,6 +37,7 @@ class Avms7ExportCommand extends CConsoleCommand
 
         $referenceData = $this->getReferenceData($airportCode,$avms7);
         $this->setTenantAgents($data,$referenceData);
+        $this->setVisitorCompanies($data,$referenceData);
 
         $idMappings = [];
         $this->importImages($data);
@@ -275,6 +276,10 @@ class Avms7ExportCommand extends CConsoleCommand
 
     }
 
+    public function manageVisitorCompany(&$data,$referenceData){
+        
+    }
+
     public function setTenantAgents(&$data, $refernceData){
 
         foreach(['visit','card_generated'] as $tableName) {
@@ -345,27 +350,30 @@ class Avms7ExportCommand extends CConsoleCommand
                                 where o.ibcode = '$airportCode'
                                 and exists (select * from log_visit where UserId = o.id)
                               ",
-            "visitor_company"=>"
-                select oc.userid, min(c.id) as companyId, max(n.CompanyName) as company_name, max(n.ContactEmail) as email_address, max(n.ContactPerson) as contact_person, max(n.ContactPhone) phone_number
-                from oc_set oc
-                    join operational_need n on oc.oid = n.id
-                    left join users c
-                            on c.level = 4
-                            and c.id = n.companyId
-
-                where oc.airportCode = 'MBW'
-
-                group by oc.userid,n.CompanyName
-            "
+            "visitor_company"=> "select oc.userid as visitor_id, min(c.id) as companyId, max(n.CompanyName) as company_name, max(n.ContactEmail) as email_address, max(n.ContactPerson) as contact_person, max(n.ContactPhone) phone_number
+                                from oc_set oc
+                                    join operational_need n on oc.oid = n.id
+                                    left join users c
+                                            on c.level = 4
+                                            and c.id = n.companyId
+                                where oc.airportCode = '$airportCode'
+                                group by oc.userid,n.CompanyName
+                                "
         ];
         $data = [];
+
         $data['operator_owners']=[];
-
         $operator_owners = $avms7->getRows($queries['operator_owners']);
-
         foreach($operator_owners as $operator){
             $data['operator_owners'][$operator['operatorId']] = $operator;
         }
+
+        $data['visitor_company']=[];
+        $visitors = $avms7->getRows($queries['visitor_company']);
+        foreach($visitors as $visitor){
+            $data['visitor_company'][$visitor['visitor_id']] = $visitor;
+        }
+
         return $data;
     }
 

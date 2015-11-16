@@ -36,22 +36,21 @@ class Avms7ExportCommand extends CConsoleCommand
         $data = $this->extractTenant($airportCode,$avms7);
 
         $referenceData = $this->getReferenceData($airportCode,$avms7);
-        $this->setTenantAgents($data,$referenceData);
-        $this->setVisitorCompanies($data,$referenceData,$avms7);
-
-        $idMappings = [];
-        $this->importImages($data);
-
-        $this->mapExistingData($tenant,$data,$idMappings,$vms,$referenceData);
-        unset($data['tenant']);
-        unset($data['tenant_agent']);
-
 
         $transaction = Yii::app()->db->beginTransaction();
+        try
+        {
+            $idMappings = [];
+            $this->setTenantAgents($data,$referenceData);
+            $this->setVisitorCompanies($data,$referenceData,$avms7);
+            $this->setVisitorTypes($data,$tenant['id']);
+            $this->importImages($data);
+            $this->mapExistingData($tenant,$data,$idMappings,$vms,$referenceData);
 
-        $foreignKeys = $this->getForeignKeys();
-        try {
+            unset($data['tenant']);
+            unset($data['tenant_agent']);
 
+            $foreignKeys = $this->getForeignKeys();
             foreach ($data as $table => $rows) {
                 $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation','card_generated'], $idMappings,$vms);
             }
@@ -65,7 +64,42 @@ class Avms7ExportCommand extends CConsoleCommand
 
     }
 
+    function setVisitorTypes(&$data,$tenantId)
+    {
+        $lookup = [];
+        for($i=0;$i<sizeof($data['visitor']);$i++){
+            $visitor = $data['visitor'][$i];
+            $key = $tenantId.".".$visitor['tenant_agent'];
 
+            if(!isset($lookup[$key])) {
+
+                $row = ['name' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $tenantId,'tenant_agent'=>$visitor['tenant_agent']];
+                $this->insertRow('visitor_type', $row, true);
+                $lookup[$key] = $row['id'];
+                $data['visitor'][$i]['visitor_type'] = $row['id'];
+
+            } else {
+                $data['visitor'][$i]['visitor_type'] = $lookup[$key];
+            }
+        }
+
+        for($i=0;$i<sizeof($data['visit']);$i++){
+            $visitor = $data['visit'][$i];
+            $key = $tenantId.".".$visitor['tenant_agent'];
+
+            if(!isset($lookup[$key])) {
+
+                $row = ['name' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $tenantId,'tenant_agent'=>$visitor['tenant_agent']];
+                $this->insertRow('visitor_type', $row, true);
+                $lookup[$key] = $row['id'];
+                $data['visit'][$i]['visitor_type'] = $row['id'];
+
+            } else {
+                $data['visit'][$i]['visitor_type'] = $lookup[$key];
+            }
+        }
+
+    }
     function importTable($tableName,$rows,$foreignKeys,$targetTables,&$idMappings,$vms){
 
         $cols = [];
@@ -90,32 +124,7 @@ class Avms7ExportCommand extends CConsoleCommand
             // populate referencing columns
             if($this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables)) {
 
-                $vals =[];
-                $colsQuoted = [];
-                foreach ($row as $columnName => $value) {
-                    $colsQuoted[] = Yii::app()->db->quoteColumnName($columnName);
-                    if ($value == '') {
-                        $vals[] = 'NULL';
-                    } else {
-                        $vals[] = $this->quoteValue($tableName, $columnName, $value);
-                    }
-
-                }
-
-                $quotedTableName = Yii::app()->db->quoteTableName($tableName);
-
-                $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
-
-                //RUN SQL
-                echo "\r\n" . $sql;
-                Yii::app()->db->createCommand($sql)->execute();
-
-                if ($isAutoIncrement) {
-
-                    //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
-                    $row['id'] = Yii::app()->db->getLastInsertID();
-
-                }
+                $this->insertRow($tableName,$row,$isAutoIncrement);
 
                 $this->afterInsertRow($tableName, $row, $idMappings, $oldId);
 
@@ -123,7 +132,7 @@ class Avms7ExportCommand extends CConsoleCommand
                     $idMappings[$tableName][$oldId] = $row['id'];
                     echo "\r\n" . $tableName . " " . $oldId . "=" . $row['id'];
                 }
-                echo "<br><br>";
+                echo "\r\n";
 
             } else{
                echo "\r\nWARNING: Skipped row $tableName :".implode(",",$row);
@@ -132,6 +141,34 @@ class Avms7ExportCommand extends CConsoleCommand
         echo "<br><br>";
     }
 
+    function insertRow($tableName,&$row,$isAutoIncrement){
+        $vals =[];
+        $colsQuoted = [];
+        foreach ($row as $columnName => $value) {
+            $colsQuoted[] = Yii::app()->db->quoteColumnName($columnName);
+            if ($value == '') {
+                $vals[] = 'NULL';
+            } else {
+                $vals[] = $this->quoteValue($tableName, $columnName, $value);
+            }
+
+        }
+
+        $quotedTableName = Yii::app()->db->quoteTableName($tableName);
+
+        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
+
+        //RUN SQL
+        echo "\r\n" . $sql;
+        Yii::app()->db->createCommand($sql)->execute();
+
+        if ($isAutoIncrement) {
+
+            //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
+            $row['id'] = Yii::app()->db->getLastInsertID();
+
+        }
+    }
 
     function beforeInsertRow($tableName, &$row,$oldId,$vms){
 
@@ -165,7 +202,6 @@ class Avms7ExportCommand extends CConsoleCommand
                     $row['identification_country_issued'] = '13'; // australia
                 }
             }
-
         }
     }
 
@@ -380,7 +416,6 @@ class Avms7ExportCommand extends CConsoleCommand
     {
         $idMappings['company'] = [];
         $idMappings['company'][$tenant['code']] = $tenant['id'];
-
 
         foreach($data['tenant_agent'] as $agent){
 

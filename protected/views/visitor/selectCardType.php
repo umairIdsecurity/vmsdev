@@ -47,7 +47,6 @@ if (!$cardTypeWorkstationModel) {
             <?php
             }
             ?>
-
         </tr>
         <tr>
             <?php

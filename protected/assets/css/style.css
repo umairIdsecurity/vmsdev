@@ -818,7 +818,8 @@ dt.tabs dt{
 }
 
 #selectCardDiv input[type="radio"] {
-    //display:none !important;
+    /*display:none !important;*/
+     float: none; !important;
 }
 
 

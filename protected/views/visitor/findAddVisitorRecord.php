@@ -1,6 +1,8 @@
 <?php
+
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 
 $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
@@ -27,6 +29,7 @@ $model->identification_country_issued = 13;
     #content h1 {color: #2f96b4;font-size: 18px;font-weight: bold;margin-left: 50px;  }
     .required {padding-left: 10px;}
     .errorMessageImportant {display: block !important;}
+    .date_of_birth_class{width: 71.5px !important;}
 </style>
 
 <br>
@@ -154,27 +157,20 @@ $model->identification_country_issued = 13;
 
                             <tr class="vic-visitor-fields" id="vic-birth-date-field">
                                 <td class="birthdayDropdown">
-                                    <span>Date of Birth</span> <br/>
-                                    <?php
-                                    if (!strtotime($model->date_of_birth)) {
-                                        $model->date_of_birth = date('Y-m-d');
-                                    }
-                                    ?>
-                                    <input type="hidden" id="dateofBirthBreakdownValueYear"
-                                           value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
-                                    <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                                           value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
-                                    <input type="hidden" id="dateofBirthBreakdownValueDay"
-                                           value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                                    <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
-                                    <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
-                                    <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                                   <span>Date of Birth</span> <br/>
+                                    <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
+                                    <script>
+                                        $(function(){
+                                            $('#Visitor_date_of_birth').combodate({
+                                                minYear: (new Date().getFullYear()-100),
+                                                maxYear: (new Date().getFullYear()-10),
+                                                smartDays: true,
+                                                customClass: 'date_of_birth_class'
+                                            });
+                                        });
+                                    </script>
                                     <span class="required">*</span>
-                                    <br />
-                                    <?php
-                                    echo $form->error($model, 'date_of_birth');
-                                    ?>
+                                    <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                                 </td>
                             </tr>
 
@@ -798,7 +794,8 @@ $model->identification_country_issued = 13;
         
         var bod_field = $("#vic-birth-date-field:hidden");
         if (bod_field.length != 1) {
-            var dt = new Date();
+
+/*            var dt = new Date();
             if(dt.getFullYear() < $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
@@ -811,7 +808,7 @@ $model->identification_country_issued = 13;
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
                 return false;
-            }
+            }*/
         }
 
         if ($("#u18_identification:hidden").length != 1) {
@@ -919,73 +916,6 @@ $model->identification_country_issued = 13;
             $("#searchvisitor").hide();
             $("#search-visitor").val(''); 
         });
-
-        $('#fromDay').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-
-        $('#fromMonth').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-        $('#fromYear').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                if (dt.getFullYear() - $("#fromYear").val() < 18) {
-                    $('#u18_identification').show();
-                    $('.primary-identification-require').hide();
-                } else {
-                    $('#u18_identification').hide();
-                    $('.primary-identification-require').show();
-                }
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-
 		
         if($('#photoCropPreview').imgAreaSelect) {
             $('#photoCropPreview').imgAreaSelect({

@@ -597,6 +597,7 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
             case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
+            case Roles::ROLE_AIRPORT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
                 if (!empty($workstations)) {
                     $text = "";
@@ -819,6 +820,7 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:            
             case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
+            case Roles::ROLE_AIRPORT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
                 if (!empty($workstations)) {
                     $text = "";

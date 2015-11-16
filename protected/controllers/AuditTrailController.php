@@ -7,6 +7,35 @@ class AuditTrailController extends Controller {
 	 */
 	public $layout = '//layouts/column2';
 
+
+	private $query = "select v.id,
+						ct.name,
+						r.reason,
+						v.date_check_in,
+						v.time_check_in,
+						t.code,
+						p.first_name,
+						p.middle_name,
+						p.last_name,
+						p.email,
+						p.contact_number,
+						v.created_by,
+						v.closed_by,
+						'hyperlink to visit'
+						from visit v
+						join visitor p on p.id = v.visitor
+						left join card_generated c on c.id = v.card
+						join company t on t.id = t.tenant
+						left join visit_reason r on r.id = v.reason
+						left join card_type ct on v.card_type = ct.id
+						where tenant = 'tenant if not superadmin'
+						and tenant_agent = 'tenant_agent if user is in a tenant_agent'
+						";
+
+
+
+
+
 	/**
 	 * @return array action filters
 	 */

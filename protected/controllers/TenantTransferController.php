@@ -150,14 +150,14 @@ class TenantTransferController extends Controller
         $name  = $_FILES['ImportTenantForm']['name']['tenantFile'];
         if(!empty($name))
         {
-            $model->file=CUploadedFile::getInstance($model,'$tenantFile');
+            $model->tenantFile=CUploadedFile::getInstance($model,'tenantFile');
             $fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$name;
 
             // get database foriegn keys
             $foreignKeys = $this->getForeignKeys();
 
 
-            if($model->file->saveAs($fullImgSource))
+            if($model->tenantFile->saveAs($fullImgSource))
             {
 
                 $data=file_get_contents($fullImgSource);
@@ -220,7 +220,7 @@ class TenantTransferController extends Controller
         
     }
 
-    function importTable($tableName,$rows,$foreignKeys,$targetTables,$idMappings){
+    function importTable($tableName,$rows,$foreignKeys,$targetTables,&$idMappings){
 
         $cols = [];
 
@@ -398,13 +398,16 @@ class TenantTransferController extends Controller
 
     function getForeignKeys()
     {
-        $rows = array_merge(DatabaseIndexHelper::getForeignKeys(),$this->unmappedRefs);
+        $foreignKeys = DatabaseIndexHelper::getForeignKeys();
+        $rows = array_merge($foreignKeys,$this->unmappedRefs);
         $referencedTables = [];
         foreach($rows as $row){
             if(!isset($referencedTables[$row['table_name']])){
                 $referencedTables[$row['table_name']]=[];
             }
-            $referencedTables[$row['table_name']][$row['column_name']]=['referenced_table_name'=>$row['referenced_table_name'],'referenced_column_name'=>$row['referenced_column_name']];
+            if(!($row['column_name']=='tenant_agent' && $row['referenced_table_name']=='user')) {
+                $referencedTables[$row['table_name']][$row['column_name']] = ['referenced_table_name' => $row['referenced_table_name'], 'referenced_column_name' => $row['referenced_column_name']];
+            }
         }
         return $referencedTables;
     }

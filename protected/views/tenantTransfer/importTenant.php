@@ -21,7 +21,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
 
     <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>">
-        <label class="myLabel" for="ImportTenantForm_file" style="width: 120px;">
+        <label class="myLabel" for="ImportTenantForm_tenantFile" style="width: 120px;">
             <?php echo $form->fileField($model,'tenantFile'); ?>
             <span>Select Tenant File</span>
         </label>
@@ -30,16 +30,16 @@ $form = $this->beginWidget('CActiveForm', array(
             <?php echo $form->error($model,'file'); ?>
         </div>
     </div>
-    <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>">
-        <label class="myLabel" for="ImportTenantForm_file" style="width: 120px;">
-            <?php echo $form->fileField($model,'tenantFile'); ?>
-            <span>Select AVMS 7 File</span>
-        </label>
-
-        <div class="row message-no-margin">
-            <?php echo $form->error($model,'file'); ?>
-        </div>
-    </div>
+<!--    <div class=" --><?php //if ($model->hasErrors('postcode')) echo "error"; ?><!--">-->
+<!--        <label class="myLabel" for="ImportTenantForm_avms7File" style="width: 120px;">-->
+<!--            --><?php //echo $form->fileField($model,'avms7File'); ?>
+<!--            <span>Select AVMS 7 File</span>-->
+<!--        </label>-->
+<!---->
+<!--        <div class="row message-no-margin">-->
+<!--            --><?php //echo $form->error($model,'file'); ?>
+<!--        </div>-->
+<!--    </div>-->
 
     <div class="row">
         <?php echo CHtml::submitButton('Upload File(s)', array("class"=>"completeButton")); ?>

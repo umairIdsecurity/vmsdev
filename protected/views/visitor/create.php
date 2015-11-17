@@ -1118,6 +1118,8 @@ function selectVicCard(cardType) {
         $(".vms-visitor-fields").show();
         $(".vic-host-fields").hide();
         $(".vms-host-fields").show();
+        // We always need password field
+        $("#password-field").show();
 
         // third table
         $('.visitReasonOtherRow').prependTo('.third-column');

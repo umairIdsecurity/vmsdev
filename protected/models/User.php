@@ -119,7 +119,7 @@ class User extends VmsActiveRecord {
         if($this->scenario == 'add_company_contact') {
             return array(
 
-                array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
+                array('first_name, last_name, email, contact_number, company', 'required', 'message'=>'Please complete {attribute}'),
 
                     array('email','unique',
                         'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1',

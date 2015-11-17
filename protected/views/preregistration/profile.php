@@ -421,37 +421,20 @@ $session = new CHttpSession;
 <script type="text/javascript">
 
         function doSomething(obj,res){ //the 'obj' is IMG tag, 'res' is base64image
-            console.log(obj);
             $.ajax({
                 cache: false,
                 type: 'post',
                 url: "<?php echo Yii::app()->createUrl('preregistration/uploadProfilePhoto');?>",
                 data: 'image='+res,
                 success: function(){
-                    console.log(obj);
-                    //console.log(res);
                     obj.attr('src',res);
-                    /*var data = JSON.parse(result);
-                    //console.log(data);
-                    $("#photoPreview").attr('src','');
-                    $("#photoPreview").attr('src', "data:image;base64,"+data.db_image);
-                    $("#Visitor_photo").val(data.photoId);
-                    $("#fileInputId").val("");
-
-                    $("#photoError").empty();
-                    $("#photoError").append("Photo uploaded successfully.").css("color","green").show();
-                    
-                    $("#photoError").delay(3000).fadeOut(0,function() {
-                        $("#photoError").empty();
-                        $("#photoError").append("Please browse a photo first.").css("color","red");
-                    });*/
                 }
             });
         }
 
-    $(document).ready(function() {
+/*    $(document).ready(function() {
 
-/*        $("#uploadPhotoBtn").click(function(event){
+        $("#uploadPhotoBtn").click(function(event){
             
             var file_data = $("#fileInputId")[0].files[0];
 
@@ -492,7 +475,7 @@ $session = new CHttpSession;
                     }
                 });
             }
-        });*/
-    });
+        });
+    });*/
 
 </script>

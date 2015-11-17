@@ -1317,8 +1317,9 @@ class Visit extends CActiveRecord {
      * @param int $visitor_id
      * @return int
      */
-    public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id) {
+    public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id = "") {
         $criteria = new CDbCriteria;
+        $this->visitor = !empty($visitor_id) ? $visitor_id: $this->visitor;
         $criteria->addCondition(" ( id != ".$current_visit_id."  OR (id = ".$current_visit_id." AND visit_status = ". VisitStatus::CLOSED.") ) AND "
                 . " tenant = ".Yii::app()->user->tenant." "
                 . " AND (visit_status != ".VisitStatus::SAVED." AND visit_status != ".VisitStatus::PREREGISTERED."  ) "

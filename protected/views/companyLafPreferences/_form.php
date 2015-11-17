@@ -604,12 +604,9 @@ $company = Company::model()->findByPk($session['company']);
                             $.each(r.data, function (index, value) {
                                 
                                 /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
-                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                /*document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;*/
                                 document.getElementById('photoPreview2').src = "data:image;base64,"+ value.db_image;
-                                
-
-                                
-
+                    
                             });
                         }
                     });

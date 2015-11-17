@@ -148,7 +148,7 @@ class CompanyLafPreferencesController extends Controller {
     }
 
     public function actionAjaxCrop() {
-        $jpeg_quality = 90;
+        /*$jpeg_quality = 90;
          
         //$src = $_REQUEST['imageUrl']; 
          $photo = Photo::model()->findByPk($_REQUEST["logo_id"]);
@@ -181,8 +181,88 @@ class CompanyLafPreferencesController extends Controller {
            unlink($src);
         }
 
+        echo json_encode("exit");
+        exit;*/
+        function imageCreateFromAny($filepath) {
+            $type = exif_imagetype($filepath); // [] if you don't have exif you could use getImageSize()
+            $allowedTypes = array(
+                1,  // [] gif
+                2,  // [] jpeg
+                3,  // [] png
+                4,  // [] jpg
+                6   // [] bmp
+            );
+            if (!in_array($type, $allowedTypes)) {
+                return false;
+            }
+            switch ($type) {
+                case 1 :
+                    $im = imageCreateFromGif($filepath);
+                    break;
+                case 2 :
+                    $im = imageCreateFromJpeg($filepath);
+                    break;
+                case 3 :
+                    $im = imageCreateFromPng($filepath);
+                    break;
+                case 4 :
+                    $im = imageCreateFromJpg($filepath);
+                    break;
+                case 6 :
+                    $im = imageCreateFromBmp($filepath);
+                    break;
+            }
+            return $im;
+        }
+        $jpeg_quality = 90;
+
+        //for accessing server files
+        $path = Yii::getPathOfAlias('webroot') . "/uploads/company_logo";
+
+        $photo = Photo::model()->findByPk($_REQUEST['photoId']);
+        $photoAttr = $photo->attributes;
+
+        $db_image_contents = $photoAttr['db_image'];
+        $db_image_name = $photoAttr['unique_filename'];
+
+
+        $file = fopen($path."/".$db_image_name,"w");
+        fwrite($file, base64_decode($db_image_contents));
+        fclose($file);
+
+        $src = $path."/".$db_image_name;        
+        $img_r = imageCreateFromAny($src);
+
+        $dst_r = imagecreatetruecolor(200, 200);
+        $usernameHash = hash('adler32', "company_logo");
+        $uniqueFileName = 'company_logo' . $usernameHash . '-' . time() . ".png";
+        imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x1'], $_REQUEST['y1'], 200, 200, $_REQUEST['width'], $_REQUEST['height']);
+        
+
+        header('Content-type: image/jpeg');
+        imagejpeg($dst_r, "uploads/company_logo/" . $uniqueFileName, $jpeg_quality);
+
+        $uploadedFile = "uploads/company_logo/" . $uniqueFileName;
+        $file=file_get_contents($uploadedFile);
+        $image = base64_encode($file);
+
+        Photo::model()->updateByPk($_REQUEST['photoId'], array(
+            'unique_filename' => $uniqueFileName,
+            'relative_path' => "uploads/company_logo/" . $uniqueFileName,
+            'db_image' => $image,
+        ));
+
+        
+        if (file_exists($src)) {
+            unlink($src);
+        }
+
+        if (file_exists($uploadedFile)) {
+            unlink($uploadedFile);
+        }
+
+        echo json_encode("exit");
         exit;
-        return true;
     }
 
     /**

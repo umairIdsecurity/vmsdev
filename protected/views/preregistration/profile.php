@@ -92,40 +92,81 @@ $session = new CHttpSession;
                 <input type="hidden" id="Visitor_photo" name="Registration[photo]" value="<?php echo $model['photo']; ?>">
                 
                 <div class="photoDiv" style="">
-                    <?php  
-                            if ($model['photo'] != NULL) 
-                            {
-                                $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
-                                $my_image = '';
-
-                                if(!empty($data['db_image']))
-                                {
-                                    $my_image = "data:image;base64," . $data['db_image'];
-                                }
-                                else
-                                {
-                                    $my_image = $data['relative_path']; 
-                                }
-                             ?>
-                                <center><img id='photoPreview' src = "<?php echo $my_image ?>" style='display:block;height:174px;width:133px;'/></center>
-                    <?php 
-                            }
-                            elseif($model->photo == NULL)
-                            { 
-                    ?>    
-                                <center><img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:block;height:174px;width:133px;'/></center>
                     <?php
-                            }
+                        //**********************************************************************************
+                        $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
+                        $my_image = '';
+
+                        if(!empty($data['db_image']))
+                        {
+                            $my_image = "data:image;base64," . $data['db_image'];
+                        }
+                        else
+                        {
+                            $my_image = Yii::app()->controller->assetsBase.'/images/portrait_box.png';
+                        }
+
+                        $this->widget('ext.NavaJcrop.ImageJcrop', array(
+                            'config' => array(
+                                'title'=>$model->photo,
+                                'image'=>$my_image,//required, all field below are not required.
+                                'id'=>'nava-Jcrop',
+                                //'unique'=>true,
+                                //'resultStyle'=>'position: relative; left: 50%; margin-left: -67px;',
+                                'buttons'=>array(
+                                    'cancel'=>array(
+                                        'name'=>'Cancel',
+                                        'class'=>'button-crop',
+                                        'style'=>'margin-left: 5px;',
+                                    ),
+                                    'edit'=>array(
+                                        'name'=>'Edit',
+                                        'class'=>'button-crop',
+                                        'style'=>'margin-left: 5px;',
+                                    ),
+                                    'crop'=>array(
+                                        'name'=>'Crop',
+                                        'class'=>'button-crop',
+                                        'style'=>'margin-left: 5px;',
+                                    )
+                                ),
+                                'options'=>array(
+                                    'imageWidth'=>133,
+                                    'imageHeight'=>174,
+                                    'resultStyle'=>'position: fixed;top: 50px;max-width:1200px;max-height:1200px;z-index: 9999;',
+                                    'resultMaxWidth'=>500,
+                                    'resultMinWidth'=>500,
+                                ),
+                                'callBack'=> array(
+                                    'success'=>"function(obj,res){doSomething(obj,res);}",
+                                    'error'=>"function(){alert('error');}",
+                                )
+                            )
+                        ));
+                        //**********************************************************************************
                     ?>
 
+
                     <br>       
+                    
+                        <div class="">
+                             &nbsp; <b>Drag &amp; Drop File</b>
+                            <!-- <br>
+                            <span style="font-size:10px;">Max Size: 2MB ;File Ext. : jpeg/png<br>
+                                <span class="imageDimensions">Dimensions: 180px(Width) x 60px(Height)</span>
+                            </span> -->
+                        </div>
+                    
+
+
+                    <!-- <br>       
                     <center><input type="file" name="fileInput" id="fileInputId" /></center>
 
                     <br>   
                     <center><input type="button" id="uploadPhotoBtn" value="Upload Photo" class='btn btn-primary bt-login'></center>
 
                     <br>   
-                    <center><p id="photoError" style="color:red;display:none;">Please browse a photo first.</p></center>
+                    <center><p id="photoError" style="color:red;display:none;">Please browse a photo first.</p></center> -->
 
                 </div>
 
@@ -368,11 +409,7 @@ $session = new CHttpSession;
             </table>
         </div>
     </div>        
-
-
-       
-        <!-- <input type="hidden" name="Visitor[visitor_status]" value="<?php //echo VisitorStatus::VISITOR_STATUS_SAVE; ?>" style='display:none;' /> -->
-
+    <!-- <input type="hidden" name="Visitor[visitor_status]" value="<?php //echo VisitorStatus::VISITOR_STATUS_SAVE; ?>" style='display:none;' /> -->
     <?php $this->endWidget(); ?>
 </div>
 
@@ -383,9 +420,38 @@ $session = new CHttpSession;
 
 <script type="text/javascript">
 
+        function doSomething(obj,res){ //the 'obj' is IMG tag, 'res' is base64image
+            console.log(obj);
+            $.ajax({
+                cache: false,
+                type: 'post',
+                url: "<?php echo Yii::app()->createUrl('preregistration/uploadProfilePhoto');?>",
+                data: 'image='+res,
+                success: function(){
+                    console.log(obj);
+                    //console.log(res);
+                    obj.attr('src',res);
+                    /*var data = JSON.parse(result);
+                    //console.log(data);
+                    $("#photoPreview").attr('src','');
+                    $("#photoPreview").attr('src', "data:image;base64,"+data.db_image);
+                    $("#Visitor_photo").val(data.photoId);
+                    $("#fileInputId").val("");
+
+                    $("#photoError").empty();
+                    $("#photoError").append("Photo uploaded successfully.").css("color","green").show();
+                    
+                    $("#photoError").delay(3000).fadeOut(0,function() {
+                        $("#photoError").empty();
+                        $("#photoError").append("Please browse a photo first.").css("color","red");
+                    });*/
+                }
+            });
+        }
+
     $(document).ready(function() {
 
-        $("#uploadPhotoBtn").click(function(event){
+/*        $("#uploadPhotoBtn").click(function(event){
             
             var file_data = $("#fileInputId")[0].files[0];
 
@@ -426,7 +492,7 @@ $session = new CHttpSession;
                     }
                 });
             }
-        });
+        });*/
     });
 
 </script>

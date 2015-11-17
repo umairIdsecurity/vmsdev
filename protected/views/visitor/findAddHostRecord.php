@@ -392,7 +392,7 @@ $defaultKey = key($asicCardTypes);
                                 </td>
                             </tr>
 
-                            <tr class="vic-visitor-fields">
+                            <tr class="vic-visitor-fields" id="password-field">
                                 <td id="passwordVicForm">
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $asicModel, 'form' => $form, 'session' => $session)); ?>
                                 </td>

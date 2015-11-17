@@ -304,14 +304,10 @@ $defaultKey = key($asicCardTypes);
                                 </td>
                             </tr>
                             
-<!--                            <tr>
+                       <tr>
                                 <td id="userCompanyRow">
                                     <div style="margin-bottom: 5px;">
                                         <?php 
-                                        /* 
-                                         * Add Host does not require Add Company as the Host is always an internal staff Member. 
-                                         * Remove Add Company for Log Visit > Add Host
-                                         *
                                             $this->widget('application.extensions.select2.Select2', array(
                                             'model' => $userModel,
                                             'attribute' => 'company',
@@ -319,16 +315,16 @@ $defaultKey = key($asicCardTypes);
                                             'selectedItems' => array(), // Items to be selected as default
                                             'placeHolder' => 'Please select a company'
                                             
-                                        ));*/
+                                        )); 
                                         ?>
                                         <span class="required">*</span>
-                                        <?php //echo $form->error($userModel, 'company', array("style" => "margin-top:0px")); ?>
+                                        <?php  echo $form->error($userModel, 'company', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
-                            </tr>-->
-                            <input type="hidden" id="User_company">
+                            </tr> 
+                             
                             
-<!--                            <tr>
+                         <tr>
                                 <td>
                                     <div style="margin-bottom: 5px;" id="userStaffRow"></div>
                                 </td>
@@ -338,7 +334,7 @@ $defaultKey = key($asicCardTypes);
                                    <a style="float: left; margin-right: 5px; width: 86px; height: 16px;   border: 1px solid #63B421; border-radius: 5px; background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12)); font-size: 12px; padding: 3px 15px 5px; color: #fff;   font-weight: bold;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addUserCompanyLink"  class="actionForward">Add Company</a>
                                     <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addUserContactLink" class="btn btn-xs btn-info actionForward" role="button" data-toggle="modal" data-id="asic">Add Contact</a>
                                 </td>
-                            </tr>-->
+                            </tr> 
                             <tr class="vic-host-fields">
                                 <td>
                                     <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>

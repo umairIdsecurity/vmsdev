@@ -415,6 +415,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         $(document).on('click', '#registerNewVisit', function (e) {
             
+            /** Check Visit Count if exceed 28 days than don;t activate it */
+            var countExceeds = checkForVisitCountLimit();
+            if( countExceeds == 0) {
+                $("#visit_cannot_be_activate").html("Visitor has reached 28 days limit.");
+                $("#visit_cannot_be_activate").show();
+                 return false;
+            }
+             
+            
             /** If already has an active visit then dont activate this one */
             var existsVisit = checkForAlreadyActiveVisit();
             if( !existsVisit ) {
@@ -424,7 +433,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
            // Check if user tries to activate visit with future date
             var isFuture = CheckIfThisWithFutureDate();
             if( isFuture ) {
-                 //alert("VIC can not be activated in the future");
+                 $("#visit_cannot_be_activate").html("VIC can not be activated in the future");
                  $("#visit_cannot_be_activate").show();
                  return false;
             }
@@ -852,6 +861,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
         return flag;
+    }
+    
+    // Check if visitor visit count exceeds 28
+    function checkForVisitCountLimit() {
+         var totalVisitsCount = '<?php echo Visit::model()->getOldVisitsCountForThisYear($model->id, $model->visitor); ?>';
+         var cardType = '<?php echo $model->card_type ?>';
+            if( totalVisitsCount >= 28 && cardType != '<?php echo CardType::VIC_CARD_EXTENDED?>' ) {
+                 return 0;
+            } else {
+                return 1;
+            }
+                
     }
     // Check if user tries to activate it with future dates
     function CheckIfThisWithFutureDate() {

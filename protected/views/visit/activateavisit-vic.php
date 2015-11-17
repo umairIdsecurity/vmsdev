@@ -187,9 +187,11 @@ $asicEscort = new AddAsicEscort();
 
             if (!strtotime($model->date_check_out) || $model->date_check_out == '0000-00-00') {
                 $model->date_check_out = date('d-m-Y');
+            } else {
+                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
             }
 
-            if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS])) {
+            if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status != VisitStatus::PREREGISTERED) {
                 switch ($model->card_type) {
                     case CardType::VIC_CARD_24HOURS:
                         $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));

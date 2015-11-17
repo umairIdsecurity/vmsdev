@@ -74,7 +74,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     'label'=>'Delete',
                     //other params
                     'imageUrl' => false,
-                    'visible' => '(($data->id)!= 1)',
+                    'visible' => '(($data->id)!= 1 && Yii::app()->user->role == Roles::ROLE_SUPERADMIN)',
                 ),
 
             ),

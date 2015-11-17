@@ -589,7 +589,7 @@ $model->identification_country_issued = 13;
                                 </td>
                             </tr>
 
-                            <tr class="vic-visitor-fields">
+                            <tr class="vic-visitor-fields" id="password-field">
                                 <td id="passwordVicForm">
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
                                 </td>

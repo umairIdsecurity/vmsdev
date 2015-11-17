@@ -2100,7 +2100,50 @@ class PreregistrationController extends Controller
 
     public function actionUploadProfilePhoto() {
         //if (Yii::app()->request->isAjaxRequest) {
-            if (isset($_FILES["fileInput"])) 
+    		
+
+    		if(isset($_POST['image']))
+    		{
+		        $img = $_POST['image'];
+	        	$newNameHash = hash('adler32', time());
+				$newName    = $newNameHash.'-'. time();
+	            $img = str_replace('data:image/png;base64,', '', $img);
+	            $img = str_replace(' ', '+', $img);
+	            $data = base64_decode($img);
+	            $file = '/uploads/visitor/'.$newName.'.jpg';
+	            $image_url = Yii::app()->request->hostInfo.'/'.Yii::app()->baseUrl.$file;
+
+	            $src = Yii::getPathOfAlias('webroot').$file; 
+
+	            file_put_contents($src,$data);
+
+	            $file=file_get_contents($image_url);
+			    $image = base64_encode($file);
+
+		        $connection = Yii::app()->db;
+		        $command = $connection->createCommand("INSERT INTO photo". "(filename, unique_filename, relative_path, db_image) VALUES ('NULL','".$newName."','NULL','" . $image . "')");
+		        $command->query();
+
+		        $lastId = Yii::app()->db->lastInsertID;
+
+		        $update = $connection->createCommand("update visitor set photo=" . $lastId . " where id=" . Yii::app()->user->id);
+		        $update->query();
+
+		        $photoModel=Photo::model()->findByPk($lastId);
+
+		        $ret = array("photoId" =>  $lastId, "db_image" => $photoModel->db_image);
+		        
+		        //delete uploaded file from folder as inserted in DB -- directed by Geoff
+		        if (file_exists($src)) {
+		            unlink($src);
+		        }
+
+                echo json_encode($ret);
+		        
+		    }
+		    Yii::app()->end();
+
+            /*if (isset($_FILES["fileInput"])) 
 			{
 				//*******************************************************************************
 				$name  = $_FILES["fileInput"]["name"];
@@ -2138,7 +2181,7 @@ class PreregistrationController extends Controller
 				}
 				//*******************************************************************************
 			}
-			Yii::app()->end();
+			Yii::app()->end();*/
         //}
     }
 

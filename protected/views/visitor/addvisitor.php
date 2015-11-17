@@ -1,11 +1,4 @@
-
 <?php
-/* @var $this VisitorController */
-/* @var $model Visitor */
-
-?>
-
-    <?php
 
 if (!isset($_GET['profile_type']) || $_GET['profile_type'] == Visitor::PROFILE_TYPE_CORPORATE) {
     $formSuffix = '';

@@ -1389,7 +1389,7 @@ class Visit extends CActiveRecord {
             $status = "";
             
             // Set all expires visit to close 
-            if ( $dateDiff > 0 ) { 
+            if ( $dateDiff >= 1 ) { 
                 $update["visit_closed_date"] = $dateNow->format("Y-m-d H:i:s");
                 $update["visit_status"] = VisitStatus::CLOSED;
                 // CLOSE and Reset Visit for the first time only

@@ -539,7 +539,8 @@ class VisitController extends Controller {
         if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) 
         {
             $visitParams = Yii::app()->request->getPost('Visit');
-            
+             $model->attributes = $visitParams;
+             
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
@@ -548,9 +549,6 @@ class VisitController extends Controller {
                 $model->visit_reason = $_POST['Visit']['visit_reason'];
             }
 
-            $model->attributes = $visitParams;
-
-            
             // If operator select other reason then save new one
             if (isset($_POST['VisitReason'])) {
                 $visitReasonModel             = new VisitReason;
@@ -574,6 +572,7 @@ class VisitController extends Controller {
                 $model->visit_closed_date = date("Y-m-d");
                 $model->closed_by = Yii::app()->user->id;
                 $model->visit_status = VisitStatus::CLOSED;
+               
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     // If Visitor card status is Asic Pending then CLose the visit otherwise AutoClose

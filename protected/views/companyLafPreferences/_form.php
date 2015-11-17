@@ -16,7 +16,7 @@ $company = Company::model()->findByPk($session['company']);
     }
     ?>
 
-    #photoPreview {
+    #photoPreview2 {
         height: 100% !important;
         width: 100% !important;
         
@@ -60,9 +60,9 @@ $company = Company::model()->findByPk($session['company']);
                      <?php
                      if ($company->logo != NULL) {
                          ?>
-                    <img id='photoPreview' class="companylogopreview" src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>"/>
+                    <img id='photoPreview2' class="companylogopreview" src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>"/>
                 <?php } else { ?>
-                    <img id="photoPreview" >
+                    <img id="photoPreview2" >
                 <?php } ?>
             </div>
             <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
@@ -555,7 +555,9 @@ $company = Company::model()->findByPk($session['company']);
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
-<input type="hidden" id="Host_photo">
+
+<input type="hidden" id="Host_photo" name="CompanyLafPreferences[logo]" value="<?php echo $company->logo; ?>">
+<!-- <input type="hidden" id="Host_photo"> -->
 
 <script>
     $(document).ready(function () {
@@ -580,7 +582,7 @@ $company = Company::model()->findByPk($session['company']);
             e.preventDefault();
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('CompanyLafPreferences/AjaxCrop'); ?>',
+                url: "<?php echo Yii::app()->createUrl('CompanyLafPreferences/AjaxCrop'); ?>",
                 data: {
                     x1: $("#x12").val(),
                     x2: $("#x22").val(),
@@ -588,7 +590,7 @@ $company = Company::model()->findByPk($session['company']);
                     y2: $("#y22").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Host_photo').val(),
                     logo_id: $('#CompanyLafPreferences_logo').val()
                 },
@@ -596,13 +598,17 @@ $company = Company::model()->findByPk($session['company']);
                 success: function (r) {
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo').val(),
+                        url: "<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>" + $('#Host_photo').val(),
                         dataType: 'json',
                         success: function (r) {
                             $.each(r.data, function (index, value) {
                                 
-                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+                                /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
                                 document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoPreview2').src = "data:image;base64,"+ value.db_image;
+                                
+
+                                
 
                             });
                         }

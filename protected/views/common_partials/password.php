@@ -119,6 +119,9 @@ $(document).ready(function() {
     }
     else {
         $(".show_password_fields").hide();
+        $('.pass_option').each(function(i,v){
+            $(v).prop('checked',false);
+        });
     }
     
    }); 

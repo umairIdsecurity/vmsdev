@@ -21,6 +21,27 @@ if(!$hostModel) $hostModel = Visitor::model();
         <td style="width:35%!important;">Visitor Information</td>
         <td>Actions</td>
     </tr>
+
+    <?php if(isset($errorMsg)&&($errorMsg!="")): ?>
+        <tr>
+            <td style="width:35% !important;">&nbsp;</td>
+            <td style="width:35%!important;">&nbsp;</td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td style="width:35% !important;color:red"><?= $errorMsg ?></td>
+            <td style="width:35%!important;"></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td style="width:35% !important;">&nbsp;</td>
+            <td style="width:35%!important;">&nbsp;</td>
+            <td></td>
+        </tr>          
+    <?php endif; ?>
+
     <tr>
         <td style="padding:5px;text-align: center;">
             <?php
@@ -47,7 +68,7 @@ if(!$hostModel) $hostModel = Visitor::model();
                 'newPatient'   => $newPatient,
                 'newHost'      => $newHost,
                 'asic'         => $asic,
-                'asicEscort'   => $asicEscort,
+                'asicEscort'   => $asicEscort
             ));
             ?>
 
@@ -61,7 +82,7 @@ if(!$hostModel) $hostModel = Visitor::model();
                     'reasonModel'  => $reasonModel,
                     'patientModel' => $patientModel,
                     'asic'         => $asic,
-                    'visitCount'   => $visitCount,
+                    'visitCount'   => $visitCount
                 ));
             ?>
         </td>

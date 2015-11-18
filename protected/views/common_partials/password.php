@@ -27,7 +27,7 @@ if (isset($company) && !empty($company)) {
                             array(
                                 PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                 PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
-                            ), array('class' => 'password_requirement form-label', 'separator' => ''));
+                            ), array('class' => 'password_requirement form-label', 'separator' => '', 'onclick' => 'show_hide_password_fields(this);'));
                         ?>
                         <?php echo $form->error($model, 'password_requirement'); ?>
                     </td>
@@ -110,22 +110,16 @@ if (isset($company) && !empty($company)) {
 
  <!-- password-border -->
 <script>
-
-$(document).ready(function() {
-   $(".password_requirement").click(function() {
-
-   if( $(".password_requirement:checked").val() == 2 ) {
-        $(".show_password_fields").show();
-    }
-    else {
-        $(".show_password_fields").hide();
+function show_hide_password_fields(t){
+    if($(t).val() == 2) {
+        $(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').show();
+    } else {
+        $(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').hide();
         $('.pass_option').each(function(i,v){
             $(v).prop('checked',false);
         });
     }
-    
-   }); 
-});
+}
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();

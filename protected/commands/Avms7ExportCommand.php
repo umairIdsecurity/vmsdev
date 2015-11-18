@@ -194,6 +194,10 @@ class Avms7ExportCommand extends CConsoleCommand
 
     function afterInsertRow($tableName,&$row, &$idMappings,$oldId){
 
+        if($tableName=='company'){
+            $idMappings[$row['name']] = $row['id'];
+        }
+
         $sql=[];
         foreach($sql as $statement){
             echo "\r\n".$statement."<br>";
@@ -383,11 +387,10 @@ class Avms7ExportCommand extends CConsoleCommand
                     } else {
                         $data[$tableName][$i]['tenant_agent'] = null;
                     }
-                    unset($data[$tableName][$i]['operator']);
                 }
+                unset($data[$tableName][$i]['operator']);
             }
         }
-
     }
 
     public function filterUserRecords(&$data,&$idMappings,$vms,$tenant){
@@ -424,11 +427,11 @@ class Avms7ExportCommand extends CConsoleCommand
                                             where tenant = ".$tenant['id']."
                                             and company_type=2
                                             and is_deleted=0
-                                            and (email_address='".$agent['EmailAddress']."'
-                                                or name='".$agent['Company']."')"
+                                            and (email_address='".$agent['email_address']."'
+                                                or name='".$agent['name']."')"
                                         );
             if($vmsAgent==null){
-                echo "\r\nWARNING: Cant find agent ".$agent['EmailAddress']." : ".$agent['Company'];
+                echo "\r\nWARNING: Cant find agent ".$agent['email_address']." : ".$agent['name'];
                 continue;
             }
             $idMappings['company'][$agent['tenant_agent']] = $vmsAgent['id'];
@@ -437,7 +440,7 @@ class Avms7ExportCommand extends CConsoleCommand
 
             $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE  tenant_agent=".$vmsAgent['id']." ORDER BY id ASC");
             if($workstation==null) {
-                echo "\r\nWARNING: Cant find workstation for agent ".$agent['EmailAddress']." : ".$agent['Company'];
+                echo "\r\nWARNING: Cant find workstation for agent ".$agent['email_address']." : ".$agent['name'];
                 continue;
             };
 
@@ -512,7 +515,7 @@ class Avms7ExportCommand extends CConsoleCommand
                 limit 1
             ",
             'tenant_agent' => "
-                select distinct c.id as id,
+                select distinct c.ID as id,
                       c.company as name,
                       c.company as trading_name,
                       (CONCAT_WS(' ',c.FirstName, c.LastName))  as contact,
@@ -526,12 +529,10 @@ class Avms7ExportCommand extends CConsoleCommand
                       IFNULL(agent.AgentId,agent_set.AgentId) as tenant_agent,
                       0 as is_deleted,
                       2 as company_type
-                      AirportCode as tenant,
-                      IFNULL(agent.AgentId,Agent_set.AgentId) as tenant_agent,
                 from oc_set oc
                     join agent_set on agent_set.ocid = oc.id and oc.AirportCode = '$airportCode'
                     left join agent on agent.UserId = agent_set.agentid
-                    left join users a on a.id = ifnull(agent.agentid,agent_set.agentid)
+                    left join users c on c.id = ifnull(agent.agentid,agent_set.agentid)
             ",
             "company" => "
                 select distinct c.id as id,
@@ -559,10 +560,9 @@ class Avms7ExportCommand extends CConsoleCommand
             "user" => "
                 select u.ID as id,
                     u.FirstName as first_name,
-                    u.MiddleName as middle_name,
                     u.LastName as last_name,
                     u.EmailAddress as email,
-                    IFNULL(u.Mobile,u.Telephone) as contact_number,
+                    IFNULL(NULLIF(IFNULL(IFNULL(u.Mobile,u.Telephone),u.Fax),''),'000000000') as contact_number,
                     u.DateOfBirth as date_of_birth,
                     u.Company as company,
                     u.Password as password,

@@ -18,6 +18,7 @@ DELETE FROM [user] WHERE  tenant = 232 AND role = 10;
 DELETE FROM company WHERE tenant = 232 AND company_type = 3;
 DELETE FROM reset_history WHERE EXISTS (SELECT * FROM visitor where reset_history.visitor_id = visitor.id and visitor.tenant = 232);
 DELETE FROM visitor WHERE tenant = 232;
+DELETE FROM [user] where [level] = 3 AND tenant = 232
 
 ALTER TABLE card_generated WITH CHECK CHECK CONSTRAINT ALL;
 ALTER TABLE visit WITH CHECK CHECK CONSTRAINT ALL;

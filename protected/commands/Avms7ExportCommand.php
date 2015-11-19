@@ -56,6 +56,7 @@ class Avms7ExportCommand extends CConsoleCommand
             $this->setTenantAgents($data,$referenceData);
             $this->setVisitorCompanies($data,$referenceData,$avms7);
             $this->setVisitorTypes($data,$tenant['id']);
+            $this->setVisitReasons($data,$tenant['id']);
             $this->importImages($data);
             $this->mapExistingData($tenant,$data,$idMappings,$vms,$referenceData);
             $this->filterUserRecords($data,$idMappings,$vms,$tenant);
@@ -115,6 +116,26 @@ class Avms7ExportCommand extends CConsoleCommand
         }
 
     }
+    function setVisitReasons(&$data,$tenantId){
+        $lookup = [];
+
+        for($i=0;$i<sizeof($data['visit']);$i++){
+
+            $visitor = $data['visit'][$i];
+            $key = $tenantId.".".$visitor['tenant_agent'];
+
+            if(!isset($lookup[$key])) {
+
+                $row = ['reason' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $tenantId,'tenant_agent'=>$visitor['tenant_agent'],'module'=>'AVMS'];
+                $this->insertRow('visit_reason', $row, true);
+                $lookup[$key] = $row['id'];
+                $data['visit'][$i]['reason'] = $row['id'];
+
+            } else {
+                $data['visit'][$i]['reason'] = $lookup[$key];
+            }
+        }
+    }
     function importTable($tableName,&$rows,$foreignKeys,$targetTables,&$idMappings,$vms){
 
         $cols = [];
@@ -167,8 +188,6 @@ class Avms7ExportCommand extends CConsoleCommand
             } else {
                 $row['workstation']=$row['tenant'];
             }
-
-
         } else if($tableName=='visitor'){
             if(!isset($row['contact_number']) || $row['contact_number']==''){
                 $row['contact_number'] = '0000000000';
@@ -195,7 +214,7 @@ class Avms7ExportCommand extends CConsoleCommand
     function afterInsertRow($tableName,&$row, &$idMappings,$oldId){
 
         if($tableName=='company'){
-            $idMappings[$row['name']] = $row['id'];
+            $idMappings['company'][$row['name']] = $row['id'];
         }
 
         $sql=[];
@@ -298,7 +317,7 @@ class Avms7ExportCommand extends CConsoleCommand
 
             $existingCompany = $this->findCompanyFromData($data,$company);
             if($existingCompany!=null){
-                if($existingCompany['tenant_agent']==$data['visitor'][$i]['tenant_agent'])
+                if(!isset($existingCompany['tenant_agent']) || $existingCompany['tenant_agent']==$data['visitor'][$i]['tenant_agent'])
                 {
                     $data['visitor'][$i]['company'] = $existingCompany['id'];
                 } else {
@@ -376,7 +395,7 @@ class Avms7ExportCommand extends CConsoleCommand
 
     public function setTenantAgents(&$data, $refernceData){
 
-        foreach(['visit','card_generated','user'] as $tableName) {
+        foreach(['visit','card_generated','user','company'] as $tableName) {
          for ($i = 0; $i < sizeof($data[$tableName]); $i++) {
                 $operatorId = $data[$tableName][$i]['operator'];
                 if($operatorId == null || $operatorId=='' || !isset($refernceData['operator_owners'][$operatorId])){
@@ -419,6 +438,9 @@ class Avms7ExportCommand extends CConsoleCommand
     {
         $idMappings['company'] = [];
         $idMappings['company'][$tenant['code']] = $tenant['id'];
+        $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE  tenant=".$tenant['id']." ORDER BY id ASC");
+        $idMappings['workstation'][$tenant['code']] = $workstation['id'];
+
 
         foreach($data['tenant_agent'] as $agent){
 
@@ -428,13 +450,20 @@ class Avms7ExportCommand extends CConsoleCommand
                                             and company_type=2
                                             and is_deleted=0
                                             and (email_address='".$agent['email_address']."'
-                                                or name='".$agent['name']."')"
+                                                or name='".$agent['name']."'
+                                                or instr(name,'".$agent['name']."') > 0
+                                                or instr('".$agent['name']."',name) > 0
+                                                or substr(email_address,instr('@',email_address))='".substr($agent['email_address'],strpos($agent['email_address'],'@'))."'
+                                                )"
                                         );
             if($vmsAgent==null){
                 echo "\r\nWARNING: Cant find agent ".$agent['email_address']." : ".$agent['name'];
                 continue;
+                //$this->createTenantAgent($agent,$tenant,$vms);
+                //$this->createWorkstation($agent,$tenant,$vms);
+            } else {
+                $idMappings['company'][$agent['tenant_agent']] = $vmsAgent['id'];
             }
-            $idMappings['company'][$agent['tenant_agent']] = $vmsAgent['id'];
 
             // map the workstation
 
@@ -446,10 +475,34 @@ class Avms7ExportCommand extends CConsoleCommand
 
 
             $idMappings['workstation'][$agent['tenant_agent']] = $workstation['id'];
+
         }
 
     }
 
+    public function createWorkstation($agent,$tenant,$vms){
+        $workstation = [
+
+        ];
+    }
+    public function createTenantAgent($agent,$tenant,$vms){
+
+        $company = $agent;
+        $company['tenant'] = $tenant['id'];
+        $id = $company['id'];
+        $this->insertRow('company',$company,true);
+        $idMappings['company'][$id] = $company['id'];
+        $tenantAgent = [
+                            'id'=>$agent['id'],
+                            'tenant_id'=>$tenant['id'],
+                            'for_module'=>'AVMS',
+                            'is_deleted'=>0,
+                            'created_by'=>1
+                        ];
+
+        $this->insertRow('tenant_agent',$tenantAgent,false);
+
+    }
     public function extractTenant($airportCode,$avms7)
     {
         $queries = $this->getQueries($airportCode);
@@ -534,28 +587,49 @@ class Avms7ExportCommand extends CConsoleCommand
                     left join agent on agent.UserId = agent_set.agentid
                     left join users c on c.id = ifnull(agent.agentid,agent_set.agentid)
             ",
-            "company" => "
-                select distinct c.id as id,
-                     min(c.company) as name,
-                     min(c.company) as trading_name,
-                     max(CONCAT_WS(' ',c.FirstName, c.LastName))  as contact,
-                     max(CONCAT_WS(' ',c.Unit,c.StreetNo,c.Street,c.StreetType,c.Suburb,c.State,c.PostCode)) as billing_address,
-                     max(c.EmailAddress) as email_address,
-                     max(c.Telephone) as office_number,
-                     max(c.Mobile) as mobile_number,
+//            "company" => "
+//                select distinct c.id as id,
+//                     min(c.company) as name,
+//                     min(c.company) as trading_name,
+//                     max(CONCAT_WS(' ',c.FirstName, c.LastName))  as contact,
+//                     max(CONCAT_WS(' ',c.Unit,c.StreetNo,c.Street,c.StreetType,c.Suburb,c.State,c.PostCode)) as billing_address,
+//                     max(c.EmailAddress) as email_address,
+//                     max(c.Telephone) as office_number,
+//                     max(c.Mobile) as mobile_number,
+//                     1 as created_by_user,
+//                     1 as created_by_visitor,
+//                     oc.AirportCode as tenant,
+//                     IFNULL(agent.AgentId,agent_set.AgentId) as tenant_agent,
+//                     0 as is_deleted,
+//                     3 as company_type
+//                   from  operational_need n
+//                       join log_visit l on l.id = n.id and l.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
+//                       join oc_set oc on oc.id = l.setid and oc.AirportCode = '$airportCode'
+//                       join users c on c.id = n.CompanyId and c.level = 4
+//                       left join agent_set on agent_set.ocid = oc.id
+//                       left join agent on agent.UserId = agent_set.agentid
+//                  group by c.id,oc.AirportCode, IFNULL(agent.AgentId,agent_set.AgentId)
+//            ",
+            "company" =>"
+                select c.Id as id,
+                     (c.company) as name,
+                     (c.company) as trading_name,
+                     (CONCAT_WS(' ',c.FirstName, c.LastName))  as contact,
+                     (CONCAT_WS(' ',c.Unit,c.StreetNo,c.Street,c.StreetType,c.Suburb,c.State,c.PostCode)) as billing_address,
+                     (c.EmailAddress) as email_address,
+                     (c.Telephone) as office_number,
+                     (c.Mobile) as mobile_number,
                      1 as created_by_user,
                      1 as created_by_visitor,
-                     oc.AirportCode as tenant,
-                     IFNULL(agent.AgentId,agent_set.AgentId) as tenant_agent,
+                     o.ibcode as tenant,
+                     o.id as operator,
                      0 as is_deleted,
                      3 as company_type
-                   from  operational_need n
-                       join log_visit l on l.id = n.id
-                       join oc_set oc on oc.id = l.setid and oc.AirportCode = '$airportCode'
-                       join users c on c.id = n.CompanyId and c.level = 4
-                       left join agent_set on agent_set.ocid = oc.id
-                       left join agent on agent.UserId = agent_set.agentid
-                  group by c.id,oc.AirportCode, IFNULL(agent.AgentId,agent_set.AgentId)
+                from users c
+                    join users o
+                        on o.id = c.ownerid
+                        and o.IBCode = '$airportCode'
+                where c.level = 4
             ",
             "user" => "
                 select u.ID as id,
@@ -591,6 +665,7 @@ class Avms7ExportCommand extends CConsoleCommand
                   left join asic_data a on u.ID = a.UserId
                 where u.ibcode = '$airportCode'
                 and u.level not in (1,4,5,10)
+                and (1>1)
             ",
             'visitor' =>"
                 select distinct v.ID as id,
@@ -655,6 +730,11 @@ class Avms7ExportCommand extends CConsoleCommand
                                              where idCC.UserID = v.id
                                              order by id desc
                                              limit 2,1)
+                  where exists (select *
+                                  from log_visit lv
+                                  where lv.setid = oc.id
+                                  and lv.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
+                                  )
                   order by v.id
                 ",
 
@@ -677,7 +757,10 @@ class Avms7ExportCommand extends CConsoleCommand
                     l.userId as operator,
                     1 as print_count
                 from oc_set oc
-                    join log_visit l on l.setid = oc.Id and  oc.AirportCode = 'MBW'
+                    join log_visit l
+                        on l.setid = oc.Id
+                        and  oc.AirportCode = '$airportCode'
+                        and l.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
                     join card_type t on t.ID = oc.CID
                     left join close_visit c on l.ID = c.LoggedId and c.visitorid = l.VisitorID
                     left join log_negate n on l.Id = n.closedid
@@ -703,7 +786,7 @@ class Avms7ExportCommand extends CConsoleCommand
                        c.Time as time_check_out,
                        case
                         when l.IsClosed = 0 then 1
-                        else 0
+                        else 3
                        end as visit_status,
                        null as workstation,
                        oc.AirportCode as tenant,
@@ -720,7 +803,9 @@ class Avms7ExportCommand extends CConsoleCommand
                        null as company,
                        1 as is_listed
                 from oc_set oc
-                    join log_visit l on l.setid = oc.Id and  oc.AirportCode = '$airportCode'
+                    join log_visit l on l.setid = oc.Id
+                        and  oc.AirportCode = '$airportCode'
+                        and l.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
                     join card_type t on t.ID = oc.CID
                     left join close_visit c on l.ID = c.LoggedId and c.visitorid = l.VisitorID
                     left join log_negate n on l.Id = n.closedid

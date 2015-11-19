@@ -145,12 +145,6 @@ class VisitController extends Controller {
             }
             $model->reset_id = NULL;
 
-            /*echo "<pre>";
-                print_r($model->attributes);
-            
-            die;*/
-
-
             if ($visitService->save($model, $session['id'])) {
                  if((isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == '1') || isset($_POST["requestVerifyAsicSponsor"]) ){
                     
@@ -266,7 +260,7 @@ class VisitController extends Controller {
             'model' => $model,
         ));
     }
-
+    
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -413,11 +407,7 @@ class VisitController extends Controller {
                 if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
                     $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
                 }
-                /**
-                 * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
-                 * Then Imemdialty Closed this visit
-                 */
-                $this->closedAsicPending($model, $visitorModel);
+             
                 //update card type, workstation, reason as well
                 if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {$model->card_type = $_POST['Visit']['card_type'];}
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
@@ -426,7 +416,12 @@ class VisitController extends Controller {
                 if ((isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") || (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") || (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") )
                 {
                     $model->save();
-                }
+                }   
+                /**
+                 * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
+                 * Then Imemdialty Closed this visit
+                 */
+                $this->closedAsicPending($model, $visitorModel);
                 $visitorModel->scenario = 'updateVic';
                 if ($visitorModel->save()) {
                     // If visitor card status is VIC ASIC Issued then add new card status convert

@@ -338,7 +338,6 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id, $new_created=NULL) {
-        
         // set Close visit that are Auto Closed and will expire today.
         Visit::model()->setClosedAutoClosedVisits($id);  
         
@@ -399,48 +398,56 @@ class VisitController extends Controller {
         //}
 
         $hostModel = User::model()->findByPk($host);
-
+        $errorMsg="";
         // Update visitor detail form ( left column on visitor detail page )
-        if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) {
-
-            $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
-            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-
-            if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
-                $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
+        if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
+        {
+            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
+            {
+                $errorMsg="Card type can not be updated whilst visit is active.";
             }
-            /**
-             * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
-             * Then Imemdialty Closed this visit
-             */
-            $this->closedAsicPending($model, $visitorModel);
-            
-            //update card type as well
-            if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {
-                $model->card_type = $_POST['Visit']['card_type'];
-                $model->save();
-            }
-
-            $visitorModel->scenario = 'updateVic';
-            if ($visitorModel->save()) {
-                // If visitor card status is VIC ASIC Issued then add new card status convert
+            else
+            {
+                $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
+                $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
-                    $logCardstatusConvert               = new CardstatusConvert;
-                    $logCardstatusConvert->visitor_id   = $visitorModel->id;
-                    $logCardstatusConvert->convert_time = date("Y-m-d");
+                    $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                }
+                /**
+                 * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
+                 * Then Imemdialty Closed this visit
+                 */
+                $this->closedAsicPending($model, $visitorModel);
+                //update card type, workstation, reason as well
+                if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {$model->card_type = $_POST['Visit']['card_type'];}
+                if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
+                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {$model->reason = $_POST['Visit']['reason'];}
+                if(!isset($model->visit_status) || $model->visit_status == ""){$model->visit_status = $oldStatus;}
+                if ((isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") || (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") || (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") )
+                {
+                    $model->save();
+                }
+                $visitorModel->scenario = 'updateVic';
+                if ($visitorModel->save()) {
+                    // If visitor card status is VIC ASIC Issued then add new card status convert
+                    if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
+                        $logCardstatusConvert               = new CardstatusConvert;
+                        $logCardstatusConvert->visitor_id   = $visitorModel->id;
+                        $logCardstatusConvert->convert_time = date("Y-m-d");
 
-                    // save Log 
-                    if (!$logCardstatusConvert->save()) {
-                        // Do something if save process failure
+                        // save Log 
+                        if (!$logCardstatusConvert->save()) {
+                            // Do something if save process failure
+                        }
                     }
                 }
+                $this->redirect(array("visit/detail&id=".$id));
             }
-            $this->redirect(array("visit/detail&id=".$id));
         }
 
         #update Visitor and Host form ( middle column on visitor detail page )
-        if (isset($_POST['updateVisitorInfo'])) {
-
+        if (isset($_POST['updateVisitorInfo'])) 
+        {
             // Change date formate from d-m-Y to Y-m-d
             if (!empty($this->date_of_birth)) 
                 $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
@@ -533,13 +540,13 @@ class VisitController extends Controller {
             // Save visitor
             if (!$visitorModel->save()) {
                 // Do something if save visitor failure
-            }
+            }            
         }
 
         if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) 
         {
             $visitParams = Yii::app()->request->getPost('Visit');
-             $model->attributes = $visitParams;
+            $model->attributes = $visitParams;
              
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
@@ -590,10 +597,6 @@ class VisitController extends Controller {
                 }
 
             }
-            
-            if(!isset($model->visit_status) || $model->visit_status == "") {
-                $model->visit_status = $oldStatus;
-            }
                     
             // save visit model
             if ($model->save()) {
@@ -620,7 +623,8 @@ class VisitController extends Controller {
             'newHost'       => $newHost,
             'visitCount'    => $visitCount,
             'cardTypeModel' => $cardTypeModel,
-            'new_created' => $new_created
+            'new_created' => $new_created,
+            'errorMsg' => $errorMsg
         ));
     }
 

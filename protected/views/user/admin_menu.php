@@ -365,7 +365,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords', array('vms' => 'avms')); ?>'><span <?php CHelper::is_selected_submenu('visit', 'exportvisitorrecords');?>>Export Visit History</span></a></li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory', array('vms' => 'avms')); ?>'><span <?php CHelper::is_selected_submenu('visitor', 'importVisitHistory');?>>Import Visit History</span></a></li>
+                    <!-- Hide import Visit History for AVMS - CAVMS_1169 -->
+                    <!-- <li><a href='<?php //echo Yii::app()->createUrl('visitor/importVisitHistory', array('vms' => 'avms')); ?>'><span <?php //CHelper::is_selected_submenu('visitor', 'importVisitHistory');?>>Import Visit History</span></a></li> -->
                     <?php if($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN){ ?>
                     <li>
                         <a class="managevisitortype addSubMenu" href='<?php echo Yii::app()->createUrl('visitorType/index', array('vms' => 'avms')); ?>'><span <?php CHelper::is_selected_submenu('visitorType', 'index');?>>Visitor Types</span></a>

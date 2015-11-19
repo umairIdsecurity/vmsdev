@@ -143,6 +143,22 @@ class DatabaseIndexHelper
         return DatabaseIndexHelper::getValue($sql);
     }
 
+    public static function getDefaultConstrainName($tableName,$columnName){
+
+        $sql = "select d.name
+                from sys.tables t
+                  join sys.default_constraints d
+                   on d.parent_object_id = t.object_id
+                  join    sys.columns c
+                   on c.object_id = t.object_id
+                    and c.column_id = d.parent_column_id
+                 where t.name = '$tableName'
+                  and c.name = '$columnName'";
+
+        return getValue($sql);
+
+    }
+
     private static function getValue($sql){
 
         $command = Yii::app()->db->createCommand($sql);

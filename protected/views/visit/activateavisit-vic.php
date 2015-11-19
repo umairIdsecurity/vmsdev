@@ -389,7 +389,7 @@ $asicEscort = new AddAsicEscort();
   
 
         $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
-
+        
         $("#dateoutDiv #Visit_date_check_out").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -398,7 +398,7 @@ $asicEscort = new AddAsicEscort();
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
-            maxDate: maxDate,
+            maxDate: <?php echo $visitCount['remainingDays'];?>,
             dateFormat: "dd-mm-yy",
             disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL]) ? "true" : "false"; ?>,
             onClose: function (selectedDate) {

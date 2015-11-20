@@ -158,19 +158,19 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                 $my_image = $data['relative_path'];
                                             }
                                          ?>
-                                            <img id='photoPreview'
+                                            <img id='photoPreview2'
                                                  src = "<?php echo $my_image ?>"
                                                  style='display:block;height:174px;width:133px;'/>
                                         <?php } elseif ($model['photo'] == NULL) {
                                             ?>
 
-                                            <img id='photoPreview'
+                                            <img id='photoPreview2'
                                                  src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                                  style='display:block;height:174px;width:133px;'/>
 
                                         <?php } else { ?>
 
-                                            <img id='photoPreview' src="data:image;base64,<?php
+                                            <img id='photoPreview2' src="data:image;base64,<?php
                                                 if ($this->action->id == 'update' && $model->photo != '') {
                                                     echo Company::model()->getPhotoRelativePath($model->photo);
                                                 }
@@ -867,7 +867,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    //imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
+                    //imageUrl: $('#photoPreview2').attr('src').substring(1, $('#photoPreview2').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -878,7 +878,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         dataType: 'json',
                         success: function (r) {
                             $.each(r.data, function (index, value) {
-                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});*/
@@ -886,7 +886,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 //showing image from DB as saved in DB -- image is not present in folder
                                 var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
 
-                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoPreview2').src = "data:image;base64,"+ value.db_image;
+                                
                                 document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
                                 $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });

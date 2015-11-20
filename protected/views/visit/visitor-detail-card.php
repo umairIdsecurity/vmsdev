@@ -33,9 +33,9 @@ $photoForm = $this->beginWidget('CActiveForm', [
                 }
         ?>
  
-        <img id="photoPreview" src="<?php echo $my_image; ?>" class="photo_visitor">
+        <img id="photoPreview2" src="<?php echo $my_image; ?>" class="photo_visitor">
     <?php } else { ?>
-        <img id="photoPreview" src="" style="display:none;" class="photo_visitor">
+        <img id="photoPreview2" src="" style="display:none;" class="photo_visitor">
     <?php } ?>
         
 </div>
@@ -339,7 +339,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             e.preventDefault();
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                url: "<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>",
                 data: {
                     x1: $("#x1").val(),
                     x2: $("#x2").val(),
@@ -347,7 +347,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -360,12 +360,12 @@ $detailForm = $this->beginWidget('CActiveForm', [
 
                             $.each(r.data, function (index, value) {
 
-                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
 
                                 //showing image from DB as saved in DB -- image is not present in folder
 
-                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoPreview2').src = "data:image;base64,"+ value.db_image;
                                 document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
 
 
@@ -425,7 +425,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             url: "<?php echo CHtml::normalizeUrl(array("/visitor/update&id=" . $visitorModel->id . "&view=1")); ?>",
             data: form,
             success: function (data) {
-                $("#photoPreview").show();
+                $("#photoPreview2").show();
             }
         });
 
@@ -504,3 +504,10 @@ $detailForm = $this->beginWidget('CActiveForm', [
 <input type="hidden" id="height"/>
 
 <input type="hidden" id="visitorOriginalValue" value="<?php echo $visitorModel->photo; ?>"/>
+
+<style type="text/css">
+#photoPreview2 {
+    height: 206px !important;
+    width: 152px !important;
+}
+</style>

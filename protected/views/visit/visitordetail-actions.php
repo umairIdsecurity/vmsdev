@@ -447,6 +447,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             // Check if Visit Reason Checkbox is ticked
             if( $("#reasonActiveVisit").length && $("#reasonActiveVisit").is(":checked") == false) {
                     $("#visit_reason_checkbox_error").show();
+                    $("#visit_reason_dropdown_error").show();
                     return false;
             }
             

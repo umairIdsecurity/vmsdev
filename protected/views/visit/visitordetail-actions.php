@@ -461,19 +461,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             // Check if whether ASIC no & ASIC expiry is present for selected ASIC.
             if ($("#ASIC_asic_no").length) {
                 if ($("#ASIC_asic_no").val() == '') {
-                    $("#Visitor_asic_no_em_").html('Please complete ASIC no.').show();
+                    $("#Visitor_asic_no_em_").html('Please complete ASIC No.').show();
+                    $("#visit_cannot_be_activate").html("Please complete ASIC No.").show();
+                    return false;
                 } else {
                     $("#Visitor_asic_no_em_").html('').hide();
                 }
 
                 if ($("#ASIC_asic_expiry").val() == '') {
                     $("#Visitor_asic_expiry_em_").html('Please complete ASIC expiry.').show();
+                    return false;
                 } else {
                     $("#Visitor_asic_expiry_em_").html('').hide();
-                }
-
-                if ($("#ASIC_asic_no").val() == '' || $("#ASIC_asic_expiry").val() == '') {
-                    return false;
                 }
             }
             

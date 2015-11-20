@@ -467,6 +467,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
 
                                 <br />
                                 <?php echo $visitorForm->error($asic, 'asic_expiry'); ?>
+                                <?php echo $visitorForm->hiddenField($asic, "visitor_card_status", ['name' => 'ASIC[asic_status]']); ?>
                             </td>
                         </tr>
 

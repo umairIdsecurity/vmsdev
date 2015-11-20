@@ -438,6 +438,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                  return false;
             }
             
+            // Check if ASIC has expired = 8 then dont activate the visit 
+            if( $("#ASIC_asic_status").length && $("#ASIC_asic_status").val() == '<?php echo Visitor::ASIC_EXPIRED;?>' ){
+                $("#visit_cannot_be_activate").html("Visit cannot be activate. ASIC sponsor has expired.").show();
+                return false;
+            }
+            
            // Check Deposit Paid for EVIC only
             if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");

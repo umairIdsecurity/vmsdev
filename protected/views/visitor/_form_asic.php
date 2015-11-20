@@ -599,19 +599,20 @@ if ($this->action->id == 'update') {
             var asic_no = $('#Visitor_asic_no').val();
             var asic_expiry = $('#Visitor_asic_expiry').val();
 
-            if (asic_no == "" && asic_expiry == "" && passwordConfirmed == false) {
-                $('#Visitor_visitor_card_status').val(<?php echo Visitor::ASIC_EXPIRED; ?>);
+            if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val() || $("#Visitor_password").val() == "") {
                 var card_status = $('#Visitor_visitor_card_status').val();
                 if (card_status == "<?php echo Visitor::ASIC_EXPIRED; ?>") {
                     $('#Visitor_password_requirement_1').trigger('click');
                     $('.user_requires_password').show();
                     $('#Visitor_password_option_1').trigger('click');
                     $('#Visitor_password_requirement_0').prop('disabled', true);
+                    $("#Visitor_password_option_em_").html("Please Enter Correct Password").show();
+                    return false;
                 } else {
                     $('#Visitor_password_requirement_0').prop('disabled', false).trigger('click');
                     $('.user_requires_password').hide();
                 }
-                return false;
+                
             }
 
             if (!companyValue || companyValue == "") {

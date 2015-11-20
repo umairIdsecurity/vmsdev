@@ -83,7 +83,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             'afterValidate'    => 'js:function(form, data, hasError){
                 if (hasError) {
                     var currentYear = new Date().getFullYear();
-                    var selectedYear = $("#fromYear").val();
+                    var selectedYear = $(".year").val();
 
                     if (currentYear - selectedYear < 18) {
                         $("#Visitor_identification_type_em_").hide();
@@ -605,18 +605,18 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <script>
 
     function afterValidate(form, data, hasError) {
-       /* 
-       var dt = new Date();
-       if(dt.getFullYear()< $("#fromYear").val()) {
+        
+       /*var dt = new Date();
+       if(dt.getFullYear()< $(".year").val()) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+        }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1)< $(".month").val()) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }else if(
-            dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+            dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1) == $(".month").val() && dt.getDate() <= $(".day").val() ) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
@@ -713,64 +713,64 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             });
         }
 
-        /*$('#fromDay').on('change', function () {
+        /*$('.day').on('change', function () {
             
             var dt = new Date();
 
-            if(dt.getFullYear()< $("#fromYear").val()) {
+            if(dt.getFullYear()< $(".year").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1)< $(".month").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-
-        $('#fromMonth').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1) == $(".month").val() && dt.getDate() <= $(".day").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
             }
-        });
+        });*/
 
-        $('#fromYear').on('change', function () {
+        /*$('.month').on('change', function () {
             var dt = new Date();
 
-            if(dt.getFullYear()< $("#fromYear").val()) {
+            if(dt.getFullYear()< $(".year").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1)< $(".month").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1) == $(".month").val() && dt.getDate() <= $(".day").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });*/
+
+        $('.year').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $(".year").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
+                return false;
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1)< $(".month").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
+                return false;
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1) == $(".month").val() && dt.getDate() <= $(".day").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{//u18_identification
-                if (dt.getFullYear() - $("#fromYear").val() < 18) {
+                if (dt.getFullYear() - $(".year").val() < 18) {
                     $('#u18_identification').show();
                     $('.primary-identification-require').hide();
                 } else {
@@ -780,7 +780,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
-*/
+
 
 //        $('#User_workstation').on('change', function () {
 //            var workstation = $("#User_workstation").val();
@@ -797,9 +797,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         if ($("#currentAction").val() == 'update') {
 
-            $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
-            $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
-            $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
+            /*$(".year").val($("#dateofBirthBreakdownValueYear").val());
+            $(".month").val($("#dateofBirthBreakdownValueMonth").val());
+            $(".day").val($("#dateofBirthBreakdownValueDay").val());*/
 
             $('#Visitor_visitor_card_status').val(<?php echo $model->visitor_card_status; ?>);
             $('#Visitor_visitor_type').val(<?php echo $model->visitor_type; ?>);

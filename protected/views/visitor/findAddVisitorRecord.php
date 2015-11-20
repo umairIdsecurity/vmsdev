@@ -811,6 +811,7 @@ $model->identification_country_issued = 13;
             }*/
         }
 
+        
         if ($("#u18_identification:hidden").length != 1) {
             if (!$("#Visitor_u18_identification").is(":checked")) {
                 $("#Visitor_u18_identification_em_").show();
@@ -821,6 +822,7 @@ $model->identification_country_issued = 13;
         } else {
             $("#Visitor_u18_identification_em_").hide();
         }
+        
 
         if (!hasError){
             if($('#VisitCardType').val() > CONTRACTOR_TYPE) {
@@ -897,6 +899,35 @@ $model->identification_country_issued = 13;
     }
 
     $(document).ready(function() {
+
+        $('.year').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $(".year").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
+                return false;
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1)< $(".month").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
+                return false;
+            }else if(dt.getFullYear() == $(".year").val() &&(dt.getMonth()+1) == $(".month").val() && dt.getDate() <= $(".day").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
+                return false;
+            }else{//u18_identification
+                if (dt.getFullYear() - $(".year").val() < 18) {
+                    $('#u18_identification').show();
+                    $('.primary-identification-require').hide();
+                } else {
+                    $('#u18_identification').hide();
+                    $('.primary-identification-require').show();
+                }
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+    
+
 
         if($('#Visitor_contact_country').length){
             $('#Visitor_contact_country').change(function(){

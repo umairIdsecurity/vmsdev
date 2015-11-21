@@ -153,6 +153,10 @@ class VisitController extends Controller {
                    
                     $this->renderPartial('_email_asic_verify', array('visitor' => $visitor, 'host' => $host));
                 }
+                 /**
+                * If operator Selects VIC as Asic Sponsor then Convert VIC to ASIC
+                */
+                $this->convertVicToAsicSponsor($model->host); 
                 $this->redirect(array('visit/detail', 'id' => $model->id, 'new_created' => true));
             }
         }
@@ -252,6 +256,10 @@ class VisitController extends Controller {
                         $this->renderPartial('_email_asic_verify',array('visitor'=>$visitor,'host'=>$host));
                     }
                }
+               /**
+                * If operator Selects VIC as Asic Sponsor then Convert VIC to ASIC
+                */
+                $this->convertVicToAsicSponsor($model->host);    
                 $this->redirect(array('visit/detail', 'id' => $id));
             }
         }
@@ -260,7 +268,18 @@ class VisitController extends Controller {
             'model' => $model,
         ));
     }
-    
+    /**
+     * If operator Selects VIC as Asic Sponsor then Convert VIC to ASIC
+     * @param model $host The person that selected as Asic Sponsor
+     */
+    public function convertVicToAsicSponsor($host) {
+        //check if the $host is VIC 
+        $visitor = Visitor::model()->findByPk($host);
+        if( isset($visitor) && $visitor->profile_type == visitor::PROFILE_TYPE_VIC) {
+            Visitor::model()->updateByPk($host, array("profile_type"=>Visitor::PROFILE_TYPE_ASIC, "visitor_card_status"=>  Visitor::ASIC_APPLICANT));
+        }
+        return;
+    }
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.

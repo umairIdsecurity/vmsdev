@@ -438,6 +438,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                  return false;
             }
             
+            // Check if ASIC has expired = 8 then dont activate the visit 
+            if( $("#ASIC_asic_status").length && $("#ASIC_asic_status").val() == '<?php echo Visitor::ASIC_EXPIRED;?>' ){
+                $("#visit_cannot_be_activate").html("Visit cannot be activate. ASIC sponsor has expired.").show();
+                return false;
+            }
+            
            // Check Deposit Paid for EVIC only
             if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
@@ -447,6 +453,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             // Check if Visit Reason Checkbox is ticked
             if( $("#reasonActiveVisit").length && $("#reasonActiveVisit").is(":checked") == false) {
                     $("#visit_reason_checkbox_error").show();
+                    $("#visit_reason_dropdown_error").show();
                     return false;
             }
             
@@ -460,19 +467,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             // Check if whether ASIC no & ASIC expiry is present for selected ASIC.
             if ($("#ASIC_asic_no").length) {
                 if ($("#ASIC_asic_no").val() == '') {
-                    $("#Visitor_asic_no_em_").html('Please complete ASIC no.').show();
+                    $("#Visitor_asic_no_em_").html('Please complete ASIC No.').show();
+                    $("#visit_cannot_be_activate").html("Please complete ASIC No.").show();
+                    return false;
                 } else {
                     $("#Visitor_asic_no_em_").html('').hide();
                 }
 
                 if ($("#ASIC_asic_expiry").val() == '') {
                     $("#Visitor_asic_expiry_em_").html('Please complete ASIC expiry.').show();
+                    return false;
                 } else {
                     $("#Visitor_asic_expiry_em_").html('').hide();
-                }
-
-                if ($("#ASIC_asic_no").val() == '' || $("#ASIC_asic_expiry").val() == '') {
-                    return false;
                 }
             }
             

@@ -119,8 +119,10 @@ class DashboardController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit']))
             $model->attributes = $_GET['Visit'];
-
-        $this->render('viewdashboard', array(
+//        $this->render('viewdashboard', array(
+//            'model' => $model,
+//        ));
+        $this->render('admindashboard', array(
             'model' => $model,
         ));
     }

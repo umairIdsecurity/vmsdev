@@ -2,7 +2,7 @@
 Yii::import('ext.validator.PasswordCustom');
 Yii::import('ext.validator.PasswordRequirement');
 Yii::import('ext.validator.PasswordOption');
-
+Yii::import('ext.validator.EmailCustom');
 /**
  * This is the model class for table "user".
  *
@@ -142,7 +142,7 @@ class User extends VmsActiveRecord {
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,password,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
-                array('email', 'email'),
+                array('email', 'EmailCustom'),
                 array('email','unique',
                              'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant AND tenant!=1',
                              'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant']))),
@@ -180,7 +180,7 @@ class User extends VmsActiveRecord {
                 array('asic_no, asic_expiry, first_name, last_name, email, contact_number, user_type,is_deleted', 'required', 'on'=>'add_sponsor', 'message'=>'Please complete {attribute}'),
 
                 array('email', 'filter', 'filter' => 'trim'),
-                array('email', 'email'),
+                array('email', 'EmailCustom'),
                 array('email','unique',
                     'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant AND tenant!=1',
                         'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant']))),

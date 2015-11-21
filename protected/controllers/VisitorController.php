@@ -193,7 +193,7 @@ class VisitorController extends Controller {
                      * CLOSE all Auto close EVIC visits of this visitor that is now having ASIC PENDING 
                      * card status and Reset if first visit
                      */
-                    if( $model->visitor_card_status == Visitor::VIC_ASIC_PENDING ) {
+                    if( $model->visitor_card_status == Visitor::VIC_ASIC_PENDING && $oldProfileType == Visitor::PROFILE_TYPE_VIC) {
                         $this->closeAsicPendingAndReset( $model );
                     }
                         
@@ -456,6 +456,8 @@ class VisitorController extends Controller {
             $hostTitle = 'ASIC Sponsor';
             // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
             $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
+            // Don't show Expired ASIC Sponsors
+            $conditionString .= " AND (visitor_card_status != '".Visitor::ASIC_EXPIRED."') ";
         } else {
             $model = new User('search');
             $model->unsetAttributes();

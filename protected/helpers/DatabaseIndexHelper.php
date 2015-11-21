@@ -155,7 +155,7 @@ class DatabaseIndexHelper
                  where t.name = '$tableName'
                   and c.name = '$columnName'";
 
-        return getValue($sql);
+        return DatabaseIndexHelper::getValue($sql);
 
     }
 

@@ -442,7 +442,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </td>
                         </tr>
                     </table>
-                    <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) &&
+                    <?php if (((in_array($session['role'],[Roles::ROLE_SUPERADMIN, Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN,Roles::ROLE_AGENT_ADMIN])) &&
                             $this->action->id == 'update') || $this->action->id == 'addvisitor'
                     ) { ?>
                         <table style="float:left;width:300px;">

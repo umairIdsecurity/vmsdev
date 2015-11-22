@@ -6,7 +6,7 @@
  * Date: 29/10/2015
  * Time: 9:56 PM
  */
-class Avms7ExportCommand extends CConsoleCommand
+class Avms7MigrationCommand extends CConsoleCommand
 {
 
     private $unmappedRefs = [

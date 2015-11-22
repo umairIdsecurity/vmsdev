@@ -105,8 +105,17 @@ class TenantTransferController extends Controller
 
     function actionDeleteSql()
     {
+        #get the tenant
         $tenant = $_REQUEST['tenant'];
+
+        #reverse the order of queries
         $queries = array_reverse($this->getQueries($tenant));
+
+        #get integrity disabling queries
+        $driverName = Yii::app()->db->driverName;
+        $preStatement= null;
+        $postStatement= null;
+
 
         $data=[];
         $sql = "";
@@ -114,7 +123,16 @@ class TenantTransferController extends Controller
             $tableName = Yii::app()->db->quoteTableName($table);
             $data[$table] = [];
             foreach($conditions as $condition) {
-                $sql = $sql."DELETE FROM " . $tableName . " WHERE EXISTS (SELECT ".$tableName.".* WHERE " . $condition." )\r\n";
+
+                if($driverName=='mssql' || $driverName=='sqlsrv'){
+                    $preStatement = "ALTER TABLE $tableName NOCHECK CONSTRAINT all;\r\n";
+                    $postStatement = "ALTER TABLE $tableName WITH CHECK CHECK CONSTRAINT all;r\n";
+                } else {
+                    $preStatement = "SET foreign_key_checks = 0;\r\n";
+                    $postStatement = "SET foreign_key_checks = 1;\r\n";
+                }
+
+                $sql = $sql.$preStatement."DELETE $tableName.* FROM $tableName $condition;\r\n".$postStatement;
             }
         }
 
@@ -271,7 +289,6 @@ class TenantTransferController extends Controller
 
             if ($isAutoIncrement) {
 
-                //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
                 $row['id'] = Yii::app()->db->getLastInsertID();
 
             }
@@ -490,8 +507,6 @@ class TenantTransferController extends Controller
 
             'cardstatus_convert'                =>['JOIN visitor ON visitor.id = cardstatus_convert.visitor_id '.
                                                     $default_condition],
-
-            'contact_person'                    =>['WHERE tenant = '.$tenant],
 
             //'contact_support'                   =>['JOIN '.$userTable.' ON user.id = contact_support.user_id '.$default_condition],
 

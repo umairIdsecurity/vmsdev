@@ -48,11 +48,11 @@
 	</div>
 
  
-	<div class="row">
-		<?php echo $form->labelEx($model,'notification_type'); ?><br>
-		<?php echo $form->dropDownList($model, 'notification_type',array("Product Updates"=>"Product Updates"));?>
-		<?php echo $form->error($model,'notification_type'); ?>
-	</div>
+<!--	<div class="row">-->
+<!--		--><?php //echo $form->labelEx($model,'notification_type'); ?><!--<br>-->
+<!--		--><?php //echo $form->dropDownList($model, 'notification_type',array("Product Updates"=>"Product Updates"));?>
+<!--		--><?php //echo $form->error($model,'notification_type'); ?>
+<!--	</div>-->
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array("class"=>"complete")); ?>

@@ -36,7 +36,7 @@
 		'subject',
 		/* 'message', */
         'date_created',
-        'notification_type',
+        /*'notification_type',*/
 		/*'created_by',
 		 
 		'role_id',

@@ -1105,7 +1105,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             data: form,
             success: function (data, response) {
                 if(data == ''){
-                    if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                    if ([7,8,12,14].contains($("#currentRoleOfLoggedInUser").val())) {
                         window.location = 'index.php?r=dashboard';
                     } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                         window.location = 'index.php?r=dashboard/viewmyvisitors';
@@ -1124,7 +1124,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             },
             error: function (data) {
                 return;
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                if ([7,8,12,14].contains($("#currentRoleOfLoggedInUser").val())) {
                     window.location = 'index.php?r=dashboard';
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';

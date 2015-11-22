@@ -125,7 +125,7 @@ class UserWorkstations extends CActiveRecord {
         $user = User::model()->findByPk($currentlyEditedUser);
         $currentlyLoggedInUser = User::model()->findByPK(Yii::app()->user->id);
         if (in_array($user->role,Roles::getTenantRoles())) {
-            $queryCondition = "tenant= " . $user->tenant . " and tenant_agent IS NULL";
+            $queryCondition = "tenant= " . $user->tenant . " and (tenant_agent IS NULL or tenant_agent = 0)";
         } else {
             $queryCondition = "tenant = " . $user->tenant . " and tenant_agent = " . $user->tenant_agent;
         }

@@ -626,8 +626,18 @@ if ($this->action->id == 'update') {
 
     $(document).ready(function () {
 
-//        $(".workstationRow").show();
-//        getWorkstation();
+        var ROLE_SUPERADMIN     = 5;
+        var ROLE_ADMIN          = 1;
+        var ROLE_AGENT_ADMIN    = 6;
+        var ROLE_AGENT_OPERATOR = 7;
+        var ROLE_OPERATOR       = 8;
+        var ROLE_STAFFMEMBER    = 9;
+        var ROLE_VISITOR        = 10;
+        var ROLE_ISSUING_BODY_ADMIN     = 11; // Same As Administrator with Access to VIC Issuing Module Functionality
+        var ROLE_AIRPORT_OPERATOR       = 12; // Same Access Rights as Administrator with view of VIC Issuing Module Functionality
+        var ROLE_AGENT_AIRPORT_ADMIN    = 13; //Same Access as CVMS Agent with Access to VIC Issuing Module
+        var ROLE_AGENT_AIRPORT_OPERATOR = 14; //Same Access to CVMS Agent
+
         currentCardStatus = $('#Visitor_visitor_card_status').val();
         if(currentCardStatus == 6) {
             $('#Visitor_visitor_card_status').attr("readonly", true);
@@ -653,63 +663,6 @@ if ($this->action->id == 'update') {
             changeMonth: true
         });
 
-        /*$('#fromDay').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-        $('#fromMonth').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });
-        $('#fromYear').on('change', function () {
-            var dt = new Date();
-
-            if(dt.getFullYear()< $("#fromYear").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-                return false;
-            }else{
-                $("#Visitor_date_of_birth_em_").hide();
-            }
-        });*/
 
         if ($("#currentAction").val() == 'update') {
 
@@ -1006,9 +959,9 @@ if ($this->action->id == 'update') {
             url: url,
             data: form,
             success: function (data) {
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                if ([7,8,12,14].contains($("#currentRoleOfLoggedInUser").val())) {
                    window.location = 'index.php?r=dashboard';
-                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                } else if ([9].contains($("#currentRoleOfLoggedInUser").val())) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 } else {
                     window.location = 'index.php?r=visitor/admin&vms=avms';

@@ -72,7 +72,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
                 <ul <?php
-                if ($this->id == 'workstation') {
+                if ($this->id == 'workstation' && $session['role'] == Roles::ROLE_SUPERADMIN ) {
                     echo "style='display:block ;'";
                 }
                 ?>>

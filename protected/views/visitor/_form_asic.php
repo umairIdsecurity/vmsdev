@@ -959,16 +959,16 @@ if ($this->action->id == 'update') {
             url: url,
             data: form,
             success: function (data) {
-                if ([7,8,12,14].contains($("#currentRoleOfLoggedInUser").val())) {
+                if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                    window.location = 'index.php?r=dashboard';
-                } else if ([9].contains($("#currentRoleOfLoggedInUser").val())) {
+                } else if ($("#currentRoleOfLoggedInUser").val()==9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 } else {
                     window.location = 'index.php?r=visitor/admin&vms=avms';
                 }
             },
             error: function (data) {
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                     window.location = 'index.php?r=dashboard';
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';

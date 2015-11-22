@@ -958,8 +958,8 @@ function sendVisitorForm() {
         url: url,
         data: form,
         success: function (data) {
-            
-            if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+
+            if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                 window.location = 'index.php?r=dashboard';
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                 window.location = 'index.php?r=dashboard/viewmyvisitors';
@@ -968,7 +968,7 @@ function sendVisitorForm() {
             }
         },
         error: function (data) {
-            if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+            if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                 window.location = 'index.php?r=dashboard';
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                 window.location = 'index.php?r=dashboard/viewmyvisitors';

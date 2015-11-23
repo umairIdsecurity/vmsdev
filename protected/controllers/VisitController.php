@@ -561,7 +561,7 @@ class VisitController extends Controller {
         {
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
-             
+
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
@@ -583,7 +583,7 @@ class VisitController extends Controller {
                     $model->reason = $newReasonID;
                 }
             }else{
-                $model->reason = NULL;
+                $model->reason = (isset($_POST['Visit']['reason']) && ($_POST['Visit']['reason'] != "")) ? $_POST['Visit']['reason'] : NULL;
             }
 
             

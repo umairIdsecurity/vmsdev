@@ -180,7 +180,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 //echo $detailForm->error($model, 'visitor_type');
                 echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
             //}
-                
+            
             $condition = $model->card_type > 4 ? "module='AVMS'": "module='CVMS'";
             $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
             echo $detailForm->dropDownList($model, 'reason', $reasons, array("empty"=>"Select Visit Reason"));
@@ -354,7 +354,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 success: function (r) {
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
+                        url: "<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>" + $('#Visitor_photo').val(),
                         dataType: 'json',
                         success: function (r) {
 

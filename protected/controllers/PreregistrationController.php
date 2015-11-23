@@ -172,6 +172,8 @@ class PreregistrationController extends Controller
 
 	public function actionVisitReason()
 	{
+		/*echo Yii::app()->user->tenant;
+		die;*/
 		$session = new CHttpSession;
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));

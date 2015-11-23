@@ -5,7 +5,11 @@
 ?>
 
 <h1><?php echo strtoupper(Yii::app()->request->getParam('vms')) ?> Visitors</h1>
-
+<?php    
+foreach (Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div><br>";
+ }
+?>
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visitor-grid',

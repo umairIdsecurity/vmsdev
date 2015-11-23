@@ -258,7 +258,7 @@ class VisitorController extends Controller {
 
             }
             if( $model->profile_type == "CORPORATE" ) {
-                Yii::app()->user->setFlash('success', 'Corporate Visitor Updated Successfully!');
+                Yii::app()->user->setFlash('success', 'Profile Updated Successfully');
                 // $this->redirect(array("visitor/update&id=".$id));
                 $this->redirect(array('visitor/update', 'id' => $id, 'vms' => Yii::app()->request->getParam('vms')));
             }
@@ -619,9 +619,10 @@ class VisitorController extends Controller {
         $model = new Visitor;
         $profile_type = Yii::app()->request->getParam("profile_type", "CORPORATE");
         // For Corporate Visitor
-        if( $profile_type == "CORPORATE")  
+        if( $profile_type == "CORPORATE")  {
+            $model->scenario = "corporateVisitor";
             $this->performAjaxValidation($model);
-        
+        }
         $visitorService = new VisitorServiceImpl;
         $session = new CHttpSession;
 		
@@ -639,7 +640,7 @@ class VisitorController extends Controller {
              if (empty($model->tenant)) {
                 $model->tenant = $session['tenant'];
             }
-            
+                
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 // Add company contact for this visitor if profile is ASIC
                 if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {
@@ -691,39 +692,15 @@ class VisitorController extends Controller {
                             }
                         }
                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-                        mail($to, $subject, $body, $headers);
+                        @mail($to, $subject, $body, $headers);
                     }
                     elseif ($passwordRequire == 2) {
                         User::model()->restorePassword($model->email);
                     }
                 }
 
-                //email sending 
-                // if(!empty($model->password_requirement)){
-                //     $passwordRequire= intval($model->password_requirement);
-                //     if($passwordRequire == 2){
-                //         $loggedUserEmail = Yii::app()->user->email;
-                //         $headers = "MIME-Version: 1.0" . "\r\n";
-                //         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-                //         $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-                //         $to=$model->email;
-                //         $subject="Preregistration email notification";
-                //         $body = "<html><body>Hi,<br><br>".
-                //                 "This is preregistration email.<br><br>".
-                //                 "Please click on the below URL:<br>".
-                //                 Yii::app()->request->baseUrl."/index.php/preregistration/login<br>";
-                //         if(!empty($model->password_option)){
-                //             $passwordCreate= intval($model->password_option);
-                //             if($passwordCreate == 1){
-                //                 $body .= "Password: ".$_POST['Visitor']['password']."<br>";
-                //             }
-                //         }
-                //         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-                //         @mail($to, $subject, $body, $headers);
-                //     }
-                // }
                 if( $model->profile_type == "CORPORATE" ) {
-                    Yii::app()->user->setFlash('success', 'Corporate Visitor Created Successfully!');
+                    Yii::app()->user->setFlash('success', 'Profile Added Successfully.');
                     $this->redirect(array("visitor/admin&vms=cvms"));
                     echo '<script> window.location = "'.Yii::app()->createUrl("/visitor/admin&vms=cvms").'"; </script>';
                 }

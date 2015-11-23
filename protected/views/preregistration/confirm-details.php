@@ -1,11 +1,13 @@
 <?php
-/*$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');*/
 
-$countryList = CHtml::listData(Country::model()->findAll(array(
-    "order" => "name asc",
-    "group" => "name"
-)), 'id', 'name');
+    $cs = Yii::app()->clientScript;
+    $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+    $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+
+    $countryList = CHtml::listData(Country::model()->findAll(array(
+        "order" => "name asc",
+        "group" => "name"
+    )), 'id', 'name');
 ?>
 
 <div class="page-content">
@@ -98,29 +100,23 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 </div>
 
                 <div class="row form-group">
-                        <div class="col-xs-12 col-md-12 col-sm-12">
-                        <!-- <span class="">Date of Birth</span> -->
-                        <?php
-                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                            'model'       => $model,
-                            'attribute'   => 'date_of_birth',
-                            'options'     => array(
-                                'maxDate'=>'-1',
-                                'dateFormat' => 'dd-mm-yy',
-                                'changeMonth' => true,
-                                'changeYear' => true,
-                                'yearRange' => '-100:+0', // last hundred years
-                            ),
-                            'htmlOptions' => array(
-                                'maxlength'   => '10',
-                                'placeholder' => 'Date of birth',
-                                'class' => 'form-control input-sm'
-                            ),
-                        ));
-                        ?>
+                    <div class="col-xs-12 col-md-12 col-sm-12">
+                        <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
+                        <script>
+                            $(function(){
+                                $('#Registration_date_of_birth').combodate({
+                                    minYear: (new Date().getFullYear()-100),
+                                    maxYear: (new Date().getFullYear()-10),
+                                    smartDays: true,
+                                    customClass: 'date_of_birth_class'
+                                });
+                            });
+                        </script>
                         <?php echo $form->error($model, 'date_of_birth',array('style' => 'margin-left:0')); ?>
                     </div>
                 </div>
+
+
                 <div class="form-group">
                     <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'identification_type'); ?>
@@ -644,5 +640,14 @@ body.modal-open .page-content{
 }
   
 .modal-backdrop {background: #f7f7f7;}
+
+    .date_of_birth_class{
+        width: 32.33% !important;
+          border: 1px solid #cccccc;
+          border-radius: 3px;
+    font-size: 12px;
+    height: 30px;
+    line-height: 1.5;
+    }
 
 </style>

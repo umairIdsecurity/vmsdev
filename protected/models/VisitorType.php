@@ -155,7 +155,11 @@ class VisitorType extends CActiveRecord {
 
         if(isset(Yii::app()->user->role)) {
             if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN ) {
-                $criteria->condition = "t.is_deleted = 0 AND t.tenant = ".Yii::app()->user->tenant;
+                if(!isset(Yii::app()->user->tenant)){
+                    $criteria->condition = "t.is_deleted = 0";
+                }else{
+                    $criteria->condition = "t.is_deleted = 0 AND t.tenant = ".Yii::app()->user->tenant;
+                }
             }
         }
 

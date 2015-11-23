@@ -43,6 +43,7 @@ if ($visitorType != VisitorType::PATIENT_VISITOR) {
                 },
             ),
         ),
+       'emptyText' =>"No results found or ASIC has expired.",
     ));
 }
 ?>

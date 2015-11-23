@@ -44,10 +44,10 @@
 	</div>
  
 
-	<div class="row">
-		<?php echo $form->label($model,'notification_type'); ?>
-		<?php echo $form->textField($model,'notification_type',array('size'=>60,'maxlength'=>100)); ?>
-	</div>
+<!--	<div class="row">-->
+<!--		--><?php //echo $form->label($model,'notification_type'); ?>
+<!--		--><?php //echo $form->textField($model,'notification_type',array('size'=>60,'maxlength'=>100)); ?>
+<!--	</div>-->
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Search'); ?>

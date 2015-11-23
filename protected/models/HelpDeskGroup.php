@@ -165,13 +165,13 @@ class HelpDeskGroup extends CActiveRecord {
             $criteria->order = 'order_by ASC';
             $criteria->addInCondition('id', $heldeskGroups);
             
-            if(!empty($session['created_by'])){
-                $criteria->addCondition ('created_by = '.$session['created_by'], "OR");
-            }else{
-                if( !$isFrontDisplay )
-                    $criteria->addCondition ('created_by = '.Yii::app()->user->id, "OR");
-                 
-            }
+//            if(!empty($session['created_by'])){
+//                $criteria->addCondition ('created_by = '.$session['created_by'], "OR");
+//            }else{
+//                if( !$isFrontDisplay )
+//                    $criteria->addCondition ('created_by = '.Yii::app()->user->id, "OR");
+//
+//            }
             
 
             $helpDeskGroup = $this->findAll($criteria);

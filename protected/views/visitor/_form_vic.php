@@ -442,7 +442,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </td>
                         </tr>
                     </table>
-                    <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) &&
+                    <?php if (((in_array($session['role'],[Roles::ROLE_SUPERADMIN, Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN,Roles::ROLE_AGENT_ADMIN])) &&
                             $this->action->id == 'update') || $this->action->id == 'addvisitor'
                     ) { ?>
                         <table style="float:left;width:300px;">
@@ -1105,7 +1105,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             data: form,
             success: function (data, response) {
                 if(data == ''){
-                    if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                    if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                         window.location = 'index.php?r=dashboard';
                     } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                         window.location = 'index.php?r=dashboard/viewmyvisitors';
@@ -1124,7 +1124,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             },
             error: function (data) {
                 return;
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                     window.location = 'index.php?r=dashboard';
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';

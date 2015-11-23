@@ -95,10 +95,10 @@ class HelpDesk extends CActiveRecord {
         $criteria->compare('answer', $this->answer, true);
         $criteria->compare('helpdesk_group_id', $this->helpdesk_group_id, true);
         $criteria->compare('created_by', $this->created_by);
-	$criteria->compare('order_by', $this->order_by, true);
+	    $criteria->compare('order_by', $this->order_by, true);
         $criteria->compare('is_deleted', $this->is_deleted);
         
-        $module = CHelper::get_allowed_module();        
+//        $module = CHelper::get_allowed_module();
 //        if( $module == "CVMS" )
 //           $criteria->addCondition ('helpdesk_group_id IN (4, 6)');
 //        if( $module == "AVMS" )
@@ -153,24 +153,7 @@ class HelpDesk extends CActiveRecord {
         }
     }
 
-    /*public function beforeFind() {
-        $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0";
-        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN && isset(Yii::app()->user->helpdesk_group)) {
-            $criteria->condition = "t.helpdesk_group ='" . Yii::app()->user->helpdesk_group . "' and t.is_deleted = 0";
-        }
-        $this->dbCriteria->mergeWith($criteria);
-    }
 
-    protected function afterValidate() {
-       
-    }*/
-
-/**
-     * retrieve all models for a particular group.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model of particular group
-     */
     public function getHelpDeskByGroup($id) {
       $selectedHelpDesk = HelpDesk::model()->findAllByAttributes( array('helpdesk_group_id'=>$id),array('order' => 'order_by ASC'));
       return $selectedHelpDesk;

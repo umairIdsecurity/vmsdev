@@ -89,7 +89,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header'      => 'Action',
             'type'        => 'raw',
             'htmlOptions' => array('style' => 'text-align:center', 'class' => 'findVisitorButtonColumn'),
-            'value'       => '(checkIfanActiveVisitExists($data->id)=="0")? displaySelectVisitorButton($data):returnVisitorDetailLink($data->id)',
+            'value'       => '(checkIfanActiveVisitExists($data->id)=="0" && Visit::model()->getOldVisitsCountForThisYear(0, $data->id) < 28)? displaySelectVisitorButton($data):returnVisitorDetailLink($data->id)',
         ),
     ),
 ));
@@ -113,10 +113,13 @@ function displaySelectVisitorButton($visitorData) {
 }
 
 function returnVisitorDetailLink($visitorId) {
+    // Dont Allow to select if visit count greator or equal to 28
+    if(Visit::model()->getOldVisitsCountForThisYear(0, $visitorId) >= 28) {
+        return "<span class='red'> Visitor has reached 28 days limit. </span>";
+    }
     $criteria = new CDbCriteria;
     $criteria->order = 'id DESC';
-    $visit = Visit::model()->findByAttributes(array('visitor' => $visitorId), $criteria);
-    //$visit = Yii::app()->db->createCommand("SELECT * FROM visit WHERE visitor = ".$visitorId." ORDER BY ' DESC")->queryRow();
+    $visit = Visit::model()->findByAttributes(array('visitor' => $visitorId), $criteria);  
     if (!empty($visit)) {
         $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit['id'];
     }

@@ -1216,7 +1216,13 @@ class Visit extends CActiveRecord {
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
                 break;
         }
-        return $totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
+          $totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
+          // If visit is greater than 28 days then send 28
+          if( $totalCount <= 28 ) {
+              return $totalCount;
+          } else {
+              return 28;
+          }
     }
 
     public function getRemainingDays() {
@@ -1248,7 +1254,7 @@ class Visit extends CActiveRecord {
     }
 
     /**
-     * This method counts a visitors all visits in the current calender year.
+     * This method counts a visitor all visits in the current calender year.
      * Visit counts depends upon the days between the dateIN and DateOut.  
      * @param int $current_visit_id
      * @param int $visitor_id

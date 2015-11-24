@@ -10,21 +10,22 @@ class Avms7MigrationCommand extends CConsoleCommand
 {
 
     private $unmappedRefs = [
-        ['table_name'=>'company', 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
-        ['table_name'=>'company', 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'company', 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'company', 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'user'   , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
-        ['table_name'=>'user'   , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'user'   , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'user'   , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'visitor', 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
-        ['table_name'=>'visitor', 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'visit'  , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'visit'  , 'column_name'=>'workstation'  ,'referenced_table_name'=>'workstation','referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'card'         ,'referenced_table_name'=>'card_generated','referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'created_by'   ,'referenced_table_name'=>'user','referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'workstation'  ,'referenced_table_name'=>'workstation'     ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'card'         ,'referenced_table_name'=>'card_generated'  ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'created_by'   ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'visitor'      ,'referenced_table_name'=>'visitor'         ,'referenced_column_name'=>'id'],
 
 
         ['table_name'=>'card_generated' , 'column_name'=>'visitor_id'   ,'referenced_table_name'=>'visitor','referenced_column_name'=>'id'],
@@ -69,8 +70,8 @@ class Avms7MigrationCommand extends CConsoleCommand
                 $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation','card_generated','user'], $idMappings,$vms);
             }
 
-            //$transaction->commit();
-            $transaction->rollback();
+            $transaction->commit();
+            //$transaction->rollback();
 
         } catch (CException $e){
             $transaction->rollback();
@@ -307,6 +308,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
     public function setVisitorCompanies(&$data,$referenceData,$avms7){
 
+        $visitorCompany = [];
         for($i=0;$i<sizeof($data['visitor']);$i++){
             $company = null;
             if(!isset($referenceData['visitor_company'][$data['visitor'][$i]['id']])){
@@ -331,6 +333,15 @@ class Avms7MigrationCommand extends CConsoleCommand
                 $data['visitor'][$i]['company'] = $id;
                 $data['company'][] = $this->companyFromReferenceData($company,$id,$data['visitor'][$i]);
             }
+            $visitorCompany[$data['visitor'][$i]['id']] = $data['visitor'][$i]['company'];
+        }
+
+        for($i=0;$i<sizeof($data['visit']);$i++){
+            $visitorId = $data['visit'][$i]['visitor'];
+            if(isset($visitorCompany[$visitorId])) {
+                $data['visit'][$i]['company'] = $visitorCompany[$visitorId];
+            }
+
         }
     }
 

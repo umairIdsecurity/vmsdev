@@ -254,7 +254,7 @@ class Visitor extends CActiveRecord {
             
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             // array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic','preregistration', 'corporateVisitor']),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic','preregistration', 'update']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -273,8 +273,8 @@ class Visitor extends CActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, first_name, photo, last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
-        );
-
+            );
+        
         $rules[] = array(
             'identification_alternate_document_name1,
             identification_alternate_document_no1,
@@ -322,6 +322,7 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
+                    'on' => 'VicScenario',
                     'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued'],
                     'message'=>'Please complete {attribute}'
                 );
@@ -340,7 +341,7 @@ class Visitor extends CActiveRecord {
                 );
                 break;
         }
-
+        
         return $rules;
     }
 

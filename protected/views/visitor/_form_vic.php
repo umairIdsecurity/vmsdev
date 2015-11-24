@@ -74,9 +74,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <div data-ng-app="PwordForm">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id'                     => 'register-form',
+        'id'                     => 'vic-register-form',
         'htmlOptions'            => array("name" => "registerform"),
-        'enableAjaxValidation'   => false,
+        'enableAjaxValidation'   => true,
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
@@ -98,7 +98,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                 }
                     hasError = false;
-                    return afterValidate(form, data, hasError);
+                   return afterValidate(form, data, hasError);
             }'
         ),
     ));
@@ -327,9 +327,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td width="37%">
-                                <input type="text" id="Visitor_email" name="Visitor[email]" maxlength="50" size="50"
-                                       placeholder="Email" value="<?php echo $model->email; ?>"/><span
-                                    class="required">*</span>
+                                 <?php echo $form->textField($model, "email", array("placeholder"=>"Email Address")) ?>
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
                                 <div style="" class="errorMessageEmail">A profile already exists for this email address.
                                 </div>
@@ -628,9 +627,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 return false;
             } else {
                 $('#Visitor_is_under_18_em_').hide();
+                return true;
             }
         } else {
             $('#Visitor_is_under_18_em_').hide();
+            return true;
         }
 
         var companyValue = $("#Visitor_company").val();

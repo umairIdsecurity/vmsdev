@@ -76,28 +76,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => true,
     'clientOptions'=>array(
         'validateOnSubmit'=>true,
-        'afterValidate' => 'js:function(form,data,hasError){
-            if(!hasError){
-                if($(".pass_option").is(":checked")== false){
-                    $("#pass_error_").show();
-                    $("#User_password_em_").html("select one option");
-                    return false;
-                }
-                else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#User_password").val()== "" || $("#User_repeat_password").val()=="")){
-                    $("#pass_error_").show();
-                    $("#pass_error_").html("Type password or generate");
-                    return false;
-                }
-                else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && $("#User_password").val() != "" && $("#User_repeat_password").val() !="" && $("#User_repeat_password").val() != $("#User_password").val()){
-                    $("#pass_error_").show();
-                    $("#pass_error_").html("Password does not match with Repeat Password.");
-                    return false;
-                }
-                else {
-                     $("#pass_error_").hide();
-                }
-            }
-        }'
+     
         ),
     
  ));
@@ -194,7 +173,8 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
         </td>
 
     </tr>
-
+  
+    
 </table>
 
 <table style="float:left;width:300px;">

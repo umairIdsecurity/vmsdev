@@ -159,11 +159,9 @@ class VisitorController extends Controller {
         if (isset($_GET['view'])) {
             $isViewedFromModal = 1;
         }
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-         // For Corporate Visitor
-        if( Yii::app()->request->getParam("profile_type", "CORPORATE") == "CORPORATE")  
-            $this->performAjaxValidation($model);
+        $model->scenario = $this->getValidationScenario( $model, $model->profile_type );
+        // Uncomment the following line if AJAX validation is needed             
+        $this->performAjaxValidation($model);
         
         $visitorParams = Yii::app()->request->getPost('Visitor');
 
@@ -256,12 +254,14 @@ class VisitorController extends Controller {
                 }
                 }
 
-            }
+            } 
+            Yii::app()->user->setFlash('success', 'Profile Updated Successfully');
             if( $model->profile_type == "CORPORATE" ) {
-                Yii::app()->user->setFlash('success', 'Profile Updated Successfully');
-                // $this->redirect(array("visitor/update&id=".$id));
-                $this->redirect(array('visitor/update', 'id' => $id, 'vms' => Yii::app()->request->getParam('vms')));
+                $this->redirectAddUpdateRoleBased("id={$id}&vms=cvms");
+            } else {
+                $this->redirectAddUpdateRoleBased("id={$id}&vms=avms");
             }
+            
         } else{
             $this->render('update', array(
                 'model' => $model,
@@ -391,10 +391,25 @@ class VisitorController extends Controller {
      * @param Visitor $model the model to be validated
      */
     protected function performAjaxValidation($model) {
+        // Corporate Add Form
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'visitor-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+        
+        // ASIC Add Form
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'asic-register-form') {  
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+        
+        // Vic Add Form
+          // ASIC Add Form
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'vic-register-form') {  
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+        
     }
 
     public function actionGetTenantAgentWithSameTenant($id) {
@@ -615,14 +630,37 @@ class VisitorController extends Controller {
         //return true;
     }
 
+    /**
+     * Get Validation Scenario for Add Visitor Profile
+     * @param type $profile Corporate/Asic/Vic
+     * @return string
+     */
+    public function getValidationScenario( $model, $profile) {
+        switch ($profile) { 
+            case "CORPORATE":
+                return 'corporateVisitor';
+                break;
+            case "ASIC":
+               return "asic";
+               break;
+           
+           case "VIC":
+               return "VicScenario";
+               break;
+           
+           default :
+               return "";
+               break;
+        }
+        return $model;
+    }
     public function actionAddVisitor() {
         $model = new Visitor;
         $profile_type = Yii::app()->request->getParam("profile_type", "CORPORATE");
-        // For Corporate Visitor
-        if( $profile_type == "CORPORATE")  {
-            $model->scenario = "corporateVisitor";
-            $this->performAjaxValidation($model);
-        }
+        $model->scenario = $this->getValidationScenario( $model, $profile_type );
+        //AJAX validation is needed
+        $this->performAjaxValidation($model);
+            
         $visitorService = new VisitorServiceImpl;
         $session = new CHttpSession;
 		
@@ -698,18 +736,17 @@ class VisitorController extends Controller {
                         User::model()->restorePassword($model->email);
                     }
                 }
-
+                 Yii::app()->user->setFlash('success', 'Profile Added Successfully.');
                 if( $model->profile_type == "CORPORATE" ) {
-                    Yii::app()->user->setFlash('success', 'Profile Added Successfully.');
-                    $this->redirect(array("visitor/admin&vms=cvms"));
-                    echo '<script> window.location = "'.Yii::app()->createUrl("/visitor/admin&vms=cvms").'"; </script>';
+                    $this->redirectAddUpdateRoleBased("vms=cvms");
                 }
                 else {
+                    $this->redirectAddUpdateRoleBased("vms=avms");
                     Yii::app()->end();
                 }
                 
             }  else {  // Not Save record then
-                //$errors = $model->getErrors(); print_r($errors); exit;
+                 //$errors = $model->getErrors(); print_r($errors); exit;
                  if( $model->profile_type == "CORPORATE" ) {
                      $this->redirect(array("visitor/addvisitor/&profile_type=CORPORATE"));
                  }
@@ -987,6 +1024,22 @@ class VisitorController extends Controller {
                 'merge' => $merge,
                 'model' => $model,
             ),false,true);
+        }
+    }
+    /**
+     * Redirect after Add Visitor or Update Visitor On Role Based
+     * 
+     * @param type $model
+     */
+    private function redirectAddUpdateRoleBased($queryString) {
+        $userRole = Yii::app()->user->role;
+        
+        if( in_array($userRole, [7,8,12,14]) ) {
+             $this->redirect(array("dashboard"));
+        } elseif ( $userRole == 9 ) {
+             $this->redirect(array("visit/view"));
+        } else {
+             $this->redirect( array("visitor/admin&".$queryString) );
         }
     }
 }

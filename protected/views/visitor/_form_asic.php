@@ -71,9 +71,9 @@ if ($this->action->id == 'update') {
 <div class="addvisitor-form-ASIC" data-ng-app="PwordForm">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id'                     => 'register-form',
+        'id'                     => 'asic-register-form',
         'htmlOptions'            => array("name" => "registerform"),
-        'enableAjaxValidation'   => false,
+        'enableAjaxValidation'   => true,
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
@@ -139,11 +139,8 @@ if ($this->action->id == 'update') {
                         break;
                 }
 
-                if(jQuery.isEmptyObject(data)) {
-                    hasError = false;
-                }
-
-                return afterValidate(form, data, hasError); 
+              hasError = false;
+              return true;
             }'
         ),
     ));
@@ -401,13 +398,9 @@ if ($this->action->id == 'update') {
                         </tr>
                         <tr>
                             <td width="37%">
-                                <input type="text" id="Visitor_email" name="Visitor[email]" maxlength="50" size="50"
-                                       placeholder="Email" value="<?php echo $model->email; ?>"/><span
-                                    class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
-                                <div style="" class="errorMessageEmail">A profile already exists for this email address.
-                                </div>
-
+                                <?php echo $form->textField($model, "email", array("placeholder"=>"Email Address")) ?>
+                                <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'email'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -544,7 +537,7 @@ if ($this->action->id == 'update') {
 
 <script>
 
-    function afterValidate(form, data, hasError) {
+    function afterValidate(form, data, hasError) {  
 
 /*        var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
@@ -959,6 +952,7 @@ if ($this->action->id == 'update') {
             url: url,
             data: form,
             success: function (data) {
+                
                 if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                    window.location = 'index.php?r=dashboard';
                 } else if ($("#currentRoleOfLoggedInUser").val()==9) {

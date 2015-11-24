@@ -1,5 +1,16 @@
 <?php
 $session = new CHttpSession;
+
+//this is because to ensure the CAVMS-1144 and CAVMS-1092
+$tenant = '';
+if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+    $tenant = Yii::app()->user->tenant;
+}
+else
+{
+    $tenant = (isset($session['wk_tenant']) && ($session['wk_tenant'] != "")) ? $session['wk_tenant'] : '';
+}
+
 ?>
 <style type="text/css">
     table.dataTable.no-footer{
@@ -214,11 +225,11 @@ $session = new CHttpSession;
 
                 <div class="form-group" id="addCompanyDiv">
                     <?php
-                        echo $form->dropDownList($model, 'company', CHtml::listData(Registration::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
+                        echo $form->dropDownList($model, 'company', CHtml::listData(Registration::model()->findAllCompanyByTenant($tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
                        /* $this->widget('application.extensions.select2.Select2', array(
                                 'model' => $model,
                                 'attribute' => 'company',
-                                'items' =>  CHtml::listData(Registration::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),
+                                'items' =>  CHtml::listData(Registration::model()->findAllCompanyByTenant($tenant), 'id', 'name'),
                                 'selectedItems' => array(), // Items to be selected as default
                                 'placeHolder' => 'Please select a company',        
                         ));*/

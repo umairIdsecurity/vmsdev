@@ -134,6 +134,7 @@ $session = new CHttpSession;
 {
     /*margin: 7px 0 0;*/
     /*padding: 0;*/
+    margin-left:50%;margin-top:9%;
     width: 70px;
 }
 
@@ -177,7 +178,7 @@ $session = new CHttpSession;
     .mobileLogo{
         display: block;
         padding: 15px 0 0 !important;
-        width: 150px;
+        width: 75px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -271,10 +272,10 @@ $session = new CHttpSession;
             <div class="row">
                 
                 <div class="col-sm-2">
-                    <div class="standardLogo" style="margin-left:auto;margin-right:auto">
+                    <div class="standardLogo">
                         <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
                             <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
-                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 120px" alt="Pre registration"/>
+                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 60px" alt="Pre registration"/>
                             </a>
                         <?php } else{ ?>
                             <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">

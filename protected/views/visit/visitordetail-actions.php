@@ -135,8 +135,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         </table>
                         <?php 
                                 // 'Deposit paid' for EVIC visit for saved and preregistered
-                                if( in_array( $model->visit_status, array(VisitStatus::SAVED, VisitStatus::PREREGISTERED) ) && $model->card_type == CardType::VIC_CARD_EXTENDED ) {
-                         ?>
+                                //if( in_array( $model->visit_status, array(VisitStatus::SAVED, VisitStatus::PREREGISTERED) ) && $model->card_type == CardType::VIC_CARD_EXTENDED ) {
+                                if( ($model->visit_status != VisitStatus::ACTIVE) && ($model->card_type == CardType::VIC_CARD_EXTENDED) ) 
+                                {
+                         ?>     
                         <div id="deposit_paid_evic" style="margin-bottom:15px">        
                             
                                     <strong> Deposit Paid? 

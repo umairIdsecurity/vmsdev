@@ -69,7 +69,7 @@ class LoginForm extends CFormModel {
 
     public function audit_log_login(){
         $log = new AuditLog();
-        $log->action_datetime = date('Y-m-d H:i:s');
+        $log->action_datetime = time();
         $log->action = "LOGIN TO SYSTEM";
         $log->detail = 'ID: ' . Yii::app()->user->id;
         $log->user_email_address = Yii::app()->user->email;

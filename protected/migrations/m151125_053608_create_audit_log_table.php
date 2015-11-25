@@ -7,7 +7,7 @@ class m151125_053608_create_audit_log_table extends CDbMigration
 	{
 		$this->createTable('audit_log', array(
 			'id' => 'pk',
-			'action_datetime' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
+			'action_datetime' => 'TIMESTAMP',
 			'action' => 'varchar(100)',
 			'detail' => 'text',
 			'user_email_address' => 'varchar(50)',

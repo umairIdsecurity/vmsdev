@@ -155,7 +155,7 @@ $session = new ChttpSession;
   display: inline-block;
   height: 3px;
   width: 18px;
-  background: ##0088cc;
+  background: #0088cc;
 }
 .cd-close-panel::before {
   -webkit-transform: rotate(45deg);

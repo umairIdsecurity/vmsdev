@@ -156,13 +156,15 @@ jQuery(document).ready(function($){
 				  var ivar = 1;
 				  var isFound =0;
 				  $helpDeskUl.find('li').each(function(){
-					isAllFound = 1;			
+                                   	isAllFound = 1;			
 					for(kvar=0;kvar<tokens.length;kvar++)
 					{
 					   if(!($(this).is(':Contains("'+tokens[kvar]+'")')) && tokens[kvar].length >2 )
 					   {
 							isAllFound = 0;		 	 
-					   }
+					   } else {
+                                                $(this).show();
+                                           }
 					   
 					}
 					   if(ivar !=1 && isAllFound==1)

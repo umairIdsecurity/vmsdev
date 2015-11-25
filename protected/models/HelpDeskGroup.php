@@ -163,8 +163,10 @@ class HelpDeskGroup extends CActiveRecord {
 
             $criteria = new CDbCriteria();
             $criteria->order = 'order_by ASC';
-            $criteria->addInCondition('id', $heldeskGroups);
-            
+            if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN) 
+                $criteria->addInCondition('id', $heldeskGroups);
+            else 
+                $criteria->addCondition ('created_by = '.Yii::app()->user->id);
 //            if(!empty($session['created_by'])){
 //                $criteria->addCondition ('created_by = '.$session['created_by'], "OR");
 //            }else{
@@ -172,8 +174,8 @@ class HelpDeskGroup extends CActiveRecord {
 //                    $criteria->addCondition ('created_by = '.Yii::app()->user->id, "OR");
 //
 //            }
-            
 
+             
             $helpDeskGroup = $this->findAll($criteria);
             return $helpDeskGroup;
     }

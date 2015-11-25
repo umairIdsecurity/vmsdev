@@ -61,9 +61,22 @@ class LoginForm extends CFormModel {
         if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
             $duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
             Yii::app()->user->login($this->_identity, $duration);
+            $this->audit_log_login(); //logs the login of the user
             return true;
         } else
             return false;
+    }
+
+    public function audit_log_login(){
+        $log = new AuditLog();
+        $log->action_datetime = date('Y-m-d H:i:s');
+        $log->action = "LOGIN TO SYSTEM";
+        $log->detail = 'ID: ' . Yii::app()->user->id;
+        $log->user_email_address = Yii::app()->user->email;
+        $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
+        $log->tenant = Yii::app()->user->tenant;
+        $log->tenant_agent = Yii::app()->user->tenant_agent;
+        $log->save();
     }
 
     public function findWorkstations($id) {

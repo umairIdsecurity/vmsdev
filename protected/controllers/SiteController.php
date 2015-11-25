@@ -290,8 +290,21 @@ class SiteController extends Controller {
      * Logs out the current user and redirect to homepage.
      */
     public function actionLogout() {
+        $this->audit_log_logout(); //logs the logout of the user
         Yii::app()->user->logout();
         $this->redirect('index.php?r=site/login');
+    }
+
+    public function audit_log_logout(){
+        $log = new AuditLog();
+        $log->action_datetime = date('Y-m-d H:i:s');
+        $log->action = "LOGOUT";
+        $log->detail = 'ID: ' . Yii::app()->user->id;
+        $log->user_email_address = Yii::app()->user->email;
+        $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
+        $log->tenant = Yii::app()->user->tenant;
+        $log->tenant_agent = Yii::app()->user->tenant_agent;
+        $log->save();
     }
 
     /**

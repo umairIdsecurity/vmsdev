@@ -12,8 +12,8 @@ class m151125_053608_create_audit_log_table extends CDbMigration
 			'detail' => 'text',
 			'user_email_address' => 'varchar(50)',
 			'ip_address' => 'varchar(25)',
-			'tenant' => 'INT(100)',
-			'tenant_agent' => 'INT(100)'
+			'tenant' => 'bigint',
+			'tenant_agent' => 'bigint'
 		));
 	}
 

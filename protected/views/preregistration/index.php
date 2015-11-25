@@ -1,3 +1,17 @@
+<?php
+    $session = new CHttpSession;
+    //this is because to ensure the CAVMS-1144 and CAVMS-1092
+    $tenant = '';
+    if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+        $tenant = Yii::app()->user->tenant;
+    }
+    else
+    {
+        $tenant = (isset($session['wk_tenant']) && ($session['wk_tenant'] != "")) ? $session['wk_tenant'] : '';
+    }
+
+?>
+
 <!-- <div class="page-content"> -->
         <div class="row"><div class="col-sm-12">&nbsp;</div></div>
         
@@ -44,8 +58,8 @@
                 
                 <?php
                     $ws='';
-                    if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
-                        $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
+                    if($tenant != ""){
+                        $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.$tenant);
                     }else{
                          $ws=Workstation::model()->findAll('is_deleted=0');
                     }

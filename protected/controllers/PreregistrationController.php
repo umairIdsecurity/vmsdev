@@ -78,7 +78,7 @@ class PreregistrationController extends Controller
 				//these will be used to ensure the nothing left in flow
 				$session['workstation'] = $workstation->id;
 				$session['created_by'] = $workstation->created_by;
-				$session['tenant'] = $workstation->tenant;
+				$session['wk_tenant'] = $workstation->tenant;
 				$session['pre-page'] = 2;
 				$this->redirect(array('preregistration/privacyPolicy'));
 			}
@@ -151,7 +151,7 @@ class PreregistrationController extends Controller
 				$this->redirect(array('preregistration/visitReason'));
 			}	
 			$model->attributes = $_POST['Registration'];
-			if($model->tenant == null || $model->tenant == ""){$model->tenant = $session['tenant'];}
+			if($model->tenant == null || $model->tenant == ""){$model->tenant = $session['wk_tenant'];}
 			if($model->created_by == null || $model->created_by == ""){$model->created_by =  $session['created_by'];}
 			if($model->visitor_workstation == null || $model->visitor_workstation == ""){$model->visitor_workstation = $session['workstation'];}
 			$model->identification_country_issued = $_POST['Registration']['identification_country_issued'];
@@ -172,8 +172,6 @@ class PreregistrationController extends Controller
 
 	public function actionVisitReason()
 	{
-		/*echo Yii::app()->user->tenant;
-		die;*/
 		$session = new CHttpSession;
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
 			$this->redirect(array('preregistration/index'));
@@ -205,7 +203,7 @@ class PreregistrationController extends Controller
 			$model->card_type = 6; //VIC 24 hour Card
 			$model->created_by = $session['created_by'];
 			$model->workstation  = $session['workstation'];
-			$model->tenant = $session['tenant'];
+			$model->tenant = $session['wk_tenant'];
 			$model->visit_status  = 2; //default visit status is 2=PREREGISTER
 			$model->company =  $_POST['Company']['name'];
 			if($model->validate())
@@ -267,7 +265,7 @@ class PreregistrationController extends Controller
 				if( !empty($model->email) && !empty($model->contact_number) ){
 					$model->profile_type = 'ASIC';
 					$model->key_string = hash('ripemd160', uniqid());
-					$model->tenant = $session['tenant'];
+					$model->tenant = $session['wk_tenant'];
 					$model->visitor_workstation = $session['workstation'];
 					$model->created_by = $session['created_by'];
 					$model->role = 9; //Staff Member/Intranet

@@ -1,5 +1,15 @@
 <?php
-$session = new CHttpSession;
+    $session = new CHttpSession;
+    //this is because to ensure the CAVMS-1144 and CAVMS-1092
+    $tenant = '';
+    if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
+        $tenant = Yii::app()->user->tenant;
+    }
+    else
+    {
+        $tenant = (isset($session['wk_tenant']) && ($session['wk_tenant'] != "")) ? $session['wk_tenant'] : '';
+    }
+
 ?>
 
 <style type="text/css">
@@ -26,28 +36,28 @@ $session = new CHttpSession;
             <div class="form-group">
                 <?php
                     $account=(isset(Yii::app()->user->account_type)) ? Yii::app()->user->account_type : "";
-                    $vt = '';$vr='';
+                    $vt ='';$vr='';
                     if($account == 'CORPORATE'){
-                        if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
-                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "CVMS" and tenant = '.Yii::app()->user->tenant);
-                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "cvms" and tenant = '.Yii::app()->user->tenant);
+                        if($tenant != ""){
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "CVMS" and tenant = '.$tenant);
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "cvms" and tenant = '.$tenant);
                         }else{
                             $vt=VisitorType::model()->findAll('is_deleted=0 and module = "CVMS"');
                             $vr=VisitReason::model()->findAll('is_deleted=0 and module = "cvms"');
                         }
                         
                     }elseif(($account == 'VIC') || ($account == 'ASIC')){
-                        if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
-                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "AVMS" and tenant = '.Yii::app()->user->tenant);
-                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "avms" and tenant = '.Yii::app()->user->tenant);
+                        if($tenant != ""){
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and module = "AVMS" and tenant = '.$tenant);
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and module = "avms" and tenant = '.$tenant);
                         }else{
                             $vt=VisitorType::model()->findAll('is_deleted=0 and module = "AVMS"');
                             $vr=VisitReason::model()->findAll('is_deleted=0 and module = "avms"');
                         }                   
                     }else{
-                        if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
-                            $vt=VisitorType::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
-                            $vr=VisitReason::model()->findAll('is_deleted=0 and tenant = '.Yii::app()->user->tenant);
+                        if($tenant != ""){
+                            $vt=VisitorType::model()->findAll('is_deleted=0 and tenant = '.$tenant);
+                            $vr=VisitReason::model()->findAll('is_deleted=0 and tenant = '.$tenant);
                         }else{
                             $vt=VisitorType::model()->findAll('is_deleted=0');
                             $vr=VisitReason::model()->findAll('is_deleted=0');
@@ -93,22 +103,30 @@ $session = new CHttpSession;
             <div class="form-group" id="addCompanyDiv">
                 <?php
                 $visitor = Registration::model()->findByPk(Yii::app()->user->id);
-                if(isset($visitor->tenant)){
+                if(isset($visitor->tenant) && ($visitor->tenant != "")){
                     $this->widget('application.extensions.select2.Select2', array(
                         'model' => $companyModel,
                         'attribute' => 'name',
                         'items' => CHtml::listData(Registration::model()->findAllCompanyByTenant($visitor->tenant), 'id', 'name'),
-                        //'selectedItems' => array(), // Items to be selected as default
                         'placeHolder' => 'Select Company',
                     ));
                 }else{
-                    $this->widget('application.extensions.select2.Select2', array(
-                        'model' => $companyModel,
-                        'attribute' => 'name',
-                        'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'), 'id', 'name'),
-                        //'selectedItems' => array(), // Items to be selected as default
-                        'placeHolder' => 'Select Company',
-                    ));
+                    if($tenant != "")
+                    {
+                        $this->widget('application.extensions.select2.Select2', array(
+                            'model' => $companyModel,
+                            'attribute' => 'name',
+                            'items' => CHtml::listData(Company::model()->findAll('is_deleted=0 and tenant = '.$tenant), 'id', 'name'),
+                            'placeHolder' => 'Select Company',
+                        ));
+                    }else{
+                        $this->widget('application.extensions.select2.Select2', array(
+                            'model' => $companyModel,
+                            'attribute' => 'name',
+                            'items' => CHtml::listData(Company::model()->findAll('is_deleted=0'), 'id', 'name'),
+                            'placeHolder' => 'Select Company',
+                        ));
+                    } 
                 }
                 ?>
                 <?php echo $form->error($companyModel,'name'); ?>

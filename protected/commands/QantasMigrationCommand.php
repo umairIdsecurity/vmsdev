@@ -5,7 +5,7 @@
  * Date: 21/11/2015
  * Time: 10:28 AM
  */
-class PAPLMigrationCommand extends CConsoleCommand
+class QantasMigrationCommand extends CConsoleCommand
 {
     private $vms = null;
     private $tenant = null;
@@ -15,16 +15,20 @@ class PAPLMigrationCommand extends CConsoleCommand
     private $company = null;
     private $visitorType = null;
 
+    public function actionTest()
+    {
+        $result = AddressHelper::parse("1/32 Kilarney Heights Kallaroo WA 6025");
+        echo $result;
+    }
 
     public function actionImport()
     {
-        echo "1";
-    }
-    public function actionImportQantas()
-    {
+        // load the file
+        $rows = CSVHelper::ImportCsvFromFile("~/Downloads/201505 Qantas VIC MAY 2015.csv");
+
         $vms = new DataHelper(Yii::app()->db);
         $ibcode = 'PER';
-        $tenantAgentName = 'Qantas';
+
         $this->createdBy = 1;
 
         // get the tenant
@@ -38,21 +42,22 @@ class PAPLMigrationCommand extends CConsoleCommand
         $this->ensureVisitorTypeForQuantas();
 
         // import the file
-        $rows = CSVHelper::ImportCsvFromFile("~/Downloads/201505 Qantas VIC MAY 2015.csv");
+
         foreach($rows as $row){
-            $company        = $this->ensureCompanyFromQantasData($row);
-            $sponsor        = $this->ensureSponsorFromQantasData($row,$company);
-            $visitor        = $this->ensureVisitorFromQantasData($row,$sponsor,$company);
-            $cardGenerated  = $this->ensureCardGeneratedFromQantasData($row,$visitor);
-            $visit          = $this->ensureVisitFromQantasData($row,$cardGenerated,$visitor);
+            $company        = $this->ensureCompanyFromData($row);
+            $sponsor        = $this->ensureSponsorFromData($row,$company);
+            $visitor        = $this->ensureVisitorFromData($row,$sponsor,$company);
+            $cardGenerated  = $this->ensureCardGeneratedFromData($row,$visitor);
+            $visit          = $this->ensureVisitFromData($row,$cardGenerated,$visitor);
         }
     }
 
 
     function ensureTenantAgentForQuantas(){
+
         $this->tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name like '%$tenantAgentName%' and isDeleted = 0");
         if($this->tenantAgent==null){
-            $this->createTenantAgentForQantas();
+            $this->createTenantAgentFor();
         }
     }
 
@@ -75,7 +80,7 @@ class PAPLMigrationCommand extends CConsoleCommand
     }
 
 
-    function ensureCompanyFromQantasData($row){
+    function ensureCompanyFromData($row){
 
         if($this->company==null){
             $companyName = 'Qantas company for data import';
@@ -105,7 +110,7 @@ class PAPLMigrationCommand extends CConsoleCommand
         return $this->company;
     }
 
-    function ensureSponsorFromQantasData($row,$company){
+    function ensureSponsorFromData($row,$company){
         $nameParts = explode(' ',$row['ASIC SponsorName']);
         $firstName = $nameParts[0];
         $middlelName = null;
@@ -170,7 +175,7 @@ class PAPLMigrationCommand extends CConsoleCommand
         return true;
     }
 
-    function createTenantAgentForQantas(){
+    function createTenantAgent(){
 
         $id = $this->vms->insertRow('company',
             [
@@ -213,8 +218,63 @@ class PAPLMigrationCommand extends CConsoleCommand
 
     }
 
-    function ensureVisitorFromQantasData($row){
+    function ensureVisitorFromData($row){
 
+
+        $visitor =  $this->vms->getFirstRow("
+                                  select *
+                                  from visitor
+                                  where first_name = '".$row['VFirstName']."'
+                                  and last_name = '".$row['VLastName']."'
+                                  and date_of_birth = '".strtotime(str_replace('/','-',$row['DOB']))."'
+                                  and tenant=".$this->tenant[id]."
+                                  and tenant_agent =".$this->tenantAgent['id']);
+
+        if($visitor==null){
+
+            $identificationType= $row["Document Type"]=='Driving Licence'?'DRIVERS_LICENSE':
+                ($row["Document Type"]=="Passport"?'PASSPORT':null);
+
+            return $this->vms->insertRow('visitor',
+                [
+                    'first_name'                    =>$row['VFirstName'],
+                    'middle_name'                   =>null,
+                    'last_name'                     =>$row['VLastName'],
+                    'email'                         =>$row['VFirstName'].".".$row['VLastName']."@unknowncompany",
+                    'contact_number'                =>$row['Mobile Number'],
+                    'date_of_birth'                 =>strtotime(str_replace('/','-',$row['DOB'])),
+                    'company'                       =>$this->company['id'],
+                    'role'                          =>10,
+                    'visitor_type'                  =>$this->visitorType['id'],
+                    'visitor_workstation'           =>$this->workstation['id'],
+                    'profile_type'                  =>$row['ASIC Applicant']==NO?'VIC':'ASIC',
+                    'identification_document_type'  =>$identificationType,
+                    'identification_country_issued' =>13,
+                    'identification_document_no'    =>$row['Document ID'],
+                    'contact_unit'                  =>null,
+                    'contact_street_no'=>null,
+                    'contact_street_name'=>null,
+                    'contact_street_type'=>null,
+                    'contact_suburb'=>null,
+                    'contact_state'=>null,
+                    'contact_country'=>null,
+                    'contact_postcode'=>null,
+                    'asic_no'=>null,
+                    'asic_expiry'=>null,
+                    'date_created'=>null,
+
+
+
+                ],
+                true
+            );
+        }
+
+        return $visitor;
+
+
+
+        //strtotime(str_replace('/','-',$row['DOB']))
     }
 
 }

@@ -17,8 +17,8 @@ class QantasMigrationCommand extends CConsoleCommand
 
     public function actionTest()
     {
-        $result = AddressHelper::parse("1/32 Kilarney Heights Kallaroo WA 6025");
-        echo $result;
+        $result = AddressHelper::parse(strtoupper("1/32 Kilarney Heights"));
+        //echo $result;
     }
 
     public function actionImport()
@@ -55,9 +55,10 @@ class QantasMigrationCommand extends CConsoleCommand
 
     function ensureTenantAgentForQuantas(){
 
+        $tenantAgentName = 'Qantas';
         $this->tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name like '%$tenantAgentName%' and isDeleted = 0");
         if($this->tenantAgent==null){
-            $this->createTenantAgentFor();
+            $this->createTenantAgent();
         }
     }
 
@@ -220,15 +221,17 @@ class QantasMigrationCommand extends CConsoleCommand
 
     function ensureVisitorFromData($row){
 
+        $addressParts = AddressHelper::parse($row['Address1']);
+        $unit = $addressParts['Unit']==null?null:str_replace('/','',$addressParts['Unit']);
 
-        $visitor =  $this->vms->getFirstRow("
-                                  select *
+        $visitor =  $this->vms->getFirstRow("select *
                                   from visitor
                                   where first_name = '".$row['VFirstName']."'
                                   and last_name = '".$row['VLastName']."'
                                   and date_of_birth = '".strtotime(str_replace('/','-',$row['DOB']))."'
                                   and tenant=".$this->tenant[id]."
-                                  and tenant_agent =".$this->tenantAgent['id']);
+                                  and tenant_agent =".$this->tenantAgent['id']
+                                    );
 
         if($visitor==null){
 

@@ -17,16 +17,26 @@ class CSVHelper
         foreach($rows as $row)
         {
             $vals = str_getcsv($row,',','"',"\\");
-            if(sizeof($vals)>1){
-                if(sizeof($vals) > sizeof($header) && sizeof($header) > 1){
+            if(CSVHelper::countVals($vals)>1){
+                if(sizeof($vals) > sizeof($header)){
                     $header = $vals;
                     continue;
-                } else {
+                } else if($header!=null){
                     $result[] = array_combine($header,$vals);
                 }
             }
         }
         return $result;
+    }
+
+    private static function countVals($vals){
+        $r = 0;
+        for($i=0;$i<sizeof($vals);$i++){
+            if($vals[$i]>''){
+                $r++;
+            }
+        }
+        return $r;
     }
 
 

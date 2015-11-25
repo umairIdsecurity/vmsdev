@@ -14,69 +14,102 @@ class QantasMigrationCommand extends CConsoleCommand
     private $createdBy = null;
     private $company = null;
     private $visitorType = null;
+    private $visitReason = null;
+    private $ibcode = null;
 
     public function actionTest()
     {
-        $result = AddressHelper::parse(strtoupper("1/32 Kilarney Heights"));
+        //$result = AddressHelper::parse(strtoupper("1/32 Kilarney Heights"));
+        echo $this->parseDateForSql('1/1/13');
         //echo $result;
     }
 
     public function actionImport()
     {
         // load the file
-        $rows = CSVHelper::ImportCsvFromFile("~/Downloads/201505 Qantas VIC MAY 2015.csv");
+        $rows = CSVHelper::ImportCsvFromFile("/Users/gistewart/Downloads/201505 Qantas VIC MAY 2015.csv");
 
         $vms = new DataHelper(Yii::app()->db);
-        $ibcode = 'PER';
+        $transaction = Yii::app()->db->beginTransaction();
+        try {
 
-        $this->createdBy = 1;
 
-        // get the tenant
-        $this->tenant = $vms->getFirstRow("select * from company where code = '$ibcode' and is_deleted = 0 and company_type=1");
-        if($this->tenant==null) throw new CException("Tenant for $ibcode not found");
 
-        // ensure a tenant agent
-        $this->ensureTenantAgentForQuantas();
+            $this->vms = $vms;
+            $this->ibcode = 'PER';
 
-        // ensure a visitor type
-        $this->ensureVisitorTypeForQuantas();
+            $this->createdBy = 1;
 
-        // import the file
+            // get the tenant
+            $this->tenant = $vms->getFirstRow("select * from company where code = '" . $this->ibcode . "' and is_deleted = 0 and company_type=1");
+            if ($this->tenant == null) throw new CException("Tenant for " . $this->ibcode . " not found");
 
-        foreach($rows as $row){
-            $company        = $this->ensureCompanyFromData($row);
-            $sponsor        = $this->ensureSponsorFromData($row,$company);
-            $visitor        = $this->ensureVisitorFromData($row,$sponsor,$company);
-            $cardGenerated  = $this->ensureCardGeneratedFromData($row,$visitor);
-            $visit          = $this->ensureVisitFromData($row,$cardGenerated,$visitor);
+            // ensure a tenant agent
+            $this->ensureTenantAgent();
+
+            // ensure a visitor type
+            $this->ensureVisitorType();
+
+            // ensure a visit reason
+            $this->ensureVisitReason();
+
+            foreach ($rows as $row) {
+                $company = $this->ensureCompanyFromData($row);
+                $sponsor = $this->ensureSponsorFromData($row, $company);
+                $visitor = $this->ensureVisitorFromData($row, $company);
+                $cardGenerated = $this->ensureCardGeneratedFromData($row);
+                $visit = $this->ensureVisitFromData($row,$cardGenerated,$visitor,$sponsor);
+            }
+            $transaction->commit();
+        } catch (CException $e){
+
+            echo "\r\n".$e->getMessage();
+            $transaction->rollback();
         }
+
     }
 
 
-    function ensureTenantAgentForQuantas(){
+    function ensureTenantAgent(){
 
         $tenantAgentName = 'Qantas';
-        $this->tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name like '%$tenantAgentName%' and isDeleted = 0");
+        $this->tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name like '%$tenantAgentName%' and is_deleted = 0");
         if($this->tenantAgent==null){
             $this->createTenantAgent();
         }
     }
 
-    function ensureVisitorTypeForQuantas(){
-        $visitorTypeName = 'Other for data import';
-        $this->visitorType = $this->vms->getFirstRow("select * from visitor_type where name='$visitorTypeName' and tenant = ".$this->tenant['id']);
+    function ensureVisitorType(){
+        $visitorTypeName = 'Other: Data Import';
+        $sql = "select * from visitor_type where name='$visitorTypeName' and tenant = ".$this->tenant['id'];
+        $this->visitorType = $this->vms->getFirstRow($sql);
+
         if($this->visitorType==null){
-           $this->visitorType = $this->vms->insertRow('visitor_type',
-               [
-                   'name'=>$visitorTypeName,
-                   'created_by'=>$this->createdBy,
-                   'tenant'=>$this->tenant['id'],
-                   'tenant_agent'=>$this->tenant_agent['id'],
-                   'is_deleted'=>0,
-                   'module'=>'AVMS'
-               ],
-               true
-           );
+            $newRow = [
+                'name'=>$visitorTypeName,
+                'created_by'=>$this->createdBy,
+                'tenant'=>$this->tenant['id'],
+                'tenant_agent'=>$this->tenantAgent['id'],
+                'is_deleted'=>0,
+                'module'=>'AVMS'
+            ];
+           $this->visitorType = $this->vms->insertRow('visitor_type',$newRow,true);
+        }
+    }
+
+    function ensureVisitReason(){
+        $reason = 'Other: Data Import';
+        $this->visitReason = $this->vms->getFirstRow("select * from visit_reason where reason='$reason' and tenant = ".$this->tenant['id']);
+        if($this->visitReason==null){
+            $newRow = [
+                'reason'=>$reason,
+                'created_by'=>$this->createdBy,
+                'tenant'=>$this->tenant['id'],
+                'tenant_agent'=>$this->tenantAgent['id'],
+                'is_deleted'=>'0',
+                'module'=>'AVMS'
+            ];
+            $this->visitReason = $this->vms->insertRow('visit_reason',$newRow,true);
         }
     }
 
@@ -84,26 +117,24 @@ class QantasMigrationCommand extends CConsoleCommand
     function ensureCompanyFromData($row){
 
         if($this->company==null){
-            $companyName = 'Qantas company for data import';
+            $companyName = 'Qantas: Data Import';
             $company =  $this->vms->getFirstRow("
                                       select *
                                       from company
-                                      where name = $companyName
-                                      and tenant=".$this->tenant[id]."
+                                      where name = '$companyName'
+                                      and tenant=".$this->tenant['id']."
                                       and tenant_agent =".$this->tenantAgent['id']."
                                       and company_type=2");
             if($company==null){
-                $this->company = $this->vms->insertRow('company',
-                    [
-                        'name'=>$companyName,
-                        'trading_name'=>$companyName,
-                        'contact'=>'Unknown Contact',
-                        'created_by_user'=>$this->createdBy,
-                        'tenant'=>$this->tenant['id'],
-                        'tenant_agent'=>$this->tenant_agent['id']
-                    ],
-                    true
-                );
+                $newRow  = [
+                    'name'=>$companyName,
+                    'trading_name'=>$companyName,
+                    'contact'=>'Unknown Contact',
+                    'created_by_user'=>$this->createdBy,
+                    'tenant'=>$this->tenant['id'],
+                    'tenant_agent'=>$this->tenantAgent['id']
+                ];
+                $this->company = $this->vms->insertRow('company',$newRow ,true);
             } else {
                 $this->company = $company;
             }
@@ -112,52 +143,49 @@ class QantasMigrationCommand extends CConsoleCommand
     }
 
     function ensureSponsorFromData($row,$company){
-        $nameParts = explode(' ',$row['ASIC SponsorName']);
+        $nameParts = explode(' ',$row['ASIC Sponsor Name']);
         $firstName = $nameParts[0];
-        $middlelName = null;
+        $middleName = null;
         if(sizeof($nameParts)==3){
             $lastName = $nameParts[2];
             $middleName = $nameParts[1];
         } else {
-            $lastName = $nameParts[1];
+            if(sizeof($nameParts)>=2) {
+                $lastName = $nameParts[1];
+            } else {
+                $lastName='Unknown';
+            }
         }
+        $qFirstName = $this->vms->db->quoteValue($firstName);
+        $qLastName = $this->vms->db->quoteValue($lastName);
+
         $sponsor =  $this->vms->getFirstRow("
                                   select *
                                   from visitor
-                                  where first_name = '$firstName'
-                                  and last_name = '$lastName'
+                                  where first_name = $qFirstName
+                                  and last_name = $qLastName
                                   and asic_no = '".$row['ASIC SponsorNumber']."'
-                                  and tenant=".$this->tenant[id]."
+                                  and tenant=".$this->tenant['id']."
                                   and tenant_agent =".$this->tenantAgent['id']);
 
         if($sponsor==null){
-            $identificationType= $row["Document Type"]=='Driving Licence'?'DRIVERS_LICENSE':
-                ($row["Document Type"]=="Passport"?'PASSPORT':null);
-
-            return $this->vms->insertRow('visitor',
-                [
-                    'first_name'=>$firstName,
-                    'middle_name'=>$middleName,
-                    'last_name'=>$lastName,
-                    'email'=>$firstName.".".$lastName."@unknowncompany",
-                    'contact_number'=>$row['Mobile Number'],
-                    'company'=>$company['id'],
-                    'role'=>10,
-                    'visitor_type'=>$this->visitorType['id'],
-                    'visitor_workstation'=>$this->workstation['id'],
-                    'profile_type'=>'ASIC'
-                ],
-                true
-            );
+            $newRow = [
+                'first_name'=>$firstName,
+                'middle_name'=>$middleName,
+                'last_name'=>$lastName,
+                'email'=>$firstName.".".$lastName."@unknowncompany",
+                'contact_number'=>$this->valueIfEmpty($row['Mobile Number'],'0000000000'),
+                'company'=>$company['id'],
+                'role'=>10,
+                'visitor_type'=>$this->visitorType['id'],
+                'visitor_workstation'=>$this->workstation['id'],
+                'profile_type'=>'ASIC'
+            ];
+            return $this->vms->insertRow('visitor',$newRow,true);
         }
 
         return $sponsor;
-        //'identification_document_type'=>$identificationType,
-        //            'identification_country_issued'=>13,
-        //            'identification_document_no'=>$row['Document ID']
 
-
-        //strtotime(str_replace('/','-',$row['DOB']))
     }
 
     function protectFileImport($fileName,$rows){
@@ -178,58 +206,49 @@ class QantasMigrationCommand extends CConsoleCommand
 
     function createTenantAgent(){
 
-        $id = $this->vms->insertRow('company',
-            [
-                'name'=>'Qantas',
-                'trading_name'=>'Qantas',
-                'contact'=>'Unknown Contact',
-                'created_by_user'=>$this->createdBy,
-                'tenant'=>$this->tenant['id']
-            ],
-            true
-        );
-        $this->tenantAgent = $this->vms->getFirstRow("select * from company where id = $id");
+        $row = [
+            'name'=>'Qantas',
+            'trading_name'=>'Qantas',
+            'contact'=>'Unknown Contact',
+            'created_by_user'=>$this->createdBy,
+            'tenant'=>$this->tenant['id']
+        ];
+        $this->tenantAgent = $this->vms->insertRow('company', $row, true );
 
-        $this->vms->insertRow('tenant_agent',
-            [
-                'id'=>$id,
-                'tenant_id'=>$this->tenant['id'],
-                'for_module'=>'AVMS',
-                'is_deleted'=>0,
-                'created_by'=>$this->createdBy,
-                'date_created'=>date('Y-m-d H:i:s')
-            ],
-            false
-        );
+        $newRow = [
+            'id'=>$this->tenantAgent['id'],
+            'tenant_id'=>$this->tenant['id'],
+            'for_module'=>'AVMS',
+            'is_deleted'=>0,
+            'created_by'=>$this->createdBy,
+            'date_created'=>date('Y-m-d H:i:s')
+        ];
+        $this->vms->insertRow('tenant_agent',$newRow,false);
 
-        $id = $this->vms->insertRow('workstation',
-            [
-                'name'=>'Quantas',
-                'contact_name'=>'Unknown Contact',
-                'contact_number'=>'000000000',
-                'contact_email_address'=>'import@quantas.com',
-                'tenant'=>$this->tenant['id'],
-                'tenant_agent'=>$this->tenant_agent['id'],
-                'is_deleted'=>0,
-                'timezone_id'=>128
-            ],
-            true
-        );
-        $this->workstation = $this->vms->getFirstRow("select * from workstation where id = $id");
+        $newRow =  [
+            'name'=>'Quantas',
+            'contact_name'=>'Unknown Contact',
+            'contact_number'=>'000000000',
+            'contact_email_address'=>'import@quantas.com',
+            'tenant'=>$this->tenant['id'],
+            'tenant_agent'=>$this->tenantAgent['id'],
+            'is_deleted'=>0,
+            'timezone_id'=>128
+        ];
+        $this->workstation = $this->vms->insertRow('workstation',$newRow,true);
 
     }
 
-    function ensureVisitorFromData($row){
+    function ensureVisitorFromData($row,$company){
 
         $addressParts = AddressHelper::parse($row['Address1']);
-        $unit = $addressParts['Unit']==null?null:str_replace('/','',$addressParts['Unit']);
 
         $visitor =  $this->vms->getFirstRow("select *
                                   from visitor
-                                  where first_name = '".$row['VFirstName']."'
-                                  and last_name = '".$row['VLastName']."'
-                                  and date_of_birth = '".strtotime(str_replace('/','-',$row['DOB']))."'
-                                  and tenant=".$this->tenant[id]."
+                                  where first_name = ".$this->vms->db->quoteValue($row['VFirstName'])."
+                                  and last_name = ".$this->vms->db->quoteValue($row['VLastName'])."
+                                  and date_of_birth = '".$this->parseDateForSql($row['DOB'])."'
+                                  and tenant=".$this->tenant['id']."
                                   and tenant_agent =".$this->tenantAgent['id']
                                     );
 
@@ -237,47 +256,97 @@ class QantasMigrationCommand extends CConsoleCommand
 
             $identificationType= $row["Document Type"]=='Driving Licence'?'DRIVERS_LICENSE':
                 ($row["Document Type"]=="Passport"?'PASSPORT':null);
-
-            return $this->vms->insertRow('visitor',
-                [
-                    'first_name'                    =>$row['VFirstName'],
-                    'middle_name'                   =>null,
-                    'last_name'                     =>$row['VLastName'],
-                    'email'                         =>$row['VFirstName'].".".$row['VLastName']."@unknowncompany",
-                    'contact_number'                =>$row['Mobile Number'],
-                    'date_of_birth'                 =>strtotime(str_replace('/','-',$row['DOB'])),
-                    'company'                       =>$this->company['id'],
-                    'role'                          =>10,
-                    'visitor_type'                  =>$this->visitorType['id'],
-                    'visitor_workstation'           =>$this->workstation['id'],
-                    'profile_type'                  =>$row['ASIC Applicant']==NO?'VIC':'ASIC',
-                    'identification_document_type'  =>$identificationType,
-                    'identification_country_issued' =>13,
-                    'identification_document_no'    =>$row['Document ID'],
-                    'contact_unit'                  =>null,
-                    'contact_street_no'=>null,
-                    'contact_street_name'=>null,
-                    'contact_street_type'=>null,
-                    'contact_suburb'=>null,
-                    'contact_state'=>null,
-                    'contact_country'=>null,
-                    'contact_postcode'=>null,
-                    'asic_no'=>null,
-                    'asic_expiry'=>null,
-                    'date_created'=>null,
-
-
-
-                ],
-                true
-            );
+            $newRow = [
+                'first_name'                    =>$row['VFirstName'],
+                'middle_name'                   =>null,
+                'last_name'                     =>$row['VLastName'],
+                'email'                         =>$row['VFirstName'].".".$row['VLastName']."@unknowncompany",
+                'contact_number'                =>$this->valueIfEmpty($row['Mobile Number'],'0000000000'),
+                'date_of_birth'                 =>$this->parseDateForSql($row['DOB']),
+                'company'                       =>$company['id'],
+                'role'                          =>'10',
+                'visitor_type'                  =>$this->visitorType['id'],
+                'visitor_workstation'           =>$this->workstation['id'],
+                'profile_type'                  =>$row['ASIC Applicant']=='NO'?'VIC':'ASIC',
+                'identification_type'           =>$identificationType,
+                'identification_country_issued' =>'13',
+                'identification_document_no'    =>$row['Document ID'],
+                'contact_unit'                  =>$addressParts['Unit'],
+                'contact_street_no'             =>$addressParts['StreetNumber'],
+                'contact_street_name'           =>$addressParts['StreetName'],
+                'contact_street_type'           =>$addressParts['StreetType'],
+                'contact_suburb'                =>$row['Address2'],
+                'contact_state'                 =>$row['State'],
+                'contact_country'               =>$this->vms->getFirstRow("select * from country where name = '".$row['Country']."'")['id'],
+                'contact_postcode'              =>$row['Post Code'],
+                'asic_no'                       =>null,
+                'asic_expiry'                   =>null,
+                'date_created'                  =>date('Y-m-d'),
+                'tenant'=>$this->tenant['id'],
+                'tenant_agent'=>$this->tenantAgent['id']
+            ];
+            return $this->vms->insertRow('visitor',$newRow,true);
         }
-
         return $visitor;
+    }
 
+    function ensureCardGeneratedFromData($row){
 
+        $id = $this->vms->getFirstRow('select max(id)+1 as id from card_generated')['id'].'';
+        $num = $this->ibcode.substr('0000000'.$id,-6);
+        $startDate =$this->parseDateForSql($row['Date of Issue']);
+        $endDate = $this->parseDateForSql($row['Date of Expiry']);
+        $newRow = [
+            'card_number'=> $num,
+            'date_printed'=>$startDate,
+            'date_expiration'=>$endDate,
+            'date_cancelled'=>null,
+            'date_returned'=>$endDate
+        ];
+        return $this->vms->insertRow('card_generated',$newRow,true);
+    }
 
-        //strtotime(str_replace('/','-',$row['DOB']))
+    public function ensureVisitFromData($row,$cardGenerated,$visitor,$sponsor)
+    {
+        $newRow = [
+            'visitor'           => $visitor['id'],
+            'card_type'         =>3,
+            'card'              =>$cardGenerated['id'],
+            'visitor_type'      =>$this->visitorType['id'],
+            'visitor_status'    =>1,
+            'host'              =>$sponsor['id'],
+            'created_by'        =>$this->createdBy,
+            'date_in'           =>$this->parseDateForSql($row['Date of Issue']),
+            'date_out'          =>$this->parseDateForSql($row['Date of Expiry']),
+            'time_in'           =>'00:00:00',
+            'time_out'          =>'23:59:59',
+            'date_check_in'     =>$this->parseDateForSql($row['Date of Issue']),
+            'date_check_out'    =>$this->parseDateForSql($row['Date of Expiry']),
+            'time_check_in'     =>'00:00:00',
+            'time_check_out'    =>'23:59:59',
+            'visit_status'      =>3,
+            'workstation'       =>$this->workstation['id'],
+            'tenant'            =>$this->tenant['id'],
+            'tenant_agent'      =>$this->tenantAgent['id'],
+            'is_deleted'        =>0,
+            'finish_date'       =>$this->parseDateForSql($row['Date of Expiry']),
+            'finish_time'       =>'23:59:59',
+            'card_returned_date'=>$this->parseDateForSql($row['Date of Expiry']),
+            'company'           =>$this->company['id'],
+            'visit_reason'      =>$row['Reasonfor VIC Issue']
+        ];
+        return $this->vms->insertRow('visit',$newRow,true);
+    }
+
+    public function parseDateForSql($strDate){
+        return DateTime::createFromFormat('d/m/Y',$strDate)->format('Y-m-d');
+    }
+
+    public function valueIfEmpty($val,$emptyVal){
+        if($val==null || trim($val,' ')==''){
+            return $emptyVal;
+        }
+        return $val;
     }
 
 }

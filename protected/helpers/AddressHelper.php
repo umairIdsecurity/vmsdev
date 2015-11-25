@@ -40,7 +40,12 @@ class AddressHelper
         $fullPattern = str_replace("{2}",AddressHelper::$unitDesignators,$fullPattern);
 
         $matches = [];
-        preg_match( "/". $fullPattern."/" , $address,$matches );
+        preg_match( "/". $fullPattern."/" , strtoupper($address),$matches );
+
+        if($matches['Unit']!=null){
+            $matches['Unit'] = str_replace('\\','',str_replace('/','',$matches['Unit']));
+        }
+
         return $matches;
     }
 

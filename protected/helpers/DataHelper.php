@@ -8,7 +8,7 @@
  */
 class DataHelper
 {
-    private $db = null;
+    public $db = null;
     public function __construct($db)
     {
         $this->db = $db; 

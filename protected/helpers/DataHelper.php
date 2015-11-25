@@ -212,5 +212,46 @@ class DataHelper
         $command->execute();
     }
 
+    public function quoteValue($tableName,$columnName,$value){
+        $column = $this->db->schema->tables[$tableName]->columns[$columnName];
+        $type = explode(' ',explode('(',$column->dbType)[0])[0];
+
+        if(in_array($type,['bigint','int','tinyint','float','boolean','bool','double'])){
+            return $value;
+        } else if($type=='bit'){
+            return ord($value)==1?'1':'0';
+        }
+        return $this->db->quoteValue($value);
+    }
+
+    public function insertRow($tableName,&$row,$isAutoIncrement){
+        $vals =[];
+        $colsQuoted = [];
+        foreach ($row as $columnName => $value) {
+            $colsQuoted[] = $this->db->quoteColumnName($columnName);
+            if ($value == '') {
+                $vals[] = 'NULL';
+            } else {
+                $vals[] = $this->quoteValue($tableName, $columnName, $value);
+            }
+
+        }
+
+        $quotedTableName = $this->db->quoteTableName($tableName);
+
+        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
+
+        //RUN SQL
+        echo "\r\n" . $sql;
+        $this->db->createCommand($sql)->execute();
+
+        if ($isAutoIncrement) {
+            $row['id'] = $this->db->getLastInsertID();
+        }
+
+        return $row;
+
+    }
+
 
 }

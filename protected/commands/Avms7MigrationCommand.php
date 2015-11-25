@@ -898,11 +898,9 @@ class Avms7MigrationCommand extends CConsoleCommand
         Yii::app()->db->createCommand($sql)->execute();
 
         if ($isAutoIncrement) {
-
-            //$row['id'] = $this->getDummyIncrement($tableName, $idMappings); //TODO:  GET NEW ID FROM DB CONNECTION
             $row['id'] = Yii::app()->db->getLastInsertID();
-
         }
+
     }
 
 

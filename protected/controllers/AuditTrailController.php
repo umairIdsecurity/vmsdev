@@ -31,11 +31,6 @@ class AuditTrailController extends Controller {
 						where tenant = 'tenant if not superadmin'
 						and tenant_agent = 'tenant_agent if user is in a tenant_agent'
 						";
-
-
-
-
-
 	/**
 	 * @return array action filters
 	 */
@@ -53,7 +48,6 @@ class AuditTrailController extends Controller {
 	 */
 	public function accessRules() {
 		return array(
-
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'    => array('view', 'cvms', 'avms'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',

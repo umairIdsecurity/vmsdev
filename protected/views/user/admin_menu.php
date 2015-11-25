@@ -437,6 +437,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsByProfiles'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'visitorsByProfiles');?>>New Visitors Profiles</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('auditTrail/cvms'); ?>'><span <?php CHelper::is_selected_submenu('auditTrail', 'cvms');?>>Audit Trail</span></a></li>
 
+                    <!-- <li><a href='<?php //echo Yii::app()->createUrl('auditLog/cvms'); ?>'><span <?php //CHelper::is_selected_submenu('auditLog', 'cvms');?>>Audit Log</span></a></li> -->
+
                 </ul>
             </li>
             <!-- menu for Reports -->
@@ -478,7 +480,10 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <li><a href='<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'profilesAvmsVisitors');?>>New Visitors</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/conversionVicToAsic'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'conversionVicToAsic');?>>Conversion of VIC to ASIC</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('auditTrail/avms'); ?>'><span <?php CHelper::is_selected_submenu('auditTrail', 'avms');?>>Audit Trail</span></a></li>
-                     <li><a href='<?php echo Yii::app()->createUrl('reports/notReturnedVic'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'notReturnedVic');?>>Lost VICs Report</span></a></li>
+                    
+                    <!-- <li><a href='<?php //echo Yii::app()->createUrl('auditLog/avms'); ?>'><span <?php //CHelper::is_selected_submenu('auditLog', 'avms');?>>Audit Log</span></a></li> -->
+                    
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/notReturnedVic'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'notReturnedVic');?>>Lost VICs Report</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsRecord'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsRecord');?>>EVIC Deposits Record </span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsReport'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsReport');?>>EVIC Deposits Report </span></a></li>
                 

@@ -225,7 +225,8 @@ class VisitorController extends Controller {
             }
 
             // If operator convert from VIC to ASIC profile then generate a company contact
-            if ($oldProfileType == Visitor::PROFILE_TYPE_VIC && $model->profile_type == Visitor::PROFILE_TYPE_ASIC) {
+            if ($oldProfileType == Visitor::PROFILE_TYPE_VIC && $model->profile_type == Visitor::PROFILE_TYPE_ASIC) 
+            {
                 $contact                 = new User('add_company_contact');
                 $contact->company        = $model->company;
                 $contact->first_name     = $model->first_name;
@@ -253,8 +254,14 @@ class VisitorController extends Controller {
                             echo $updateErrorMessage;
                 }
                 }
-
             } 
+            
+            //logs the UPDATION of ASIC SPONSOR
+            if($model->profile_type == "ASIC" ) 
+            {
+                $this->audit_logging_visit_statuses("UPDATE ASIC SPONSOR",$model);
+            }
+
             Yii::app()->user->setFlash('success', 'Profile Updated Successfully');
             if( $model->profile_type == "CORPORATE" ) {
                 $this->redirectAddUpdateRoleBased("id={$id}&vms=cvms");
@@ -267,9 +274,22 @@ class VisitorController extends Controller {
                 'model' => $model,
             ));
         }
-   
-    
     }
+
+    //log the UPDATION of ASIC SPONSOR
+    public function audit_logging_visit_statuses($action,$visitor)
+    {
+        $log = new AuditLog();
+        $log->action_datetime = date('Y-m-d H:i:s');
+        $log->action = $action;
+        $log->detail = 'Logged user ID: ' . Yii::app()->user->id." ASIC Sponsor ID: ".$visitor->id;
+        $log->user_email_address = Yii::app()->user->email;
+        $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
+        $log->tenant = Yii::app()->user->tenant;
+        $log->tenant_agent = Yii::app()->user->tenant_agent;
+        $log->save();
+    }
+
     /**
      * Close all auto Close EVIC visits if Changed to ASIC Pending
      * And Reset visit if its first visit of the Visitor

@@ -37,7 +37,10 @@ Yii::import('ext.validator.DropDown');
  * @property User $createdBy
  * @property User $tenant0
  */
+
 class Visit extends CActiveRecord {
+
+    public $deposit_paid_radio; //deposit paid Radio for Extended VISIT
 
     public $time_in_minutes;
     public $time_in_hours;

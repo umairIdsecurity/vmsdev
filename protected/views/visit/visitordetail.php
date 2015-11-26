@@ -521,7 +521,7 @@ $this->renderPartial('visithistory', array('model' => $model,
                 window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
             }
         }).fail(function() {
-            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
         });
     }
 

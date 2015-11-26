@@ -22,8 +22,12 @@ class AddressHelper
 
     static $unitDesignators = "APARTMENT|APT|BUILDING|BLDG|FLOOR|FL|SUITE|STE|UNIT|UNIT|ROOM|RM|DEPARTMENT|DEPT|SPC|LEVEL|LVL";
 
-    static function parse($address){
+    static function parse($fullAddress){
 
+        $fullAddress = strtoupper($fullAddress);
+        $parts = explode($fullAddress,' ');
+        $address = $fullAddress[0];
+        $addressEnd = implode(' ',array_splice($fullAddress,2));
 
         $pUnitNo = "([0-9]{1,4}[a-zA-Z]{0,1})";
         $pUnit = "(?<Unit>((({2}) $pUnitNo) )|($pUnitNo\/))?";
@@ -45,6 +49,7 @@ class AddressHelper
         if($matches['Unit']!=null){
             $matches['Unit'] = str_replace('\\','',str_replace('/','',$matches['Unit']));
         }
+
 
         return $matches;
     }

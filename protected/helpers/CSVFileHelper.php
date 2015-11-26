@@ -9,21 +9,21 @@
 class CsvFileHelper
 {
     public $fileName = null;
-    private $handle = null;
     private $header = [];
     private $row = null;
+    private $rows = null;
+    private $currentRowNum = 0;
 
-    public function __construct($fileName){
+
+    //public function __construct($fileName){
+    //    $this->fileName = $fileName;
+    //    $this->readLine();
+   // }
+
+    public function open($fileName){
         $this->fileName = $fileName;
-        $this->handle = fopen($fileName, "r");
-        $this->row =  $this->nextRow();
+        $this->row = $this->readLine();
     }
-
-    public function __destruct()
-    {
-        fclose($this->handle);
-    }
-
     public function hasMore()
     {
         return $this->row!=null;
@@ -31,18 +31,20 @@ class CsvFileHelper
 
     public function nextRow()
     {
-        try{
-            return $this->row;
-        } finally {
-            $this->row = $this->readLine();
-        }
+        $result = $this->row;
+        $this->row = $this->readLine();
+        return $result;
     }
 
     private function readLine(){
 
-        while(($line = fgets($this->handle)) !== false)
+        if($this->rows==null){
+            $this->rows = file($this->fileName);
+        }
+        while($this->currentRowNum < sizeof($this->rows))
         {
-            $vals = str_getcsv($line,',','"',"\\");
+            $vals = str_getcsv($this->rows[$this->currentRowNum],',','"',"\\");
+            $this->currentRowNum++;
             if(sizeof($vals)==0){
                 continue;
             }
@@ -57,8 +59,5 @@ class CsvFileHelper
         }
         return null;
     }
-
-
-
 
 }

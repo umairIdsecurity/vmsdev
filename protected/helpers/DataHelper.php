@@ -239,7 +239,7 @@ class DataHelper
 
         $quotedTableName = $this->db->quoteTableName($tableName);
 
-        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
+        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") \r\nVALUES (" . implode(', ', $vals) . ")";
 
         //RUN SQL
         echo "\r\n" . $sql;

@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'audit_log':
  * @property integer $id
- * @property string $action_datetime
+ * @property string $action_datetime_new
  * @property string $action
  * @property string $detail
  * @property string $user_email_address
@@ -31,7 +31,7 @@ class AuditLog extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('action_datetime', 'required'),
+			array('action_datetime_new', 'required'),
 			array('tenant, tenant_agent', 'numerical', 'integerOnly'=>true),
 			array('action', 'length', 'max'=>100),
 			array('user_email_address', 'length', 'max'=>50),
@@ -39,7 +39,7 @@ class AuditLog extends CActiveRecord
 			array('detail', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, action_datetime, action, detail, user_email_address, ip_address, tenant, tenant_agent', 'safe', 'on'=>'search'),
+			array('id, action_datetime_new, action, detail, user_email_address, ip_address, tenant, tenant_agent', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,7 +61,7 @@ class AuditLog extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'action_datetime' => 'Action Datetime',
+			'action_datetime_new' => 'Action Datetime',
 			'action' => 'Action',
 			'detail' => 'Detail',
 			'user_email_address' => 'User Email Address',
@@ -90,7 +90,7 @@ class AuditLog extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('action_datetime',$this->action_datetime,true);
+		$criteria->compare('action_datetime_new',$this->action_datetime_new,true);
 		$criteria->compare('action',$this->action,true);
 		$criteria->compare('detail',$this->detail,true);
 		$criteria->compare('user_email_address',$this->user_email_address,true);

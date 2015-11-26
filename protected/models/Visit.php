@@ -1333,6 +1333,7 @@ class Visit extends CActiveRecord {
             
             $dateNow = new DateTime("NOW");
             $dateOut = new DateTime( $v->date_check_out." ".$v->time_check_out );
+            $dateIn = new DateTime( $v->date_check_in." ".$v->time_check_in );
             $dateDiff = $dateOut->diff($dateNow)->format("%r%a");
             $status = "";
             
@@ -1346,10 +1347,13 @@ class Visit extends CActiveRecord {
                      if( is_null( $v->parent_id ) )
                         $update["reset_id"] = 1;
                 }
-            } elseif ($dateDiff == 0 && $v->card_type == CardType::VIC_CARD_24HOURS) { 
-                // 24 Hour visit will be expired on the exact time when it was activated
-                if( ($dateNow->format("H") > $dateOut->format("H") ) || ($dateNow->format("H") == $dateOut->format("H") && $dateNow->format("i") > $dateOut->format("i"))) {
+            } elseif ($v->card_type == CardType::VIC_CARD_24HOURS) { 
+                // 24 hour VIC can you please set the now close at 12pm midnight of the day
+                if( $dateNow->format("d") >= $dateOut->format("d") ) {
                     $update["visit_closed_date"] = $dateNow->format("Y-m-d H:i:s");
+                    $update["visit_status"] = VisitStatus::CLOSED;
+                } elseif (( $dateNow->format("H") >= 23 && $dateNow->format("d") == $dateIn->format("d"))) {
+                    $update["visit_closed_date"] = $dateNow->format("Y-m-d 23:59:59");
                     $update["visit_status"] = VisitStatus::CLOSED;
                 }
             }

@@ -174,7 +174,7 @@ class CompanyController extends Controller
                         $userModel->asic_expiry_day = 10;
                         $userModel->asic_expiry_month = 10;
                         $userModel->asic_expiry_year = 15;
-                        $userModel->save();
+                        $userModel->save(false);
                         unset($_SESSION['is_field']);
 
                         $cs = Yii::app()->clientScript;
@@ -404,7 +404,7 @@ class CompanyController extends Controller
     protected function performAjaxValidation($model)
     {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'company-form') {
-            if ($_POST['Company']['password_option'] == 1) {
+            if ($_POST['Company']['password_option'] == 1 && $_POST['Company']['password_requirement'] == 2) {
                 $model->scenario = "passwordrequire";
             }
             echo CActiveForm::validate($model);

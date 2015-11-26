@@ -42,15 +42,14 @@ if ($this->action->id == 'update') {
             'afterValidate' => 'js:function(form, data, hasError) {
                 if (!hasError) {
                     if($("#currentAction").val() == "create"){
-                        if($(".pass_option").is(":checked")== false){
+                        if( $("#Company_password_requirement_1").is(":checked") == true && $(".pass_option").is(":checked")== false){                       
                             $("#pass_error_").show();
-                            $("#User_password_em_").html("select one option");
                             return false;
                         }
                         else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Company_user_password").val()== "" || $("#Company_user_repeatpassword").val()=="")){
                             $("#pass_error_").show();
                             $("#pass_error_").html("Type password or generate");
-                            return false;
+                             return false;
                         }
                         else{
                             checkCompanyNameUnique();
@@ -206,7 +205,7 @@ if ($this->action->id == 'update') {
                 </tr>
                         <tr class="show_password_fields" style=" display:none;">
                             <td>
-                                <table style=" !important; width:253px; border-left-style:none; border-top-style:none">
+                                <table style="width:253px; border-left-style:none; border-top-style:none">
                                     <tr>
                                         <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                                     </tr>
@@ -219,7 +218,7 @@ if ($this->action->id == 'update') {
 
                                     <tr>
                                         <td>
-                                            <?php echo $form->hiddenField($model, 'password_option'); ?>
+                                            <?php echo $form->hiddenField($model, 'password_option', array("value"=>"0")); ?>
                                             <input type="radio" value="1" class="pass_option" id="radio1" name="radiobtn" onclick="call_radio1();" />
                                             &nbsp;Create Password
                                         </td>
@@ -372,11 +371,11 @@ $(document).ready(function() {
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();
-        $('#Visitor_password_option').val(radiochooseval);
+        $('#Company_password_option').val(radiochooseval);
     }
     function call_radio2(){
         radiochooseval = $("#radio2").val();
-        $('#Visitor_password_option').val(radiochooseval);
+        $('#Company_password_option').val(radiochooseval);
     }
     function createCompanyForm() {
         return "#company-form ";
@@ -507,7 +506,7 @@ $(document).ready(function() {
     function generatepassword() {
         $("#random_password").val('');
         $('.pass_option[value=1]').prop('checked', true);
-        $('#Visitor_password_option').val(1);
+        $('#Company_password_option').val(1);
 
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";

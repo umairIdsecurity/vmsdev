@@ -1,6 +1,6 @@
 <?php
 
-class m191115_201002_change_asic_no_on_user_table extends CDbMigration
+class m151119_201002_change_asic_no_on_user_table extends CDbMigration
 {
 	public function safeUp()
 	{

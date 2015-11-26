@@ -1,16 +1,22 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: geoffstewart
- * Date: 21/11/2015
- * Time: 10:28 AM
+ * Date: 25/11/2015
+ * Time: 10:59 PM
  */
-class QantasMigrationCommand extends CConsoleCommand
+class PAPLMigration extends CConsoleCommand
 {
+
     private $vms = null;
     private $tenant = null;
-    private $tenantAgent = null;
-    private $workstation = null;
+    private $tenantAgents = [
+
+    ];
+    private $workstations = [
+
+    ];
     private $createdBy = null;
     private $company = null;
     private $visitorType = null;
@@ -24,17 +30,11 @@ class QantasMigrationCommand extends CConsoleCommand
         //echo $result;
     }
 
-    public function actionImportFromDirectory($dirName){
-
-    }
-
-    public function actionImportFile($fileName)
+    public function actionImport()
     {
         // load the file
         //$rows = CSVHelper::ImportCsvFromFile("/Users/gistewart/Downloads/201505 Qantas VIC MAY 2015.csv");
-        //$rows = CSVHelper::ImportCsvFromFile("/Users/geoffstewart/Downloads/201505 Qantas VIC MAY 2015.csv");
-
-        $rows = CSVHelper::ImportCsvFromFile($fileName);
+        $rows = CSVHelper::ImportCsvFromFile("/Users/geoffstewart/Downloads/PAPL VIC.csv");
 
         $vms = new DataHelper(Yii::app()->db);
         $transaction = Yii::app()->db->beginTransaction();
@@ -44,23 +44,21 @@ class QantasMigrationCommand extends CConsoleCommand
 
             $this->vms = $vms;
             $this->ibcode = 'PER';
-
             $this->createdBy = 1;
 
             // get the tenant
             $this->tenant = $vms->getFirstRow("select * from company where code = '" . $this->ibcode . "' and is_deleted = 0 and company_type=1");
             if ($this->tenant == null) throw new CException("Tenant for " . $this->ibcode . " not found");
 
-            // ensure a tenant agent
-            $this->ensureTenantAgent();
-
-            // ensure a visitor type
             $this->ensureVisitorType();
-
-            // ensure a visit reason
             $this->ensureVisitReason();
 
+
             foreach ($rows as $row) {
+
+                $tenantAgent = $this->vms->getFirstRow('select * from company where company_type = 2 and is_deleted=0 and tenant = '.$this->tenant['id']);
+
+                // add rows
                 $company = $this->ensureCompanyFromData($row);
                 $sponsor = $this->ensureSponsorFromData($row, $company);
                 $visitor = $this->ensureVisitorFromData($row, $company);
@@ -68,11 +66,25 @@ class QantasMigrationCommand extends CConsoleCommand
                 $visit = $this->ensureVisitFromData($row,$cardGenerated,$visitor,$sponsor);
             }
             $transaction->commit();
-
         } catch (CException $e){
 
             echo "\r\n".$e->getMessage();
             $transaction->rollback();
+        }
+
+    }
+
+    function checkTenantAgents($rows)
+    {
+        $tenantAgents = [];
+        foreach($rows as $row){
+            if($row['Issuing Agent'])
+            $agent = $this->vms->getFirstRow('select *
+                                              from company
+                                              where company_type = 2
+                                              and is_deleted=0
+                                              and tenant = '.$this->tenant['id']."'
+                                              and name like '%'".$row['Issuing Agent']."%'");
         }
 
     }
@@ -98,10 +110,10 @@ class QantasMigrationCommand extends CConsoleCommand
                 'created_by'=>$this->createdBy,
                 'tenant'=>$this->tenant['id'],
                 'tenant_agent'=>$this->tenantAgent['id'],
-                'is_deleted'=>'0',
+                'is_deleted'=>0,
                 'module'=>'AVMS'
             ];
-           $this->visitorType = $this->vms->insertRow('visitor_type',$newRow,true);
+            $this->visitorType = $this->vms->insertRow('visitor_type',$newRow,true);
         }
     }
 
@@ -140,8 +152,7 @@ class QantasMigrationCommand extends CConsoleCommand
                     'contact'=>'Unknown Contact',
                     'created_by_user'=>$this->createdBy,
                     'tenant'=>$this->tenant['id'],
-                    'tenant_agent'=>$this->tenantAgent['id'],
-                    'is_deleted'=>'0'
+                    'tenant_agent'=>$this->tenantAgent['id']
                 ];
                 $this->company = $this->vms->insertRow('company',$newRow ,true);
             } else {
@@ -185,13 +196,10 @@ class QantasMigrationCommand extends CConsoleCommand
                 'email'=>$firstName.".".$lastName."@unknowncompany",
                 'contact_number'=>$this->valueIfEmpty($row['Mobile Number'],'0000000000'),
                 'company'=>$company['id'],
-                'role'=>'10',
+                'role'=>10,
                 'visitor_type'=>$this->visitorType['id'],
                 'visitor_workstation'=>$this->workstation['id'],
-                'profile_type'=>'ASIC',
-                'tenant'=>$this->tenant['id'],
-                'tenant_agent'=>$this->tenantAgent['id'],
-                'is_deleted'=>'0'
+                'profile_type'=>'ASIC'
             ];
             return $this->vms->insertRow('visitor',$newRow,true);
         }
@@ -223,8 +231,7 @@ class QantasMigrationCommand extends CConsoleCommand
             'trading_name'=>'Qantas',
             'contact'=>'Unknown Contact',
             'created_by_user'=>$this->createdBy,
-            'tenant'=>$this->tenant['id'],
-            'is_deleted'=>'0'
+            'tenant'=>$this->tenant['id']
         ];
         $this->tenantAgent = $this->vms->insertRow('company', $row, true );
 
@@ -232,7 +239,7 @@ class QantasMigrationCommand extends CConsoleCommand
             'id'=>$this->tenantAgent['id'],
             'tenant_id'=>$this->tenant['id'],
             'for_module'=>'AVMS',
-            'is_deleted'=>'0',
+            'is_deleted'=>0,
             'created_by'=>$this->createdBy,
             'date_created'=>date('Y-m-d H:i:s')
         ];
@@ -245,8 +252,8 @@ class QantasMigrationCommand extends CConsoleCommand
             'contact_email_address'=>'import@quantas.com',
             'tenant'=>$this->tenant['id'],
             'tenant_agent'=>$this->tenantAgent['id'],
-            'is_deleted'=>'0',
-            'timezone_id'=>'128'
+            'is_deleted'=>0,
+            'timezone_id'=>128
         ];
         $this->workstation = $this->vms->insertRow('workstation',$newRow,true);
 
@@ -263,7 +270,7 @@ class QantasMigrationCommand extends CConsoleCommand
                                   and date_of_birth = '".$this->parseDateForSql($row['DOB'])."'
                                   and tenant=".$this->tenant['id']."
                                   and tenant_agent =".$this->tenantAgent['id']
-                                    );
+        );
 
         if($visitor==null){
 
@@ -295,9 +302,8 @@ class QantasMigrationCommand extends CConsoleCommand
                 'asic_no'                       =>null,
                 'asic_expiry'                   =>null,
                 'date_created'                  =>date('Y-m-d'),
-                'tenant'                        =>$this->tenant['id'],
-                'tenant_agent'                  =>$this->tenantAgent['id'],
-                'is_deleted'=>'0'
+                'tenant'=>$this->tenant['id'],
+                'tenant_agent'=>$this->tenantAgent['id']
             ];
             return $this->vms->insertRow('visitor',$newRow,true);
         }
@@ -324,10 +330,10 @@ class QantasMigrationCommand extends CConsoleCommand
     {
         $newRow = [
             'visitor'           => $visitor['id'],
-            'card_type'         =>'3',
+            'card_type'         =>3,
             'card'              =>$cardGenerated['id'],
             'visitor_type'      =>$this->visitorType['id'],
-            'visitor_status'    =>'1',
+            'visitor_status'    =>1,
             'host'              =>$sponsor['id'],
             'created_by'        =>$this->createdBy,
             'date_in'           =>$this->parseDateForSql($row['Date of Issue']),
@@ -338,11 +344,11 @@ class QantasMigrationCommand extends CConsoleCommand
             'date_check_out'    =>$this->parseDateForSql($row['Date of Expiry']),
             'time_check_in'     =>'00:00:00',
             'time_check_out'    =>'23:59:59',
-            'visit_status'      =>'3',
+            'visit_status'      =>3,
             'workstation'       =>$this->workstation['id'],
             'tenant'            =>$this->tenant['id'],
             'tenant_agent'      =>$this->tenantAgent['id'],
-            'is_deleted'        =>'0',
+            'is_deleted'        =>0,
             'finish_date'       =>$this->parseDateForSql($row['Date of Expiry']),
             'finish_time'       =>'23:59:59',
             'card_returned_date'=>$this->parseDateForSql($row['Date of Expiry']),
@@ -362,5 +368,6 @@ class QantasMigrationCommand extends CConsoleCommand
         }
         return $val;
     }
+
 
 }

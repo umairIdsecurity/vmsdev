@@ -297,7 +297,7 @@ class SiteController extends Controller {
 
     public function audit_log_logout(){
         $log = new AuditLog();
-//        $log->action_datetime = time();
+        $log->action_datetime_new = date('Y-m-d H:i:s');
         $log->action = "LOGOUT";
         $log->detail = 'ID: ' . Yii::app()->user->id;
         $log->user_email_address = Yii::app()->user->email;

@@ -22,7 +22,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'action_datetime',
+		'action_datetime_new',
 		'action',
 		'detail',
 		'user_email_address',
@@ -43,7 +43,7 @@ $this->menu=array(
 	</tr>
 	<tr>
 		<td>Action Datetime</td>
-		<td><?=$model->action_datetime?></td>
+		<td><?=$model->action_datetime_new?></td>
 	</tr>
 	<tr>
 		<td>Action</td>

@@ -14,7 +14,6 @@
 class VisitServiceImpl implements VisitService {
 
     public function save($visit, $sessionId) {
-
         //Integrity Constraint violation here if removed
         if(empty($visit->visitor_type)){
             $visit->visitor_type = NULL;
@@ -46,16 +45,22 @@ class VisitServiceImpl implements VisitService {
             'tenant_agent' => $visitor->tenant_agent,
         ));
 
+        //logs the visit which has been ACTIVATED
         if($visit->visit_status == VisitStatus::ACTIVE){
             $this->audit_logging_visit_statuses("ACTIVATE VISIT",$visit);
         }
+
+        //logs the visit which has been CANCELLED
+        /*if($visit->visit_status == VisitStatus::SAVED){
+            $this->audit_logging_visit_statuses("CANCEL VISIT",$visit);
+        }*/
 
         return true;
     }
 
     public function audit_logging_visit_statuses($action,$visit){
         $log = new AuditLog();
-        $log->action_datetime = date('Y-m-d H:i:s');
+        $log->action_datetime_new = date('Y-m-d H:i:s');
         $log->action = $action;
         $log->detail = 'Logged user ID: ' . Yii::app()->user->id." Visit ID: ".$visit->id." Visitor ID: ".$visit->visitor;
         $log->user_email_address = Yii::app()->user->email;

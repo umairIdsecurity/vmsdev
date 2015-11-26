@@ -115,6 +115,8 @@ class DashboardController extends Controller {
         $session = new CHttpSession;
         $session['lastPage'] = 'dashboard';
         $this->layout = '//layouts/column2';
+        // Auto Closed TO Closed the EVIC and 24 Hour Visits
+        Visit::model()->setClosedAutoClosedVisits();
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit']))

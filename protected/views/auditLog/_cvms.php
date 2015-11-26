@@ -27,8 +27,8 @@
 			'filter'=>CHtml::activeTextField($model, 'id', array('placeholder'=>'ID')),
 		),
 		array(
-			'name' => 'action_datetime',
-			'filter'=>CHtml::activeTextField($model, 'action_datetime', array('placeholder'=>'Action Datetime')),
+			'name' => 'action_datetime_new',
+			'filter'=>CHtml::activeTextField($model, 'action_datetime_new', array('placeholder'=>'Action Datetime')),
 		),
 
 		array(

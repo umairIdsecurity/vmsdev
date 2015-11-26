@@ -142,8 +142,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <div id="deposit_paid_evic" style="margin-bottom:15px">        
                             
                                     <strong> Deposit Paid? 
-                                        <input type="radio" id="deposit_paid_radio_yes" name="deposit_paid_radio" value="1" style="margin-left:15px"> Yes  
-                                    <input type="radio" id="deposit_paid_radio_no" name="deposit_paid_radio" value="0" style="margin-left:15px"> No
+                                        <input type="radio" id="deposit_paid_radio_yes" name="Visit[deposit_paid_radio]" value="1" style="margin-left:15px"> Yes  
+                                        <input type="radio" id="deposit_paid_radio_no" name="Visit[deposit_paid_radio]" value="0" style="margin-left:15px"> No
                                     </strong>
                            
                                 </div>   

@@ -153,7 +153,10 @@ class VisitController extends Controller {
                    
                     $this->renderPartial('_email_asic_verify', array('visitor' => $visitor, 'host' => $host));
                 }
-                 /**
+
+                //logs the INSERT NEW VISIT
+                $this->audit_logging_visit_statuses("INSERT NEW VISIT",$model);
+                /**
                 * If operator Selects VIC as Asic Sponsor then Convert VIC to ASIC
                 */
                 $this->convertVicToAsicSponsor($model->host); 
@@ -189,13 +192,13 @@ class VisitController extends Controller {
             $asic_sponsor->save();
         }
 
-        if (isset($_POST['Visit'])) {
-
+        if (isset($_POST['Visit'])) 
+        {
             $oldhost = $model->host;
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
 
-		if ($model->visitor_type == null) {
+            if ($model->visitor_type == null) {
                 $model->visitor_type = $oldVisitorType;
             }
             if ($model->reason == null) {
@@ -359,7 +362,6 @@ class VisitController extends Controller {
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
 
-        
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
             return $this->redirect(Yii::app()->createUrl('visit/view'));
@@ -374,7 +376,7 @@ class VisitController extends Controller {
 	        	$this->redirect(Yii::app()->createUrl('visit/view'));
 	        	exit();
 	        }
-        }
+        }    
 
         $workstationModel = Workstation::model()->findByPk($model->workstation);
 
@@ -614,7 +616,11 @@ class VisitController extends Controller {
             }
                     
             // save visit model
-            if ($model->save()) {
+            if ($model->save())
+            {
+                ////logs the visit which has been CLOSED
+                if($model->visit_status == VisitStatus::CLOSED){$this->audit_logging_visit_statuses("CLOSE VISIT",$model);}
+                
                 // if has file upload then upload and save
                 if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
@@ -641,6 +647,19 @@ class VisitController extends Controller {
             'new_created' => $new_created,
             'errorMsg' => $errorMsg
         ));
+    }
+
+    //log the closing of visit
+    public function audit_logging_visit_statuses($action,$visit){
+        $log = new AuditLog();
+        $log->action_datetime = date('Y-m-d H:i:s');
+        $log->action = $action;
+        $log->detail = 'Logged user ID: ' . Yii::app()->user->id." Visit ID: ".$visit->id." Visitor ID: ".$visit->visitor;
+        $log->user_email_address = Yii::app()->user->email;
+        $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
+        $log->tenant = Yii::app()->user->tenant;
+        $log->tenant_agent = Yii::app()->user->tenant_agent;
+        $log->save();
     }
 
     /**

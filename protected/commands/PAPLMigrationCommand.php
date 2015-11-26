@@ -6,17 +6,35 @@
  * Date: 25/11/2015
  * Time: 10:59 PM
  */
-class PAPLMigration extends CConsoleCommand
+class PAPLMigrationCommand extends CConsoleCommand
 {
 
     private $vms = null;
     private $tenant = null;
-    private $tenantAgents = [
-
+    private $tenantAgentNameMappings = [
+        'Air BP'=>'Air BP',
+        'Air Services'=>'Air Services Australia',
+        'Airflite'=>'Airflite',
+        'Cobham'=>'Cobham',
+        'Hawker Pacific'=>'Hawker Pacific',
+        'Maxem'=>'Maxem Aviation',
+        'Shell'=>'Shell',
+        'Skippers'=>'Skippers',
+        'Toll'=>'Toll',
+        'Universal'=>'Universal Aviation',
     ];
-    private $workstations = [
-
+    private $workstationAgentNameMappings = [
+        'Skippers'=>'Skippers',
+        'Airflite'=>'Airflite',
+        'Cobham'=>'Cobham',
+        'Hawker Pacific'=>'Hawker Pacific',
+        'Maxem Aviation'=>'Maxem Aviation',
+        'Toll'=>'Toll',
+        'Universal Aviation'=>'Universal Aviation',
+        'Quantas'=>'Qantas'
     ];
+    private $workstation = [];
+    private $tenantAgents = [];
     private $createdBy = null;
     private $company = null;
     private $visitorType = null;
@@ -25,22 +43,24 @@ class PAPLMigration extends CConsoleCommand
 
     public function actionTest()
     {
-        //$result = AddressHelper::parse(strtoupper("1/32 Kilarney Heights"));
-        echo $this->parseDateForSql('1/1/13');
-        //echo $result;
+        $rows =new CSVFileHelper("/Users/geoffstewart/Downloads/VIC Register-Deidentified.csv");
+        while($rows->hasMore()){
+            $row = $rows->nextRow();
+            $result = AddressHelper::parse($row['Residential Address']);
+            echo "\r\n".json_encode($result);
+        }
     }
 
-    public function actionImport()
+    public function actionMigrate()
     {
         // load the file
-        //$rows = CSVHelper::ImportCsvFromFile("/Users/gistewart/Downloads/201505 Qantas VIC MAY 2015.csv");
-        $rows = CSVHelper::ImportCsvFromFile("/Users/geoffstewart/Downloads/PAPL VIC.csv");
+        $fileName = "/Users/geoffstewart/Downloads/VIC Register-Deidentified.csv";
+        //$this->open($fileName);
+        //$rows = new FileCsvHelper($fileName);
 
         $vms = new DataHelper(Yii::app()->db);
         $transaction = Yii::app()->db->beginTransaction();
         try {
-
-
 
             $this->vms = $vms;
             $this->ibcode = 'PER';
@@ -50,13 +70,16 @@ class PAPLMigration extends CConsoleCommand
             $this->tenant = $vms->getFirstRow("select * from company where code = '" . $this->ibcode . "' and is_deleted = 0 and company_type=1");
             if ($this->tenant == null) throw new CException("Tenant for " . $this->ibcode . " not found");
 
+            // ensure the visitor type
             $this->ensureVisitorType();
+
+            // ensure visit reason
             $this->ensureVisitReason();
 
+            $row=null;
+            //while ($this->hasMore()) {
 
-            foreach ($rows as $row) {
-
-                $tenantAgent = $this->vms->getFirstRow('select * from company where company_type = 2 and is_deleted=0 and tenant = '.$this->tenant['id']);
+            //    $row = $this->nextRow();
 
                 // add rows
                 $company = $this->ensureCompanyFromData($row);
@@ -64,12 +87,14 @@ class PAPLMigration extends CConsoleCommand
                 $visitor = $this->ensureVisitorFromData($row, $company);
                 $cardGenerated = $this->ensureCardGeneratedFromData($row);
                 $visit = $this->ensureVisitFromData($row,$cardGenerated,$visitor,$sponsor);
-            }
+            //}
             $transaction->commit();
         } catch (CException $e){
 
             echo "\r\n".$e->getMessage();
             $transaction->rollback();
+        } finally{
+            $this->close();
         }
 
     }
@@ -90,16 +115,34 @@ class PAPLMigration extends CConsoleCommand
     }
 
 
-    function ensureTenantAgent(){
+    function getTenantAgent($row){
 
-        $tenantAgentName = 'Qantas';
-        $this->tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name like '%$tenantAgentName%' and is_deleted = 0");
+        $tenantAgentName = $this->tenantAgentNameMappings[$row['Issuing Agent']];
+
+        $this->tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name = '$tenantAgentName' and is_deleted = 0");
         if($this->tenantAgent==null){
-            $this->createTenantAgent();
+            throw new CException("Tenant agent $tenantAgentName not found.");
+        }
+    }
+
+    function getWorkstation($row){
+
+        $tenantAgent = $this->getTenantAgent($row);
+        $sql = "select * from workstation where tenant=".$this->tenant['id'];
+        if($row['LOCATION']>''){$sql+=" and name like '%".$row['LOCATION']."%' ";}
+        if($tenantAgent!=null){$sql+=" and tenant_agent=".$tenantAgent['id'];}
+
+
+
+
+        $workstation = $this->vms->getFirstRow($sql);
+        if($workstation==null){
+            throw new CException("Workstation ".$row['LOCATION']."not found.");
         }
     }
 
     function ensureVisitorType(){
+
         $visitorTypeName = 'Other: Data Import';
         $sql = "select * from visitor_type where name='$visitorTypeName' and tenant = ".$this->tenant['id'];
         $this->visitorType = $this->vms->getFirstRow($sql);
@@ -109,8 +152,7 @@ class PAPLMigration extends CConsoleCommand
                 'name'=>$visitorTypeName,
                 'created_by'=>$this->createdBy,
                 'tenant'=>$this->tenant['id'],
-                'tenant_agent'=>$this->tenantAgent['id'],
-                'is_deleted'=>0,
+                'is_deleted'=>'0',
                 'module'=>'AVMS'
             ];
             $this->visitorType = $this->vms->insertRow('visitor_type',$newRow,true);
@@ -125,7 +167,6 @@ class PAPLMigration extends CConsoleCommand
                 'reason'=>$reason,
                 'created_by'=>$this->createdBy,
                 'tenant'=>$this->tenant['id'],
-                'tenant_agent'=>$this->tenantAgent['id'],
                 'is_deleted'=>'0',
                 'module'=>'AVMS'
             ];
@@ -133,36 +174,48 @@ class PAPLMigration extends CConsoleCommand
         }
     }
 
+    function isAgent($row){
+        return $row['Issuing Agent']!='Perth Airport';
+    }
 
     function ensureCompanyFromData($row){
 
-        if($this->company==null){
-            $companyName = 'Qantas: Data Import';
-            $company =  $this->vms->getFirstRow("
-                                      select *
-                                      from company
-                                      where name = '$companyName'
-                                      and tenant=".$this->tenant['id']."
-                                      and tenant_agent =".$this->tenantAgent['id']."
-                                      and company_type=2");
-            if($company==null){
-                $newRow  = [
-                    'name'=>$companyName,
-                    'trading_name'=>$companyName,
-                    'contact'=>'Unknown Contact',
-                    'created_by_user'=>$this->createdBy,
-                    'tenant'=>$this->tenant['id'],
-                    'tenant_agent'=>$this->tenantAgent['id']
-                ];
-                $this->company = $this->vms->insertRow('company',$newRow ,true);
-            } else {
-                $this->company = $company;
+        $tenantAgent = $this->isTenantAgent($row)?$this->getTenantAgent($row):null;
+
+        $companyName = $row['Issuing Agent'].': Data Import';
+        $company =  $this->vms->getFirstRow("
+                                  select *
+                                  from company
+                                  where name = '$companyName'
+                                  and tenant=".$this->tenant['id']." "
+                                  .( $tenantAgent!=null ? "and tenant_agent =".$tenantAgent['id']:"")
+                                  ." and company_type=2");
+
+        if($company==null){
+
+            $newRow  = [
+                'name'=>$companyName,
+                'trading_name'=>$companyName,
+                'contact'=>'Unknown Contact',
+                'created_by_user'=>$this->createdBy,
+                'tenant'=>$this->tenant['id'],
+                'is_deleted'=>'0'
+            ];
+            if($tenantAgent!=null){
+                $newRow['tenant_agent']=$tenantAgent['id'];
             }
+            $this->company = $this->vms->insertRow('company',$newRow ,true);
+        } else {
+            $this->company = $company;
         }
         return $this->company;
     }
 
     function ensureSponsorFromData($row,$company){
+
+        $tenantAgent = $this->isTenantAgent($row)?$this->getTenantAgent($row):null;
+
+
         $nameParts = explode(' ',$row['ASIC Sponsor Name']);
         $firstName = $nameParts[0];
         $middleName = null;
@@ -185,8 +238,9 @@ class PAPLMigration extends CConsoleCommand
                                   where first_name = $qFirstName
                                   and last_name = $qLastName
                                   and asic_no = '".$row['ASIC SponsorNumber']."'
-                                  and tenant=".$this->tenant['id']."
-                                  and tenant_agent =".$this->tenantAgent['id']);
+                                  and tenant=".$this->tenant['id'].""
+                                  .( $tenantAgent!=null ? " and tenant_agent =".$tenantAgent['id']:"")
+                                  );
 
         if($sponsor==null){
             $newRow = [
@@ -198,9 +252,14 @@ class PAPLMigration extends CConsoleCommand
                 'company'=>$company['id'],
                 'role'=>10,
                 'visitor_type'=>$this->visitorType['id'],
-                'visitor_workstation'=>$this->workstation['id'],
-                'profile_type'=>'ASIC'
+                'visitor_workstation'=>$this->getWorkstation($row)['id'],
+                'profile_type'=>'ASIC',
+                'tenant'=>$this->tenant['id'],
+                'is_deleted'=>'0'
             ];
+            if($tenantAgent!=null){
+                $newRow['tenant_agent']=$tenantAgent['id'];
+            }
             return $this->vms->insertRow('visitor',$newRow,true);
         }
 
@@ -209,6 +268,7 @@ class PAPLMigration extends CConsoleCommand
     }
 
     function protectFileImport($fileName,$rows){
+
         $crc = crc32(implode("\r\n",$rows));
         $existing = $this->vms->getFirstRow("Select * from imported_file where crc='$crc'");
         if($existing!=null){
@@ -224,42 +284,10 @@ class PAPLMigration extends CConsoleCommand
         return true;
     }
 
-    function createTenantAgent(){
-
-        $row = [
-            'name'=>'Qantas',
-            'trading_name'=>'Qantas',
-            'contact'=>'Unknown Contact',
-            'created_by_user'=>$this->createdBy,
-            'tenant'=>$this->tenant['id']
-        ];
-        $this->tenantAgent = $this->vms->insertRow('company', $row, true );
-
-        $newRow = [
-            'id'=>$this->tenantAgent['id'],
-            'tenant_id'=>$this->tenant['id'],
-            'for_module'=>'AVMS',
-            'is_deleted'=>0,
-            'created_by'=>$this->createdBy,
-            'date_created'=>date('Y-m-d H:i:s')
-        ];
-        $this->vms->insertRow('tenant_agent',$newRow,false);
-
-        $newRow =  [
-            'name'=>'Quantas',
-            'contact_name'=>'Unknown Contact',
-            'contact_number'=>'000000000',
-            'contact_email_address'=>'import@quantas.com',
-            'tenant'=>$this->tenant['id'],
-            'tenant_agent'=>$this->tenantAgent['id'],
-            'is_deleted'=>0,
-            'timezone_id'=>128
-        ];
-        $this->workstation = $this->vms->insertRow('workstation',$newRow,true);
-
-    }
 
     function ensureVisitorFromData($row,$company){
+
+        $tenantAgent = $this->isTenantAgent($row)?$this->getTenantAgent($row):null;
 
         $addressParts = AddressHelper::parse($row['Address1']);
 
@@ -268,9 +296,9 @@ class PAPLMigration extends CConsoleCommand
                                   where first_name = ".$this->vms->db->quoteValue($row['VFirstName'])."
                                   and last_name = ".$this->vms->db->quoteValue($row['VLastName'])."
                                   and date_of_birth = '".$this->parseDateForSql($row['DOB'])."'
-                                  and tenant=".$this->tenant['id']."
-                                  and tenant_agent =".$this->tenantAgent['id']
-        );
+                                  and tenant=".$this->tenant['id'].""
+                                  .( $tenantAgent!=null ? " and tenant_agent =".$tenantAgent['id']:"")
+                                  );
 
         if($visitor==null){
 
@@ -286,7 +314,7 @@ class PAPLMigration extends CConsoleCommand
                 'company'                       =>$company['id'],
                 'role'                          =>'10',
                 'visitor_type'                  =>$this->visitorType['id'],
-                'visitor_workstation'           =>$this->workstation['id'],
+                'visitor_workstation'           =>$this->getWorkstation($row)['id'],
                 'profile_type'                  =>$row['ASIC Applicant']=='NO'?'VIC':'ASIC',
                 'identification_type'           =>$identificationType,
                 'identification_country_issued' =>'13',
@@ -302,9 +330,11 @@ class PAPLMigration extends CConsoleCommand
                 'asic_no'                       =>null,
                 'asic_expiry'                   =>null,
                 'date_created'                  =>date('Y-m-d'),
-                'tenant'=>$this->tenant['id'],
-                'tenant_agent'=>$this->tenantAgent['id']
+                'tenant'=>$this->tenant['id']
             ];
+            if($tenantAgent!=null){
+                $newRow['tenant_agent']=$tenantAgent['id'];
+            }
             return $this->vms->insertRow('visitor',$newRow,true);
         }
         return $visitor;
@@ -328,6 +358,9 @@ class PAPLMigration extends CConsoleCommand
 
     public function ensureVisitFromData($row,$cardGenerated,$visitor,$sponsor)
     {
+        $tenantAgent = $this->isTenantAgent($row)?$this->getTenantAgent($row):null;
+
+
         $newRow = [
             'visitor'           => $visitor['id'],
             'card_type'         =>3,
@@ -345,16 +378,21 @@ class PAPLMigration extends CConsoleCommand
             'time_check_in'     =>'00:00:00',
             'time_check_out'    =>'23:59:59',
             'visit_status'      =>3,
-            'workstation'       =>$this->workstation['id'],
-            'tenant'            =>$this->tenant['id'],
-            'tenant_agent'      =>$this->tenantAgent['id'],
+            'workstation'       =>$this->getWorkstation($row)['id'],
             'is_deleted'        =>0,
             'finish_date'       =>$this->parseDateForSql($row['Date of Expiry']),
             'finish_time'       =>'23:59:59',
             'card_returned_date'=>$this->parseDateForSql($row['Date of Expiry']),
             'company'           =>$this->company['id'],
-            'visit_reason'      =>$row['Reasonfor VIC Issue']
+            'visit_reason'      =>$row['Reasonfor VIC Issue'],
+            'tenant'=>$this->tenant['id']
+
         ];
+
+        if($tenantAgent!=null){
+            $newRow['tenant_agent']=$tenantAgent['id'];
+        }
+
         return $this->vms->insertRow('visit',$newRow,true);
     }
 
@@ -368,6 +406,57 @@ class PAPLMigration extends CConsoleCommand
         }
         return $val;
     }
+
+
+//    public $fileName = null;
+//    private $handle = null;
+//    private $header = [];
+//    private $row = null;
+//
+//    public function load($fileName){
+//        $this->fileName = $fileName;
+//        $this->handle = fopen($fileName, "r");
+//        $this->row =  $this->nextRow();
+//    }
+//
+//    public function close()
+//    {
+//        fclose($this->handle);
+//    }
+//
+//    public function hasMore()
+//    {
+//        return $this->row!=null;
+//    }
+//
+//    public function nextRow()
+//    {
+//        try{
+//            return $this->row;
+//        } finally {
+//            $this->row = $this->readLine();
+//        }
+//    }
+//
+//    private function readLine(){
+//
+//        while(($line = fgets($this->handle)) !== false)
+//        {
+//            $vals = str_getcsv($line,',','"',"\\");
+//            if(sizeof($vals)==0){
+//                continue;
+//            }
+//
+//            if(sizeof($this->header)<sizeof($vals) && $this->row == null){
+//                $this->header = $vals;
+//                continue;
+//            }
+//
+//            return CSVHelper::combine($this->header,$vals);
+//
+//        }
+//        return null;
+//    }
 
 
 }

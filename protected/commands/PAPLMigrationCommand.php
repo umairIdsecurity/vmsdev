@@ -43,15 +43,34 @@ class PAPLMigrationCommand extends CConsoleCommand
 
     public function actionTest()
     {
-        $fileName = "/Users/geoffstewart/Downloads/VIC Register-Deidentified.csv";
+        $fileName = "/Users/gistewart/Downloads/VIC Register-Deidentified.csv";
         $rows = new CsvFileHelper();
+        $skipped = 0;
         $rows->open($fileName);
-
+        $i = 0;
+        echo "\r\n".date('Y-m-d H:i:s');
         while($rows->hasMore()){
+
+
             $row = $rows->nextRow();
-            $result = AddressHelper::parse($row['Residential Address']);
-            echo "\r\n".json_encode($result);
+
+            if(isset($row['Residential Address']) && $row['Residential Address']>'') {
+                $result = AddressHelper::parse($row['Residential Address']);
+                //$result = AddressHelper::parseFromGoogleSpaces($row['Residential Address']);
+
+
+                if(!isset($result['PostCode']) || $result['PostCode']=='0000'){
+                    $skipped++;
+                }
+                echo "\r\n" . json_encode($result);
+            }
+            $i++;
+            if ($i > 1000) {
+                echo "\r\n" . date('Y-m-d H:i:s').", Skipped $skipped";
+                return;
+            }
         }
+
     }
 
     public function actionMigrate()

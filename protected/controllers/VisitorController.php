@@ -280,7 +280,7 @@ class VisitorController extends Controller {
     public function audit_logging_visit_statuses($action,$visitor)
     {
         $log = new AuditLog();
-        $log->action_datetime = date('Y-m-d H:i:s');
+        $log->action_datetime_new = date('Y-m-d H:i:s');
         $log->action = $action;
         $log->detail = 'Logged user ID: ' . Yii::app()->user->id." ASIC Sponsor ID: ".$visitor->id;
         $log->user_email_address = Yii::app()->user->email;

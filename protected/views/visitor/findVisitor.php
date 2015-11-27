@@ -21,7 +21,8 @@ if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
 else {
     //$tenant_agent = "(tenant_agent IS NULL or tenant_agent =0 or tenant_agent='') and";
     $tenant_agent = "";
-}
+} 
+$tenant_agent = "";
 $model = new Visitor;
 $criteria = new CDbCriteria;
 $tenant = '';

@@ -222,13 +222,13 @@ class VisitorType extends CActiveRecord {
             $criteria->addCondition("t.module='CVMS'");
         }
         
-        if(isset($session['tenant_agent']))
-            $criteria->addCondition("t.tenant_agent=".$session['tenant_agent']);
-
-         $criteria->addCondition("visitor_type_card_type.is_deleted=0 AND visitor_type_card_type.card_type='".$card_type."'");
-
-        $criteria->join = 'JOIN visitor_type_card_type'
-                                        .' ON visitor_type_card_type.visitor_type = t.id';
+//        if(isset($session['tenant_agent']))
+//            $criteria->addCondition("t.tenant_agent=".$session['tenant_agent']);
+//
+//         $criteria->addCondition("visitor_type_card_type.is_deleted=0 AND visitor_type_card_type.card_type='".$card_type."'");
+//
+//        $criteria->join = 'JOIN visitor_type_card_type'
+//                                        .' ON visitor_type_card_type.visitor_type = t.id';
         
          
 

@@ -296,7 +296,7 @@ class Workstation extends CActiveRecord {
     public function getEnableDisabledWorkstations ($workstation_id, $check_module = 3 ) {
         
         $module = CHelper::get_module_authorization_by_workstation( $workstation_id );
-        if( $module == $check_module || $module == "3") // IF CVMS or Both
+        if( $module == $check_module || $module == "3" || Roles::ROLE_SUPERADMIN == Yii::app()->user->role) // IF CVMS or Both
           return false;
         else
           return true;

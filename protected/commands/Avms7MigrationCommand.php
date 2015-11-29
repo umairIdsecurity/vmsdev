@@ -771,6 +771,10 @@ class Avms7MigrationCommand extends CConsoleCommand
                     v.State as contact_state,
                     v.PostCode as contact_postcode,
                     v.Country as contact_country,
+                    case
+                      when NULLIF(ad.asic_number,'') IS NOT NULL  then 'ASIC'
+                      else 'VIC'
+                    end as profile_type,
                     ad.asic_number as asic_no,
                     ad.asic_expiry as asic_expiry,
                     idA.DocumentType as identification_type,

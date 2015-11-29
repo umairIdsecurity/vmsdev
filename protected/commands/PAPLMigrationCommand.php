@@ -97,7 +97,7 @@ class PAPLMigrationCommand extends CConsoleCommand
 
             // ensure visit reason
             $this->ensureVisitReason();
-
+            $count = 0;
             while ($rows->hasMore()) {
 
                 // get next row
@@ -109,13 +109,16 @@ class PAPLMigrationCommand extends CConsoleCommand
                 $visitor = $this->ensureVisitorFromData($row, $company);
                 $cardGenerated = $this->ensureCardGeneratedFromData($row);
                 $visit = $this->ensureVisitFromData($row,$cardGenerated,$visitor,$sponsor);
+                $count++;
             }
+
+            echo "\r\n imported $count records";
 
             $transaction->commit();
 
         } catch (CException $e){
 
-            echo "\r\n".$e->getMessage();
+            echo "\r\n".$e->getMessage()."\r\n".$e->getTraceAsString();
             $transaction->rollback();
         }
 
@@ -124,23 +127,24 @@ class PAPLMigrationCommand extends CConsoleCommand
 
     function getTenantAgent($row){
 
+        if(!$this->isTenantAgent($row))
+            return null;
+
         $tenantAgentName = $this->tenantAgentNameMappings[$row['Issuing Agent']];
 
-        $this->tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name = '$tenantAgentName' and is_deleted = 0");
-        if($this->tenantAgent==null){
+        $tenantAgent = $this->vms->getFirstRow("select * from company where tenant = ".$this->tenant['id']." and company_type=2 and name = '$tenantAgentName' and is_deleted = 0");
+        if($tenantAgent==null){
             throw new CException("Tenant agent $tenantAgentName not found.");
         }
+        return $tenantAgent;
     }
 
     function getWorkstation($row){
 
         $tenantAgent = $this->getTenantAgent($row);
         $sql = "select * from workstation where tenant=".$this->tenant['id'];
-        if($row['LOCATION']>''){$sql+=" and name like '%".$row['LOCATION']."%' ";}
-        if($tenantAgent!=null){$sql+=" and tenant_agent=".$tenantAgent['id'];}
-
-
-
+        if($row['LOCATION']>''){$sql=$sql." and name like '%".$row['LOCATION']."%' ";}
+        if($tenantAgent!=null){$sql=$sql." and tenant_agent=".$tenantAgent['id'];}
 
         $workstation = $this->vms->getFirstRow($sql);
         if($workstation==null){
@@ -223,7 +227,7 @@ class PAPLMigrationCommand extends CConsoleCommand
         $tenantAgent = $this->isTenantAgent($row)?$this->getTenantAgent($row):null;
 
 
-        $nameParts = explode(' ',$row['ASIC Holder Name']);
+        $nameParts = explode(' ',str_replace("  "," ",trim($row['ASIC Holder Name'])));
         $firstName = $nameParts[0];
         $middleName = null;
         if(sizeof($nameParts)==3){
@@ -303,7 +307,7 @@ class PAPLMigrationCommand extends CConsoleCommand
         $visitor =  $this->vms->getFirstRow("select *
                                   from visitor
                                   where first_name = ".$this->vms->db->quoteValue($row['Given Names'])."
-                                  and last_name = ".$this->vms->db->quoteValue($row['VLastName'])."
+                                  and last_name = ".$this->vms->db->quoteValue($row['Surname'])."
                                   and date_of_birth = '".$this->parseDateForSql($row['DOB'])."'
                                   and tenant=".$this->tenant['id'].""
                                   .( $tenantAgent!=null ? " and tenant_agent =".$tenantAgent['id']:"")
@@ -311,10 +315,11 @@ class PAPLMigrationCommand extends CConsoleCommand
 
         if($visitor==null){
 
-            $identificationType= $row["Document Type"]=='Driving Licence'?'DRIVERS_LICENSE':
-                ($row["Document Type"]=="Passport"?'PASSPORT':null);
+            $identificationType= $row["ID Type"]=='Drivers License'?'DRIVERS_LICENSE':
+                ($row["ID Type"]=="Passport"?'PASSPORT':null);
+
             $newRow = [
-                'email'                         =>$nameParts['first_name'].".".$row['last_name']."@unknowncompany",
+                'email'                         =>$nameParts['first_name'].".".$nameParts['last_name']."@unknowncompany",
                 'contact_number'                =>$this->valueIfEmpty($this->valueIfEmpty($row['Visitor Contact Mobile'],$row['Visitor Contact Phone']),'0000000000'),
                 'date_of_birth'                 =>$this->parseDateForSql($row['DOB']),
                 'company'                       =>$company['id'],
@@ -324,15 +329,15 @@ class PAPLMigrationCommand extends CConsoleCommand
                 'profile_type'                  =>$row['ASIC Submitted']=='FALSE'?'VIC':'ASIC',
                 'identification_type'           =>$identificationType,
                 'identification_country_issued' =>'13',
-                'identification_document_no'    =>$row['Document ID'],
+                'identification_document_no'    =>$row['ID Number'],
                 'contact_unit'                  =>$addressParts['Unit'],
                 'contact_street_no'             =>$addressParts['StreetNumber'],
                 'contact_street_name'           =>$addressParts['StreetName'],
                 'contact_street_type'           =>$addressParts['StreetType'],
-                'contact_suburb'                =>$row['Address2'],
-                'contact_state'                 =>$row['State'],
-                'contact_country'               =>$this->vms->getFirstRow("select * from country where name = '".$row['Country']."'")['id'],
-                'contact_postcode'              =>$row['Post Code'],
+                'contact_suburb'                =>$addressParts['Suburb'],
+                'contact_state'                 =>$addressParts['State'],
+                'contact_country'               =>$this->vms->getFirstRow("select * from country where code = 'AU'")['id'],
+                'contact_postcode'              =>$addressParts['PostCode'],
                 'asic_no'                       =>null,
                 'asic_expiry'                   =>null,
                 'date_created'                  =>date('Y-m-d'),
@@ -351,14 +356,15 @@ class PAPLMigrationCommand extends CConsoleCommand
 
         $id = $this->vms->getFirstRow('select max(id)+1 as id from card_generated')['id'].'';
         $num = $this->ibcode.substr('0000000'.$id,-6);
-        $startDate =$this->parseDateForSql($row['Date of Issue']);
-        $endDate = $this->parseDateForSql($row['Date of Expiry']);
+        $startDate =$this->parseDateForSql($row['VIC Issue Date']);
+        $endDate = $this->parseDateForSql($row['VIC Expiry Date']);
+        $returnedDate = $this->parseDateForSql($row['VIC Return Date']);
         $newRow = [
             'card_number'=> $num,
             'date_printed'=>$startDate,
             'date_expiration'=>$endDate,
             'date_cancelled'=>null,
-            'date_returned'=>$endDate
+            'date_returned'=>$returnedDate
         ];
         return $this->vms->insertRow('card_generated',$newRow,true);
     }
@@ -376,22 +382,22 @@ class PAPLMigrationCommand extends CConsoleCommand
             'visitor_status'    =>1,
             'host'              =>$sponsor['id'],
             'created_by'        =>$this->createdBy,
-            'date_in'           =>$this->parseDateForSql($row['Date of Issue']),
-            'date_out'          =>$this->parseDateForSql($row['Date of Expiry']),
+            'date_in'           =>$this->parseDateForSql($row['VIC Issue Date']),
+            'date_out'          =>$this->parseDateForSql($row['VIC Expiry Date']),
             'time_in'           =>'00:00:00',
             'time_out'          =>'23:59:59',
-            'date_check_in'     =>$this->parseDateForSql($row['Date of Issue']),
-            'date_check_out'    =>$this->parseDateForSql($row['Date of Expiry']),
+            'date_check_in'     =>$this->parseDateForSql($row['VIC Issue Date']),
+            'date_check_out'    =>$this->parseDateForSql($row['VIC Expiry Date']),
             'time_check_in'     =>'00:00:00',
             'time_check_out'    =>'23:59:59',
             'visit_status'      =>3,
             'workstation'       =>$this->getWorkstation($row)['id'],
             'is_deleted'        =>0,
-            'finish_date'       =>$this->parseDateForSql($row['Date of Expiry']),
+            'finish_date'       =>$this->parseDateForSql($row['VIC Expiry Date']),
             'finish_time'       =>'23:59:59',
-            'card_returned_date'=>$this->parseDateForSql($row['Date of Expiry']),
+            'card_returned_date'=>$this->parseDateForSql($row['VIC Expiry Date']),
             'company'           =>$this->company['id'],
-            'visit_reason'      =>$row['Reasonfor VIC Issue'],
+            'visit_reason'      =>$row['Reason for Issue'],
             'tenant'=>$this->tenant['id']
 
         ];
@@ -404,6 +410,9 @@ class PAPLMigrationCommand extends CConsoleCommand
     }
 
     public function parseDateForSql($strDate){
+        if($strDate==null || trim($strDate) == ''){
+            return null;
+        }
         return DateTime::createFromFormat('d/m/Y',$strDate)->format('Y-m-d');
     }
 

@@ -24,7 +24,9 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         ['table_name'=>'visit'  , 'column_name'=>'workstation'  ,'referenced_table_name'=>'workstation'     ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'card'         ,'referenced_table_name'=>'card_generated'  ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'host'         ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'created_by'   ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'closed_by'    ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'visitor'      ,'referenced_table_name'=>'visitor'         ,'referenced_column_name'=>'id'],
 
 
@@ -175,7 +177,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                echo "\r\nWARNING: Skipped row $tableName :".implode(",",$row);
             }
         }
-        echo "<br><br>";
+        echo "\r\n\r\n";
     }
 
 
@@ -189,6 +191,8 @@ class Avms7MigrationCommand extends CConsoleCommand
             } else {
                 $row['workstation']=$row['tenant'];
             }
+
+
         } else if($tableName=='visitor'){
             if(!isset($row['contact_number']) || $row['contact_number']==''){
                 $row['contact_number'] = '0000000000';
@@ -220,7 +224,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         $sql=[];
         foreach($sql as $statement){
-            echo "\r\n".$statement."<br>";
+            echo "\r\n".$statement."\r\n";
             Yii::app()->db->createCommand($statement)->execute();
         }
 
@@ -292,7 +296,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
                         // set the reference value on the row
                         $row[$columnName] = $idMappings[$ref['referenced_table_name']][$value];
-                        echo $tableName.".".$columnName." ".$value."=".$row[$columnName]."<br>";
+                        echo $tableName.".".$columnName." ".$value."=".$row[$columnName]."\r\n";
 
                     } else {
 
@@ -408,9 +412,10 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         foreach(['visit','card_generated','user','company'] as $tableName) {
          for ($i = 0; $i < sizeof($data[$tableName]); $i++) {
-                $operatorId = $data[$tableName][$i]['operator'];
-                if($operatorId == null || $operatorId=='' || !isset($refernceData['operator_owners'][$operatorId])){
-                    //echo "\r\n cant find operator ".$operatorId;
+             $operatorId = $data[$tableName][$i]['operator'];
+             if($operatorId!=null &&  $operatorId > '')
+                if(!isset($refernceData['operator_owners'][$operatorId])){
+                    echo "\r\n cant find operator ".$operatorId;
                 } else {
                     if ($refernceData['operator_owners'][$operatorId]['agentLevel'] == 6) {
                         $data[$tableName][$i]['tenant_agent'] = $refernceData['operator_owners'][$operatorId]['agentId'];
@@ -426,23 +431,62 @@ class Avms7MigrationCommand extends CConsoleCommand
     public function filterUserRecords(&$data,&$idMappings,$vms,$tenant){
 
         $toKeep = [];
-        foreach($data['user'] as $user){
+        for($i=0;$i<sizeof($data['user']);$i++){
+            $user = &$data['user'][$i];
+
+        //foreach($data['user'] as $user){
+
+
+            // get local tenant agent
+            $localTenantAgent = null;
+            if(isset($user['tenant_agent']) && $user['tenant_agent']>'' && isset($idMappings['company'][$user['tenant_agent']])){
+                $localTenantAgent = $idMappings['company'][$user['tenant_agent']];
+            }
+
 
             // match the agent
             $vmsUser = $vms->getFirstRow("SELECT * FROM ".Yii::app()->db->quoteTableName('user')."
                                             where tenant = ".$tenant['id']."
                                             and is_deleted=0
-                                            and (email='".$user['email']."'
+                                            and (email like '".str_replace(".au","%",$user['email'])."'
                                                 or (first_name='".$user['first_name']."' and last_name='".$user['last_name']."'))".
-                                            (isset($user['tenant_agent']) && $user['tenant_agent']>''?'and tenant_agent='.$user['tenant_agent']:'')
+                                            ($localTenantAgent!=null?' and tenant_agent='.$localTenantAgent:'')
                                             );
+
+            // if we don't have a first name or last name
+            if($vmsUser == null && !($user['first_name']> ''  && $user['last_name']>'')) {
+
+                // if we don't get a match then used someone at the company
+                if ($user['company'] > '') {
+                    $vmsUser = $vms->getFirstRow("SELECT u.* FROM " . Yii::app()->db->quoteTableName('user') . " u join company c on u.company = c.id
+                                            where u.tenant = " . $tenant['id'] . "
+                                            and u.is_deleted=0
+                                            and c.name = '" . $user['company'] . "' " .
+                                            ($localTenantAgent!=null?'and u.tenant_agent='.$localTenantAgent:'')
+                    );
+                }
+
+                // if we don't get a match then use someone at the same domain
+                if ($vmsUser == null) {
+                    $vmsUser = $vms->getFirstRow("SELECT * FROM " . Yii::app()->db->quoteTableName('user') . "
+                                            where tenant = " . $tenant['id'] . "
+                                            and is_deleted=0
+                                            and email like '%" . str_replace(".au","%",substr($user['email'], strpos($user['email'], '@'))) . "' " .
+                                            ($localTenantAgent!=null?'and tenant_agent='.$localTenantAgent:'')
+                    );
+                }
+            }
+
             if($vmsUser==null){
+                if(!($user['first_name']>'')){$user['first_name'] = 'Unknown';}
+                if(!($user['last_name']>'')){$user['last_name'] = 'Unknown';}
+
                 $toKeep[] = $user;
             } else {
                 $idMappings['user'][$user['id']] = $vmsUser['id'];
             }
         }
-        $data['user']==$toKeep;
+        $data['user']=$toKeep;
     }
 
     public function mapExistingData($tenant,$data,&$idMappings,$vms,$refernceData)
@@ -667,7 +711,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                       when level in (3,6,2,8) then null
                       else u.ID
                     end as operator,
-                    u.photo as photo,
+                    null as photo,
                     null as timezone_id,
                     1 as allowed_module,
                     a.asic_number as asic_no,
@@ -676,7 +720,6 @@ class Avms7MigrationCommand extends CConsoleCommand
                   left join asic_data a on u.ID = a.UserId
                 where u.ibcode = '$airportCode'
                 and u.level not in (1,4,5,10)
-                and (1>1)
             ",
             'visitor' =>"
                 select distinct v.ID as id,
@@ -688,7 +731,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                     v.DateOfBirth as date_of_birth,
                     v.Company as company,
                     v.Password as password,
-                    v.photo as photo,
+                    null as photo,
                     v.Unit as contact_unit,
                     v.StreetNo as contact_street_no,
                     v.Street as contact_street_name,
@@ -785,8 +828,8 @@ class Avms7MigrationCommand extends CConsoleCommand
                        t.visitor_type as visitor_type,
                        l.ReasonNo as reason,
                        1 as visitor_status,
-                       c.UserID as host,
-                       1 as created_by,
+                       c.UserId as host,
+                       l.UserID as created_by,
                        l.Date as date_in,
                        l.Time as time_in,
                        c.Date as date_out,
@@ -891,10 +934,10 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         $quotedTableName = Yii::app()->db->quoteTableName($tableName);
 
-        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
+        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ")\r\n VALUES (" . implode(', ', $vals) . ")";
 
         //RUN SQL
-        echo "\r\n" . $sql;
+        echo "\r\n" . $sql."\r\n";
         Yii::app()->db->createCommand($sql)->execute();
 
         if ($isAutoIncrement) {

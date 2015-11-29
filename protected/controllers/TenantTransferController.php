@@ -52,6 +52,40 @@ class TenantTransferController extends Controller
         ['table_name'=>'workstation','column_name'=>'tenant_agent','referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'visitor_type','column_name'=>'tenant','referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'visitor_type','column_name'=>'tenant_agent','referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'company', 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'company', 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+
+        ['table_name'=>'user'   , 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'user'   , 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+
+        ['table_name'=>'visitor', 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'visitor_type'         ,'referenced_table_name'=>'visitor_type'    ,'referenced_column_name'=>'id'],
+
+        ['table_name'=>'visit'  , 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+
+        ['table_name'=>'visit'  , 'column_name'=>'workstation'          ,'referenced_table_name'=>'workstation'     ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'card'                 ,'referenced_table_name'=>'card_generated'  ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'host'                 ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'created_by'           ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'closed_by'            ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'visitor'              ,'referenced_table_name'=>'visitor'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'visitor_type'         ,'referenced_table_name'=>'visitor_type'    ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'reason'               ,'referenced_table_name'=>'visit_reason'    ,'referenced_column_name'=>'id'],
+
+
+
+        ['table_name'=>'card_generated' , 'column_name'=>'visitor_id'   ,'referenced_table_name'=>'visitor','referenced_column_name'=>'id'],
+        ['table_name'=>'card_generated' , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'card_generated' , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+
+        ['table_name'=>'visitor_type'   , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visitor_type'   , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+
+        ['table_name'=>'visit_reason'  , 'column_name'=>'tenant'        ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visit_reason'  , 'column_name'=>'tenant_agent'  ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        
 
 
     ];

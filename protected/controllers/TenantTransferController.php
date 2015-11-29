@@ -126,7 +126,7 @@ class TenantTransferController extends Controller
 
                 if($driverName=='mssql' || $driverName=='sqlsrv'){
                     $preStatement = "ALTER TABLE $tableName NOCHECK CONSTRAINT all;\r\n";
-                    $postStatement = "ALTER TABLE $tableName WITH CHECK CHECK CONSTRAINT all;r\n";
+                    $postStatement = "ALTER TABLE $tableName WITH CHECK CHECK CONSTRAINT all;\r\n";
                 } else {
                     $preStatement = "SET foreign_key_checks = 0;\r\n";
                     $postStatement = "SET foreign_key_checks = 1;\r\n";

@@ -25,6 +25,11 @@ class ResetDatabaseCommand extends CConsoleCommand
 
     }
 
+    public function deleteTenant()
+    {
+
+    }
+
     private function runQueries($queries){
 
         foreach($queries as $query){

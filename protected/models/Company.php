@@ -65,16 +65,17 @@ class Company extends CActiveRecord {
         // will receive user inputs.
 		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1){
 		return array(
-	            array('name', 'required','message'=>'Please complete {attribute}'),
-
+	         array('name', 'required','message'=>'Please complete {attribute}'),
+                 array("name", "check_unique_name", 'company_name'=>$this->name, 'except'=>array("company_contact_update")),
+                 array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact_update','message'=>'Please complete {attribute}'),      
                 //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'preregistration'),
                 array('user_first_name','required','on' => 'preregistration','message'=>'Please complete First Name'),
                 array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
                 array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
                 array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
-
-
-	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
+                 array("email_address", "unique", 'except'=>array("company_contact_update"), 'message'=>"Email already exist."),
+                    
+                array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
                 array('password_requirement,password_option,user_password','safe'),
                 array('user_password,user_repeatpassword',
                     'required',
@@ -88,7 +89,7 @@ class Company extends CActiveRecord {
                     'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
-                array('user_email','email'),
+                    array('user_email','email'),
 	            array('website', 'url'),
 	            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
 	            array('name, trading_name, billing_address', 'length', 'max' => 150),
@@ -109,16 +110,16 @@ class Company extends CActiveRecord {
 		}
 		else{
 			return array(
-
+ 
                             array('name', 'required','message'=>'Please complete {attribute}'),
-                            
-                            //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'preregistration'),
+                            array("name", "check_unique_name", 'company_name'=>$this->name, 'except'=>array('company_contact_update')),
+                            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
+                            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact_update','message'=>'Please complete {attribute}'),    
                             array('user_first_name','required','on' => 'preregistration','message'=>'Please complete First Name'),
                             array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
                             array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
                             array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
-                            array('user_email','email'),
-
+                            array("email_address", "unique", 'except'=>array("company_contact_update")),
                             array('code', 'required', 'except' => 'preregistration', 'message'=>'Please complete {attribute}'),
                             array('email_address , mobile_number', 'required' , 'on' => 'updatetenant', 'message'=>'Please complete {attribute}'),
                             // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
@@ -199,7 +200,13 @@ class Company extends CActiveRecord {
             'company_type' => 'Company Type'
         );
     }
-
+    
+    //** Company name should be unique
+    public function check_unique_name($attribute, $params) {
+      $model = Company::model()->find("name = '".$this->name."' AND tenant = ".Yii::app()->user->tenant);
+      if( $model )
+            $this->addError($attribute, 'Company name '.$this->name.' has already been taken.');
+    }
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *

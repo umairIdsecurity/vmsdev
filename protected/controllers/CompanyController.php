@@ -95,10 +95,12 @@ class CompanyController extends Controller
         //     $this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = new Company;
+        
+        $model->scenario = 'company_contact';
         if (yii::app()->request->isAjaxRequest) {
             $this->performAjaxValidation($model);
         }
-        $model->scenario = 'company_contact';
+        
         if (isset($_POST['is_user_field']) && $_POST['is_user_field'] == 1) {
             $session['is_field'] = 1;
         } else {
@@ -180,12 +182,13 @@ class CompanyController extends Controller
                         $cs = Yii::app()->clientScript;
                         $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
                         $model->unsetAttributes();
-
+                        
                         switch ($isUserViewingFromModal) {
                             case 1:
                                 Yii::app()->user->setFlash('success', 'Company Successfully added!');
                                 break;
                             default:
+                                Yii::app()->user->setFlash('success', 'Company Successfully added!');
                                 if(in_array(Yii::app()->user->role, UserGroup::$USERGROUP_ARRAY_OPERATOR)  )
                                         $this->redirect(array('dashboard/admindashboard'));
                                 else
@@ -232,12 +235,15 @@ class CompanyController extends Controller
         //$this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = $this->loadModel($id);
-
+        
         if (isset($_POST['is_user_field']) && $_POST['is_user_field'] == 1) {
             $session['is_field'] = 1;
-            $model->scenario = 'company_contact';
+            $model->scenario = 'company_contact_update';
         } else {
             unset($_SESSION['is_field']);
+        }
+           if (yii::app()->request->isAjaxRequest) {
+            $this->performAjaxValidation($model);
         }
 
         /*$userModel = User::model()->findByAttributes(

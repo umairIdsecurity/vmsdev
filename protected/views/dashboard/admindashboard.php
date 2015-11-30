@@ -93,6 +93,11 @@ foreach ($workstationList as $workstation) {
 
 ?>
     <div  class="admindashboardDiv">
+    <?php    
+    foreach (Yii::app()->user->getFlashes() as $key => $message) {
+                echo '<div class="flash-' . $key . '">' . $message . "</div><br>";
+            }
+            ?>
         <?php
         $login_url = $this->createUrl('site/login');
         $this->widget('zii.widgets.grid.CGridView', array(

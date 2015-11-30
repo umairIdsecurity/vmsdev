@@ -446,7 +446,11 @@ $(document).ready(function() {
             url:url ,
             data: formInfo,
             success: function(data){
-                window.location = 'index.php?r=company/admin';
+               var curentRole = '<?php echo Yii::app()->user->role?>';
+                if( curentRole == '7' || curentRole == '8' || curentRole == '12' || curentRole == '14')
+                     window.location = 'index.php?r=dashboard';
+                 else
+                    window.location = 'index.php?r=company/admin';
             }
         });
     }

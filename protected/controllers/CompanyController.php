@@ -186,7 +186,10 @@ class CompanyController extends Controller
                                 Yii::app()->user->setFlash('success', 'Company Successfully added!');
                                 break;
                             default:
-                                $this->redirect(array('company/admin'));
+                                if(in_array(Yii::app()->user->role, UserGroup::$USERGROUP_ARRAY_OPERATOR)  )
+                                        $this->redirect(array('dashboard/admindashboard'));
+                                else
+                                    $this->redirect(array('company/admin'));
                         }
                     }
                 }

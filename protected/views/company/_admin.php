@@ -5,7 +5,11 @@
 ?>
 
 <h1>Companies</h1>
-
+<?php    
+foreach (Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div><br>";
+ }
+?>
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'company-grid',

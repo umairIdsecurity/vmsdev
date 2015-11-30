@@ -473,7 +473,7 @@ class VisitorController extends Controller {
             $tenant_agent = "tenant_agent=" . $_GET["tenant_agent"] . " and";
         } else {
             $tenant_agent = "";
-        }
+        } $tenant_agent = ""; // 
 
         $criteria = new CDbCriteria;
 

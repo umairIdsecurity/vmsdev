@@ -172,9 +172,9 @@ $detailForm = $this->beginWidget('CActiveForm', [
         // if ($asic) {
             //$visitor_types = VisitorType::model()->returnVisitorTypes();
            // if(is_array($visitor_types)) {
-               $visitor_types = VisitorType::model()->getFromCardType(-1);
+               $visitor_types = VisitorType::model()->getCardTypeVisitorTypes($model->card_type);
                if($visitor_types) {
-                    echo $detailForm->dropDownList($model, 'visitor_type', $visitor_types);
+                    echo $detailForm->dropDownList($model, 'visitor_type', CHtml::listData($visitor_types, 'id', 'name'), array("empty"=>"Select Visitor Type"));
                     echo "<span class='required'>*</span>";
                }
                 //echo $detailForm->error($model, 'visitor_type');

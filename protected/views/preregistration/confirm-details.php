@@ -123,7 +123,7 @@
 
 
                 <div class="form-group">
-                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->dropDownList($model, 'identification_type', Registration::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'identification_type'); ?>
 
                 </div>

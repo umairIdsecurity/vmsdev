@@ -453,7 +453,7 @@ if ($this->action->id == 'update') {
                         <table style="float:left;width:300px;">
                             <tr>
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type'));
+                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type'));
                                     ?>
                                     <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
                                 </td>

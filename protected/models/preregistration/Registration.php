@@ -102,8 +102,14 @@ class Registration extends CActiveRecord {
 
     public static $IDENTIFICATION_TYPE_LIST = array(
         'PASSPORT'        => 'Passport',
-        'DRIVERS_LICENSE' => 'Drivers License',
+        'DRIVERS_LICENSE' => 'Driver Licence',
         'PROOF_OF_AGE'    => 'Proof of Age Card',
+        'FIRE_ARMS_LICENCE'  => 'Fire Arms Licence',
+        'WORKING_WITH_CHILDREN_CARD' => 'Working with Children Card',
+        'APPROVED_MANAGER' => 'Approved Manager',
+        'IMMICARD' => 'ImmiCard',
+        'HIGH_RISK_WORK_LICENCE' => 'High Risk Work Licence',
+        'SENIORS_CARD' => 'Seniors Card'
     );
 
     public static $STREET_TYPES = array(
@@ -243,7 +249,7 @@ class Registration extends CActiveRecord {
                 ),
 
 			array('profile_type', 'length', 'max'=>9),
-			array('identification_type', 'length', 'max'=>15),
+			array('identification_type', 'length', 'max'=>100),
 			array('contact_street_type', 'length', 'max'=>8),
 			array('contact_state', 'length', 'max'=>50),
 			array('contact_postcode', 'length', 'max'=>10),

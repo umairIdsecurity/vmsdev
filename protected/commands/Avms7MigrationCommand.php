@@ -10,25 +10,40 @@ class Avms7MigrationCommand extends CConsoleCommand
 {
 
     private $unmappedRefs = [
-        ['table_name'=>'company', 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
-        ['table_name'=>'company', 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'company', 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'company', 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'user'   , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
-        ['table_name'=>'user'   , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'user'   , 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'user'   , 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'visitor', 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
-        ['table_name'=>'visitor', 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'visitor_type'         ,'referenced_table_name'=>'visitor_type'    ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'visit'  , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
 
-        ['table_name'=>'visit'  , 'column_name'=>'workstation'  ,'referenced_table_name'=>'workstation'     ,'referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'card'         ,'referenced_table_name'=>'card_generated'  ,'referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'created_by'   ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'visitor'      ,'referenced_table_name'=>'visitor'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'workstation'          ,'referenced_table_name'=>'workstation'     ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'card'                 ,'referenced_table_name'=>'card_generated'  ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'host'                 ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'created_by'           ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'closed_by'            ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'visitor'              ,'referenced_table_name'=>'visitor'         ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'visitor_type'         ,'referenced_table_name'=>'visitor_type'    ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'reason'               ,'referenced_table_name'=>'visit_reason'    ,'referenced_column_name'=>'id'],
+
 
 
         ['table_name'=>'card_generated' , 'column_name'=>'visitor_id'   ,'referenced_table_name'=>'visitor','referenced_column_name'=>'id'],
+        ['table_name'=>'card_generated' , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'card_generated' , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+
+        ['table_name'=>'visitor_type'   , 'column_name'=>'tenant'       ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visitor_type'   , 'column_name'=>'tenant_agent' ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+
+        ['table_name'=>'visit_reason'  , 'column_name'=>'tenant'        ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+        ['table_name'=>'visit_reason'  , 'column_name'=>'tenant_agent'  ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
+
 
     ];
 
@@ -54,10 +69,11 @@ class Avms7MigrationCommand extends CConsoleCommand
             $idMappings = [];
             $idMappings['user'][1] = 1;
 
+
             $this->setTenantAgents($data,$referenceData);
             $this->setVisitorCompanies($data,$referenceData,$avms7);
-            $this->setVisitorTypes($data,$tenant['id']);
-            $this->setVisitReasons($data,$tenant['id']);
+            $this->setVisitorTypes($data,$airportCode,$idMappings);
+            $this->setVisitReasons($data,$airportCode);
             $this->importImages($data);
             $this->mapExistingData($tenant,$data,$idMappings,$vms,$referenceData);
             $this->filterUserRecords($data,$idMappings,$vms,$tenant);
@@ -66,8 +82,10 @@ class Avms7MigrationCommand extends CConsoleCommand
             unset($data['tenant_agent']);
 
             $foreignKeys = $this->getForeignKeys();
-            foreach ($data as $table => $rows) {
-                $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation','card_generated','user'], $idMappings,$vms);
+            $tables = ['company','visitor_type','visit_reason','user', 'visitor','card_generated', 'visit'];
+            foreach ($tables as $table) {
+                $rows = $data[$table];
+                $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation','card_generated','user','visitor_type','visit_reason'], $idMappings,$vms);
             }
 
             $transaction->commit();
@@ -80,19 +98,25 @@ class Avms7MigrationCommand extends CConsoleCommand
 
     }
 
-    function setVisitorTypes(&$data,$tenantId)
+    function setVisitorTypes(&$data,$airportCode,$idMappings)
     {
         $lookup = [];
+        $id = 1;
+        $data['visitor_type']=[];
         for($i=0;$i<sizeof($data['visitor']);$i++){
+
             $visitor = $data['visitor'][$i];
-            $key = $tenantId.".".$visitor['tenant_agent'];
+            $key = $airportCode.".".$visitor['tenant_agent'];
 
             if(!isset($lookup[$key])) {
 
-                $row = ['name' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $tenantId,'tenant_agent'=>$visitor['tenant_agent']];
-                $this->insertRow('visitor_type', $row, true);
+                $row = ['id'=>$id, 'name' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $airportCode,'tenant_agent'=>$visitor['tenant_agent']];
+
+                //$this->insertRow('visitor_type', $row, true);
                 $lookup[$key] = $row['id'];
                 $data['visitor'][$i]['visitor_type'] = $row['id'];
+                $data['visitor_type'][] = $row;
+                $row = ['id'=>$id, 'name' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $airportCode,'tenant_agent'=>$visitor['tenant_agent']];
 
             } else {
                 $data['visitor'][$i]['visitor_type'] = $lookup[$key];
@@ -102,14 +126,17 @@ class Avms7MigrationCommand extends CConsoleCommand
         for($i=0;$i<sizeof($data['visit']);$i++){
 
             $visitor = $data['visit'][$i];
-            $key = $tenantId.".".$visitor['tenant_agent'];
+            $key = $airportCode.".".$visitor['tenant_agent'];
 
             if(!isset($lookup[$key])) {
 
-                $row = ['name' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $tenantId,'tenant_agent'=>$visitor['tenant_agent']];
-                $this->insertRow('visitor_type', $row, true);
+                $row = ['id'=>$id, 'name' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $airportCode,'tenant_agent'=>$visitor['tenant_agent']];
+                //$this->insertRow('visitor_type', $row, true);
+
                 $lookup[$key] = $row['id'];
                 $data['visit'][$i]['visitor_type'] = $row['id'];
+                $data['visitor_type'][] = $row;
+                $id++;
 
             } else {
                 $data['visit'][$i]['visitor_type'] = $lookup[$key];
@@ -117,20 +144,23 @@ class Avms7MigrationCommand extends CConsoleCommand
         }
 
     }
-    function setVisitReasons(&$data,$tenantId){
+    function setVisitReasons(&$data,$airportCode){
         $lookup = [];
-
+        $id = 1;
+        $data['visit_reason']=[];
         for($i=0;$i<sizeof($data['visit']);$i++){
 
             $visitor = $data['visit'][$i];
-            $key = $tenantId.".".$visitor['tenant_agent'];
+            $key = $airportCode.".".$visitor['tenant_agent'];
 
             if(!isset($lookup[$key])) {
 
-                $row = ['reason' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $tenantId,'tenant_agent'=>$visitor['tenant_agent'],'module'=>'AVMS'];
-                $this->insertRow('visit_reason', $row, true);
+                $row = ['id' => $id, 'reason' => 'Other: Data Import', 'created_by' => 1, 'tenant' => $airportCode,'tenant_agent'=>$visitor['tenant_agent'],'module'=>'AVMS'];
+                //$this->insertRow('visit_reason', $row, true);
                 $lookup[$key] = $row['id'];
                 $data['visit'][$i]['reason'] = $row['id'];
+                $data['visit_reason'][] = $row;
+                $id++;
 
             } else {
                 $data['visit'][$i]['reason'] = $lookup[$key];
@@ -175,7 +205,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                echo "\r\nWARNING: Skipped row $tableName :".implode(",",$row);
             }
         }
-        echo "<br><br>";
+        echo "\r\n\r\n";
     }
 
 
@@ -189,6 +219,8 @@ class Avms7MigrationCommand extends CConsoleCommand
             } else {
                 $row['workstation']=$row['tenant'];
             }
+
+
         } else if($tableName=='visitor'){
             if(!isset($row['contact_number']) || $row['contact_number']==''){
                 $row['contact_number'] = '0000000000';
@@ -220,7 +252,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         $sql=[];
         foreach($sql as $statement){
-            echo "\r\n".$statement."<br>";
+            echo "\r\n".$statement."\r\n";
             Yii::app()->db->createCommand($statement)->execute();
         }
 
@@ -292,7 +324,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
                         // set the reference value on the row
                         $row[$columnName] = $idMappings[$ref['referenced_table_name']][$value];
-                        echo $tableName.".".$columnName." ".$value."=".$row[$columnName]."<br>";
+                        echo $tableName.".".$columnName." ".$value."=".$row[$columnName]."\r\n";
 
                     } else {
 
@@ -351,6 +383,7 @@ class Avms7MigrationCommand extends CConsoleCommand
             'companyId'         => null,
             'contact_person'    => $visitor['first_name'].' '.$visitor['last_name'],
             'email_address'     => $visitor['email'],
+            'code'              => $visitor['tenant'],
             'phone_number'      => $visitor['contact_number'],
             'company_name'      => $visitor['company']>''?$visitor['company']:'Unknown Company '.$visitor['id'],
             'tenant'            => $visitor['tenant'],
@@ -364,6 +397,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                 'id'                => $id,
                 'name'              => $company['company_name'],
                 'trading_name'      => $company['company_name'],
+                'code'              => $company['code'],
                 'contact'           => $company['contact_person'],
                 'email_address'     => $company['email_address'],
                 'mobile_number'   => $company['phone_number'],
@@ -408,9 +442,10 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         foreach(['visit','card_generated','user','company'] as $tableName) {
          for ($i = 0; $i < sizeof($data[$tableName]); $i++) {
-                $operatorId = $data[$tableName][$i]['operator'];
-                if($operatorId == null || $operatorId=='' || !isset($refernceData['operator_owners'][$operatorId])){
-                    //echo "\r\n cant find operator ".$operatorId;
+             $operatorId = $data[$tableName][$i]['operator'];
+             if($operatorId!=null &&  $operatorId > '')
+                if(!isset($refernceData['operator_owners'][$operatorId])){
+                    echo "\r\n cant find operator ".$operatorId;
                 } else {
                     if ($refernceData['operator_owners'][$operatorId]['agentLevel'] == 6) {
                         $data[$tableName][$i]['tenant_agent'] = $refernceData['operator_owners'][$operatorId]['agentId'];
@@ -426,23 +461,62 @@ class Avms7MigrationCommand extends CConsoleCommand
     public function filterUserRecords(&$data,&$idMappings,$vms,$tenant){
 
         $toKeep = [];
-        foreach($data['user'] as $user){
+        for($i=0;$i<sizeof($data['user']);$i++){
+            $user = &$data['user'][$i];
+
+        //foreach($data['user'] as $user){
+
+
+            // get local tenant agent
+            $localTenantAgent = null;
+            if(isset($user['tenant_agent']) && $user['tenant_agent']>'' && isset($idMappings['company'][$user['tenant_agent']])){
+                $localTenantAgent = $idMappings['company'][$user['tenant_agent']];
+            }
+
 
             // match the agent
             $vmsUser = $vms->getFirstRow("SELECT * FROM ".Yii::app()->db->quoteTableName('user')."
                                             where tenant = ".$tenant['id']."
                                             and is_deleted=0
-                                            and (email='".$user['email']."'
+                                            and (email like '".str_replace(".au","%",$user['email'])."'
                                                 or (first_name='".$user['first_name']."' and last_name='".$user['last_name']."'))".
-                                            (isset($user['tenant_agent']) && $user['tenant_agent']>''?'and tenant_agent='.$user['tenant_agent']:'')
+                                            ($localTenantAgent!=null?' and tenant_agent='.$localTenantAgent:'')
                                             );
+
+            // if we don't have a first name or last name
+            if($vmsUser == null && !($user['first_name']> ''  && $user['last_name']>'')) {
+
+                // if we don't get a match then used someone at the company
+                if ($user['company'] > '') {
+                    $vmsUser = $vms->getFirstRow("SELECT u.* FROM " . Yii::app()->db->quoteTableName('user') . " u join company c on u.company = c.id
+                                            where u.tenant = " . $tenant['id'] . "
+                                            and u.is_deleted=0
+                                            and c.name = '" . $user['company'] . "' " .
+                                            ($localTenantAgent!=null?'and u.tenant_agent='.$localTenantAgent:'')
+                    );
+                }
+
+                // if we don't get a match then use someone at the same domain
+                if ($vmsUser == null) {
+                    $vmsUser = $vms->getFirstRow("SELECT * FROM " . Yii::app()->db->quoteTableName('user') . "
+                                            where tenant = " . $tenant['id'] . "
+                                            and is_deleted=0
+                                            and email like '%" . str_replace(".au","%",substr($user['email'], strpos($user['email'], '@'))) . "' " .
+                                            ($localTenantAgent!=null?'and tenant_agent='.$localTenantAgent:'')
+                    );
+                }
+            }
+
             if($vmsUser==null){
+                if(!($user['first_name']>'')){$user['first_name'] = 'Unknown';}
+                if(!($user['last_name']>'')){$user['last_name'] = 'Unknown';}
+
                 $toKeep[] = $user;
             } else {
                 $idMappings['user'][$user['id']] = $vmsUser['id'];
             }
         }
-        $data['user']==$toKeep;
+        $data['user']=$toKeep;
     }
 
     public function mapExistingData($tenant,$data,&$idMappings,$vms,$refernceData)
@@ -528,7 +602,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
     public function getReferenceData($airportCode,$avms7){
         $queries = [
-          'operator_owners' => "select o.id as operatorId, o.level as operatorLevel,o.company as operatorCompany, a.id as agentId, a.level as agentLevel, a.company as agentCompany
+          'operator_owners' => "select o.id as operatorId, o.level as operatorLevel,o.company as operatorCompany, a.id as agentId, a.level as agentLevel, a.company as agentCompany, a.ibcode as code
                                 from users o
                                     left join users a
                                         on a.IBcode = o.ibcode
@@ -540,7 +614,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                                             )
                                 where o.ibcode = '$airportCode'
                               ",
-            "visitor_company"=> "select oc.userid as visitor_id, min(c.id) as companyId, max(n.CompanyName) as company_name, max(n.ContactEmail) as email_address, max(n.ContactPerson) as contact_person, max(n.ContactPhone) phone_number
+            "visitor_company"=> "select oc.userid as visitor_id, min(c.id) as companyId, max(n.CompanyName) as company_name, max(n.ContactEmail) as email_address, max(n.ContactPerson) as contact_person, max(n.ContactPhone) phone_number,oc.airportcode as 'code'
                                 from oc_set oc
                                     join operational_need n on oc.oid = n.id
                                     left join users c
@@ -631,11 +705,12 @@ class Avms7MigrationCommand extends CConsoleCommand
                      (c.Telephone) as office_number,
                      (c.Mobile) as mobile_number,
                      1 as created_by_user,
-                     1 as created_by_visitor,
+                     null as created_by_visitor,
                      o.ibcode as tenant,
                      o.id as operator,
                      0 as is_deleted,
-                     3 as company_type
+                     3 as company_type,
+                     o.ibcode as code
                 from users c
                     join users o
                         on o.id = c.ownerid
@@ -667,7 +742,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                       when level in (3,6,2,8) then null
                       else u.ID
                     end as operator,
-                    u.photo as photo,
+                    null as photo,
                     null as timezone_id,
                     1 as allowed_module,
                     a.asic_number as asic_no,
@@ -676,7 +751,6 @@ class Avms7MigrationCommand extends CConsoleCommand
                   left join asic_data a on u.ID = a.UserId
                 where u.ibcode = '$airportCode'
                 and u.level not in (1,4,5,10)
-                and (1>1)
             ",
             'visitor' =>"
                 select distinct v.ID as id,
@@ -688,7 +762,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                     v.DateOfBirth as date_of_birth,
                     v.Company as company,
                     v.Password as password,
-                    v.photo as photo,
+                    null as photo,
                     v.Unit as contact_unit,
                     v.StreetNo as contact_street_no,
                     v.Street as contact_street_name,
@@ -697,6 +771,10 @@ class Avms7MigrationCommand extends CConsoleCommand
                     v.State as contact_state,
                     v.PostCode as contact_postcode,
                     v.Country as contact_country,
+                    case
+                      when NULLIF(ad.asic_number,'') IS NOT NULL  then 'ASIC'
+                      else 'VIC'
+                    end as profile_type,
                     ad.asic_number as asic_no,
                     ad.asic_expiry as asic_expiry,
                     idA.DocumentType as identification_type,
@@ -785,8 +863,8 @@ class Avms7MigrationCommand extends CConsoleCommand
                        t.visitor_type as visitor_type,
                        l.ReasonNo as reason,
                        1 as visitor_status,
-                       c.UserID as host,
-                       1 as created_by,
+                       c.UserId as host,
+                       l.UserID as created_by,
                        l.Date as date_in,
                        l.Time as time_in,
                        c.Date as date_out,
@@ -891,10 +969,10 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         $quotedTableName = Yii::app()->db->quoteTableName($tableName);
 
-        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
+        $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ")\r\n VALUES (" . implode(', ', $vals) . ")";
 
         //RUN SQL
-        echo "\r\n" . $sql;
+        echo "\r\n" . $sql."\r\n";
         Yii::app()->db->createCommand($sql)->execute();
 
         if ($isAutoIncrement) {

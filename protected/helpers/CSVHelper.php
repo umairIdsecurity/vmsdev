@@ -22,13 +22,21 @@ class CSVHelper
                     $header = $vals;
                     continue;
                 } else if($header!=null){
-                    $result[] = array_combine($header,$vals);
+                    $result[] = CSVHelper::combine($header,$vals);
                 }
             }
         }
         return $result;
     }
-
+    public static function combine($header,$vals){
+        $result = [];
+        for($i=0;$i<sizeof($header);$i++){
+            if($i<sizeof($vals)){
+                $result[$header[$i]] = $vals[$i];
+            }
+        }
+        return $result;
+    }
     private static function countVals($vals){
         $r = 0;
         for($i=0;$i<sizeof($vals);$i++){

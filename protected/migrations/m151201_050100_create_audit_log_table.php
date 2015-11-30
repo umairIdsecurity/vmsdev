@@ -1,6 +1,6 @@
 <?php
 
-class m151125_053608_create_audit_log_table extends CDbMigration
+class m151201_050100_create_audit_log_table extends CDbMigration
 {
 	// Use safeUp/safeDown to do migration with transaction
 	public function safeUp()

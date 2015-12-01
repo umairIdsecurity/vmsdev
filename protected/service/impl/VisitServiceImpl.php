@@ -62,7 +62,7 @@ class VisitServiceImpl implements VisitService {
         $log = new AuditLog();
         $log->action_datetime_new = date('Y-m-d H:i:s');
         $log->action = $action;
-        $log->detail = 'Logged user ID: ' . Yii::app()->user->id." Visit ID: ".$visit->id." Visitor ID: ".$visit->visitor;
+        $log->detail = 'Logged User ID: ' . Yii::app()->user->id." Visit ID: ".$visit->id." Visitor ID: ".$visit->visitor;
         $log->user_email_address = Yii::app()->user->email;
         $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
         $log->tenant = Yii::app()->user->tenant;

@@ -434,8 +434,10 @@ class VisitController extends Controller {
                 if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {$model->card_type = $_POST['Visit']['card_type'];}
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
                 if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {$model->reason = $_POST['Visit']['reason'];}
+                if (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != "") {$model->visitor_type = $_POST['Visit']['visitor_type'];}
                 if(!isset($model->visit_status) || $model->visit_status == ""){$model->visit_status = $oldStatus;}
-                if ((isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") || (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") || (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") )
+                
+                if ((isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") || (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") || (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") || (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != ""))
                 {
                     $model->save();
                 }   

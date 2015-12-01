@@ -123,6 +123,10 @@ class UserController extends Controller
             $model->isNewRecord = 1;        
             if ($userService->save($model, Yii::app()->user, $workstation)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
+                
+                //logs the INSERT NEW USER ACCOUNT
+                $this->audit_logging_user("INSERT NEW USER ACCOUNT",$model);
+                
                 if (Yii::app()->request->isAjaxRequest) {
                     Yii::app()->end();
                 }
@@ -137,6 +141,18 @@ class UserController extends Controller
         $this->render('create', array(
             'model' => $model,
         ));
+    }
+
+    public function audit_logging_user($action,$user){
+        $log = new AuditLog();
+        $log->action_datetime_new = date('Y-m-d H:i:s');
+        $log->action = $action;
+        $log->detail = 'Logged User ID: ' . Yii::app()->user->id." User ID: ".$user->id;
+        $log->user_email_address = Yii::app()->user->email;
+        $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
+        $log->tenant = Yii::app()->user->tenant;
+        $log->tenant_agent = Yii::app()->user->tenant_agent;
+        $log->save();
     }
 
     function setUserModuleAccess($model){
@@ -183,6 +199,8 @@ class UserController extends Controller
             $this->setUserModuleAccess($model);
             
             if ($userService->save($model, Yii::app()->user, null)) {
+                //logs the Update  USER ACCOUNT
+                $this->audit_logging_user("UPDATE USER ACCOUNT",$model);
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
             }
         }
@@ -204,6 +222,9 @@ class UserController extends Controller
 
         if(!$model->delete())
         {
+            //logs the DELETE USER ACCOUNT
+            $this->audit_logging_user("DELETE USER ACCOUNT",$model);
+
             $Criteria = new CDbCriteria();
             $Criteria->condition = 'user_id ='.$id;
             $userworkstations = UserWorkstations::model()->findAll($Criteria);

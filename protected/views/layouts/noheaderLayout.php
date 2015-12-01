@@ -47,7 +47,7 @@ $userRole = $session['role'];
 
 	<div id="header">
 		<div id="logo">
-            <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase.'/images/papl-logo.jpg','logo here',['style'=>'height: 100px']), array('site/login')); ?>
+            <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase.'/images/ids-circle-logo.png','logo here',['style'=>'height: 100px']), array('site/login')); ?>
         </div>
 	
 	</div><!-- header -->

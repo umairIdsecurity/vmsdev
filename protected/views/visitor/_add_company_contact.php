@@ -22,7 +22,7 @@ $session = new CHttpSession;
 
     <div class="modal-header">
         <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
-        <h3 id="myModalLabel">Add Company</h3>
+        <h3 id="myModalLabel">Add Company </h3>
     </div>
     <div id="addCompanyContactModalBody" class="modal-body form">
         <p class="note">Fields with <span class="required">*</span> are required.</p>
@@ -262,25 +262,32 @@ $session = new CHttpSession;
                 $("#addCompanyContactModal").modal("hide");
                 if (data.type == "contact") {
                     //$("#visitorStaffRow").html(data.contactDropDown);
-                    $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
+                     $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
+                     $('#Visitor_staff_id').trigger('change');
                 } else {
                     //update company dropdown:
                     if(currentController == "visit" && currentAction == "detail") {
-                        $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
-                        $("#AddAsicEscort_company").select2("val", data.id);
-                        $("#asicSponsorModal").modal("show");
+                         $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
+                      //  $("#AddAsicEscort_company").select2("val", data.id); // deprecated
+                         $("#AddAsicEscort_company").val(data.id);
+                         $("#asicSponsorModal").modal("show");
+                         $('#asicSponsorModal').trigger('change');
                     } else if (currentController == "visitor"){
-                        $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
-                        $("#Visitor_company").select2("val", data.id);
-                        
+                         $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
+                        // $("#Visitor_company").select2("val", data.id);
+                         $("#Visitor_company").val(data.id);
+                         $('#Visitor_company').trigger('change');
+                         
                         $("#User_company").prepend($("<option>", {value:data.id, text: data.name}));
-                        $("#User_company").select2("val", data.id);
+                        //$("#User_company").select2("val", data.id);
+                        $("#User_company").val(data.id);
+                        $('#User_company').trigger('change');
                     }
                 }
                 return false;
             }
         }).fail(function() {
-            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            //window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
     }
 

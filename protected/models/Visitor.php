@@ -204,7 +204,7 @@ class Visitor extends CActiveRecord {
         $rules = array(
             array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
             //array('tenant','required','message' =>'Please select a {attribute}'),
-            array('visitor_type', 'required', 'except' => ['asic', 'asicIssued', 'asicApplicant', 'corporateVisitor'], 'message'=>'Please complete {attribute}'),
+            array('visitor_type', 'required', 'except' => ['updateAsic','asic', 'asicIssued', 'asicApplicant', 'corporateVisitor'], 'message'=>'Please complete {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),
@@ -260,7 +260,7 @@ class Visitor extends CActiveRecord {
             
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             // array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic','preregistration', 'update']),
+            array('repeatpassword', 'PasswordRepeat','except' => ['updateAsic','delete','updateVic','preregistration', 'update']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -287,7 +287,7 @@ class Visitor extends CActiveRecord {
             identification_alternate_document_name2,
             identification_alternate_document_no2',
             'VisitorAlternateIdentification',
-            'except' => ['u18Rule', 'updateVic', 'delete']
+            'except' => ['u18Rule', 'updateVic', 'delete','updateAsic']
         );
 
         $rules[] = array(
@@ -296,7 +296,7 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
-            'except' => ['u18Rule', 'updateVic', 'delete']
+            'except' => ['u18Rule', 'updateVic', 'delete','updateAsic']
         );
 
   
@@ -329,7 +329,7 @@ class Visitor extends CActiveRecord {
                     contact_country',
                     'required',
                     'on' => 'VicScenario',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued'],
+                    'except'=> ['updateAsic','updateVic', 'updateIdentification', 'delete', 'asicIssued'],
                     'message'=>'Please complete {attribute}'
                 );
                 break;

@@ -2206,7 +2206,7 @@ class PreregistrationController extends Controller
 				"Link of the VIC profile<br>".
 				"<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visitId."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/verifyVicholder?id=".$visitId."</a><br>";
 		$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-		mail($to, $subject, $body, $headers);
+		EmailTransport::mail($to, $subject, $body, $headers);
 	}
 
 }

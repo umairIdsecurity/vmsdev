@@ -71,7 +71,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
                 "Please click on below link to reset you password.<br><br>".
                 "<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/reset/hash/".$request->hash."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/reset/hash/".$request->hash."</a><br>";
         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-        mail($to, $subject, $body, $headers);
+        EmailTransport::mail($to, $subject, $body, $headers);
 
         /*$templateParams = array(
             'email' => $visitor->email,
@@ -168,7 +168,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
                 "If you did this, you can safely disregard this email.";
                 "If you didn't do this, please contact our technical support.";
         $body .="<br><br>"."Thanks,"."<br>Admin</body></html>";
-        mail($to, $subject, $body, $headers);
+        EmailTransport::mail($to, $subject, $body, $headers);
 
         /*$templateParams = array(
             'email' => $visitor->email,

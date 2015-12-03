@@ -95,7 +95,7 @@ class CEmailLogRoute extends CLogRoute
 				$headers[]="From: {$from}";
 			$headers[]="Reply-To: {$from}";
 		}
-		mail($email,$subject,$message,implode("\r\n",$headers));
+		EmailTransport::mail($email,$subject,$message,implode("\r\n",$headers));
 	}
 
 	/**

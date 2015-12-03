@@ -11,18 +11,26 @@ class EmailTransport
         // parse the headers
         $parts = EmailTransport::extractHeaders($headers);
 
+        // create a message
+        $message = new YiiMailMessage;
 
+        // set the subject
+        $message->subject = $subject;
 
-        $message            = new YiiMailMessage;
-        $message->subject   = $subject;
-        $message->setBody($body, 'text/html');
-        $message->addTo('geoff.stewart@idsecurity.com.au');
+        // get the content type
+        $contentType = 'text/html';
+        if(isset($parts['Content-type'])){$contentType = $parts['Content-type'];}
+
+        // set the body
+        $message->setBody($body, $contentType);
+
+        // send to
+        $message->addTo($to);
 
         // set from
-        $message->from = 'vmsnotify@gmail.com';
-        if(isset($parts['from'])){$message->from = $parts['from'];}
+        if(isset($parts['From'])){$message->from = $parts['From'];}
 
-        Yii::app()->mail->send($message);
+        return Yii::app()->mail->send($message);
 
     }
 
@@ -31,8 +39,10 @@ class EmailTransport
         $rows = explode("\r\n",$headers);
         foreach($rows as $row){
             $parts = explode(":",$row);
+            if(sizeof($parts)<2) continue;
             $result[trim($parts[0])] = trim($parts[1]);
         }
+        return $result;
     }
 
 

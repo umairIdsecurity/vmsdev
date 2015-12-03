@@ -417,6 +417,7 @@ class VisitController extends Controller {
         // Update visitor detail form ( left column on visitor detail page )
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
         {
+           
             if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
             {
                 $errorMsg="Card type can not be updated whilst visit is active.";
@@ -555,12 +556,16 @@ class VisitController extends Controller {
                 $asicParams                      = Yii::app()->request->getPost('ASIC');
                 $asicModel->attributes           = $asicParams;
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-                $asicModel->scenario             = 'updateVic';
+                $asicModel->scenario             = 'updateAsic';
                 
                  // Save asic profile
                 if (!$asicModel->save()) {
                     // Do something if save escort failure
+                    echo "<pre>";
+                    $msg = print_r($asicModel->getErrors(),1);
+                    throw new CHttpException(400,'Asic Sponsor error: '.$msg);
                 }
+
             }
 
         }

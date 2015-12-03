@@ -31,6 +31,20 @@ return CMap::mergeArray(
                     ),
                 ),
             ),
+            'mail'=>array(
+                'class' => 'ext.yii-mail.YiiMail',
+                'transportType' => 'smtp',
+                'transportOptions' => array(
+                    'host' => 'smtp.gmail.com',
+                    'username' => "vmsnotify@gmail.com",
+                    'password' => "vms12345",
+                    'port' => '465',
+                    'encryption'=>'tls',
+                ),
+                'viewPath' => 'application.views.mail',
+                'logging' => true,
+                'dryRun' => false,
+            ),
             'foundation' => array("class" => "ext.foundation.components.Foundation"),
             'widgetFactory' => array(
                 'widgets' => array(

@@ -35,33 +35,33 @@ if ($this->action->id == 'update') {
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'company-form',
         'htmlOptions' => array("name" => "registerform"),
-        'enableAjaxValidation' => false,
+        'enableAjaxValidation' => true,
         'enableClientValidation' => true,
         'clientOptions' => array(
             'validateOnSubmit' => true,
-            'afterValidate' => 'js:function(form, data, hasError) {
-                if (!hasError) {
-                    if($("#currentAction").val() == "create"){
-                        if( $("#Company_password_requirement_1").is(":checked") == true && $(".pass_option").is(":checked")== false){                       
-                            $("#pass_error_").show();
-                            return false;
-                        }
-                        else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Company_user_password").val()== "" || $("#Company_user_repeatpassword").val()=="")){
-                            $("#pass_error_").show();
-                            $("#pass_error_").html("Type password or generate");
-                             return false;
-                        }
-                        else{
-                            checkCompanyNameUnique();
-                        }
-                    } else{
-                        checkCompanyNameUnique();
-                    }
-                } else {
-                    $(createCompanyForm()+".user_fields" ).show();
-                    $(createCompanyForm()+".password-border").show();
-                }
-            }'
+//            'afterValidate' => 'js:function(form, data, hasError) {
+//                if (!hasError) {
+//                    if($("#currentAction").val() == "create"){
+//                        if( $("#Company_password_requirement_1").is(":checked") == true && $(".pass_option").is(":checked")== false){                       
+//                            $("#pass_error_").show();
+//                            return false;
+//                        }
+//                        else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Company_user_password").val()== "" || $("#Company_user_repeatpassword").val()=="")){
+//                            $("#pass_error_").show();
+//                            $("#pass_error_").html("Type password or generate");
+//                             return false;
+//                        }
+//                        else{
+//                            checkCompanyNameUnique();
+//                        }
+//                    } else{
+//                        checkCompanyNameUnique();
+//                    }
+//                } else {
+//                    $(createCompanyForm()+".user_fields" ).show();
+//                    $(createCompanyForm()+".password-border").show();
+//                }
+//            }'
         ),
     ));
     ?>
@@ -163,7 +163,7 @@ if ($this->action->id == 'update') {
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'user_email'); ?>
+                                <?php echo "<br>" . $form->error($model, 'email_address'); ?>
                                 <div id="Company_user_email_unique_em_" class="errorMessage" style="display: none">User email has already been taken</div>
                             </td>
                         </tr>
@@ -446,7 +446,11 @@ $(document).ready(function() {
             url:url ,
             data: formInfo,
             success: function(data){
-                window.location = 'index.php?r=company/admin';
+               var curentRole = '<?php echo Yii::app()->user->role?>';
+                if( curentRole == '7' || curentRole == '8' || curentRole == '12' || curentRole == '14')
+                     window.location = 'index.php?r=dashboard';
+                 else
+                    window.location = 'index.php?r=company/admin';
             }
         });
     }

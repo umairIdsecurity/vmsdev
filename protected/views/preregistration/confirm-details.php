@@ -4,10 +4,15 @@
     $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
     $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 
-    $countryList = CHtml::listData(Country::model()->findAll(array(
-        "order" => "name asc",
-        "group" => "name"
-    )), 'id', 'name');
+    //this is because below country model become ambigious for name values on Window Server
+    $countryList = CHtml::listData(Yii::app()->db->createCommand('select a.* from country a inner join (select distinct name, min(id) as id from country group by name) as b on a.name = b.name and a.id = b.id order by name asc')->queryAll(),'id', 'name');
+    
+    /*$countryList = CHtml::listData(
+                                    Country::model()->findAll(array(
+                                    "order" => "name asc",
+                                    "group" => "name"
+                                )), 'id', 'name'
+                    );*/
 ?>
 
 <div class="page-content">
@@ -17,7 +22,7 @@
     <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
     
     <?php if ( (isset(Yii::app()->user->account_type)) && ((Yii::app()->user->account_type == "ASIC") || (Yii::app()->user->account_type == "CORPORATE")) ) { ?>
-                
+                 
 
     <!--  searching VIC -->
     <div class="row">
@@ -118,7 +123,7 @@
 
 
                 <div class="form-group">
-                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->dropDownList($model, 'identification_type', Registration::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type' , 'class'=>'form-control input-sm')); ?>
                     <?php echo $form->error($model, 'identification_type'); ?>
 
                 </div>

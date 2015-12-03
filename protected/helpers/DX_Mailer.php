@@ -40,7 +40,7 @@ class DX_Mailer
      * Sets the From email address for the message.
      * @var string
      */
-    var $From               = "root@localhost";
+    var $From               = "vms@localhost";
 
     /**
      * Sets the From name of the message.

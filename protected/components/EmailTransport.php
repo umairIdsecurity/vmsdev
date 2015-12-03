@@ -4,6 +4,38 @@ require_once('mandril/src/Mandrill.php');
 
 class EmailTransport
 {
+
+    // function to adapt legacy mail function to YiiMail
+    public static function mail($to,$subject,$body,$headers){
+
+        // parse the headers
+        $parts = EmailTransport::extractHeaders($headers);
+
+
+
+        $message            = new YiiMailMessage;
+        $message->subject   = $subject;
+        $message->setBody($body, 'text/html');
+        $message->addTo('geoff.stewart@idsecurity.com.au');
+
+        // set from
+        $message->from = 'vmsnotify@gmail.com';
+        if(isset($parts['from'])){$message->from = $parts['from'];}
+
+        Yii::app()->mail->send($message);
+
+    }
+
+    private static function extractHeaders($headers){
+        $result = [];
+        $rows = explode("\r\n",$headers);
+        foreach($rows as $row){
+            $parts = explode(":",$row);
+            $result[trim($parts[0])] = trim($parts[1]);
+        }
+    }
+
+
     public function sendEmail($templateName, $templateParams, $to)
     {
         $templateParams = $this->_convertToMandrillFormat($templateParams);

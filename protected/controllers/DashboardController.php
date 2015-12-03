@@ -244,7 +244,7 @@ class DashboardController extends Controller {
                 $contactModel->contact_message = $model->message;
                 $contactModel->save();
 
-                mail($contactPersonModel->contact_person_email, "Contact Support", $content, $headers);
+                Yii:app()->mail($contactPersonModel->contact_person_email, "Contact Support", $content, $headers);
 
                 Yii::app()->user->setFlash(
                         'contact', 'Thank you for contacting us. We will respond to you as soon as possible.'

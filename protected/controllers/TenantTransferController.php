@@ -85,7 +85,7 @@ class TenantTransferController extends Controller
 
         ['table_name'=>'visit_reason'  , 'column_name'=>'tenant'        ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'visit_reason'  , 'column_name'=>'tenant_agent'  ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
-        
+
 
 
     ];

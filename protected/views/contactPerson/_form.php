@@ -13,7 +13,7 @@ if ($module == "CVMS") {
 }
 
 $tenant = '';
-if(Yii::app()->user->role == Roles::ROLE_ADMIN){
+if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN){
     $tenant = "tenant='".Yii::app()->user->tenant."'";
 } 
 ?>

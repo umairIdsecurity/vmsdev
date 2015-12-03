@@ -417,7 +417,6 @@ class VisitController extends Controller {
         // Update visitor detail form ( left column on visitor detail page )
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
         {
-           
             if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
             {
                 $errorMsg="Card type can not be updated whilst visit is active.";
@@ -467,6 +466,7 @@ class VisitController extends Controller {
         #update Visitor and Host form ( middle column on visitor detail page )
         if (isset($_POST['updateVisitorInfo'])) 
         {
+            
             // Change date formate from d-m-Y to Y-m-d
             if (!empty($this->date_of_birth)) 
                 $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
@@ -477,22 +477,8 @@ class VisitController extends Controller {
             if (!empty($this->identification_document_expiry)) 
                 $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
             
-            if (isset($_POST['ASIC'])) {
-                $asicModel                       = Visitor::model()->findByPk($model->host);
-
-                // Get visitor params
-                $asicParams                      = Yii::app()->request->getPost('ASIC');
-                $asicModel->attributes           = $asicParams;
-                $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-                $asicModel->scenario             = 'updateVic';
-                
-                // Save asic profile
-                if (!$asicModel->save()) {
-                    // Do something if save process failure
-                }
-            }
-
-            if (isset($_POST['Host']) && isset($hostModel)) {
+            if (isset($_POST['Host']) && isset($hostModel)) 
+            {
                 // Get visitor params
                 $hostParams                      = Yii::app()->request->getPost('Host');
                 $hostModel->attributes           = $hostParams;
@@ -511,6 +497,7 @@ class VisitController extends Controller {
 
                 $escortModel->attributes = $escortParams;
                 $escortModel->scenario   = 'updateVic';
+
                 // Save escort profile
                 if (!$escortModel->save()) {
                     // Do something if save escort failure
@@ -559,7 +546,23 @@ class VisitController extends Controller {
             // Save visitor
             if (!$visitorModel->save()) {
                 // Do something if save visitor failure
-            }            
+            } 
+
+            if (isset($_POST['ASIC'])) 
+            {
+                $asicModel                       = Visitor::model()->findByPk($model->host);
+                // Get visitor params
+                $asicParams                      = Yii::app()->request->getPost('ASIC');
+                $asicModel->attributes           = $asicParams;
+                $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                $asicModel->scenario             = 'updateVic';
+                
+                 // Save asic profile
+                if (!$asicModel->save()) {
+                    // Do something if save escort failure
+                }
+            }
+
         }
 
         if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) 
@@ -633,12 +636,13 @@ class VisitController extends Controller {
             }
         }
 
+
         // Get visit count and remaining days
         $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
         $this->render('visitordetail', array(
             'model'         => $model,
-            'visitorModel'  => $visitorModel ? $visitorModel : new Visitor,
+            'visitorModel'  => !empty($visitorModel) ? $visitorModel : new Visitor,
             'reasonModel'   => $reasonModel,
             'hostModel'     => $hostModel,
             'patientModel'  => $patientModel,

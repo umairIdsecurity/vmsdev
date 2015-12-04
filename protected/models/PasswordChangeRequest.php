@@ -66,6 +66,7 @@ class PasswordChangeRequest extends CActiveRecord
             'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php?r=site/reset/hash/' . $request->hash,
         );
 
+        //TODO: Change to YiiMail
         $emailTransport = new EmailTransport();
         $emailTransport->sendResetPasswordEmail(
             $templateParams, $user->email, $user->first_name . ' ' . $user->last_name
@@ -149,6 +150,7 @@ class PasswordChangeRequest extends CActiveRecord
             'email' => $user->email,
         );
 
+        //TODO: Change to YiiMail
         $emailTransport = new EmailTransport();
         $emailTransport->sendResetPasswordConfirmationEmail(
             $templateParams, $user->email, $user->first_name . ' ' . $user->last_name

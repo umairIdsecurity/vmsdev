@@ -557,15 +557,13 @@ class VisitController extends Controller {
                 $asicModel->attributes           = $asicParams;
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 $asicModel->scenario             = 'updateAsic';
-                
-                 // Save asic profile
+                // Save asic profile
                 if (!$asicModel->save()) {
                     // Do something if save escort failure
                     echo "<pre>";
                     $msg = print_r($asicModel->getErrors(),1);
                     throw new CHttpException(400,'Asic Sponsor error: '.$msg);
                 }
-
             }
 
         }

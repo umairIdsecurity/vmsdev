@@ -68,7 +68,7 @@ class UserServiceImpl implements UserService {
                         "Please click the following link to create your password:<br>".
                         "http://vmsdev.identitysecurity.com.au/index.php?r=site/forgot<br>";
                 $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-                mail($to, $subject, $body, $headers);
+                EmailTransport::mail($to, $subject, $body, $headers);
             }
 
             if (is_object($workstation)) {

@@ -726,7 +726,10 @@ class Visit extends CActiveRecord {
         $criteria->compare('company0.contact', $this->_contactperson, true);
         $criteria->compare('company0.email_address', $this->_contactemail, true);
         $criteria->compare('company0.mobile_number', $this->_contactphone, true);
-        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+        
+        //$criteria->compare('visitor0.date_of_birth',$this->date_of_birth,true);
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth));
+        
         $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
         $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
         $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
@@ -772,7 +775,9 @@ class Visit extends CActiveRecord {
                 OR company0.contact LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.mobile_number LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.email_address LIKE CONCAT('%', :filterProperties , '%')
+                
                 OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                
                 OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')

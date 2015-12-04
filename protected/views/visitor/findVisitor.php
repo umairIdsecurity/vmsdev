@@ -31,12 +31,16 @@ $tenant = '';
 //}else{
 //    $tenant = '';
 //}
+$date_of_birth_condition =  "%' or date_of_birth like '%" . date("Y-m-d",strtotime($visitorName))
+                         . "%' or date_of_birth like '%" . date("d-m-Y",strtotime($visitorName))
+                         . "%' or date_of_birth like '%" . date("y/m/d",strtotime($visitorName));
 
 $tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
 $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
                  . "%' or first_name like '%" . $visitorName
                  . "%' or last_name like '%" . $visitorName
                  . "%' or email like '%" . $visitorName
+                 . $date_of_birth_condition
                  . "%' or identification_document_no LIKE '%" . $visitorName
                  . "%' or identification_alternate_document_no1 LIKE '%" . $visitorName
                  . "%' or identification_alternate_document_no2 LIKE '%" . $visitorName

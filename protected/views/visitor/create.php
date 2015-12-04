@@ -1132,6 +1132,11 @@ function selectVicCard(cardType) {
 
         // text changes:
         $('div.visitor-title-host').text('Add Host');
+        
+        // Remove company from Add Host page
+          $("#userCompanyRow").hide();
+          $("#User_company").hide();
+          $("#addUserCompanyLink").hide(); //addUserContactLink
     }
 }
 

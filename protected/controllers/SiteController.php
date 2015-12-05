@@ -58,9 +58,22 @@ class SiteController extends Controller {
 
 
     public function actionIndex() {
+
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
 
+
+        if(isset(Yii::app()->params['on_premises_airport_code'])) {
+
+            $airportCode= Yii::app()->params['on_premises_airport_code'];
+            $tenantCompany = Company::model()->find("code='" . $airportCode . "' and company_type=1 and is_deleted=0");
+
+            if($tenantCompany!=null){
+                $session['tenant'] = $tenantCompany->id;
+            } else {
+                $session['tenant'] = 1;
+            }
+        }
 
 
         if( (isset($_SERVER['HTTP_HOST']) && substr($_SERVER['HTTP_HOST'],0,5) =='vmspr' ) ||
@@ -137,6 +150,8 @@ class SiteController extends Controller {
         $this->render('contact', array('model' => $model));
     }
 
+
+
     /**
      * Displays the login page
      */
@@ -158,7 +173,8 @@ class SiteController extends Controller {
                 $session['tenant'] = $tenantCompany->id;
                 $model->tenant = $tenantCompany->id;
             } else {
-                throw new CException("Airport ".$airportCode." not found.");
+                $session['tenant'] = 1;
+                $model['tenant'] = 1;
             }
         }
 

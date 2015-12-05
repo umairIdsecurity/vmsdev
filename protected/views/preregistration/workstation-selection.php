@@ -57,12 +57,7 @@
             <div class="col-sm-4 fixedMargin">
                 
                 <?php
-                    $ws='';
-                    if($tenant != ""){
-                        $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.$tenant);
-                    }else{
-                         $ws=Workstation::model()->findAll('is_deleted=0');
-                    }
+                    $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.($tenant==null?"-1":$tenant));
                     $list=CHtml::listData($ws,'id','name');
                     echo $form->dropDownList($model,'entrypoint',
                         $list,
@@ -94,9 +89,11 @@
 
         <div class="row">
             <div class="col-sm-12">
+                <?php if(!isset(Yii::app()->params['on_premises_airport_code'])){ ?>
                 <div class="pull-left">
                     <a href="<?=Yii::app()->createUrl("preregistration/index")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
+                <?php } ?>
                 <div class="pull-right">
                     <?php
                         echo CHtml::tag('button', array(

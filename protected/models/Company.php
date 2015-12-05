@@ -507,20 +507,46 @@ class Company extends CActiveRecord {
         $aArray = array();
 
         $tenants = Yii::app()->db->createCommand()
-            ->selectdistinct('company.id as id, company.name as name, db_image')
+            ->selectdistinct('company.id as id, company.name as name, db_image,filename')
             ->from('company')
             ->leftjoin('photo','company.logo = photo.id')
             ->where("company.id != 1 and company.company_type = 1 AND company.is_deleted = 0")
             ->order("company.name")
             ->queryAll();
 
-
+      foreach($tenants as &$tenant){
+          $tenant['db_image'] = "data:image/".pathinfo($tenant['filename'], PATHINFO_EXTENSION).";base64,".$tenant['db_image'];
+      }
       return $tenants;
     }
 
     public function findTenantIdByCode($code){
         $company = Company::model()->find("code='$code' and company_type=1 and is_deleted=0");
         return isset($company['id'])?$company['id']:null;
+    }
+
+    public function getCurrentTenantName(){
+        $session = new CHttpSession();
+        if(isset($session['tenant'])){
+            $company = Company::model()->find("id=".$session['tenant']." and company_type=1 and is_deleted=0");
+            return isset($company['name'])?$company['name']:null;
+        }
+        return "The Airport";
+    }
+
+    public function getCurrentTenantImageSource(){
+
+        $session = new CHttpSession();
+
+        $tenant = Yii::app()->db->createCommand()
+            ->selectdistinct('filename, db_image')
+            ->from('company')
+            ->leftjoin('photo','company.logo = photo.id')
+            ->where("company.id = ".$session['tenant']." and company.company_type = 1 AND company.is_deleted = 0")
+            ->queryAll();
+
+        return "data:image/".pathinfo($tenant[0]['filename'], PATHINFO_EXTENSION).";base64,".$tenant[0]['db_image'];
+
     }
 
 

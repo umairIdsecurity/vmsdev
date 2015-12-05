@@ -101,7 +101,7 @@
                                         <label  data-group="<?php echo $letter;?>" style="width:100px" >
                                                 <input type="radio" name="airport" id="airport-radio-button" value="<?php echo $id;?>" >
                                                 <figure>
-                                                    <img src="data:image/png;base64,<?php echo $tenantAndImage['db_image'];  ?>" >
+                                                    <img src="<?php echo $tenantAndImage['db_image'];?>" >
                                                 </figure>
                                         </label>
                                     <?php

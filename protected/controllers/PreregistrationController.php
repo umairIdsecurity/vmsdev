@@ -65,6 +65,8 @@ class PreregistrationController extends Controller
 		if(isset(Yii::app()->params['on_premises_airport_code'])){
 			$session['tenant'] = Company::model()->findTenantIdByCode(Yii::app()->params['on_premises_airport_code']);
 			$this->redirect(array('preregistration/entryPoint'));
+		} else {
+			unset($session['tenant']);
 		}
 
 		$model = new Tenant();

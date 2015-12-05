@@ -47,7 +47,21 @@ $userRole = $session['role'];
 
 	<div id="header">
 		<div id="logo">
-            <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase.'/images/ids-circle-logo.png','logo here',['style'=>'height: 100px']), array('site/login')); ?>
+
+            <?php
+			if($company!=null){
+				$id = @is_null($company->logo)?1:$company->logo;
+
+				$photo = Photo::model()->findByPk($id);
+				if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
+					echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/ids-circle-logo.png', 'logo here', ['style' => 'height: 100px']), array('site/login'));
+				} else {
+					?><img id='photoPreview' style="width: auto !important; height: 100px !important" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+				}
+			} else {
+				echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/ids-circle-logo.png', 'logo here', ['style' => 'height: 100px']), array('site/login'));
+			}
+			?>
         </div>
 	
 	</div><!-- header -->

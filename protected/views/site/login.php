@@ -32,6 +32,8 @@ box-sizing: border-box;
 /* @var $this SiteController */
 /* @var $model LoginForm */
 /* @var $form CActiveForm  */
+$session = new CHttpSession();
+
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-timezone.js');
 
@@ -74,10 +76,17 @@ $this->pageTitle=Yii::app()->name . ' - Login';
             <td colspan="3" class="form-group" ><span class="add-on"><i class="b-password"></i></span><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password','style'=>'height: 47px')); ?></td>
             
         </tr>
-        <tr>
-            <td colspan="3" class="form-group" ><span class="add-on"><i class="b-tenant"></i></span><?php echo $form->dropDownList($model,'tenant',CHtml::listData(Company::model()->findAllTenants(),'id','name'), array('placeholder' => 'Company or Airport','style'=>'height: 47px; ')); ?></td>
-     </tr>
-
+        <?php
+        if(!isset($session['tenant'])) {?>
+            <tr>
+                <td colspan="3" class="form-group"><span class="add-on"><i
+                            class="b-tenant"></i></span><?php echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAllTenants(), 'id', 'name'), array('placeholder' => 'Company or Airport', 'style' => 'height: 47px; ')); ?>
+                </td>
+            </tr>
+            <?php
+        } else {?>
+            <?php echo $form->hiddenField($model, 'tenant') ?>
+        <?php } ?>
 
         <?php //echo $form->hiddenField($model,'timezone'); ?>
         

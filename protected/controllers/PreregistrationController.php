@@ -61,13 +61,13 @@ class PreregistrationController extends Controller
 		
 		unset($session['requsetForVerificationEmail']);
 
-		$model = '';
-//		if(isset($session['tenant']) && $session['workstation'] != ''){
-//			$model = $session['workstation_model'];
-//		}
-//		else{
-			$model = new Tenant();
-//		}
+
+		if(isset(Yii::app()->params['on_premises_airport_code'])){
+			$session['tenant'] = Company::model()->findTenantIdByCode(Yii::app()->params['on_premises_airport_code']);
+			$this->redirect(array('preregistration/entryPoint'));
+		}
+
+		$model = new Tenant();
 
 		if(isset($_POST['Tenant']))
 		{

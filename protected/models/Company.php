@@ -518,6 +518,12 @@ class Company extends CActiveRecord {
       return $tenants;
     }
 
+    public function findTenantIdByCode($code){
+        $company = Company::model()->find("code='$code' and company_type=1 and is_deleted=0");
+        return isset($company['id'])?$company['id']:null;
+    }
+
+
     public function getModelName()
     {
         return __CLASS__;

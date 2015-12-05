@@ -1,15 +1,5 @@
 <?php
     $session = new CHttpSession;
-    //this is because to ensure the CAVMS-1144 and CAVMS-1092
-    $tenant = '';
-    if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
-        $tenant = Yii::app()->user->tenant;
-    }
-    else
-    {
-        $tenant = (isset($session['wk_tenant']) && ($session['wk_tenant'] != "")) ? $session['wk_tenant'] : '';
-    }
-
 ?>
 
 <!-- <div class="page-content"> -->
@@ -17,7 +7,7 @@
         
         <?php
             $form=$this->beginWidget('CActiveForm', array(
-                'id'=>'entry-point-form',
+                'id'=>'tenant-form',
                 'enableClientValidation'=>true,
                 'clientOptions'=>array(
                     'validateOnSubmit'=>true,
@@ -54,26 +44,76 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-4 fixedMargin">
-                
-                <?php
-                    $ws='';
-                    if($tenant != ""){
-                        $ws=Workstation::model()->findAll('is_deleted=0 and tenant = '.$tenant);
-                    }else{
-                         $ws=Workstation::model()->findAll('is_deleted=0');
-                    }
-                    $list=CHtml::listData($ws,'id','name');
-                    echo $form->dropDownList($model,'entrypoint',
-                        $list,
-                        array(
-                            'class'=>'form-control input-sm' ,
-                            'empty' => 'Chose your entry point')
-                    );
-                ?>
-                
-                <?php echo $form->error($model,'entrypoint'); ?>
-            </div>
+<!--            <div class="col-sm-4 fixedMargin">-->
+
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <?php
+                                    $tenantsAndImages = Company::model()->findAllTenantsAndImages();
+                                    echo $form->dropDownList($model,'tenant',
+                                        CHtml::listData($tenantsAndImages, 'id', 'name'),
+                                    array(
+                                        'class'=>'form-control input-sm' ,
+                                        'empty' => 'Choose an Airport')
+                                );?>
+                            </div>
+                            <?php echo $form->error($model,'tenant'); ?>
+                        </div>
+                        <div class="col-sm-offset-1 col-sm-6">
+                            <div class="logo-grid All">
+                                <div class="filter">
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid All"><strong>ALL | </strong></span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid A">A</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid B">B</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid C">C</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid D">D</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid E">E</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid F">F</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid G">G</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid H">H</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid I">I</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid J">J</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid K">K</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid L">L</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid M">M</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid N">N</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid O">O</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid P">P</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid R">R</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid S">S</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid T">T</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid U">U</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid V">V</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid W">W</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid X">X</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid Y">Y</span>
+                                    <span data-object=".logo-grid" data-closet-update-class="logo-grid Z">Z</span>
+                                </div>
+                                <div class="logos">
+                                    <?php
+                                    foreach($tenantsAndImages as $tenantAndImage)
+                                    {
+                                        $letter= strtoupper(substr($tenantAndImage['name'],0,1));
+                                        $id = $tenantAndImage['id'];
+                                        ?>
+                                        <label  data-group="<?php echo $letter;?>" style="width:100px" >
+                                                <input type="radio" name="airport" id="airport-radio-button" value="<?php echo $id;?>" >
+                                                <figure>
+                                                    <img src="data:image/png;base64,<?php echo $tenantAndImage['db_image'];  ?>" >
+                                                </figure>
+                                        </label>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+<!--            </div>-->
         </div>
 
 
@@ -106,6 +146,15 @@
         </div>  
 
     <?php $this->endWidget(); ?>
+    <script>
+        $(document).ready(function() {
+             $('input[type=radio][name=airport]').on('change',function(){
+                var airportCode = $('input[type=radio][name=airport]:checked').val();
+                $('#Tenant_tenant').val(airportCode);
+            });
+
+        });
+    </script>
 
 <!-- </div> -->
 

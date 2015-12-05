@@ -6281,6 +6281,7 @@ iframe[name="google_conversion_frame"] {
   width: 0%;
   margin: 0;
   padding-top: 0%;
+  padding-right: 5px;
   position: relative;
   text-align: center;
   overflow: hidden;

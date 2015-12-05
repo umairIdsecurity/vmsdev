@@ -1,6 +1,7 @@
 <?php
-class EntryPoint extends CFormModel{
-    public $entrypoint;
+class Tenant extends CFormModel{
+
+    public $tenant;
     /**
      * Declares the validation rules.
      */
@@ -8,7 +9,9 @@ class EntryPoint extends CFormModel{
     {
         return array(
 
-            array('entrypoint', 'required' , 'message'=>'Please choose your entry point'),
+            array('tenant', 'required' , 'message'=>'Please choose an airport'),
+
+
         );
     }
     /**
@@ -19,7 +22,7 @@ class EntryPoint extends CFormModel{
     public function attributeLabels()
     {
         return array(
-            'entrypoint'=>'Entry Point',
+            'tenant'=>'Airport',
         );
     }
 }

@@ -64,7 +64,7 @@ $session = new CHttpSession;
         <div class="col-sm-12">
             <div class="">
                 <div class="pull-left">
-                    <a href="<?php echo Yii::app()->createUrl("preregistration"); ?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    <a href="<?php echo Yii::app()->createUrl("preregistration/entryPoint"); ?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
                 <div class="pull-right">
                     <?php (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? $link = Yii::app()->createUrl("preregistration/declaration"):$link = 'javascript:;';?>

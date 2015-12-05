@@ -18,7 +18,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('uploadProfilePhoto','forgot','reset','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','compAdminPrivacyPolicy','asicRegistration','companyAdminRegistration','createAsicNotificationRequestedVerifications'),
+				'actions' => array('entryPoint','uploadProfilePhoto','forgot','reset','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','compAdminPrivacyPolicy','asicRegistration','companyAdminRegistration','createAsicNotificationRequestedVerifications'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -52,12 +52,42 @@ class PreregistrationController extends Controller
 		}
 	}
 
+
 	public function actionIndex()
 	{
 		$session = new CHttpSession;
 		$session['stepTitle'] = 'PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)';
 		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration'>Preregister for a VIC</a>";
 		
+		unset($session['requsetForVerificationEmail']);
+
+		$model = '';
+//		if(isset($session['tenant']) && $session['workstation'] != ''){
+//			$model = $session['workstation_model'];
+//		}
+//		else{
+			$model = new Tenant();
+//		}
+
+		if(isset($_POST['Tenant']))
+		{
+			$model->attributes=$_POST['Tenant'];
+			if($model->validate())
+			{
+				$session['tenant'] = $model->tenant;
+				$session['pre-page'] = 2;
+				$this->redirect(array('preregistration/entryPoint'));
+			}
+		}
+		$this->render('index',array('model'=>$model));
+	}
+
+	public function actionEntryPoint(){
+
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)';
+		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration'>Preregister for a VIC</a>";
+
 		unset($session['requsetForVerificationEmail']);
 
 		$model = '';
@@ -78,19 +108,19 @@ class PreregistrationController extends Controller
 				//these will be used to ensure the nothing left in flow
 				$session['workstation'] = $workstation->id;
 				$session['created_by'] = $workstation->created_by;
-				$session['wk_tenant'] = $workstation->tenant;
-				$session['pre-page'] = 2;
+				$session['tenant'] = $workstation->tenant;
+				$session['pre-page'] = 3;
 				$this->redirect(array('preregistration/privacyPolicy'));
 			}
 		}
-		$this->render('index',array('model'=>$model));
+		$this->render('workstation-selection',array('model'=>$model));
 	}
 
 	public function actionPrivacyPolicy()
 	{
 		$session = new CHttpSession;
 		if(!isset($session['workstation']) || empty($session['workstation']) || is_null($session['workstation'])){
-			$this->redirect(array('preregistration/index'));
+			$this->redirect(array('preregistration/entryPoint'));
 		}
 		$session['stepTitle'] = 'VIC REQUIREMENTS';
 		$session['step2Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/privacyPolicy'>Requirements</a>";
@@ -151,7 +181,7 @@ class PreregistrationController extends Controller
 				$this->redirect(array('preregistration/visitReason'));
 			}	
 			$model->attributes = $_POST['Registration'];
-			if($model->tenant == null || $model->tenant == ""){$model->tenant = $session['wk_tenant'];}
+			if($model->tenant == null || $model->tenant == ""){$model->tenant = $session['tenant'];}
 			if($model->created_by == null || $model->created_by == ""){$model->created_by =  $session['created_by'];}
 			if($model->visitor_workstation == null || $model->visitor_workstation == ""){$model->visitor_workstation = $session['workstation'];}
 			$model->identification_country_issued = $_POST['Registration']['identification_country_issued'];
@@ -203,7 +233,7 @@ class PreregistrationController extends Controller
 			$model->card_type = 6; //VIC 24 hour Card
 			$model->created_by = $session['created_by'];
 			$model->workstation  = $session['workstation'];
-			$model->tenant = $session['wk_tenant'];
+			$model->tenant = $session['tenant'];
 			$model->visit_status  = 2; //default visit status is 2=PREREGISTER
 			$model->company =  $_POST['Company']['name'];
 			if($model->validate())
@@ -265,7 +295,7 @@ class PreregistrationController extends Controller
 				if( !empty($model->email) && !empty($model->contact_number) ){
 					$model->profile_type = 'ASIC';
 					$model->key_string = hash('ripemd160', uniqid());
-					$model->tenant = $session['wk_tenant'];
+					$model->tenant = $session['tenant'];
 					$model->visitor_workstation = $session['workstation'];
 					$model->created_by = $session['created_by'];
 					$model->role = 9; //Staff Member/Intranet

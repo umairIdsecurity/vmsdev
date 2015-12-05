@@ -16,11 +16,17 @@ class UserIdentity extends CUserIdentity {
      * @return boolean whether authentication succeeds.
      */
     private $_id;
+    public $tenant;
+
+    public function __construct($username,$password,$tenant){
+        $this->tenant = $tenant;
+        parent::__construct($username,$password);
+    }
     
 
     public function authenticate() {
         
-        $user = User::model()->find('LOWER(email)=?', array(strtolower($this->username)));
+        $user = User::model()->find('LOWER(email)=? AND tenant in (1,?)', array(strtolower($this->username),$this->tenant));
         
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;

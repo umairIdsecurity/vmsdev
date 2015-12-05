@@ -502,6 +502,21 @@ class Company extends CActiveRecord {
         return $aArray;
 
     }
+    public static function findAllTenantsAndImages(){
+
+        $aArray = array();
+
+        $tenants = Yii::app()->db->createCommand()
+            ->selectdistinct('company.id as id, company.name as name, db_image')
+            ->from('company')
+            ->leftjoin('photo','company.logo = photo.id')
+            ->where("company.id != 1 and company.company_type = 1 AND company.is_deleted = 0")
+            ->order("company.name")
+            ->queryAll();
+
+
+      return $tenants;
+    }
 
     public function getModelName()
     {

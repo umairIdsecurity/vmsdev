@@ -10,7 +10,9 @@ class LoginForm extends CFormModel {
     public $username;
     public $password;
     public $rememberMe;
+    public $tenant;
     private $_identity;
+
     
     /**
      * Declares the validation rules.
@@ -20,7 +22,7 @@ class LoginForm extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('username, password', 'required'),
+            array('username, password, tenant', 'required'),
             // rememberMe needs to be a boolean
             array('rememberMe', 'boolean'),
             // password needs to be authenticated
@@ -43,7 +45,7 @@ class LoginForm extends CFormModel {
      */
     public function authenticate($attribute, $params) {
         if (!$this->hasErrors()) {
-            $this->_identity = new UserIdentity($this->username, $this->password);
+            $this->_identity = new UserIdentity($this->username, $this->password,$this->tenant);
             if (!$this->_identity->authenticate())
                 $this->addError('password', 'Incorrect username or password.');
         }
@@ -55,10 +57,12 @@ class LoginForm extends CFormModel {
      */
     public function login() {
         if ($this->_identity === null) {
-            $this->_identity = new UserIdentity($this->username, $this->password);
+            $this->_identity = new UserIdentity($this->username, $this->password,$this->tenant);
             $this->_identity->authenticate();
         }
         if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
+            $session = new CHttpSession();
+            $session['tenant'] = $this['tenant'];
             $duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
             Yii::app()->user->login($this->_identity, $duration);
             $this->audit_log_login(); //logs the login of the user
@@ -108,54 +112,9 @@ class LoginForm extends CFormModel {
 	*while adding ROLE_OPERATOR, ROLE_AIRPORT_OPERATOR and ROLE_AGENT_AIRPORT_ADMIN	
 	*/
 	public function checkInductions($id) {
+
             $user = User::model()->findByPk($id);
-            $date_db = $user->induction_expiry;
-            $current_date=date("Y-m-d");
-            // There is no need to show login expires notification
-            // $validateNotifiSend2Weeks = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 2 weeks'");
-            // $validateNotifiSend1Day = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 1 day'");
-            // if(empty($validateNotifiSend2Weeks)){
-            //     //2 weeks or 14 days prior to expiry date from today date
-            //     if (strtotime($date_db) <= strtotime($current_date) + 86400*14 && strtotime($date_db) > strtotime($current_date) + 86400*13) {
-            //         $model=new Notification;
-            //         $model->created_by = Yii::app()->user->tenant;
-            //         $model->date_created = date("Y-m-d");
-            //         $model->subject = "Login Expire in 2 weeks";
-            //         $model->message = "Your login will expire after two weeks from today.";
-            //         $model->role_id = $user->role;
-            //         $model->notification_type = "Login Notifcation";
 
-            //         if($model->save()){
-            //             $notify = new UserNotification;
-            //             $notify->user_id = $user->id;
-            //             $notify->notification_id = $model->id;
-            //             $notify->has_read = 0; //Not Yet
-            //             $notify->save();
-            //         }
-            //     }
-            // }
-            
-            // if(empty($validateNotifiSend1Day)){
-            //     //1 day prior to expiry date from today date
-            //     if (strtotime($date_db) <= strtotime($current_date) + 86400*1) {
-            //         $model=new Notification;
-            //         $model->created_by = Yii::app()->user->tenant;
-            //         $model->date_created = date("Y-m-d");
-            //         $model->notification_type = "Login Notifcation";
-            //         $model->message = "Your login will expire after 1 day from today.";
-            //         $model->role_id = $user->role;
-            //         $model->subject = "Login Expire in 1 day";
-
-            //         if($model->save()){
-            //             $notify = new UserNotification;
-            //             $notify->user_id = $user->id;
-            //             $notify->notification_id = $model->id;
-            //             $notify->has_read = 0; //Not Yet
-            //             $notify->save();
-            //         }
-            //     }
-            // }    
-           
             $returnData=array("role"=>$user->role,"success"=>true,"inducComplete"=>true);
             
             if($user->is_required_induction == 1){

@@ -51,7 +51,7 @@ $session = new CHttpSession;
         <div class="form-group" id="privacy_notice">
 
 
-            <label class="checkbox text-size"><input <?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? "checked":""; ?> id="toggleCheckbox" name="name1" type="checkbox" value="<?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? '1':'0';?>"><span class="checkbox-style"></span><span class=" text-size" style="line-height:21px">I consent to Moorabin Airport using and disclosing my personal information in accordance with the Airport’s privacy notice.</span></label>
+            <label class="checkbox text-size"><input <?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? "checked":""; ?> id="toggleCheckbox" name="name1" type="checkbox" value="<?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? '1':'0';?>"><span class="checkbox-style"></span><span class=" text-size" style="line-height:21px">I consent to <?=Company::model()->getCurrentTenantName() ?> using and disclosing my personal information in accordance with the Airport’s privacy notice.</span></label>
             
             <div id="errorDiv" style="display:none;color:red;">
                 Please mark Privacy Notice

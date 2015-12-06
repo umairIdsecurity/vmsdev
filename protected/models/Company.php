@@ -203,7 +203,8 @@ class Company extends CActiveRecord {
     
     //** Company name should be unique
     public function check_unique_name($attribute, $params) {
-      $model = Company::model()->find("name = '".$this->name."' AND tenant = ".Yii::app()->user->tenant);
+        $session = new CHttpSession();
+      $model = Company::model()->find("name = '".$this->name."' AND tenant = ".$session['tenant']);
       if( $model )
             $this->addError($attribute, 'Company name '.$this->name.' has already been taken.');
     }

@@ -119,5 +119,4 @@ class Tenant extends CActiveRecord
 		return parent::model($className);
 	}
 
-
 }

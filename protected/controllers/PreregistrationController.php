@@ -69,11 +69,11 @@ class PreregistrationController extends Controller
 			unset($session['tenant']);
 		}
 
-		$model = new Tenant();
+		$model = new TenantSelection();
 
-		if(isset($_POST['Tenant']))
+		if(isset($_POST['TenantSelection']))
 		{
-			$model->attributes=$_POST['Tenant'];
+			$model->attributes=$_POST['TenantSelection'];
 			if($model->validate())
 			{
 				$session['tenant'] = $model->tenant;

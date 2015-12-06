@@ -61,10 +61,11 @@ class LoginForm extends CFormModel {
             $this->_identity->authenticate();
         }
         if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
-            $session = new CHttpSession();
-            $session['tenant'] = $this['tenant'];
             $duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
             Yii::app()->user->login($this->_identity, $duration);
+            $session = new CHttpSession();
+            $session['tenant'] = Yii::app()->user->tenant;
+
             $this->audit_log_login(); //logs the login of the user
             return true;
         } else

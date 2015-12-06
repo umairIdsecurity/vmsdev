@@ -302,7 +302,7 @@ $model->identification_country_issued = 13;
                                 }
                                 ?>>
 
-                                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
+                                        <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                             name="Visitor[tenant]">
                                         <option value=''>Please select a tenant</option>
                                         <?php

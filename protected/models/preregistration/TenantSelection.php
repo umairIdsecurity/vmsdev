@@ -1,5 +1,5 @@
 <?php
-class Tenant extends CFormModel{
+class TenantSelection extends CFormModel{
 
     public $tenant;
     /**

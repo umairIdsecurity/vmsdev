@@ -189,7 +189,7 @@ class SiteController extends Controller {
         if (isset($_POST['LoginForm'])) {
             
             $model->attributes = $_POST['LoginForm'];
-            if(isset($session['tenant'])){
+            if(isset($session['tenant']) && $model->tenant==''){
                 $model->tenant = $session['tenant'];
             }
             // validate user input and redirect to the previous page if valid

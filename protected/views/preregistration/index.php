@@ -7,7 +7,7 @@
         
         <?php
             $form=$this->beginWidget('CActiveForm', array(
-                'id'=>'tenant-form',
+                'id'=>'tenantselection-form',
                 'enableClientValidation'=>true,
                 'clientOptions'=>array(
                     'validateOnSubmit'=>true,

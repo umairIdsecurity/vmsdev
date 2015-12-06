@@ -18,8 +18,8 @@ wget http://selenium-release.storage.googleapis.com/2.40/selenium-server-standal
 yum install -y jre
 
 # setup scripts
-cp etc_init.d_selenium /etc/init.d/selenium
-cp etc_init.d_Xvfb /etc/init.d/Xvfb
+cp selenium /etc/init.d
+cp Xvfb /etc/init.d
 
 
 # start the services

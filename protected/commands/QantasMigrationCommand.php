@@ -31,9 +31,6 @@ class QantasMigrationCommand extends CConsoleCommand
     public function actionImportFile($fileName)
     {
         // load the file
-        //$rows = CSVHelper::ImportCsvFromFile("/Users/gistewart/Downloads/201505 Qantas VIC MAY 2015.csv");
-        //$rows = CSVHelper::ImportCsvFromFile("/Users/geoffstewart/Downloads/201505 Qantas VIC MAY 2015.csv");
-
         $rows = CSVHelper::ImportCsvFromFile($fileName);
 
         $vms = new DataHelper(Yii::app()->db);

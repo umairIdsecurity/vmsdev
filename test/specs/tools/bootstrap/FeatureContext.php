@@ -42,7 +42,6 @@ class FeatureContext extends MinkContext
     /** @BeforeScenario */
     public function before($event)
     {
-
         $this->printDebug("Resetting Database");
         $this->iLoginWithUsernameAndPassword("superadmin@test.com","123456");
         $this->visit("/index.php?r=resetDatabase/resetWithTestData");
@@ -54,11 +53,14 @@ class FeatureContext extends MinkContext
     */
     public function iLoginWithUsernameAndPassword($username, $password)
     {
+        $this->getSession()->reset();
         return array(
             new Step\Given('I am on "/index.php"'),
+            new Step\Then('show me a screenshot'),
             new Step\When('I fill in "Username or Email" with "'.$username.'"'),
             new Step\When('I fill in "Password" with "'.$password.'"'),
             new Step\When('I press "Login"'),
+            new Step\Then('I should see "Dashboard" appear'),
         );
     }
 
@@ -67,7 +69,7 @@ class FeatureContext extends MinkContext
     */
     public function iLogout(){
         return array(
-            new Step\Given('I am on "/index.php?r=user/create"'),
+            new Step\Given('I am on "/index.php?r=site/logout"'),
         );
     }
 
@@ -169,11 +171,53 @@ class FeatureContext extends MinkContext
         $page = $this->getMainContext()->getSession()->getPage();
         $element = $page->find('xpath', '//td[text()="'.$subject.'"]');
         if (null === $element) {
-            throw new \Exception("Couldn't found workstation ".$subject." edit page!", 1);
+            throw new \Exception("Couldn't found ".$subject." edit button!", 1);
         } else {
             $tr = $element->getParent();
             $update = $tr->find('css', '.update');
             $update->click();
         }
     }
+
+    /**
+    * @Then /^I delete "([^"]*)"$/
+    */
+    public function iDeleteItem($subject)
+    {
+        $page = $this->getMainContext()->getSession()->getPage();
+        $element = $page->find('xpath', '//td[text()="'.$subject.'"]');
+        if (null === $element) {
+            throw new \Exception("Couldn't found ".$subject." delete button!", 1);
+        } else {
+            $tr = $element->getParent();
+            $delete = $tr->find('css', '.delete');
+            $delete->click();
+            #$url = $delete->getAttribute('href');
+            #$postdata = "";
+            #$this->getSession()->getDriver()->getClient()->request('POST', $url, $postdata);
+        }
+    }
+
+    /**
+     * This works for Selenium and other real browsers that support screenshots.
+     *
+     * @Then /^show me a screenshot$/
+     */
+    public function show_me_a_screenshot() {
+        $image_data = $this->getSession()->getDriver()->getScreenshot();
+        $file_and_path = '/tmp/behat_screenshot.jpg';
+        file_put_contents($file_and_path, $image_data);
+        $html = $this->getSession()->getDriver()->getContent();
+        file_put_contents('/tmp/behat_page.html', $html);
+    }
+
+    /**
+    * @Given /^I wait for (\d+) seconds$/
+    */
+    public function iWaitForSeconds($arg1)
+    {
+        $this->getSession()->wait($arg1*1000);
+    }
+
+
 }

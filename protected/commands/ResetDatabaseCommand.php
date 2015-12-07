@@ -25,8 +25,12 @@ class ResetDatabaseCommand extends CConsoleCommand
 
     }
 
-    public function deleteTenant()
+    public function deleteTenant($code)
     {
+
+    }
+
+    public function importTenant($fileName){
 
     }
 

@@ -46,8 +46,8 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="feature-test" failonerror="true">
-            <arg line="--config=specs/tools/behat.yml --profile=features --paths ${featureArg}" />
+        <exec executable="test/specs/tools/bin/behat" taskname="feature-test" failonerror="true">
+            <arg line="--config=test/specs/tools/behat.yml --profile=features --paths ${featureArg}" />
         </exec>
 
         <property name="feature-test.done"  value="true"/>

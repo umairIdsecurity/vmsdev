@@ -1,5 +1,5 @@
 imports:
-  - ../../my-behat-config.yml
+  - ../../../my-behat-config.yml
 
 default:
 
@@ -12,6 +12,7 @@ default:
       base_url: http://localhost
       goutte: ~
       selenium2: ~
+        wd_host: "http://localhost:8643/wd/hub"
 
 features:
   paths:
@@ -28,3 +29,6 @@ bugs:
 bugs-new:
   paths:
     features: ../bugs/new
+
+
+

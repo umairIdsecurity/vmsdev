@@ -1218,7 +1218,8 @@ class Visit extends CActiveRecord {
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
                 break;
             case VisitStatus::ACTIVE:
-                $totalCount += $dateIn->diff($dateNow)->days + 1;
+                $days = ($dateIn->diff($dateNow)->days) <= 0 ? 1: ($dateIn->diff($dateNow)->days);
+                $totalCount += $days;
                 break;
             default :
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
@@ -1299,7 +1300,7 @@ class Visit extends CActiveRecord {
                             $visitCount += $dateIn->diff($dateOut)->days + 1;
                             break;
                         case VisitStatus::ACTIVE:
-                            $visitCount += $dateIn->diff($dateNow)->days + 1;
+                            $visitCount += $dateIn->diff($dateNow)->days;
                             break;
                         default :
                             $visitCount += $dateIn->diff($dateOut)->days + 1;
@@ -1397,13 +1398,13 @@ class Visit extends CActiveRecord {
         //Has Active visits?? Then
         if( $visits )
         foreach( $visits as $key => $visit ) {
-        
+      
         // Set closed visit if time-checkout reached current time.   
          $dateIn  = new DateTime($visit["date_check_in"]);
          $dateOut = new DateTime($visit["date_check_out"]);
          $dateNow = new DateTime("NOW", new DateTimeZone($timezone));
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
-         if( $isExpired > 0 )  { //   expired or will expire today 
+         if( $isExpired >= 0 )  { //   expired or will expire today 
               
              $status = "";
             //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.

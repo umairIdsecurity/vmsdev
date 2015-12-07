@@ -18,7 +18,7 @@ class AddressHelper
     static $postCodeIndex = null;
 
 
-    public static function parse($fullAddress){
+    public static function parse($fullAddress,$useGoogleSpaces=false){
 
         if(AddressHelper::$suburbIndex==null){
             AddressHelper::getSuburbs();
@@ -32,11 +32,12 @@ class AddressHelper
         if($suburb!=null) {
             $address = rtrim(substr($fullAddress, 0, strpos($fullAddress, $suburb['Suburb'])), ',');
         } else {
-            // try to match with google spaces
-            $result = AddressHelper::parseFromGoogleSpaces($fullAddress);
-            if($result!=null)
-            {
-                return $result;
+            if($useGoogleSpaces) {
+                // try to match with google spaces
+                $result = AddressHelper::parseFromGoogleSpaces($fullAddress);
+                if ($result != null) {
+                    return $result;
+                }
             }
             $address = $fullAddress;
         }
@@ -48,15 +49,9 @@ class AddressHelper
             $dummy = ['Suburb'=>'Unknown','State'=>'WA','PostCode'=>'0000'];
             $result = array_merge($result,$dummy);
         }
-
         return $result;
-
-
-
-        return $result;
-
-
     }
+
     public static function regexParse($address){
         $pUnitNo = "([0-9]{1,4}[a-zA-Z]{0,1})";
         $pUnit = "(?<Unit>((({2}) $pUnitNo) )|($pUnitNo\/))?";

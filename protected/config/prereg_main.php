@@ -57,15 +57,18 @@ return CMap::mergeArray(
         // application components
         'components' => array(
 
-            /* 'session' => array (
-             'class'=> 'CDbHttpSession',
-             'connectionID' => 'db',
-             'sessionTableName' => 'yiisession',
-             'timeout' => 10,
-             'autoStart'=>false
-             ),
-             */
-
+            'mail'=>array(
+                'class' => 'ext.yii-mail.YiiMail',
+                'transportType' => 'smtp',
+                'transportOptions' => array(
+                    'host' => 'smtp.gmail.com',
+                    'username' => 'vmsnotify@gmail.com',
+                    'password' => 'vms12345',
+                    'port' => '465',
+                    'encryption'=>'tls',
+                ),
+                'viewPath' => 'application.views.mail',
+            ),
             'ePdf' => array(
                 'class' => 'ext.yii-pdf.EYiiPdf',
                 'params' => array(

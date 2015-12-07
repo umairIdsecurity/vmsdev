@@ -783,4 +783,6 @@ class CompanyController extends Controller
         $companyList = array_unique($companyList);
         return array_search($name, $companyList);
     }
+
+
 }

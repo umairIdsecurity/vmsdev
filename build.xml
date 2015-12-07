@@ -35,7 +35,7 @@
 
     <target name="feature-test"
         unless="feature-test.done"
-        description="Run tests for features found in the specs/ready/features directory.">
+        description="Run tests for features found in the test/specs/ready/features directory.">
 
         <condition property="featureArg" value="--name=${feature}" >
             <not>
@@ -46,8 +46,8 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="feature-test" failonerror="true">
-            <arg line="--config=specs/tools/behat.yml --profile=features --paths ${featureArg}" />
+        <exec executable="test/specs/tools/bin/behat" taskname="feature-test" failonerror="true">
+            <arg line="--config=test/specs/tools/behat.yml --profile=features --paths ${featureArg}" />
         </exec>
 
         <property name="feature-test.done"  value="true"/>
@@ -55,7 +55,7 @@
 
     <target name="bug-test"
             unless="bug-test.done"
-            description="Run tests for bugs found in the specs/bugs/fixed directory.">
+            description="Run tests for bugs found in the test/specs/bugs/fixed directory.">
 
         <condition property="arg" value="--name=${bug}" >
             <not>
@@ -66,8 +66,8 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="bug-test" failonerror="true" >
-            <arg line="--config=specs/tools/behat.yml --profile=bugs --paths ${arg}" />
+        <exec executable="test/specs/tools/bin/behat" taskname="bug-test" failonerror="true" >
+            <arg line="--config=test/specs/tools/behat.yml --profile=bugs --paths ${arg}" />
         </exec>
 
         <property name="bug-test.done"  value="true"/>
@@ -75,7 +75,7 @@
 
     <target name="new-feature-test"
             unless="new-feature-test.done"
-            description="Run tests for features found in the specs/new/features directory.">
+            description="Run tests for features found in the test/specs/new/features directory.">
 
         <condition property="featureArg" value="--name=${feature}" >
             <not>
@@ -86,8 +86,8 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="new-feature-test" failonerror="true">
-            <arg line="--config=specs/tools/behat.yml --profile=features-new --paths ${featureArg}" />
+        <exec executable="test/specs/tools/bin/behat" taskname="new-feature-test" failonerror="true">
+            <arg line="--config=test/specs/tools/behat.yml --profile=features-new --paths ${featureArg}" />
         </exec>
 
         <property name="new-feature-test.done"  value="true"/>
@@ -106,8 +106,8 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="new-bug-test" failonerror="true" >
-            <arg line="--config=specs/tools/behat.yml --profile=bugs-new  --paths ${arg}" />
+        <exec executable="test/specs/tools/bin/behat" taskname="new-bug-test" failonerror="true" >
+            <arg line="--config=test/specs/tools/behat.yml --profile=bugs-new  --paths ${arg}" />
         </exec>
 
         <property name="new-bug-test.done"  value="true"/>

@@ -61,6 +61,7 @@ class TenantTransferController extends Controller
         ['table_name'=>'visitor', 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
         ['table_name'=>'visitor', 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
         ['table_name'=>'visitor', 'column_name'=>'visitor_type'         ,'referenced_table_name'=>'visitor_type'    ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visitor', 'column_name'=>'photo'                ,'referenced_table_name'=>'photo'           ,'referenced_column_name'=>'id'],
 
         ['table_name'=>'visit'  , 'column_name'=>'tenant'               ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'tenant_agent'         ,'referenced_table_name'=>'company'         ,'referenced_column_name'=>'id'],
@@ -85,7 +86,7 @@ class TenantTransferController extends Controller
 
         ['table_name'=>'visit_reason'  , 'column_name'=>'tenant'        ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
         ['table_name'=>'visit_reason'  , 'column_name'=>'tenant_agent'  ,'referenced_table_name'=>'company','referenced_column_name'=>'id'],
-        
+
 
 
     ];
@@ -411,6 +412,8 @@ class TenantTransferController extends Controller
 
     function setReferencingIds($tableName, &$row, $foreignKeys, &$idMappings,$targetTables){
 
+        $okToSkip = ['visitor.photo'];
+
         // go through each column
         foreach($row as $columnName=>$value){
 
@@ -432,9 +435,12 @@ class TenantTransferController extends Controller
                         echo $tableName.".".$columnName." ".$value."=".$row[$columnName]."<br>";
 
                     } else {
-
-                        throw new CException("New id value for " . $tableName . "." . $columnName . "=" . $value . " does not exist. perhaps tables are added in wrong order?");
-
+                        if(!in_array($tableName . "." . $columnName,$okToSkip)) {
+                            throw new CException("New id value for " . $tableName . "." . $columnName . "=" . $value . " does not exist. perhaps tables are added in wrong order?");
+                        } else {
+                            echo "Skipping new id value for " . $tableName . "." . $columnName . "=" . $value . " as it does not exist. perhaps tables are added in wrong order?";
+                            $row[$columnName] = null;
+                        }
                     }
                 }
             }

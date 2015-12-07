@@ -35,9 +35,9 @@ $session = new CHttpSession;
 
                 <h4 style="font-size: 14px; font-weight:bold">PRIVACY NOTICE - What does the Airport do with your personal information?</h4>
                 <p class="text-size">Information you provide on the VIC application includes personal information, the collection, use and disclosure of which is governed by the Privacy Act 1998 (Commonwealth). <br><br>
-                    The Airport uses this information internally for the purposes of its functions under the Aviation Transport Security Act 2004 and Aviation Transport Security Regulations 2005. <br><br>
+                    <?=Company::model()->getCurrentTenantName() ?> uses this information internally for the purposes of its functions under the Aviation Transport Security Act 2004 and Aviation Transport Security Regulations 2005. <br><br>
                     For example, the Airport will use this information to process VIC applications, to monitor compliance with the 28 day limit and to keep a register of every VIC issued. <br><br>
-                    The Airport may also disclose this information to third parties. For example, personal information will be shared with our Authorised Agents (as approved in our Transport Security Program) who issue VICs. <br><br>
+                    <?=Company::model()->getCurrentTenantName() ?> may also disclose this information to third parties. For example, personal information will be shared with our Authorised Agents (as approved in our Transport Security Program) who issue VICs. <br><br>
                 </p>
             </div>
 
@@ -51,7 +51,7 @@ $session = new CHttpSession;
         <div class="form-group" id="privacy_notice">
 
 
-            <label class="checkbox text-size"><input <?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? "checked":""; ?> id="toggleCheckbox" name="name1" type="checkbox" value="<?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? '1':'0';?>"><span class="checkbox-style"></span><span class=" text-size" style="line-height:21px">I consent to Moorabin Airport using and disclosing my personal information in accordance with the Airport’s privacy notice.</span></label>
+            <label class="checkbox text-size"><input <?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? "checked":""; ?> id="toggleCheckbox" name="name1" type="checkbox" value="<?php echo (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? '1':'0';?>"><span class="checkbox-style"></span><span class=" text-size" style="line-height:21px">I consent to <?=Company::model()->getCurrentTenantName() ?> using and disclosing my personal information in accordance with the Airport’s privacy notice.</span></label>
             
             <div id="errorDiv" style="display:none;color:red;">
                 Please mark Privacy Notice
@@ -64,7 +64,7 @@ $session = new CHttpSession;
         <div class="col-sm-12">
             <div class="">
                 <div class="pull-left">
-                    <a href="<?php echo Yii::app()->createUrl("preregistration"); ?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+                    <a href="<?php echo Yii::app()->createUrl("preregistration/entryPoint"); ?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
                 </div>
                 <div class="pull-right">
                     <?php (isset($session['privacyPolicy'])&&$session['privacyPolicy']=='checked') ? $link = Yii::app()->createUrl("preregistration/declaration"):$link = 'javascript:;';?>

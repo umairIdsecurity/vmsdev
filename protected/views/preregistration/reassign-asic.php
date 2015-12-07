@@ -8,7 +8,7 @@ if(isset(Yii::app()->user->tenant) && (Yii::app()->user->tenant != "")){
 }
 else
 {
-    $tenant = (isset($session['wk_tenant']) && ($session['wk_tenant'] != "")) ? $session['wk_tenant'] : '';
+    $tenant = (isset($session['tenant']) && ($session['tenant'] != "")) ? $session['tenant'] : '';
 }
 
 ?>

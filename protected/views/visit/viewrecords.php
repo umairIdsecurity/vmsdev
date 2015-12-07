@@ -38,6 +38,7 @@ $date_check_in = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 	),
 // DONT FORGET TO ADD TRUE this will create the datepicker return as string
 ), true);
+
 // this is the date picker
 $date_check_out = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 	// 'model'=>$model,
@@ -59,6 +60,27 @@ $date_check_out = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 // DONT FORGET TO ADD TRUE this will create the datepicker return as string
 ), true);
 
+// this is the date picker
+$date_of_birth = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+	// 'model'=>$model,
+	'name'        => 'Visit[date_of_birth]',
+	'language'    => 'id',
+	'value'       => $model->date_of_birth,
+	                       // additional javascript options for the date picker plugin
+	'options'     => array(
+		'showAnim'       => 'fold',
+		'dateFormat'     => 'dd-mm-yy',
+		'changeMonth'    => 'true',
+		'changeYear'     => 'true',
+		'constrainInput' => 'false',
+	),
+	'htmlOptions' => array(
+		'placeholder' => 'Date Of Birth',
+		/*'style'=>'height:20px;width:70px;',*/
+	),
+// DONT FORGET TO ADD TRUE this will create the datepicker return as string
+), true);
+
 $login_url = $this->createUrl('site/login');
 
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -74,6 +96,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
         jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
         jQuery('#Visit_date_check_out').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
+        jQuery('#Visit_date_of_birth').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
     }",
     'ajaxUpdateError' => "function(id, data) {window.location.replace('$login_url');}",
 
@@ -149,14 +172,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'filter'      => CHtml::activeTextField($model, 'time_check_out', array('placeholder' => 'Check Out Time')),
 			'htmlOptions' => array('width' => '110px'),
 		),
+		array(
+			'name'        => 'date_of_birth',
+			'type'        => 'html',
+			'filter'      => $date_of_birth,
+			'htmlOptions' => array('width' => '110px'),
+			'value'		  => '!empty($data->visitor0->date_of_birth) ? CHelper::formatDate($data->visitor0->date_of_birth) : ""',	
+		),
 		// 'card0.date_expiration',
 		/*array(
-	'name' => 'date_out',
-	'type' => 'html',
-	'header' => 'Date Expiration',
-	'filter'=>CHtml::activeTextField($model, 'date_out', array('placeholder'=>'Date Expiration')),
-	'htmlOptions'=>array('width'=>'110px'),
-	),*/
+			'name' => 'date_out',
+			'type' => 'html',
+			'header' => 'Date Expiration',
+			'filter'=>CHtml::activeTextField($model, 'date_out', array('placeholder'=>'Date Expiration')),
+			'htmlOptions'=>array('width'=>'110px'),
+		),*/
 	),
 ));
 

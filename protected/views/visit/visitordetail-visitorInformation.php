@@ -414,7 +414,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($asic, 'first_name', ['disabled' => $disabled, 'name' => 'ASIC[first_name]']); ?>
+                                <?php echo $visitorForm->textField($asic, 'first_name', array('disabled' => $disabled, 'name' => 'ASIC[first_name]') ); ?>
                                 <br />
                                 <?php echo $visitorForm->error($asic, 'first_name'); ?>
                             </td>
@@ -425,7 +425,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($asic, 'last_name', ['disabled' => $disabled, 'name' => 'ASIC[last_name]']); ?>
+                                <?php echo $visitorForm->textField($asic, 'last_name', array('disabled' => $disabled, 'name' => 'ASIC[last_name]')); ?>
                                 <br />
                                 <?php echo $visitorForm->error($asic, 'last_name'); ?>
                             </td>
@@ -437,7 +437,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <input type="hidden" name="asic_id" id="asic_sponsor_id" value="<?php echo $asic->id; ?>">
-                                <?php echo $visitorForm->textField($asic, 'asic_no', ['disabled' => $disabled, 'name' => 'ASIC[asic_no]']); ?>
+                                <?php echo $visitorForm->textField($asic, 'asic_no', array('disabled' => $disabled, 'name' => 'ASIC[asic_no]') ); ?>
                                 <br />
                                 <?php echo $visitorForm->error($asic, 'asic_no'); ?>
                             </td>

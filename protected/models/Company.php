@@ -203,7 +203,8 @@ class Company extends CActiveRecord {
     
     //** Company name should be unique
     public function check_unique_name($attribute, $params) {
-      $model = Company::model()->find("name = '".$this->name."' AND tenant = ".Yii::app()->user->tenant);
+        $session = new CHttpSession();
+      $model = Company::model()->find("name = '".$this->name."' AND tenant = ".$session['tenant']);
       if( $model )
             $this->addError($attribute, 'Company name '.$this->name.' has already been taken.');
     }
@@ -502,6 +503,53 @@ class Company extends CActiveRecord {
         return $aArray;
 
     }
+    public static function findAllTenantsAndImages(){
+
+        $aArray = array();
+
+        $tenants = Yii::app()->db->createCommand()
+            ->selectdistinct('company.id as id, company.name as name, db_image,filename')
+            ->from('company')
+            ->leftjoin('photo','company.logo = photo.id')
+            ->where("company.id != 1 and company.company_type = 1 AND company.is_deleted = 0")
+            ->order("company.name")
+            ->queryAll();
+
+      foreach($tenants as &$tenant){
+          $tenant['db_image'] = "data:image/".pathinfo($tenant['filename'], PATHINFO_EXTENSION).";base64,".$tenant['db_image'];
+      }
+      return $tenants;
+    }
+
+    public function findTenantIdByCode($code){
+        $company = Company::model()->find("code='$code' and company_type=1 and is_deleted=0");
+        return isset($company['id'])?$company['id']:null;
+    }
+
+    public function getCurrentTenantName(){
+        $session = new CHttpSession();
+        if(isset($session['tenant'])){
+            $company = Company::model()->find("id=".$session['tenant']." and company_type=1 and is_deleted=0");
+            return isset($company['name'])?$company['name']:null;
+        }
+        return "The Airport";
+    }
+
+    public function getCurrentTenantImageSource(){
+
+        $session = new CHttpSession();
+
+        $tenant = Yii::app()->db->createCommand()
+            ->selectdistinct('filename, db_image')
+            ->from('company')
+            ->leftjoin('photo','company.logo = photo.id')
+            ->where("company.id = ".$session['tenant']." and company.company_type = 1 AND company.is_deleted = 0")
+            ->queryAll();
+
+        return "data:image/".pathinfo($tenant[0]['filename'], PATHINFO_EXTENSION).";base64,".$tenant[0]['db_image'];
+
+    }
+
 
     public function getModelName()
     {

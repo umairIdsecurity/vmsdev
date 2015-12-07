@@ -726,7 +726,10 @@ class Visit extends CActiveRecord {
         $criteria->compare('company0.contact', $this->_contactperson, true);
         $criteria->compare('company0.email_address', $this->_contactemail, true);
         $criteria->compare('company0.mobile_number', $this->_contactphone, true);
-        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+        
+        //$criteria->compare('visitor0.date_of_birth',$this->date_of_birth,true);
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth));
+        
         $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
         $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
         $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
@@ -772,7 +775,9 @@ class Visit extends CActiveRecord {
                 OR company0.contact LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.mobile_number LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.email_address LIKE CONCAT('%', :filterProperties , '%')
+                
                 OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                
                 OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
@@ -1213,7 +1218,8 @@ class Visit extends CActiveRecord {
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
                 break;
             case VisitStatus::ACTIVE:
-                $totalCount += $dateIn->diff($dateNow)->days + 1;
+                $days = ($dateIn->diff($dateNow)->days) <= 0 ? 1: ($dateIn->diff($dateNow)->days);
+                $totalCount += $days;
                 break;
             default :
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
@@ -1294,7 +1300,7 @@ class Visit extends CActiveRecord {
                             $visitCount += $dateIn->diff($dateOut)->days + 1;
                             break;
                         case VisitStatus::ACTIVE:
-                            $visitCount += $dateIn->diff($dateNow)->days + 1;
+                            $visitCount += $dateIn->diff($dateNow)->days;
                             break;
                         default :
                             $visitCount += $dateIn->diff($dateOut)->days + 1;
@@ -1392,13 +1398,13 @@ class Visit extends CActiveRecord {
         //Has Active visits?? Then
         if( $visits )
         foreach( $visits as $key => $visit ) {
-        
+      
         // Set closed visit if time-checkout reached current time.   
          $dateIn  = new DateTime($visit["date_check_in"]);
          $dateOut = new DateTime($visit["date_check_out"]);
          $dateNow = new DateTime("NOW", new DateTimeZone($timezone));
          $isExpired = $dateOut->diff($dateNow)->format("%r%a");
-         if( $isExpired > 0 )  { //   expired or will expire today 
+         if( $isExpired >= 0 )  { //   expired or will expire today 
               
              $status = "";
             //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.

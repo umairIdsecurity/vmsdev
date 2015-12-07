@@ -138,7 +138,7 @@ $fontScale = 2;
     .card-print {
         width:<?php echo $labelWidthPx; ?>px;
         height:<?php echo $labelHeightPx; ?>px;
-        /*border:1px solid #000;*/
+         border:1px solid #000;
         border-radius:20px;
         background:<?= $bgcolor; ?>;
         position: relative;

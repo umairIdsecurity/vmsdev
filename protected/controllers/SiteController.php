@@ -56,69 +56,29 @@ class SiteController extends Controller {
     }
     
 
-    /*public function actionRedirect()
-    {
-        $session = new CHttpSession;
-
-        if (!$session) {
-            return;
-        }
-
-        switch ($session['role']) {
-            case Roles::ROLE_AGENT_OPERATOR:
-            case Roles::ROLE_OPERATOR:
-                if (!LoginForm::findWorkstations($session['id'])) {
-                    Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
-                } else {
-                    $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
-                }
-                break;
-            case Roles::ROLE_STAFFMEMBER:
-                $this->redirect('index.php?r=dashboard/viewmyvisitors');
-                break;
-            case Roles::ROLE_ADMIN:
-                $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
-                break;
-            case Roles::ROLE_AGENT_ADMIN:
-                $this->redirect('index.php?r=dashboard/admindashboard');
-                break;
-            default:
-                $this->redirect('index.php?r=dashboard');
-        }
-    }*/
 
     public function actionIndex() {
+
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
+
+
+        if(isset(Yii::app()->params['on_premises_airport_code'])) {
+
+            $airportCode= Yii::app()->params['on_premises_airport_code'];
+            $tenantCompany = Company::model()->find("code='" . $airportCode . "' and company_type=1 and is_deleted=0");
+
+            if($tenantCompany!=null){
+                $session['tenant'] = $tenantCompany->id;
+            } else {
+                $session['tenant'] = 1;
+            }
+        }
+
 
         if( (isset($_SERVER['HTTP_HOST']) && substr($_SERVER['HTTP_HOST'],0,5) =='vmspr' ) ||
             (isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg') )
         {
-            $airportCode=null;
-            if(isset(Yii::app()->params['on_premises_airport_code'])){
-                $airportCode=Yii::app()->params['on_premises_airport_code'];
-            } else if(isset($_GET['airportcode'])){
-                $airportCode=$_GET['airportcode'];
-            } else if(isset($_SESSION['airportcode'])){
-                $airportCode=$_SESSION['airportcode'];
-            } else {
-                throw new CException("Airport code must be specified for preregistration.");
-            }
-
-            if(!isset($_SESSION['airportcode']) || !isset($_SESSION['tenant'])) {
-
-                $_SESSION['airportcode'] = $airportCode;
-
-                $tenantCompany = Company::model()->find("code='" . $airportCode . "' and company_type=1 and is_deleted=0");
-
-                if($tenantCompany!=null){
-                    $_SESSION['tenant'] = $tenantCompany->tenant;
-                } else {
-                    throw new CException("Airport ".$airportCode." not found.");
-                }
-
-            }
-
 
             $this->redirect('index.php/preregistration');
 
@@ -175,14 +135,14 @@ class SiteController extends Controller {
         if (isset($_POST['ContactForm'])) {
             $model->attributes = $_POST['ContactForm'];
             if ($model->validate()) {
-                $name = '=?UTF-8?B?' . base64_encode($model->name) . '?=';
-                $subject = '=?UTF-8?B?' . base64_encode($model->subject) . '?=';
+                $name = $model->name;
+                $subject = $model->subject;
                 $headers = "From: $name <{$model->email}>\r\n" .
                         "Reply-To: {$model->email}\r\n" .
                         "MIME-Version: 1.0\r\n" .
                         "Content-Type: text/plain; charset=UTF-8";
 
-                mail(Yii::app()->params['adminEmail'], $subject, $model->body, $headers);
+                EmailTransport::mail(Yii::app()->params['adminEmail'], $subject, $model->body, $headers);
                 Yii::app()->user->setFlash('contact', 'Thank you for contacting us. We will respond to you as soon as possible.');
                 $this->refresh();
             }
@@ -190,12 +150,35 @@ class SiteController extends Controller {
         $this->render('contact', array('model' => $model));
     }
 
+
+
     /**
      * Displays the login page
      */
     public function actionLogin() {
+
         Yii::app()->session->destroy();
+
+        $session = new CHttpSession();
         $model = new LoginForm;
+
+
+        if(isset(Yii::app()->params['on_premises_airport_code'])) {
+
+            $airportCode= Yii::app()->params['on_premises_airport_code'];
+
+            $tenantCompany = Company::model()->find("code='" . $airportCode . "' and company_type=1 and is_deleted=0");
+
+            if($tenantCompany!=null){
+                $session['tenant'] = $tenantCompany->id;
+                $model->tenant = $tenantCompany->id;
+            } else {
+                $session['tenant'] = 1;
+                $model['tenant'] = 1;
+            }
+        }
+
+
         // if it is ajax validation request
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
             echo CActiveForm::validate($model);
@@ -206,7 +189,9 @@ class SiteController extends Controller {
         if (isset($_POST['LoginForm'])) {
             
             $model->attributes = $_POST['LoginForm'];
-            
+            if(isset($session['tenant']) && $model->tenant==''){
+                $model->tenant = $session['tenant'];
+            }
             // validate user input and redirect to the previous page if valid
             if ($model->validate() && $model->login()) {
                 $session = new CHttpSession;

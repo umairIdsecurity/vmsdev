@@ -19,6 +19,6 @@ $param .= '<h4>Admin</h4>';
  */
 $headers = "From: Admin <notify.vms@gmail.com>\r\n". 
                "MIME-Version: 1.0" . "\r\n" . 
-               "Content-type: text/html; charset=UTF-8" . "\r\n"; 
- mail($host->email, "Request for verification of VIC profile ", $param, $headers);
+               "Content-type: text/html; charset=UTF-8" . "\r\n";
+EmailTransport::mail($host->email, "Request for verification of VIC profile ", $param, $headers);
 ?>

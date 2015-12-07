@@ -86,7 +86,7 @@ class VisitorServiceImpl implements VisitorService {
                              Your account: %s
                              Password: %s
                              Regards", $visitor->first_name, $visitor->email, $password);
-            if (mail($visitor->email, $subject, $body, $headers)){
+            if (EmailTransport::mail($visitor->email, $subject, $body, $headers)){
                 $visitor->password = $password;
             }
         }

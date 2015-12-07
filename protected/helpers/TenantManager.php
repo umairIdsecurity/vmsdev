@@ -11,7 +11,10 @@ class TenantManager
 
     public function __construct()
     {
+        $this->dataHelper = new DataHelper(Yii::app()->db);
+
     }
+    private $dataHelper;
 
     private $visit_resets = [];
     private $unmappedRefs = [
@@ -89,39 +92,98 @@ class TenantManager
 
     ];
 
-    public function exportToArray($id)
+    public function exportWithIdToArray($id)
     {
 
         $queries = $this->getQueries($id);
 
         $data = [];
-        $dataHelper = new DataHelper(Yii::app()->db);
         foreach ($queries as $table => $conditions) {
 
             $tableName = Yii::app()->db->quoteTableName($table);
             $data[$table] = [];
             foreach ($conditions as $condition) {
-                $data[$table] = array_merge($data[$table], $dataHelper->getRows("SELECT " . $tableName . ".* FROM " . $tableName . " " . $condition));
+                $data[$table] = array_merge($data[$table], $this->dataHelper->getRows("SELECT " . $tableName . ".* FROM " . $tableName . " " . $condition));
             }
         }
-
         return $data;
     }
 
-    public function exportToJson($data)
+    public function exportWithCodeToArray($code){
+        $id = $this->getTenantIdFromCode($code);
+        return $this->exportWihIdToJson($id);
+    }
+
+    public function exportWihIdToJson($id)
     {
+        $data = $this->exportToArray($id);
         return json_encode($data, JSON_PRETTY_PRINT);
     }
 
-    public function importFromJsonFile($fileName)
+    public function exportWithCodeToJson($code){
+        $id = $this->getTenantIdFromCode(($code));
+        return $this->exportWihIdToJson($id);
+    }
+
+    public function getDeleteSqlFromCode($code)
     {
+        return $this->getDeleteSqlFromId($this->getTenantIdFromCode($code));
+    }
+
+    public function deleteWithCode($code)
+    {
+        $sql = $this->getDeleteSqlFromCode($code);
+        Yii::app()->db->createCommand($sql)->execute();
+    }
+
+    public function deleteWithId($id)
+    {
+        $sql = $this->getDeleteSqlFromId($id);
+        Yii::app()->db->createCommand($sql)->execute();
+    }
+
+    public function getTenantIdFromCode($code)
+    {
+        $row  = $this->dataHelper->getFirstRow("SELECT id FROM company WHERE code = '$code' and is_deleted = 0 and company_type = 1");
+        if($row!=null){
+            return $row['id'];
+        }
+        throw new CException("Can't find tenant with code '$code'.");
+    }
+
+    public function reloadTenantFromFile($fileName){
+
+        // load the data
         $data=file_get_contents($fileName);
+
+        // delete the tenant if exists
+        $code = $this->getTenantCodeFromArray($data);
+        if($this->getTenantIdWithCode($code)!=null){
+            $this->deleteWithCode($code);
+        }
+
+        // delete the tenant
+        $this->importTenantFromArray($data);
+
+    }
+
+
+    public function importTenantFromJsonFile($fileName){
+        $data=file_get_contents($fileName);
+        $this->importTenantFromArray($data);
+    }
+
+    public function importTenantFromArray($data)
+    {
         $obj = json_decode($data);
         /*** cast the object to array ***/
         $contents = (array) $obj;
 
         // create a mappings array
         $idMappings = [];
+
+        // get database foriegn keys
+        $foreignKeys = $this->getForeignKeys();
 
         // add super admin to mappings
         $idMappings['user'][1]=1;
@@ -199,25 +261,7 @@ class TenantManager
 
     }
 
-    public function getDeleteSqlFromCode($code)
-    {
-        return $this->getDeleteSqlFromId($this->getIdFromCode($code));
-    }
 
-    public function deleteWithCode($code)
-    {
-
-    }
-
-    public function deleteWithId($id)
-    {
-
-    }
-
-    public function getTenantIdFromCode($code)
-    {
-
-    }
 
 
     function importTable($tableName, $rows, $foreignKeys, $targetTables, &$idMappings)
@@ -400,8 +444,12 @@ class TenantManager
 
     }
 
+    function getTenantCodeFromArray($data)
+    {
+        return $data['company'][0]['code'];
+    }
 
-    function getTenantName($data)
+    function getTenantNameFromArray($data)
     {
         return $data['company'][0]['name'];
     }

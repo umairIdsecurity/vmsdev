@@ -47,7 +47,7 @@ class TenantTransferController extends Controller
         $tenant = $_REQUEST['tenant'];
 
         $manager = new TenantManager();
-        $data = $manager->exportToArray($tenant);
+        $data = $manager->exportWithIdToArray($tenant);
 
         Yii::app()->getRequest()->sendFile($this->getTenantName($data).'.tenant',json_encode($data,JSON_PRETTY_PRINT));
 
@@ -86,8 +86,6 @@ class TenantTransferController extends Controller
             $model->tenantFile=CUploadedFile::getInstance($model,'tenantFile');
             $fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$name;
 
-            // get database foriegn keys
-            $foreignKeys = $this->getForeignKeys();
 
 
             if($model->tenantFile->saveAs($fullImgSource))

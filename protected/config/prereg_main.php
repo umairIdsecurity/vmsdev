@@ -43,6 +43,7 @@ return CMap::mergeArray(
             'application.service.*',
             'application.helpers.*',
             'application.models.preregistration.*',
+            'application.extensions.yii-mail.*',
         ),
         'modules' => array(
             // uncomment the following to enable the Gii tool

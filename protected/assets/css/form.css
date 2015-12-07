@@ -8,7 +8,7 @@
  *         <label for="inputid">xyz</label>
  *         <input name="inputid" id="inputid" type="text" />
  *         <p class="hint">hint text</p>
- *     </div>
+ *     </div>x
  *     <div class="row">
  *         <label for="inputid">xyz</label>
  *         <input name="inputid" id="inputid" type="text" />
@@ -172,16 +172,20 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
 .form-in .wrapper-center td{text-align: center}
 .form-in .login-area{background:none;border:none; width: 410px;}
 .form-in .login-area .login-form input{font-size: 12px;font-weight:500;width:83px;height:25px;line-height:17px;}
-.form-in .login-area input{padding:10px 10px;font-size:15px;width:78%;height:25px}
+
 .form-in .login-area .form-group{position:relative}
 .form-in .login-area .form-group span.add-on{position:absolute;background-color: #f3f3f2;top: 4px;
     border-right:1px solid #ccc;left:1px;border-top-left-radius: 3px;border-bottom-left-radius: 3px; padding:7.5px 10px;}
 .form-in .login-area .form-group input{padding-left:60px}
+.form-in .login-area .form-group select{-webkit-appearance: none; -moz-appearance: none; appearance: none; padding-left:60px;width: 100%; }
 @media(max-width:550px){
    .form-in .login-area input{padding:10px 10px;font-size:15px;width:auto;}
+
 }
+
 
 .bg-form{line-height:25px;padding-left:5px;padding-right:5px;width:111%;background:#F1F1F1;height:25px;
     border-radius:3px;display:block;border:1px solid #ccc;margin-left:-6px}
 .b-account{background:url(../images/menu-icons-profile.png)no-repeat;width:30px;height:30px;float:left}
 .b-password{background:url(../images/glyphs-asterisk.png)no-repeat;width:30px;height:30px;float:left}
+.b-tenant{background:url(../images/airplane.png)no-repeat;width:30px;height:30px;float:left}

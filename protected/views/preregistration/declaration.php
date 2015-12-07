@@ -28,7 +28,7 @@ $session = new CHttpSession;
 
             <label class="checkbox">
                 <input <?php echo (isset($session['declarationCheck1'])&&$session['declarationCheck1']=='checked') ? 'checked':''; ?> id="toggleCheckbox1" name="name1" type="checkbox" value="<?php echo (isset($session['declarationCheck1'])&&$session['declarationCheck1']=='checked') ? '1':'0';?>">
-                <span class="checkbox-style"></span><span class="text-size">I have not previously been either refused an ASIC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Moorabin Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).</span>
+                <span class="checkbox-style"></span><span class="text-size">I have not previously been either refused an ASIC that was suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at <?=Company::model()->getCurrentTenantName() ?> for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).</span>
             </label>
 
 

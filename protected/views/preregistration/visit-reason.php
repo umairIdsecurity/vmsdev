@@ -7,7 +7,7 @@
     }
     else
     {
-        $tenant = (isset($session['wk_tenant']) && ($session['wk_tenant'] != "")) ? $session['wk_tenant'] : '';
+        $tenant = (isset($session['tenant']) && ($session['tenant'] != "")) ? $session['tenant'] : '';
     }
 
 ?>

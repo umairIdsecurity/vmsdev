@@ -32,6 +32,8 @@ box-sizing: border-box;
 /* @var $this SiteController */
 /* @var $model LoginForm */
 /* @var $form CActiveForm  */
+$session = new CHttpSession();
+
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-timezone.js');
 
@@ -54,7 +56,7 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 )); ?>
 
 
-    <table class="login-area inputSize" style="border-collapse: none !important;">
+    <table class="login-area inputSize" style="border-collapse: unset !important;">
         <tr>
             <td align="center" class="form-group"><span style="color:#428bca;font-size:27px">OPERATOR LOGIN</span></td>
         </tr>
@@ -74,6 +76,17 @@ $this->pageTitle=Yii::app()->name . ' - Login';
             <td colspan="3" class="form-group" ><span class="add-on"><i class="b-password"></i></span><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password','style'=>'height: 47px')); ?></td>
             
         </tr>
+        <?php
+        if(!isset($session['tenant'])) {?>
+            <tr>
+                <td colspan="3" class="form-group"><span class="add-on"><i
+                            class="b-tenant"></i></span><?php echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAllTenants(), 'id', 'name'), array('placeholder' => 'Company or Airport', 'style' => 'height: 47px; ')); ?>
+                </td>
+            </tr>
+            <?php
+        } else {?>
+            <?php echo $form->hiddenField($model, 'tenant') ?>
+        <?php } ?>
 
         <?php //echo $form->hiddenField($model,'timezone'); ?>
         
@@ -90,8 +103,6 @@ $this->pageTitle=Yii::app()->name . ' - Login';
         <tr class="">
             <td colspan="2">
                 <a class="forgotLink" style="padding:0" class="btn btn-link" href="<?=$this->createUrl('site/forgot')?>">Forgot password?</a>
-                <!-- &nbsp;&nbsp;&nbsp;
-                <a class="forgotLink" style="padding:0" class="btn btn-link" href='<?php //echo Yii::app()->getBaseUrl(true)."/index.php/preregistration";?>'>Go to Preregistration</a> -->
             </td>
         </tr>
         

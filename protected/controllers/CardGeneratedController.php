@@ -268,7 +268,7 @@ class CardGeneratedController extends Controller {
 
 
        $html2pdf->Output();
-        //$this->render('printpdf', $data);
+       // $this->render('printpdf', $data);
 
     }
 

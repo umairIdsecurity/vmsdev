@@ -6,14 +6,14 @@
  * Date: 29/11/2015
  * Time: 8:39 AM
  */
-class ResetDatabaseCommand extends CConsoleCommand
+class VmsDatabaseCommand extends CConsoleCommand
 {
     public function actionVisitorsAndVisits()
     {
         $this->runQueries(['clear_all_visits_and_visitors.sql']);
     }
 
-    public function actionIndex()
+    public function actionRebuild()
     {
         $this->runQueries([
             'drop_and_create_database.sql',
@@ -25,10 +25,29 @@ class ResetDatabaseCommand extends CConsoleCommand
 
     }
 
-    public function deleteTenant()
+    public function actionExportTenant($code,$fileName)
     {
-
+        $manager = new TenantManager();
+        $json = $manager->exportWithCodeToJson($code);
+        file_put_contents($fileName,$json);
     }
+
+    public function actionDeleteTenant($code)
+    {
+        $manager = new TenantManager();
+        $manager->deleteWithCode($code);
+    }
+
+    public function actionImportTenant($fileName){
+        $manager = new TenantManager();
+        $manager->importFromJsonFile($fileName);
+    }
+
+    public function actionReloadTenant($fileName){
+        $manager = new TenantManager();
+        $manager->reloadTenantFromFile($fileName);
+    }
+
 
     private function runQueries($queries){
 

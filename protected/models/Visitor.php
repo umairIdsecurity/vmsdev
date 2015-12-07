@@ -731,6 +731,21 @@ class Visitor extends CActiveRecord {
         }
     }
 
+    public function isVisitorProfileTaken($firstname,$middlename,$lastname,$dateofbirth,$id = 0) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "first_name = '" . $firstname . "' AND last_name = '" . $lastname . "' AND date_of_birth = '" . date("Y-m-d",strtotime($dateofbirth)). "' ".($id?" AND id <> $id":"") ." AND tenant = ".Yii::app()->user->tenant . ((isset($middlename)&&$middlename!="") ? " AND middle_name = '$middlename'":"");
+        $visitorEmail = Visitor::model()->findAll($Criteria);
+
+        //$visitorEmail = array_filter($visitorEmail);
+        $visitorEmailCount = count($visitorEmail);
+
+        if ($visitorEmailCount == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function checkAsicStatusById($id=0) {
         $allow = 1;
         $visitor = Visitor::model()->findByPk($id);

@@ -181,9 +181,17 @@ $model->identification_country_issued = 13;
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'email',
                                             array('style' => 'text-transform:none;')); ?>
-                                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">A
+                                   <!--  <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">A
                                         profile already exists for this email address.
+                                    </div> -->
+                                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">
+                                        A User Profile already exists for this email address. <a href='javascript:;' id='searchVisitorsByEmailLink'>Click here</a> to Find this Visitor Profile or enter an alternate email address.
                                     </div>
+
+                                    <div style="" id="" class="newErrorMessage newErrorMessageEmail">
+                                        A User Profile already exists for First Name, Last Name and DOB. <a href='javascript:;' id='searchVisitorsByFirstnameLink'>Click here</a> to Find Visitor Profile or enter a middle name to create a new profile if a different person.
+                                    </div>
+
                                 </td>
                             </tr>
 
@@ -872,8 +880,8 @@ $model->identification_country_issued = 13;
 
                 $(".visitorReason").hide();
                 $("#photoErrorMessage").hide();
-                checkEmailIfUnique();
-                
+                //checkEmailIfUnique();
+                checkAlreadyVisitor();                
             }
         }
     }
@@ -1208,12 +1216,12 @@ $model->identification_country_issued = 13;
         $("#Visit_reason_search").val(reason.value);
     }
 
-    function sendVisitorForm() {
-        
+    function sendVisitorForm() 
+    {
         var form = $("#register-form").serialize();
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("visitor/create&view=1")); ?>",
+            url: '<?php echo CHtml::normalizeUrl(array("visitor/create&view=1")); ?>',
             data: form,
             success: function(data) {
 

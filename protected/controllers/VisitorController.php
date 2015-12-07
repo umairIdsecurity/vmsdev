@@ -31,7 +31,7 @@ class VisitorController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
-                                    'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
+                                    'GetPatientDetails','CheckAlreadyVisitorProfile','CheckAlreadyVisitor', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
                                     'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails','checkAsicEscort',
                                 ),
                 'users' => array('@'),
@@ -555,6 +555,38 @@ class VisitorController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
+
+    public function actionCheckAlreadyVisitor($email, $id = 0) {
+        if (Visitor::model()->isEmailAddressTaken($email, $id)) {
+            $aArray[] = array(
+                'isTaken' => 1,
+            );
+        } else {
+            $aArray[] = array(
+                'isTaken' => 0,
+            );
+        }
+        $resultMessage['data'] = $aArray;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+
+    public function actionCheckAlreadyVisitorProfile($firstname,$middlename,$lastname,$dateofbirth,$id = 0) {
+        if (Visitor::model()->isVisitorProfileTaken($firstname,$middlename,$lastname,$dateofbirth,$id)) {
+            $aArray[] = array(
+                'isTaken' => 1,
+            );
+        } else {
+            $aArray[] = array(
+                'isTaken' => 0,
+            );
+        }
+        $resultMessage['data'] = $aArray;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+
+
 
     public function actionCheckAsicStatusById($id){
         echo Visitor::model()->checkAsicStatusById($id);

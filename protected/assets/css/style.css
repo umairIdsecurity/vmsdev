@@ -779,10 +779,13 @@ dt.tabs dt{
 /*.required{ padding-left:10px;}*/
 /*radio buttons*/
 
-.errorMessageEmail, .errorMessageEmail1{
+.errorMessageEmail, .newErrorMessageEmail, .errorMessageEmail1{
     display: none;
 
 }
+
+
+
 #searchVisitorTableDiv, #visitor_fields_for_Search,
 #search-visitor-reason-error, #searchHostTableDiv,
 #register-host-form, #register-reason-form, .visitorReason
@@ -1653,6 +1656,16 @@ p.asic{
     margin-bottom: 11px;
     margin-top: -11px;
 }
+.newErrorMessage{
+    color: red;
+    font-size: 0.9em;
+    text-transform: lowercase;
+    margin-bottom: 11px;
+    margin-top: -11px;
+}
+.newErrorMessage{
+    display: none;
+}
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
     border-radius: 4px;
     color: #555555;
@@ -1666,6 +1679,10 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 .errorMessage:first-letter {
+    text-transform: uppercase;
+}
+
+.newErrorMessage:first-letter {
     text-transform: uppercase;
 }
 
@@ -2234,5 +2251,9 @@ label.myLabel input[type="file"] {
 }
 
 .message-no-margin .errorMessage {
+    margin: 0;
+}
+
+.newErrorMessage {
     margin: 0;
 }

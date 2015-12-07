@@ -578,7 +578,6 @@ function populateFieldHost(id) {
 
 function checkEmailIfUnique() {
     var email = $("#Visitor_email").val();
-
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
@@ -616,6 +615,92 @@ function checkEmailIfUnique() {
                 }
             });
 
+        }
+    });
+}
+
+function checkAlreadyVisitor()
+{
+    var email = $("#Visitor_email").val();
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo Yii::app()->createUrl("visitor/checkAlreadyVisitor&email="); ?>' + email,
+        dataType: 'json',
+        data: email,
+        success: function (r) 
+        {
+            $.each(r.data, function (index, value) {
+                if (value.isTaken == 1) {
+                    $(".newErrorMessageEmail").hide();
+                    $(".errorMessageEmail").show();
+                    $("#emailIsUnique").val("0");
+                } else {
+                    checkAlreadyVisitorProfile();
+                }
+            });
+        }
+    });
+}
+
+$('#searchVisitorsByEmailLink').click(function(){
+    var email = $("#Visitor_email").val();
+    $("#search-visitor").val(email);
+    $("#dummy-visitor-findBtn").click();
+    
+});
+
+$('#searchVisitorsByFirstnameLink').click(function(){
+    var firstname = $("#Visitor_first_name").val();
+    $("#search-visitor").val(firstname);
+    $("#dummy-visitor-findBtn").click();
+    
+});
+
+function checkAlreadyVisitorProfile()
+{
+    var firstname = $("#Visitor_first_name").val();
+    var middlename = $("#Visitor_middle_name").val();
+    var lastname = $("#Visitor_last_name").val();
+    var dateofbirth = $("#Visitor_date_of_birth").val(); 
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo Yii::app()->createUrl("visitor/checkAlreadyVisitorProfile&firstname=' + firstname + '&middlename=' + middlename + '&lastname=' +  lastname + '&dateofbirth=' + dateofbirth + '"); ?>',
+        dataType: 'json',
+        data: {firstname,middlename,lastname,dateofbirth},
+        success: function (r) 
+        {
+            $.each(r.data, function (index, value) {
+                if (value.isTaken == 1) {
+                    $(".newErrorMessageEmail").show();
+                    $(".errorMessageEmail").hide();
+                    $("#emailIsUnique").val("0");
+                } else {
+                    $(".newErrorMessageEmail").hide();
+                    $("#emailIsUnique").val("1");
+
+                    //tenant and tenant agent of visitor and host should be the same
+                    var options = $("#Visitor_tenant > option").clone();
+                    $('#User_tenant option').remove();
+                    $('#User_tenant').append(options);
+                    $('#User_tenant').val($("#Visitor_tenant").val());
+
+                    var options = $("#Visitor_tenant_agent > option").clone();
+                    $('#User_tenant_agent option').remove();
+                    $('#User_tenant_agent').append(options);
+                    $('#User_tenant_agent').val($("#Visitor_tenant_agent").val());
+
+                    var options = $("#Visitor_company > option").clone();
+                     $('#User_company option').remove();
+                    $('#User_company').append(options);
+                    $('#User_company').val($("#Visitor_company").val());
+
+                    if ($("#Visitor_tenant_agent").val() == '') {
+                        getHostCompanyWithSameTenant($("#Visitor_tenant").val());
+                    }
+
+                    $("#clicktabB").click();
+                }
+            });
         }
     });
 }

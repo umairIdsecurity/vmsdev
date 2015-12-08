@@ -605,7 +605,7 @@ class VisitController extends Controller {
                 $model->closed_by = Yii::app()->user->id;
                 $model->visit_status = VisitStatus::CLOSED;
                
-                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     // If Visitor card status is Asic Pending then CLose the visit otherwise AutoClose
                     if( $model->card_type == CardType::VIC_CARD_EXTENDED && $visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING)

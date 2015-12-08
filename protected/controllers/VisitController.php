@@ -279,7 +279,7 @@ class VisitController extends Controller {
         //check if the $host is VIC 
         $visitor = Visitor::model()->findByPk($host);
         if( isset($visitor) && $visitor->profile_type == visitor::PROFILE_TYPE_VIC) {
-            Visitor::model()->updateByPk($host, array("profile_type"=>Visitor::PROFILE_TYPE_ASIC, "visitor_card_status"=>  Visitor::ASIC_APPLICANT));
+            Visitor::model()->updateByPk($host, array("profile_type"=>Visitor::PROFILE_TYPE_ASIC, "visitor_card_status"=>  Visitor::ASIC_ISSUED));
         }
         return;
     }

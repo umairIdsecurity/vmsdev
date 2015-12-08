@@ -418,12 +418,12 @@ class VisitController extends Controller {
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
         {
            
-            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
-            {
-                $errorMsg="Card type can not be updated whilst visit is active.";
-            }
-            else
-            {
+//            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
+//            {
+//                $errorMsg="Card type can not be updated whilst visit is active.";
+//            }
+//            else
+//            {
                 $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
                 $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
@@ -461,7 +461,7 @@ class VisitController extends Controller {
                     }
                 }
                 $this->redirect(array("visit/detail&id=".$id));
-            }
+//            }
         }
 
         #update Visitor and Host form ( middle column on visitor detail page )

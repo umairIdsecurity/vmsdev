@@ -279,7 +279,7 @@ class VisitController extends Controller {
         //check if the $host is VIC 
         $visitor = Visitor::model()->findByPk($host);
         if( isset($visitor) && $visitor->profile_type == visitor::PROFILE_TYPE_VIC) {
-            Visitor::model()->updateByPk($host, array("profile_type"=>Visitor::PROFILE_TYPE_ASIC, "visitor_card_status"=>  Visitor::ASIC_APPLICANT));
+            Visitor::model()->updateByPk($host, array("profile_type"=>Visitor::PROFILE_TYPE_ASIC, "visitor_card_status"=>  Visitor::ASIC_ISSUED));
         }
         return;
     }
@@ -418,12 +418,12 @@ class VisitController extends Controller {
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
         {
            
-            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
-            {
-                $errorMsg="Card type can not be updated whilst visit is active.";
-            }
-            else
-            {
+//            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
+//            {
+//                $errorMsg="Card type can not be updated whilst visit is active.";
+//            }
+//            else
+//            {
                 $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
                 $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
@@ -461,7 +461,7 @@ class VisitController extends Controller {
                     }
                 }
                 $this->redirect(array("visit/detail&id=".$id));
-            }
+//            }
         }
 
         #update Visitor and Host form ( middle column on visitor detail page )
@@ -605,7 +605,7 @@ class VisitController extends Controller {
                 $model->closed_by = Yii::app()->user->id;
                 $model->visit_status = VisitStatus::CLOSED;
                
-                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     // If Visitor card status is Asic Pending then CLose the visit otherwise AutoClose
                     if( $model->card_type == CardType::VIC_CARD_EXTENDED && $visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING)

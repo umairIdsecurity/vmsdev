@@ -188,7 +188,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             
             $condition = $model->card_type > 4 ? "module='AVMS'": "module='CVMS'";
             $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
-            echo $detailForm->dropDownList($model, 'reason', $reasons, array("empty"=>"Select Visit Reason"));
+            echo $detailForm->dropDownList($model, 'reason', $reasons, array("empty"=>"Select Visit Reason"), array('options' => array($model->reason=>array('selected'=>true))));
             echo "<br />";
         //}
           ?> 

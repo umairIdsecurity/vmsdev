@@ -2132,8 +2132,6 @@ class PreregistrationController extends Controller
 
     public function actionUploadProfilePhoto() {
         //if (Yii::app()->request->isAjaxRequest) {
-    		
-
     		if(isset($_POST['image']))
     		{
 		        $img = $_POST['image'];

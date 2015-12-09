@@ -501,18 +501,18 @@ $asicEscort = new AddAsicEscort();
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td></td>
-                <td>ASIC Escort
+                <td><strong>Verify today's ASIC Escort</strong>
                     <hr style="border-color: black;"></td>
             </tr>
             <tr>
                 <td width="5%"><input type="radio" id="asicDecalarationRbtn1"  onclick="asicEscortDefault()"/></td>
-                <td><label for="asicDecalarationRbtn1">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
+                <td><label for="asicDecalarationRbtn1">I <strong><?= $asic->first_name ?></strong> note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>Or</td><td>&nbsp;</td></tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="radio" id="asicEscortRbtn" onclick="asicEscort()"/></td>
-                <td><label for="asicEscortRbtn">Add ASIC Escort.</label></td>
+                <td><label for="asicEscortRbtn">Another ASIC holder will be supervising on this visit. Please add or search for another ASIC Escort.</label></td>
             </tr>
 
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>

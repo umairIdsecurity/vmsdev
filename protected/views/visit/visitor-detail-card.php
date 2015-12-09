@@ -41,6 +41,8 @@ $photoForm = $this->beginWidget('CActiveForm', [
 </div>
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);
+/*
+This is wrong according to https://ids-jira.atlassian.net/browse/CAVMS-1184: Card Color is dependent on CARD TYPE and not on PROFILE TYPE
 $bgcolor = "";
 if ($vstr) {
 	if ($vstr->profile_type == "CORPORATE") {
@@ -48,15 +50,18 @@ if ($vstr) {
 	} elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
 	     $bgcolor = CardGenerated::VIC_CARD_COLOR;
 	}
-}
+}*/
 ?>
 
 <?php
-if($model->card_type > CardType::CONTRACTOR_VISITOR) {
-    $this->renderPartial("_card_detail",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
-} else {
-    $this->renderPartial("_card-corporate",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
-}
+    $bgcolor = "";
+    if($model->card_type > CardType::CONTRACTOR_VISITOR) {
+        $bgcolor = CardGenerated::VIC_CARD_COLOR;
+        $this->renderPartial("_card_detail",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
+    } else {
+        $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
+        $this->renderPartial("_card-corporate",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
+    }
 ?>
 
 <div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>

@@ -1275,11 +1275,18 @@ class Visit extends CActiveRecord {
         $criteria->addCondition(" ( id != " . $current_visit_id . "  ) AND "
                 . " tenant = " . Yii::app()->user->tenant . " "
                 . " AND (visit_status != " . VisitStatus::SAVED . " AND visit_status != " . VisitStatus::PREREGISTERED . "  ) "
-                . " AND visitor = " . $this->visitor . " AND is_deleted = 0 AND reset_id IS NULL");
+                . " AND visitor = " . $this->visitor . " AND is_deleted = 0");
+        $criteria->order = "id DESC";
+
         $visits = $this->findAll($criteria);
         if ($visits) {
             $visitCount = 0;
             foreach ($visits as $key => $v) {
+                
+                //Important: if reset_id is 1 for a visit then don't count old visits before that reset visit.
+                if( $v["reset_id"] ) {
+                    break;
+                }
                 $dateIn = new DateTime($v["date_check_in"]);
                 $dateOut = new DateTime($v["date_check_out"]);
                 $dateClosed = !is_null($v["visit_closed_date"]) ? new DateTime($v["visit_closed_date"]) : $dateOut;

@@ -135,7 +135,14 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
-            $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
+            //CAVMS--622
+            if (($model->visit_status == visitStatus::CLOSED) || ($model->visit_status == visitStatus::PREREGISTERED) || ($model->visit_status == visitStatus::SAVED)) {
+                $model->date_check_in = date('d-m-Y');
+            }
+            else{
+                $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));    
+            }
+            
 
             /*
             CAV -- 788
@@ -501,12 +508,12 @@ $asicEscort = new AddAsicEscort();
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td></td>
-                <td><strong>Verify today's ASIC Escort</strong>
+                <td><strong>Verify today’s ASIC Escort - Please select one of the following options</strong>
                     <hr style="border-color: black;"></td>
             </tr>
             <tr>
                 <td width="5%"><input type="radio" id="asicDecalarationRbtn1"  onclick="asicEscortDefault()"/></td>
-                <td><label for="asicDecalarationRbtn1">I <strong><?= $asic->first_name ?></strong> note that they must be under my direct supervision at all times whilst they are airside.</label></td>
+                <td><label for="asicDecalarationRbtn1">I <strong><?= $asic->first_name." ".$asic->last_name ?></strong> note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>Or</td><td>&nbsp;</td></tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>

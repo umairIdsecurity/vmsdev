@@ -55,7 +55,7 @@
                                     echo $form->dropDownList($model,'tenant',
                                         CHtml::listData($tenantsAndImages, 'id', 'name'),
                                     array(
-                                        'class'=>'form-control input-sm' ,
+                                        'class'=>'form-control input-sm',
                                         'empty' => 'Choose an Airport')
                                 );?>
                             </div>

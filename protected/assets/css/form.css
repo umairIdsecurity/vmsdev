@@ -177,7 +177,7 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
 .form-in .login-area .form-group span.add-on{position:absolute;background-color: #f3f3f2;top: 4px;
     border-right:1px solid #ccc;left:1px;border-top-left-radius: 3px;border-bottom-left-radius: 3px; padding:7.5px 10px;}
 .form-in .login-area .form-group input{padding-left:60px}
-.form-in .login-area .form-group select{-webkit-appearance: none; -moz-appearance: none; appearance: none; padding-left:60px;width: 100%; }
+.form-in .login-area .form-group select{/*-webkit-appearance: none; -moz-appearance: none; appearance: none;*/ padding-left:60px;width: 100%; }
 @media(max-width:550px){
    .form-in .login-area input{padding:10px 10px;font-size:15px;width:auto;}
 

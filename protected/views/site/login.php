@@ -74,27 +74,33 @@ $this->pageTitle=Yii::app()->name . ' - Login';
         </tr>
         <tr>
             <td colspan="3" class="form-group" ><span class="add-on"><i class="b-password"></i></span><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password','style'=>'height: 47px')); ?></td>
-            
         </tr>
+        <tr>
+            <td colspan="2"><?php echo $form->error($model,'password'); ?></td>
+        </tr>
+
         <?php
-        if(!isset($session['tenant'])) {?>
-            <tr>
-                <td colspan="3" class="form-group"><span class="add-on"><i
-                            class="b-tenant"></i></span><?php echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAllTenants(), 'id', 'name'), array('placeholder' => 'Company or Airport', 'style' => 'height: 47px; ')); ?>
-                </td>
-            </tr>
-            <?php
-        } else {?>
+            if(!isset($session['tenant'])) {
+        ?>
+                <tr>
+                    <td colspan="3" class="form-group"><span class="add-on"><i class="b-tenant"></i></span>
+                        <?php echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAllTenants(), 'id', 'name'), array('empty' => 'Select Airport', 'style' => 'height: 47px; ')); ?>
+                    </td>
+                </tr>
+        <?php
+            } else {
+        ?>
+
             <?php echo $form->hiddenField($model, 'tenant') ?>
-        <?php } ?>
+        
+        <?php
+            } 
+        ?>
 
         <?php //echo $form->hiddenField($model,'timezone'); ?>
         
         <?php echo CHtml::hiddenField('timezone' , 'value', array('id' => 'LoginForm_timezone')); ?>
         
-        <tr>
-            <td colspan="2"><?php echo $form->error($model,'password'); ?></td>
-        </tr>
         <tr class="login-form">
             <td colspan="2">
                 <?php echo CHtml::submitButton('Login',array('class'=>'actionForward')); ?>

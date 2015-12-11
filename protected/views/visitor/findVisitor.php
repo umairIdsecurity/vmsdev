@@ -14,15 +14,15 @@ $session = new CHttpSession;
 /* @var $model Visitor */
 $visitorName = $_GET['id'];
 
+$tenant_agent = "";
 if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
     $tenant_agent = "tenant_agent=" . $_GET["tenant_agent"] . " and";
 } 
-
 else {
     //$tenant_agent = "(tenant_agent IS NULL or tenant_agent =0 or tenant_agent='') and";
     $tenant_agent = "";
 } 
-$tenant_agent = "";
+
 $model = new Visitor;
 $criteria = new CDbCriteria;
 $tenant = '';
@@ -31,9 +31,10 @@ $tenant = '';
 //}else{
 //    $tenant = '';
 //}
-$date_of_birth_condition =  "%' or date_of_birth like '%" . date("Y-m-d",strtotime($visitorName))
-                         . "%' or date_of_birth like '%" . date("d-m-Y",strtotime($visitorName))
-                         . "%' or date_of_birth like '%" . date("y/m/d",strtotime($visitorName));
+
+$date_of_birth_condition =  "%' or DATE_FORMAT(date_of_birth, '%Y-%m-%d') like '%" . $visitorName
+                         . "%' or DATE_FORMAT(date_of_birth, '%d-%m-%Y') like '%" . $visitorName
+                         . "%' or DATE_FORMAT(date_of_birth, '%y/%m/%d') like '%" . $visitorName;
 
 $tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
 $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
@@ -48,8 +49,6 @@ $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) 
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
     $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
-    // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' ";
-
 } else {
     $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "'";
 }
@@ -57,7 +56,6 @@ $conditionString .= " AND is_deleted = '0'";
 
 
 $criteria->addCondition($conditionString);
-
 
 $model->unsetAttributes();
 

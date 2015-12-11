@@ -281,9 +281,9 @@ $session = new CHttpSession;
                                 <?php if(isset($session['tenant'])){
                                     $imageSource = Company::model()->getCurrentTenantImageSource();
                                     ?>
-                                    <img src="<?php echo $imageSource ?>" style="width: 120px" alt="Pre registration"/>
+                                    <img src="<?php echo $imageSource ?>" style="width: 70px" alt="Pre registration"/>
                                 <?php } else { ?>
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 60px" alt="Pre registration"/>
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 60px" alt="Pre registration"/> 
                                 <?php } ?>
                             </a>
                     </div>
@@ -294,11 +294,10 @@ $session = new CHttpSession;
                         <?php } else{ ?>
                             <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
                         <?php } ?>
-                                <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
                                 <?php if(isset($session['tenant'])){?>
                                     <img src="<?php echo $imageSource ?>"  alt="Pre registration"/>
                                 <?php } else { ?>
-                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/>
+                                    <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" alt="Pre registration"/> 
                                 <?php } ?>
                         </a>
                     </div>

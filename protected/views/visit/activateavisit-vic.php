@@ -741,6 +741,7 @@ $asicEscort = new AddAsicEscort();
             $('#asicDecalarationRbtn1').prop('checked',false);
         });
         $('#findEscortBtn').on('click', function(){
+            
             if($('#search-escort').val() == ''){
                 $('#searchEscortErrorMessage').show();
                 return;
@@ -754,19 +755,20 @@ $asicEscort = new AddAsicEscort();
                 var searchAsicEscortResult = $('.searchAsicEscortResult').empty();
                 $.ajax({
                     type: "GET",
-                    url: "<?php echo CHtml::normalizeUrl(array("visitor/getAsicEscort")); ?>",
-                    data: {searchInfo :searchInfo},
+                    url: "<?php echo CHtml::normalizeUrl(array('visitor/getAsicEscort')); ?>",
+                    data: {"searchInfo":searchInfo},
                     success: function(data) {
                         console.log(data);
-                        if (data.indexOf("Visitor Management System  - Login") > -1) {
-                            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
-                        }
+                        /*if (data.indexOf("Visitor Management System  - Login") > -1) {
+                            window.location = "<?php echo Yii::app()->createUrl('site/login');?>";
+                        }*/
                         searchAsicEscortResult.append(data);
                         $('#findEscortBtn' ).show();
                         $('#divMsg').hide();
                     }
                 }).fail(function() {
-                    window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+                    alert("Something went wrong. Please, try again.");
+                    /*window.location = "<?php echo Yii::app()->createUrl('site/login');?>";*/
                 });
             }
         });

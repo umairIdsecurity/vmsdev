@@ -5,8 +5,11 @@
     <property name="feature" value=""/>
 
     <property name="bug" value="*"/>
+    <property name="behat-exec" value="behat"/>
 
-
+    <condition property="behat-exec" value="behat.bat">
+        <os family="windows"/>
+    </condition>
 
 
     <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
@@ -46,7 +49,7 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="feature-test" failonerror="true">
+        <exec executable="${behat-exec}" taskname="feature-test" failonerror="true">
             <arg line="--config=test/specs/tools/behat.yml --profile=features --paths ${featureArg}" />
         </exec>
 
@@ -66,7 +69,7 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="bug-test" failonerror="true" >
+        <exec executable="${behat-exec}" taskname="bug-test" failonerror="true" >
             <arg line="--config=test/specs/tools/behat.yml --profile=bugs --paths ${arg}" />
         </exec>
 
@@ -86,7 +89,7 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="new-feature-test" failonerror="true">
+        <exec executable="${behat-exec}" taskname="new-feature-test" failonerror="true">
             <arg line="--config=test/specs/tools/behat.yml --profile=features-new --paths ${featureArg}" />
         </exec>
 
@@ -106,7 +109,7 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="new-bug-test" failonerror="true" >
+        <exec executable="${behat-exec}" taskname="new-bug-test" failonerror="true" >
             <arg line="--config=test/specs/tools/behat.yml --profile=bugs-new  --paths ${arg}" />
         </exec>
 

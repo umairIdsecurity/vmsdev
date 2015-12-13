@@ -6,10 +6,7 @@
 
     <property name="bug" value="*"/>
     <property name="behat-exec" value="behat"/>
-
-    <condition property="behat-exec" value="behat.bat">
-        <os family="windows"/>
-    </condition>
+    <property name="phantom-exec" value="phantomjs"/>
 
 
     <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
@@ -40,6 +37,7 @@
         unless="feature-test.done"
         description="Run tests for features found in the test/specs/ready/features directory.">
 
+
         <condition property="featureArg" value="--name=${feature}" >
             <not>
                 <equals arg1="" arg2="${feature}"  />
@@ -49,9 +47,25 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="${behat-exec}" taskname="feature-test" failonerror="true">
-            <arg line="--config=test/specs/tools/behat.yml --profile=features --paths ${featureArg}" />
-        </exec>
+        <parallel>
+
+            <exec executable="${phantomjs-exec}" taskname="phantomjs-service" failonerror="true" searchpath="true">
+                <arg line="--webdriver=8643" />
+            </exec>
+
+            <sequential>
+                <sleep seconds="3" />
+                <exec executable="${behat-exec}" taskname="feature-test" failonerror="true" searchpath="true">
+                    <arg line="--config=test/specs/tools/behat.yml --profile=features --paths ${featureArg}" />
+                </exec>
+                <exec executable="taskkill">
+                    <arg line="/im ${phantomjs-exec} /f /t"/>
+                </exec>
+            </sequential>
+
+        </parallel>
+
+
 
         <property name="feature-test.done"  value="true"/>
     </target>

@@ -1,4 +1,0 @@
-default:
-  extensions:
-      Behat\MinkExtension\Extension:
-        base_url: http://vmsuitest.identitysecurity.info

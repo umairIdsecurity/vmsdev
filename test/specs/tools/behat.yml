@@ -11,7 +11,7 @@ default:
     Behat\MinkExtension\Extension:
       base_url: http://localhost
       goutte: ~
-      selenium2: ~
+      selenium2:
         wd_host: "http://localhost:8643/wd/hub"
 
 features:

@@ -5,8 +5,8 @@
     <property name="feature" value=""/>
 
     <property name="bug" value="*"/>
-
-
+    <property name="behat-exec" value="behat"/>
+    <property name="phantomjs-exec" value="phantomjs"/>
 
 
     <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
@@ -34,8 +34,9 @@
 
 
     <target name="feature-test"
-        unless="feature-test.done"
-        description="Run tests for features found in the test/specs/ready/features directory.">
+            unless="feature-test.done"
+            description="Run tests for features found in the test/specs/ready/features directory.">
+
 
         <condition property="featureArg" value="--name=${feature}" >
             <not>
@@ -46,9 +47,25 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="feature-test" failonerror="true">
-            <arg line="--config=test/specs/tools/behat.yml --profile=features --paths ${featureArg}" />
-        </exec>
+        <parallel>
+
+            <exec executable="${phantomjs-exec}.exe" taskname="phantomjs-service" failonerror="true" searchpath="true">
+                <arg line="--webdriver=8643" />
+            </exec>
+
+            <sequential>
+                <sleep seconds="3" />
+                <exec executable="${behat-exec}.bat" taskname="feature-test" failonerror="true" searchpath="true" dir="test/specs/tools">
+                    <arg line="--config=test/specs/tools/behat.yml --profile=features" />
+                </exec>
+                <exec executable="taskkill">
+                    <arg line="/im ${phantomjs-exec}.exe /f /t"/>
+                </exec>
+            </sequential>
+
+        </parallel>
+
+
 
         <property name="feature-test.done"  value="true"/>
     </target>
@@ -66,7 +83,7 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="bug-test" failonerror="true" >
+        <exec executable="${behat-exec}" taskname="bug-test" failonerror="true" >
             <arg line="--config=test/specs/tools/behat.yml --profile=bugs --paths ${arg}" />
         </exec>
 
@@ -86,7 +103,7 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="new-feature-test" failonerror="true">
+        <exec executable="${behat-exec}" taskname="new-feature-test" failonerror="true">
             <arg line="--config=test/specs/tools/behat.yml --profile=features-new --paths ${featureArg}" />
         </exec>
 
@@ -106,7 +123,7 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="test/specs/tools/bin/behat" taskname="new-bug-test" failonerror="true" >
+        <exec executable="${behat-exec}" taskname="new-bug-test" failonerror="true" >
             <arg line="--config=test/specs/tools/behat.yml --profile=bugs-new  --paths ${arg}" />
         </exec>
 

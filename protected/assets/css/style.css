@@ -1659,7 +1659,7 @@ p.asic{
 .newErrorMessage{
     color: red;
     font-size: 0.9em;
-    text-transform: lowercase;
+    /*text-transform: lowercase;*/
     margin-bottom: 11px;
     margin-top: -11px;
 }

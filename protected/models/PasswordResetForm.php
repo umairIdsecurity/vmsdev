@@ -35,7 +35,7 @@ class PasswordResetForm extends CFormModel {
     public function checkPasswordsAreMatched($passwordConfirmation) {
 
         if ($this->passwordConfirmation != $this->password) {
-            $this->addError($passwordConfirmation, 'Passwords are not matches each others');
+            $this->addError($passwordConfirmation, 'Password confirmation does not match new password.');
         }
     }
 }

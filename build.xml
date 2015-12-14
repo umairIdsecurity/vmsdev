@@ -8,6 +8,14 @@
     <property name="behat-exec" value="behat"/>
     <property name="phantomjs-exec" value="phantomjs"/>
 
+    <condition property="behat-exec" value="behat.bat">
+        <os family="windows"/>
+    </condition>
+
+    <condition property="phantomjs-exec" value="phantomjs.exe">
+        <os family="windows"/>
+    </condition>
+
 
     <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
     <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -47,21 +55,22 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <parallel>
+        <parallel threadCount="10">
 
-            <exec executable="${phantomjs-exec}.exe" taskname="phantomjs-service" failonerror="true" searchpath="true">
-                <arg line="--webdriver=8643" />
-            </exec>
 
             <sequential>
-                <sleep seconds="3" />
-                <exec executable="${behat-exec}.bat" taskname="feature-test" failonerror="true" searchpath="true" dir="test/specs/tools">
+                <exec executable="${behat-exec}" taskname="feature-test" failonerror="true" searchpath="true" dir="test/specs/tools">
                     <arg line="--config=test/specs/tools/behat.yml --profile=features" />
                 </exec>
                 <exec executable="taskkill">
-                    <arg line="/im ${phantomjs-exec}.exe /f /t"/>
+                    <arg line="/im ${phantomjs-exec} /f /t"/>
                 </exec>
             </sequential>
+
+            <exec executable="${phantomjs-exec}" taskname="phantomjs-service" failonerror="true" searchpath="true" spawn="true">
+                <arg line="--webdriver=8643" />
+            </exec>
+
 
         </parallel>
 

@@ -1,13 +1,12 @@
 {
     "require": {
-  	  "behat/behat": "2.4.*@stable",
-      "behat/mink": "1.4.*@stable",
-      "behat/mink-extension": "*",
-      "behat/mink-goutte-driver": "*",
-      "behat/mink-selenium2-driver": "*"
+  	  "behat/behat": "*",
+      "behat/mink": "*",
+      "behat/mink-extension": "dev-master",
+      "behat/mink-goutte-driver": "dev-master",
+      "behat/mink-selenium2-driver": "dev-master"
 	},
-    "minimum-stability": "dev",
     "config": {
       "bin-dir": "bin/"
-    }
+  }
 }

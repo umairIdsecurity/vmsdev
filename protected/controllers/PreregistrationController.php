@@ -52,7 +52,6 @@ class PreregistrationController extends Controller
 		}
 	}
 
-
 	public function actionIndex()
 	{
 		$session = new CHttpSession;

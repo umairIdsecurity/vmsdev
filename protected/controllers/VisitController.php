@@ -416,8 +416,6 @@ class VisitController extends Controller {
         // Update visitor detail form ( left column on visitor detail page )
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
         {
-
-           
 //            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
 //            {
 //                $errorMsg="Card type can not be updated whilst visit is active.";

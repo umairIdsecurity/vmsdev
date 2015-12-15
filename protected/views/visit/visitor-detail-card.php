@@ -130,19 +130,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
 <?php endif; ?>
+
 <?php
-$detailForm = $this->beginWidget('CActiveForm', [
-    'id'          => 'update-visitor-detail-form',
-    'htmlOptions' => ['name' => 'update-visitor-detail-form'],
-    'enableAjaxValidation'   => false,
-    'enableClientValidation' => true,
-    'clientOptions'          => [
-        'validateOnSubmit' => false,
-        'afterValidate'    => 'js:function(form, data, hasError){
-            return afterValidate(form, data, hasError);
-        }'
-    ]
-]);
+    $detailForm = $this->beginWidget('CActiveForm', array(
+        'id'          => 'update-visitor-detail-form',
+        'htmlOptions' => array('name' => 'update-visitor-detail-form'),
+        'enableAjaxValidation'   => false,
+        'enableClientValidation' => true,
+        'clientOptions'          => array(
+            'validateOnSubmit' => false,
+            'afterValidate'    => 'js:function(form, data, hasError){
+                return afterValidate(form, data, hasError);
+            }'
+        )
+    ));
 ?>
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
     <?php
@@ -427,7 +428,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
         var form = $("#update-photo-form").serialize();
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("/visitor/update&id=" . $visitorModel->id . "&view=1")); ?>",
+            url: "<?php echo CHtml::normalizeUrl(array('/visitor/update&id=' . $visitorModel->id . '&view=1')); ?>",
             data: form,
             success: function (data) {
                 $("#photoPreview2").show();

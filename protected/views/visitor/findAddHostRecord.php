@@ -30,8 +30,11 @@ $defaultKey = key($asicCardTypes);
         <div id="searchHostDiv">
             <div>
                 <!-- <label><b>Search Name:</b></label> -->
-                <input type="text" id="search-host" style="width:370px" name="search-host"
-                       placeholder="Enter name, email address" class="search-text"/>
+                
+                <span id="searchInputDiv">
+
+                </span>
+                
                 <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;"
                         data-target="#findHostRecordModal" data-toggle="modal">Search Visits
                 </button>
@@ -41,9 +44,9 @@ $defaultKey = key($asicCardTypes);
                     Find ASIC Sponsor
                 </button>
                 <!-- <button class="host-AddBtn" <?php
-                if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
+                /*if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                     echo " style='display:none;' ";
-                }
+                }*/
                 ?>>Add Host</button>-->
 
                 <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;"></div>
@@ -632,6 +635,7 @@ $defaultKey = key($asicCardTypes);
 
 <script>
     $(document).ready(function () {
+
         $("#subm").hide();
         $(".visitor-title-host").click(function () {
 

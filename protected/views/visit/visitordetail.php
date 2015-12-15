@@ -195,7 +195,7 @@ $this->renderPartial('visithistory', array('model' => $model,
 
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitReason/checkReasonIfUnique&id='); ?>' + visitReason.trim(),
+                url: "<?php echo Yii::app()->createUrl('visitReason/checkReasonIfUnique&id='); ?>" + visitReason.trim(),
                 dataType: 'json',
                 data: visitReason,
                 crossDomain: false,

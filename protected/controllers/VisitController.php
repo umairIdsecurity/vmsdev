@@ -413,22 +413,27 @@ class VisitController extends Controller {
 
         $hostModel = User::model()->findByPk($host);
         $errorMsg="";
-        // Update visitor detail form ( left column on visitor detail page )
-        if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
+
+        // Update visitor detail form (left column on visitor detail page )
+        //this chunk of deals with: update card type, workstation, reason and visitor type as well
+        if(isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visit'])) 
         {
-//            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
-//            {
-//                $errorMsg="Card type can not be updated whilst visit is active.";
-//            }
-//            else
-//            {
-                $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
-                $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-                if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
-                    $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                }
-             
-                //update card type, workstation, reason as well
+            if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
+            {
+                $errorMsg="Card type can not be updated whilst visit is active.";
+                //card type cannot be updated for Active Visit whereas other fields on left column can be updated
+                if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
+                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {$model->reason = $_POST['Visit']['reason'];}
+                if (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != "") {$model->visitor_type = $_POST['Visit']['visitor_type'];}
+                if(!isset($model->visit_status) || $model->visit_status == ""){$model->visit_status = $oldStatus;}
+                
+                if ((isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") || (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") || (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != ""))
+                {
+                    $model->save();
+                } 
+            }
+            else
+            {
                 if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {$model->card_type = $_POST['Visit']['card_type'];}
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
                 if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {$model->reason = $_POST['Visit']['reason'];}
@@ -438,29 +443,40 @@ class VisitController extends Controller {
                 if ((isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") || (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") || (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") || (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != ""))
                 {
                     $model->save();
-                }   
-                /**
-                 * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
-                 * Then Imemdialty Closed this visit
-                 */
-                $this->closedAsicPending($model, $visitorModel);
-                $visitorModel->scenario = 'updateVic';
-                if ($visitorModel->save()) {
-                    // If visitor card status is VIC ASIC Issued then add new card status convert
-                    if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
-                        $logCardstatusConvert               = new CardstatusConvert;
-                        $logCardstatusConvert->visitor_id   = $visitorModel->id;
-                        $logCardstatusConvert->convert_time = date("Y-m-d");
+                } 
+            }
+        }
 
-                        // save Log 
-                        if (!$logCardstatusConvert->save()) {
-                            // Do something if save process failure
-                        }
+        //this chunk of code deals with visitor card status on the left column on visit detail page
+        if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
+        {
+            $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
+            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+            if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
+                $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
+            }
+            /**
+             * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
+             * Then Imemdialty Closed this visit
+             */
+            $this->closedAsicPending($model, $visitorModel);
+            $visitorModel->scenario = 'updateVic';
+            if ($visitorModel->save()) {
+                // If visitor card status is VIC ASIC Issued then add new card status convert
+                if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
+                    $logCardstatusConvert               = new CardstatusConvert;
+                    $logCardstatusConvert->visitor_id   = $visitorModel->id;
+                    $logCardstatusConvert->convert_time = date("Y-m-d");
+
+                    // save Log 
+                    if (!$logCardstatusConvert->save()) {
+                        // Do something if save process failure
                     }
                 }
-                $this->redirect(array("visit/detail&id=".$id));
-//            }
+            }
+            $this->redirect(array("visit/detail&id=".$id));
         }
+
 
         #update Visitor and Host form ( middle column on visitor detail page )
         if (isset($_POST['updateVisitorInfo'])) 
@@ -642,7 +658,7 @@ class VisitController extends Controller {
         $visitCount['remainingDays'] = $model->remainingDays;
         $this->render('visitordetail', array(
             'model'         => $model,
-            'visitorModel'  => !empty($visitorModel) ? $visitorModel : new Visitor,
+            'visitorModel'  => $visitorModel ? $visitorModel : new Visitor,
             'reasonModel'   => $reasonModel,
             'hostModel'     => $hostModel,
             'patientModel'  => $patientModel,

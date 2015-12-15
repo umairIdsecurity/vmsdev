@@ -17,7 +17,7 @@ default:
   formatter:
     name: pretty,junit
     parameters:
-      output_path: ,xml
+      output_path: ,behat_output.xml
 
 
 features:

@@ -95,29 +95,16 @@ $asicEscort = new AddAsicEscort();
                 }
             ?>
 
-            <!-- <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;"> -->
-            <select disabled style="width:70px;">
-                
-                <?php //for ($i = 1; $i <= 24; $i++): ?>
-
-                    <!-- <option value="<?php //echo $i; ?>"><?php //echo date("H", strtotime("$i:00")); ?></option> -->
-                    <option value="<?php echo $hours;//echo $i; ?>" ><?php echo $hours;//echo date("H", strtotime("$i:00")); ?></option>
-
-                <?php //endfor; ?>
-
+            <select style="width:70px;">
+                <?php for ($i = 1; $i <= 24; $i++): ?>
+                    <option value="<?php echo $i; ?>" <?php echo ($i==$hours) ? "selected":""; ?>><?php echo ($i > 0 && $i < 10) ? '0' . $i : $i; ?></option>
+                <?php endfor; ?>
             </select> :
-            <!-- <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;"> -->
-            <select disabled style="width:70px;">
-                <?php //for ($i = 1; $i <= 60; $i++): ?>
-                    <option value="<?php echo $minutes;//echo $i; ?>"><?php
-                        echo $minutes;
-                       /* if ($i > 0 && $i < 10) {
-                            echo '0' . $i;
-                        } else {
-                            echo $i;
-                        };*/
-                        ?></option>
-                <?php //endfor; ?>
+
+            <select style="width:70px;">
+                <?php for ($i = 0; $i <= 59; $i++): ?>
+                    <option value="<?php echo $i; ?>" <?php echo ($i==$minutes) ? "selected":""; ?>><?php echo ($i >= 0 && $i < 10) ? '0' . $i : $i; ?></option>
+                <?php endfor; ?>
             </select>
             
         </td>
@@ -527,7 +514,7 @@ $asicEscort = new AddAsicEscort();
                 <td></td>
                 <td>
                     <input type="text" id="search-escort" style="width:293px" name="search-host"
-                           placeholder="Enter name, email address" class="search-text"/>
+                           placeholder="Search ASIC Sponsors by name,email address" class="search-text"/>
                     <button type="button" class="btn btn-primary neutral" id="findEscortBtn" style="margin-bottom: 14px!important;width: auto !important; height: auto !important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
                     <div id="divMsg" style="display:none;">
                         <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />

@@ -83,15 +83,21 @@ if (!$cardTypeWorkstationModel) {
                 e.stopImmediatePropagation();
                 return false;
             }
+            
+
+            $("#searchInputDiv").empty();    
             // Remove to avoid validation
             if(card_type_value < 5 ) { 
                 $("#User_asic_no").remove();
                 $("#User_asic_expiry").remove(); 
+                $("#searchInputDiv").append('<input type="text" id="search-host" style="width:370px" name="search-host" placeholder="Enter name, email address" class="search-text"/>'); 
+            }else{
+                $("#searchInputDiv").append('<input type="text" id="search-host" style="width:370px" name="search-host" placeholder="Search ASIC Sponsors by name, email address" class="search-text"/>'); 
             }
             
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('VisitorType/getFromCardType&cardtype='); ?>' + card_type_value,
+                url: "<?php echo Yii::app()->createUrl('VisitorType/getFromCardType&cardtype='); ?>" + card_type_value,
                 dataType: 'json',
                 data: card_type_value,
                 success: function (r) {

@@ -1168,6 +1168,7 @@ function display_ct() {
 
 /* VIC JS functions*/
 function selectVicCard(cardType) {
+    
     $('#VisitCardType').val(cardType);
 
     if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {

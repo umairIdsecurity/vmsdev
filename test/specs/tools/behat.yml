@@ -3,47 +3,38 @@ imports:
 
 default:
 
-  autoload:
-      '': bootstrap
-
-  suites:
-
-    default:
-      paths:
-        - bootstrap
-        - ../features/ready
-
-      contexts:
-        - FeatureContext
-
-    new_features:
+  paths:
+    features: ../features/ready
+    bootstrap: bootstrap
 
   extensions:
-    Behat\MinkExtension:
+    Behat\MinkExtension\Extension:
       base_url: http://localhost:8888
       goutte: ~
       selenium2:
         wd_host: "http://localhost:8643/wd/hub"
 
+  formatter:
+    name: pretty,junit
+    parameters:
+      output_path: ,xml
+
+
 features:
-  suites:
-    paths:
-      '': ../features/ready
+  paths:
+    features: ../features/ready
 
 features-new:
-  suites:
-      paths:
-        '': ../features/new
+  paths:
+    features: ../features/new
 
 bugs:
-  suites:
-      paths:
-        '': ../bugs/fixed
+  paths:
+    features: ../bugs/fixed
 
 bugs-new:
-  suites:
-      paths:
-       '': ../bugs/new
+  paths:
+    features: ../bugs/new
 
 
 

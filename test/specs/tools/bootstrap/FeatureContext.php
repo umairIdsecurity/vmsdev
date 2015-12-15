@@ -65,7 +65,7 @@ class FeatureContext extends MinkContext
      * @Then /^I import tenant "([^"]*)"$/
      */
     public function iImportTenant($tenantName){
-        
+
     }
 
     /**

@@ -92,8 +92,8 @@ class TenantTransferController extends Controller
             {
 
                 $manager = new TenantManager();
-                $manager->importFromJsomFile($fullImgSource);
-                
+                $manager->importTenantFromJsonFile($fullImgSource);
+
                 if (file_exists($fullImgSource))
                 {
                     unlink($fullImgSource);

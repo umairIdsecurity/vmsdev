@@ -52,6 +52,29 @@ class FeatureContext extends MinkContext
         //$this->iWaitForSeconds(5);
     }
 
+
+    /**
+     * @Then /^I reset tenant "([^"]*)"$/
+     */
+    public function iResetTenant($tenantName){
+        $this->iDeleteTenant($tenantName);
+        $this->iImportTenant($tenantName);
+    }
+
+    /**
+     * @Then /^I import tenant "([^"]*)"$/
+     */
+    public function iImportTenant($tenantName){
+        
+    }
+
+    /**
+     * @Then /^I delete tenant "([^"]*)"$/
+     */
+    public function iDeleteTenant($tenantName){
+
+    }
+
     /**
      * @Then /^I login with username as "([^"]*)" and password as "([^"]*)"$/
      */

@@ -31,7 +31,7 @@ class VisitorController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('getAsicEscort','csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
-                                    'GetPatientDetails','CheckAlreadyVisitorProfile','CheckAlreadyVisitor', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
+                                    'GetPatientDetails','CheckAlreadyVisitorProfile','CheckAlreadyVisitor', 'CheckEmailIfUnique', 'GetVisitorDetails', 'findVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
                                     'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails','checkAsicEscort',
                                 ),
                 'users' => array('@'),

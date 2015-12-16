@@ -32,20 +32,25 @@ $tenant = '';
 //    $tenant = '';
 //}
 
-$date_of_birth_condition =  "%' or DATE_FORMAT(date_of_birth, '%Y-%m-%d') like '%" . $visitorName
+/*$date_of_birth_condition =  "%' or DATE_FORMAT(date_of_birth, '%Y-%m-%d') like '%" . $visitorName
                          . "%' or DATE_FORMAT(date_of_birth, '%d-%m-%Y') like '%" . $visitorName
                          . "%' or DATE_FORMAT(date_of_birth, '%y/%m/%d') like '%" . $visitorName;
+*/
+$date_of_birth_condition =  " or DATE(date_of_birth) = '" . $visitorName;
+
+
 
 $tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
 $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
                  . "%' or first_name like '%" . $visitorName
                  . "%' or last_name like '%" . $visitorName
                  . "%' or email like '%" . $visitorName
-                 . $date_of_birth_condition
                  . "%' or identification_document_no LIKE '%" . $visitorName
                  . "%' or identification_alternate_document_no1 LIKE '%" . $visitorName
                  . "%' or identification_alternate_document_no2 LIKE '%" . $visitorName
-                 . "%')";
+                 . "%'"
+                 . $date_of_birth_condition ."'"
+                 .")";
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
     $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";

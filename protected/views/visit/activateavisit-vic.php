@@ -514,7 +514,7 @@ $asicEscort = new AddAsicEscort();
                 <td></td>
                 <td>
                     <input type="text" id="search-escort" style="width:293px" name="search-host"
-                           placeholder="Search ASIC Sponsors by name,email address" class="search-text"/>
+                           placeholder="Search ASIC Sponsors by name, email or ASIC no." class="search-text"/>
                     <button type="button" class="btn btn-primary neutral" id="findEscortBtn" style="margin-bottom: 14px!important;width: auto !important; height: auto !important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
                     <div id="divMsg" style="display:none;">
                         <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />

@@ -92,7 +92,7 @@ if (!$cardTypeWorkstationModel) {
                 $("#User_asic_expiry").remove(); 
                 $("#searchInputDiv").append('<input type="text" id="search-host" style="width:370px" name="search-host" placeholder="Enter name, email address" class="search-text"/>'); 
             }else{
-                $("#searchInputDiv").append('<input type="text" id="search-host" style="width:370px" name="search-host" placeholder="Search ASIC Sponsors by name, email address" class="search-text"/>'); 
+                $("#searchInputDiv").append('<input type="text" id="search-host" style="width:370px" name="search-host" placeholder="Search ASIC Sponsors by name, email or ASIC no." class="search-text"/>'); 
             }
             
             $.ajax({

@@ -112,11 +112,11 @@ class PreregistrationController extends Controller
 				$session['tenant'] = $workstation->tenant;
 				$session['pre-page'] = 3;
 				$this->redirect(array('preregistration/privacyPolicy'));
-			}
+			}                     
 		}
 		$this->render('workstation-selection',array('model'=>$model));
-	}
-
+	} 
+	
 	public function actionPrivacyPolicy()
 	{
 		$session = new CHttpSession;

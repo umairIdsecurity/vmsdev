@@ -541,6 +541,12 @@ class Visitor extends CActiveRecord {
             $this->date_of_birth = NULL;
         }
 
+        if(!empty($this->asic_expiry)){
+            $this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));
+        }else{
+            $this->asic_expiry = NULL;
+        }
+
         if(!empty($this->identification_document_expiry)){
             $this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
         }else{

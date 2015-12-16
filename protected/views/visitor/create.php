@@ -525,7 +525,7 @@ function preloadHostDetails(hostId) {
 function checkAsicStatusById(id){
     $.ajax({
         type: 'POST',
-        url: '<?php echo Yii::app()->createUrl('visitor/checkAsicStatusById&id='); ?>' + id,
+        url: "<?php echo Yii::app()->createUrl('visitor/checkAsicStatusById&id='); ?>" + id,
         dataType: 'text',
         data: id,
         success: function (flag) {
@@ -535,7 +535,7 @@ function checkAsicStatusById(id){
            }else{
                $.ajax({
                    type: 'POST',
-                   url: '<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>' + id,
+                   url: "<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>" + id,
                    dataType: 'json',
                    data: id,
                    success: function (r) {

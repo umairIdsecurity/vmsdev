@@ -185,7 +185,8 @@ class DashboardController extends Controller {
         ));
     }
 
-    public function actionAdminDashboard() {
+    public function actionAdminDashboard() 
+    {
         $this->layout = '//layouts/column2';
         $session = new CHttpSession;
         $session['lastPage'] = 'dashboard';

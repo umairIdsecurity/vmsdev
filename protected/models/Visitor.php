@@ -292,9 +292,7 @@ class Visitor extends CActiveRecord {
 
         $rules[] = array(
             'identification_type,
-            identification_country_issued,
-            identification_document_no,
-            identification_document_expiry',
+            identification_country_issued',
             'VisitorPrimaryIdentification',
             'except' => ['u18Rule', 'updateVic', 'delete','updateAsic']
         );

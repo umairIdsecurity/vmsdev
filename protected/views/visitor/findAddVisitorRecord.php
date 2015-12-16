@@ -502,7 +502,7 @@ $model->identification_country_issued = 13;
                                             'style'       => 'width: 80px;',
                                         ),
                                     ));
-                                    ?><span class="required primary-identification-require">*</span>
+                                    ?><!-- <span class="required primary-identification-require">*</span> -->
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>
@@ -774,12 +774,14 @@ $model->identification_country_issued = 13;
                 $("#Visitor_identification_country_issued_em_").empty().removeClass("errorMessageImportant");
             }
 
+            /*
+            CAVMS--1171
             if ($("#Visitor_identification_document_expiry").val() == "") {
                 is_error = true;
                 $("#Visitor_identification_document_expiry_em_").html("Please complete identification document expiry").addClass("errorMessageImportant");
             } else {
                 $("#Visitor_identification_document_expiry_em_").empty().removeClass("errorMessageImportant");
-            }
+            }*/
         }
 
         return true;

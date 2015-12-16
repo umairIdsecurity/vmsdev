@@ -480,7 +480,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             'style'       => 'width: 80px;',
                                         ),
                                     ));
-                                    ?><span class="required primary-identification-require">*</span>
+                                    ?><!-- <span class="required primary-identification-require">*</span> -->
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>

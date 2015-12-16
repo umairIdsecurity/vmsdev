@@ -430,7 +430,8 @@ class SiteController extends Controller {
                 }
             }
             //******************************************************************
-            
+            //this will expire the all the ASICs of the USER just logged in based on it's TENANT 
+            $this->expireASICsForLoggedUser();
             $this->redirect('index.php?r=dashboard/adminDashboard');
         }
 
@@ -438,6 +439,18 @@ class SiteController extends Controller {
         $this->render('selectworkstation', array('workstations' => $aArray, 'addWorkstation' => isset($addWorkstation) ? $addWorkstation : 0));
     }
     
+    //this will expire the all the ASICs of the USER just logged in based on it's TENANT 
+    public function expireASICsForLoggedUser()
+    {
+        $allAsics = Visitor::model()->findAll("profile_type='ASIC' AND tenant='".Yii::app()->user->tenant."' AND is_deleted=0");
+        $today = date("Y-m-d");
+        foreach ($allAsics as $key => $asic) {
+            if(($asic->asic_expiry != "") && (date("Y-m-d",strtotime($asic->asic_expiry)) <= $today)){
+                Visitor::model()->updateByPk($asic->id,array("visitor_card_status"=>"7"));   
+            }
+        }
+    }
+
     public function checkTimezone(){
         $userTimezone = User::model()->with('userTimezones')->find('t.tenant='.Yii::App()->user->tenant.' AND t.id='.Yii::App()->user->id);
         $serverTimezone = date_default_timezone_get();

@@ -2,6 +2,12 @@
     $session = new CHttpSession;
 ?>
 
+<style type="text/css">
+    .highlight{
+        box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);    
+    }
+</style>
+
 <!-- <div class="page-content"> -->
         <div class="row"><div class="col-sm-12">&nbsp;</div></div>
         
@@ -136,8 +142,10 @@
     <script>
         $(document).ready(function() {
              $('input[type=radio][name=airport]').on('change',function(){
+                $(this).closest('label').addClass('highlight').siblings().removeClass('highlight');
                 var airportCode = $('input[type=radio][name=airport]:checked').val();
                 $('#TenantSelection_tenant').val(airportCode);
+
             });
 
         });

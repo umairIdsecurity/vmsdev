@@ -177,7 +177,8 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
 .form-in .login-area .form-group span.add-on{position:absolute;background-color: #f3f3f2;top: 4px;
     border-right:1px solid #ccc;left:1px;	border-top-left-radius: 3px;border-bottom-left-radius: 3px; padding:7.5px 10px;}
 .form-in .login-area .form-group input{padding-left:60px}
-.form-in .login-area .form-group select{  -webkit-appearance: none;
+.form-in .login-area .form-group select{
+	-webkit-appearance: none;
 	-moz-appearance : none;
 	appearance : none;
 	border:1px solid #ccc;
@@ -185,11 +186,12 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
 	padding:5px 3px;
 	padding-left: 60px;
 	width: 100%;
-	color: darkgray ;
 	background:url(../images/select-arrows.png) no-repeat right;
 	background-size: 18px 18px}
-.form-in .login-area .form-group select.textIndent{  padding-left: 60px !important;}
 
+/*.form-in .login-area .form-group select {*/
+	/*color: lightgrey ;*/
+/*}*/
 
 
 
@@ -203,4 +205,4 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
     border-radius:3px;display:block;border:1px solid #ccc;margin-left:-6px}
 .b-account{background:url(../images/menu-icons-profile.png)no-repeat;width:30px;height:30px;float:left}
 .b-password{background:url(../images/glyphs-asterisk.png)no-repeat;width:30px;height:30px;float:left}
-.b-tenant{background:url(../images/airplane.png)no-repeat;background-size: 30px 30px; width:30px;height:30px;float:left}
+.b-tenant{background:url(../images/airplane.png)no-repeat;background-size: 28px 28px; width:30px;height:30px;float:left}

@@ -1,31 +1,11 @@
 
 # install phantom js
-curl -O https://phantomjs.googlecode.com/files/phantomjs-1.9.1-linux-i686.tar.bz2
-tar xvf phantomjs-1.9.1-linux-i686.tar.bz2
-cp phantomjs-1.9.1-linux-i686/bin/phantomjs /usr/local/bin
+sudo curl -O https://phantomjs.googlecode.com/files/phantomjs-1.9.8-linux-x86_64.tar.bz2
+sudo tar jxvf phantomjs-1.9.8-linux-x86_64.tar.bz2
+sudo cp phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs
+sudo chmod +x /usr/local/bin/phantomjs
 sudo yum install -y freetype
 sudo yum install -y fontconfig
 
 
-# install selenium web driver
-yum install firefox Xvfb libXfont Xorg
-mkdir /usr/lib/selenium /var/log/selenium /var/log/Xvfb
-chown screener.screener  /usr/lib/selenium /var/log/selenium /var/log/Xvfb
-cd /usr/lib/selenium ;
-wget http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar
-
-# install java
-yum install -y jre
-
-# setup scripts
-cp selenium /etc/init.d
-cp Xvfb /etc/init.d
-
-
-# start the services
-/etc/init.d/Xvfb start
-/etc/init.d/selenium start
-
-
-
-
+composer global require behat/behat:2.5.*@stable behat/mink:1.5.*@stable behat/mink-extension:1.3.3 behat/mink-goutte-driver:1.0.9 behat/mink-selenium2-driver:1.1.1 behat/mink-zombie-driver:1.1.0

@@ -2090,8 +2090,8 @@ GO
 
 SET IDENTITY_INSERT [dbo].[company] ON
 
-INSERT INTO company (id, code, name, trading_name, logo, contact, billing_address, email_address, office_number, mobile_number, website, company_laf_preferences, created_by_user, created_by_visitor, tenant, tenant_agent, is_deleted)
-VALUES (1, 'IDS', 'Identity Security', 'Identity Security', null, 'Julie Stewart Rose', 'PO BOX 710 Port Melbourne VIC 3207', 'julie.stewart@idsecurity.com.au', 396453450, 2147483647, 'http://idsecurity.com.au', NULL, NULL, NULL, 1, NULL, 0);
+INSERT INTO company (id, code, name, trading_name, logo, contact, billing_address, email_address, office_number, mobile_number, website, company_laf_preferences, created_by_user, created_by_visitor, tenant, tenant_agent, is_deleted,company_type)
+VALUES (1, 'IDS', 'Identity Security', 'Identity Security', null, 'Julie Stewart Rose', 'PO BOX 710 Port Melbourne VIC 3207', 'julie.stewart@idsecurity.com.au', 396453450, 2147483647, 'http://idsecurity.com.au', NULL, NULL, NULL, 1, 0, 0,1);
 
 SET IDENTITY_INSERT [dbo].[company] OFF
 GO 

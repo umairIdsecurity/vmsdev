@@ -1135,8 +1135,8 @@ INSERT INTO `visit_status` (`id`, `name`, `created_by`) VALUES
 
 
 
-INSERT INTO `company` (`id`, `code`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `company_laf_preferences`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(1, 'IDS', 'Identity Security', 'Identity Security', 1, 'Julie Stewart Rose', 'PO BOX 710 Port Melbourne VIC 3207', 'julie.stewart@idsecurity.com.au', 396453450, 2147483647, 'http://idsecurity.com.au', 1, NULL, NULL, 1, 1, 0);
+INSERT INTO `company` (`id`, `code`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `company_laf_preferences`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`,`company_type`) VALUES
+(1, 'IDS', 'Identity Security', 'Identity Security', 1, 'Julie Stewart Rose', 'PO BOX 710 Port Melbourne VIC 3207', 'julie.stewart@idsecurity.com.au', 396453450, 2147483647, 'http://idsecurity.com.au', 1, NULL, NULL, NULL, NULL, 0,1);
 
 INSERT INTO `company_laf_preferences` (`id`, `action_forward_bg_color`, `action_forward_bg_color2`, `action_forward_font_color`, `action_forward_hover_color`, `action_forward_hover_color2`, `action_forward_hover_font_color`, `complete_bg_color`, `complete_bg_color2`, `complete_hover_color`, `complete_hover_color2`, `complete_font_color`, `complete_hover_font_color`, `neutral_bg_color`, `neutral_bg_color2`, `neutral_hover_color`, `neutral_hover_color2`, `neutral_font_color`, `neutral_hover_font_color`, `nav_bg_color`, `nav_hover_color`, `nav_font_color`, `nav_hover_font_color`, `sidemenu_bg_color`, `sidemenu_hover_color`, `sidemenu_font_color`, `sidemenu_hover_font_color`, `css_file_path`)
 VALUES (1, '#9ED92F', '#9ED92F', '#ffffff', '#9ED92F', '#9ED92F', '#ffffff', '#0d0d0c', '#a1999a', '#998e8e', '#b0a9a9', '#ffffff', '#ffffff', '#33bcdb', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#30c5d9', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#1670c4', '#157cdb', '/company_css/IDS-1424944653.css');

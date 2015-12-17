@@ -84,7 +84,8 @@ $this->pageTitle=Yii::app()->name . ' - Login';
         ?>
                 <tr>
                     <td colspan="3" class="form-group"><span class="add-on"><i class="b-tenant"></i></span>
-                        <?php echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAllTenants(), 'id', 'name'), array('empty' => 'Select Airport', 'style' => 'height: 47px; ')); ?>
+                        <?php echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAtLeast1Tenant(), 'id', 'name'), array('empty' =>'Select Airport', 'style' => 'height: 47px; ')); ?>
+
                     </td>
                 </tr>
         <?php

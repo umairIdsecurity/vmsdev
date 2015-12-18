@@ -387,6 +387,7 @@ class Visit extends CActiveRecord {
             'patient0' => array(self::BELONGS_TO, 'Patient', 'patient'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
+
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
             // 'company0' => array(self::BELONGS_TO, 'Company', 'visitor0->company'),
             'company0' => array(

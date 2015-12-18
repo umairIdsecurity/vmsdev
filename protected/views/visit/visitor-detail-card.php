@@ -157,8 +157,16 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_CORPORATE) {
                 $profileType = Visitor::PROFILE_TYPE_CORPORATE;
             }
+            //because of CAVMS- 1180
+            $statuses = '';
+            if((Yii::app()->user->role == Roles::ROLE_AIRPORT_OPERATOR)||(Yii::app()->user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR)){
+                $statuses = Visitor::$VISITOR_CARD_TYPE_LIST_OPERATOR[$profileType]; 
+            }else{ 
+                $statuses = Visitor::$VISITOR_CARD_TYPE_LIST[$profileType]; 
+            }
+
             if( count(Visitor::$VISITOR_CARD_TYPE_LIST[$profileType]) )
-            echo $detailForm->dropDownList($visitorModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
+            echo $detailForm->dropDownList($visitorModel, 'visitor_card_status',$statuses, ['empty' => 'Select Card Status']);
                 echo "<br />";
         //}
 

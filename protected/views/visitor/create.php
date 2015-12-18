@@ -665,7 +665,9 @@ $('#searchVisitorsByEmailLink').click(function(){
 
 $('#searchVisitorsByFirstnameLink').click(function(){
     var firstname = $("#Visitor_first_name").val();
-    $("#search-visitor").val(firstname);
+    var lastname = $("#Visitor_last_name").val();
+    var res = firstname + ' ' + lastname;
+    $("#search-visitor").val(res);
     $("#dummy-visitor-findBtn").click();
     
 });

@@ -52,7 +52,11 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     ?>
                                     <input type='submit' id="closeVisitSubmit" name="closeVisitForm" style="display: none;" />
                                     <input type="submit" id="closeVisitBtn" class="complete" value="Close Visit" />
-                                    <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
+                                    
+                                    <?php if($model->visit_status != VisitStatus::ACTIVE ) : //introduced because of CAVMS-1178 ?>
+                                        <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
+                                    <?php endif; ?>
+
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
                                     <?php $this->endWidget(); ?>
                                 </div>
@@ -161,7 +165,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             
                              <div style="display:none;" id="visit_cannot_be_activate" class="errorMessage">VIC can not be activated in the future</div>
                             <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
-                             <div style="display:inline;font-size:12px;">
+                             
+                              
+                            <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
                                 <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED])) : ?>
                                     <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
@@ -169,6 +175,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                                 <?php endif;?>
                             </div>
+
+
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED ) : ?>
                             <?php  
                             $disabled = '';

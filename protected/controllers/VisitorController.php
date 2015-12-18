@@ -484,7 +484,8 @@ class VisitorController extends Controller {
                 . "%' or first_name like '%" . $searchInfo
                 . "%' or last_name like '%" . $searchInfo
                 . "%' or email like '%" . $searchInfo
-                . "%' or identification_document_no LIKE '%" . $searchInfo
+                . "%' or asic_no = '" . $searchInfo
+                . "' or identification_document_no LIKE '%" . $searchInfo
                 . "%' or identification_alternate_document_no1 LIKE '%" . $searchInfo
                 . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
                 . "%')";

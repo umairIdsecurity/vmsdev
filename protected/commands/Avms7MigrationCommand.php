@@ -25,7 +25,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         ['table_name'=>'visit'  , 'column_name'=>'workstation'          ,'referenced_table_name'=>'workstation'     ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'card'                 ,'referenced_table_name'=>'card_generated'  ,'referenced_column_name'=>'id'],
-        ['table_name'=>'visit'  , 'column_name'=>'host'                 ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
+        ['table_name'=>'visit'  , 'column_name'=>'host'                 ,'referenced_table_name'=>'visitor'            ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'created_by'           ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'closed_by'            ,'referenced_table_name'=>'user'            ,'referenced_column_name'=>'id'],
         ['table_name'=>'visit'  , 'column_name'=>'visitor'              ,'referenced_table_name'=>'visitor'         ,'referenced_column_name'=>'id'],
@@ -71,6 +71,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
 
             $this->setTenantAgents($data,$referenceData);
+            $this->setUserCompanies($data);
             $this->setVisitorCompanies($data,$referenceData,$avms7);
             $this->setVisitorTypes($data,$airportCode,$idMappings);
             $this->setVisitReasons($data,$airportCode);
@@ -338,6 +339,23 @@ class Avms7MigrationCommand extends CConsoleCommand
 
     }
 
+
+    public function setUserCompanies(&$data)
+    {
+        //user companies should be a tenant or a tenant agent
+        $visitorCompany = [];
+        for ($i = 0; $i < sizeof($data['user']); $i++) {
+            $company = null;
+            if (isset($data['user'][$i]['tenant_agent'])) {
+                $data['user'][$i]['company'] = $data['user'][$i]['tenant_agent'];
+            } else if (isset($user['tenant'])) {
+                $data['user'][$i]['company'] = $data['user'][$i]['tenant'];
+            } else {
+                throw new CException("Cant assign company for user ".$user['email']);
+            }
+        }
+    }
+
     public function setVisitorCompanies(&$data,$referenceData,$avms7){
 
         $visitorCompany = [];
@@ -519,6 +537,8 @@ class Avms7MigrationCommand extends CConsoleCommand
         $data['user']=$toKeep;
     }
 
+
+
     public function mapExistingData($tenant,$data,&$idMappings,$vms,$refernceData)
     {
         $idMappings['company'] = [];
@@ -622,7 +642,9 @@ class Avms7MigrationCommand extends CConsoleCommand
                                             and c.id = n.companyId
                                 where oc.airportCode = '$airportCode'
                                 group by oc.userid,n.CompanyName
-                                "
+                                ",
+
+
         ];
         $data = [];
 
@@ -672,29 +694,6 @@ class Avms7MigrationCommand extends CConsoleCommand
                     left join agent on agent.UserId = agent_set.agentid
                     left join users c on c.id = ifnull(agent.agentid,agent_set.agentid)
             ",
-//            "company" => "
-//                select distinct c.id as id,
-//                     min(c.company) as name,
-//                     min(c.company) as trading_name,
-//                     max(CONCAT_WS(' ',c.FirstName, c.LastName))  as contact,
-//                     max(CONCAT_WS(' ',c.Unit,c.StreetNo,c.Street,c.StreetType,c.Suburb,c.State,c.PostCode)) as billing_address,
-//                     max(c.EmailAddress) as email_address,
-//                     max(c.Telephone) as office_number,
-//                     max(c.Mobile) as mobile_number,
-//                     1 as created_by_user,
-//                     1 as created_by_visitor,
-//                     oc.AirportCode as tenant,
-//                     IFNULL(agent.AgentId,agent_set.AgentId) as tenant_agent,
-//                     0 as is_deleted,
-//                     3 as company_type
-//                   from  operational_need n
-//                       join log_visit l on l.id = n.id and l.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
-//                       join oc_set oc on oc.id = l.setid and oc.AirportCode = '$airportCode'
-//                       join users c on c.id = n.CompanyId and c.level = 4
-//                       left join agent_set on agent_set.ocid = oc.id
-//                       left join agent on agent.UserId = agent_set.agentid
-//                  group by c.id,oc.AirportCode, IFNULL(agent.AgentId,agent_set.AgentId)
-//            ",
             "company" =>"
                 select c.Id as id,
                      (c.company) as name,

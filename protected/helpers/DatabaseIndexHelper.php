@@ -18,7 +18,7 @@ class DatabaseIndexHelper
             case 'mysql';
                 $sql =  "SELECT table_name, column_name, referenced_table_name, referenced_column_name "
                         ."FROM  information_schema.key_column_usage "
-                        ."WHERE constraint_schema =  (SELECT DATABASE())";
+                        ."WHERE constraint_schema =  (SELECT DATABASE()) AND referenced_table_name IS NOT NULL";
                 break;
 
             case 'mssql';

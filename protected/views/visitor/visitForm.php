@@ -140,7 +140,7 @@ date_default_timezone_set('Asia/Manila');
     function populateVisitFormFields() {
         document.getElementById('User_company').disabled = false;
         if ($("#isPreloaded").val() != '') {
-            var url = "<?php echo CHtml::normalizeUrl(array("visit/update&id=")); ?>" + $("#preloadVisitId").val();
+            var url = "<?php echo CHtml::normalizeUrl(array('visit/update&id=')); ?>" + $("#preloadVisitId").val();
             $("#register-visit-form").attr("action", url);
         }
         $("#Visit_visitor").val($("#visitorId").val());

@@ -36,7 +36,8 @@ $tenant = '';
                          . "%' or DATE_FORMAT(date_of_birth, '%d-%m-%Y') like '%" . $visitorName
                          . "%' or DATE_FORMAT(date_of_birth, '%y/%m/%d') like '%" . $visitorName;
 */
-$date_of_birth_condition =  " or DATE(date_of_birth) = '" . $visitorName;
+                         
+//$date_of_birth_condition =  " or DATE(date_of_birth) = '" . $visitorName;
 
 
 
@@ -49,7 +50,7 @@ $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) 
                  . "%' or identification_alternate_document_no1 LIKE '%" . $visitorName
                  . "%' or identification_alternate_document_no2 LIKE '%" . $visitorName
                  . "%'"
-                 . $date_of_birth_condition ."'"
+                 /*. $date_of_birth_condition ."'"*/
                  .")";
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {

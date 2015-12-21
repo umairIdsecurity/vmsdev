@@ -89,7 +89,23 @@ class Visitor extends CActiveRecord {
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
+        )
+    );
+
+    ////because of CAVMS- 1180
+    public static $VISITOR_CARD_TYPE_LIST_OPERATOR = array(
+        self::PROFILE_TYPE_CORPORATE => array(
         ),
+        self::PROFILE_TYPE_VIC => array(
+            self::SAVED            => 'Card Status: Saved',
+            self::VIC_HOLDER       => 'Card Status: VIC Holder'
+        ),
+        self::PROFILE_TYPE_ASIC => array(
+            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant',
+            self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
+            self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
+            self::ASIC_DENIED    => 'Card Status: ASIC Denied',
+        )
     );
 
     const ASIC_DENIED_LABEL      = 'Card Status: ASIC Denied';

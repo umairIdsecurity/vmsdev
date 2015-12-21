@@ -79,6 +79,9 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         <?php $this->renderPartial('logvisit', array('visitModel' => $visitModel)); ?>
     </li>
 </ul>
+
+<input type="hidden" id="asicDeniedFlag" value="" />
+
 <input type="text" style="display:none;" id="createUrlForEmailUnique"
        value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
 
@@ -264,7 +267,7 @@ function getCardType() {
         $("#clicktabB2").click(function (e) {
             e.preventDefault();
             var currentURL = $("#getcurrentUrl").val();
-
+            
             $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
             //checks if host is from search and verifys that a user has been selected
             if ($("#search-host").val() == '' || $("#selectedHostInSearchTable").val() == '0' || $("#selectedHostInSearchTable").val() == '') {
@@ -276,21 +279,29 @@ function getCardType() {
                 $("#searchTextHostErrorMessage").show();
             } else if (currentURL != "") {
                 showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
-            } else if ($("#selectedVisitorInSearchTable").val() != '0' && $("#selectedVisitorInSearchTable").val() != '') { // if visitor is from search
-
+            } 
+            else if ($("#selectedVisitorInSearchTable").val() != '0' && $("#selectedVisitorInSearchTable").val() != '') 
+            { // if visitor is from search
                 if ($("#VisitReason_reason_search").val() != 0 && $("#Visit_reason_search").val() == 'Other') {
-
                     sendReasonForm();
-                } else {
-                    if ($("#hostId").val() != 0 || $("#hostId").val() != '') {
-                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+' true '+"</textarea>");
-                        $("#register-visit-form").append($sendMail);
+                } 
+                else 
+                {
+                    if ($("#hostId").val() != 0 || $("#hostId").val() != '') 
+                    {
+                        var sendMail = $("<textarea  name='Visit[sendMail]'>"+' true '+"</textarea>");
+                        $("#register-visit-form").append(sendMail);
                     }
-                    populateVisitFormFields();
+
+                    if ($("#asicDeniedFlag").val() != 0) {
+                        populateVisitFormFields();
+                    }
+                    
                 }
                 $("#searchTextHostErrorMessage").hide();
             }
-            else {
+            else 
+            {
                 $("#searchTextHostErrorMessage").hide();
                 sendReasonForm();
             }
@@ -531,9 +542,12 @@ function checkAsicStatusById(id){
         success: function (flag) {
            if(flag == 0){
                alert('ASIC Denied. A VIC can not be issued to this person.\n Please inform them to report to the ASIC office.');
+               $("#asicDeniedFlag").val(flag);
                return;
-           }else{
-               $.ajax({
+           }
+           else{
+                $("#asicDeniedFlag").val(flag);
+                $.ajax({
                    type: 'POST',
                    url: "<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>" + id,
                    dataType: 'json',
@@ -560,7 +574,7 @@ function populateFieldHost(id) {
     } else {
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/GetPatientDetails&id='); ?>' + id,
+            url: "<?php echo Yii::app()->createUrl('visitor/GetPatientDetails&id='); ?>" + id,
             dataType: 'json',
             data: id,
             success: function (r) {
@@ -651,7 +665,9 @@ $('#searchVisitorsByEmailLink').click(function(){
 
 $('#searchVisitorsByFirstnameLink').click(function(){
     var firstname = $("#Visitor_first_name").val();
-    $("#search-visitor").val(firstname);
+    var lastname = $("#Visitor_last_name").val();
+    var res = firstname + ' ' + lastname;
+    $("#search-visitor").val(res);
     $("#dummy-visitor-findBtn").click();
     
 });

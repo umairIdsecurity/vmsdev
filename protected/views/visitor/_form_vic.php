@@ -187,11 +187,18 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <tr>
                                         <td>
                                             <?php
-                                            echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['1' => ['selected'=>true]]]); ?>
+                                                //because of CAVMS- 1180
+                                                $statuses = '';
+                                                if((Yii::app()->user->role == Roles::ROLE_AIRPORT_OPERATOR)||(Yii::app()->user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR)){
+                                                    $statuses = Visitor::$VISITOR_CARD_TYPE_LIST_OPERATOR[Visitor::PROFILE_TYPE_VIC]; 
+                                                }else{
+                                                    $statuses = Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]; 
+                                                }
+                                                echo $form->dropDownList($model, 'visitor_card_status', $statuses, ['empty' => 'Select Card Status', 'options'=>['1' => ['selected'=>true]]]); 
+                                            ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
-
                                     </tr>
                                     <tr>
                                         <td id="visitorTenantRow" <?php

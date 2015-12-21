@@ -43,9 +43,6 @@ class TenantManager
         ['table_name' => 'user', 'column_name' => 'photo', 'referenced_table_name' => 'photo', 'referenced_column_name' => 'id'],
         ['table_name' => 'user_notification', 'column_name' => 'user_id', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
         ['table_name' => 'user_notification', 'column_name' => 'notification_id', 'referenced_table_name' => 'notification', 'referenced_column_name' => 'id'],
-        ['table_name' => 'visit', 'column_name' => 'tenant_agent', 'referenced_table_name' => 'tenant_agent', 'referenced_column_name' => 'id'],
-        ['table_name' => 'visit', 'column_name' => 'asic_escort', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
-        ['table_name' => 'visit', 'column_name' => 'closed_by', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
         ['table_name' => 'visitor', 'column_name' => 'tenant_agent', 'referenced_table_name' => 'tenant_agent', 'referenced_column_name' => 'id'],
         ['table_name' => 'tenant_agent_contact', 'column_name' => 'tenant_id', 'referenced_table_name' => 'tenant', 'referenced_column_name' => 'id'],
         ['table_name' => 'tenant_agent_contact', 'column_name' => 'user_id', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
@@ -60,6 +57,7 @@ class TenantManager
 
         ['table_name' => 'user', 'column_name' => 'tenant', 'referenced_table_name' => 'company', 'referenced_column_name' => 'id'],
         ['table_name' => 'user', 'column_name' => 'tenant_agent', 'referenced_table_name' => 'company', 'referenced_column_name' => 'id'],
+        //['table_name' => 'user', 'column_name' => 'company', 'referenced_table_name' => 'company', 'referenced_column_name' => 'id'],
 
         ['table_name' => 'visitor', 'column_name' => 'tenant', 'referenced_table_name' => 'company', 'referenced_column_name' => 'id'],
         ['table_name' => 'visitor', 'column_name' => 'tenant_agent', 'referenced_table_name' => 'company', 'referenced_column_name' => 'id'],
@@ -71,7 +69,11 @@ class TenantManager
 
         ['table_name' => 'visit', 'column_name' => 'workstation', 'referenced_table_name' => 'workstation', 'referenced_column_name' => 'id'],
         ['table_name' => 'visit', 'column_name' => 'card', 'referenced_table_name' => 'card_generated', 'referenced_column_name' => 'id'],
-        ['table_name' => 'visit', 'column_name' => 'host', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
+        //['table_name' => 'visit', 'column_name' => 'host', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
+        ['table_name' => 'visit', 'column_name' => 'tenant_agent', 'referenced_table_name' => 'tenant_agent', 'referenced_column_name' => 'id'],
+        ['table_name' => 'visit', 'column_name' => 'asic_escort', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
+        ['table_name' => 'visit', 'column_name' => 'closed_by', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
+
         ['table_name' => 'visit', 'column_name' => 'created_by', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
         ['table_name' => 'visit', 'column_name' => 'closed_by', 'referenced_table_name' => 'user', 'referenced_column_name' => 'id'],
         ['table_name' => 'visit', 'column_name' => 'visitor', 'referenced_table_name' => 'visitor', 'referenced_column_name' => 'id'],
@@ -284,7 +286,7 @@ class TenantManager
             }
 
             // massage the data in out of the ordinary circumstances
-            $this->beforeInsertRow($tableName, $row, $oldId);
+            $this->beforeInsertRow($tableName, $row, $oldId,$idMappings);
 
             // populate referencing columns
             $this->setReferencingIds($tableName, $row, $foreignKeys, $idMappings, $targetTables);
@@ -331,7 +333,7 @@ class TenantManager
         echo "<br><br>";
     }
 
-    function beforeInsertRow($tableName, &$row, $oldId)
+    function beforeInsertRow($tableName, &$row, $oldId,$idMappings)
     {
         if ($tableName == 'user' and $row['first_name'] == 'Kris') {
             echo 'found kris';
@@ -347,6 +349,17 @@ class TenantManager
         if ($tableName == 'visit' && isset($row['reset_id'])) {
             $this->visit_resets[$row['reset_id']] = $oldId;
             $row['reset_id'] = null;
+        }
+
+        if ($tableName == 'visit' && isset ($row['host']))
+        {
+            if(isset($idMappings['user'][$row['host']])){
+                $row['host'] = $idMappings['user'][$row['host']];
+            } else if(isset($idMappings['visitor'][$row['host']])) {
+                $row['host'] = $idMappings['visitor'][$row['host']];
+            } else {
+                throw new CException("Can't find host ".$row['host']." for visitor ".$row['visitor']." and card type ".$row['card_type']);
+            }
         }
     }
 

@@ -28,6 +28,7 @@ class CSVHelper
         }
         return $result;
     }
+
     public static function combine($header,$vals){
         $result = [];
         for($i=0;$i<sizeof($header);$i++){

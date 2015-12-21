@@ -58,11 +58,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'value'  => 'isset($data->card0->card_number) ? $data->card0->card_number : ""',
 			'filter' => CHtml::activeTextField($model, 'cardnumber', array('placeholder' => 'Card Number', 'class' => 'header-form')),
 		),
-		array(
+		/*array(
 			'name'   => 'companycode',
 			'value'  => 'isset($data->company0->code) ? $data->company0->code : ""',
 			'filter' => CHtml::activeTextField($model, 'companycode', array('placeholder' => 'Tenant Code', 'class' => 'header-form')),
-		),
+		),*/
+        //beacuse of CAVMS-783
+        array(
+            'name'   => 'tenant',
+            'value'  => 'showTenantCode($data->tenant)',
+            'filter' => CHtml::activeTextField($model, 'tenant', array('placeholder' => 'Tenant Code', 'class' => 'header-form')),
+        ),
 		array(
 			'name'   => 'firstname',
 			'value'  => '$data->visitor0->first_name',
@@ -217,6 +223,15 @@ function getContactName($id)
         return $users[0]->getFullName();
     else
         return "";
+}
+
+function showTenantCode($tenant) {
+    if ($tenant == '') {
+        return "";
+    } else {
+        $company = Company::model()->findByPk($tenant);
+        return $company->code;
+    }
 }
 
 ?>

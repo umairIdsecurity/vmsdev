@@ -191,7 +191,7 @@ if ($this->action->id == 'update') {
                     <td>
                         <?php
                         if (!isset($model->password_requirement)) {
-                            $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                            $model->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
                         }
 
                         echo $form->radioButtonList($model, 'password_requirement',
@@ -203,14 +203,12 @@ if ($this->action->id == 'update') {
                         <?php echo $form->error($model, 'password_requirement'); ?>
                     </td>
                 </tr>
-                        <tr class="show_password_fields" style=" display:none;">
+                        <tr class="show_password_fields" style="">
                             <td>
                                 <table style="width:253px; border-left-style:none; border-top-style:none">
                                     <tr>
                                         <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                                     </tr>
-
-
 
                                     <tr id="third_option" class='hiddenElement'>
 
@@ -268,7 +266,7 @@ if ($this->action->id == 'update') {
                                     </tr>
 
                                     <tr>
-                                        <td> <input type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
+                                        <td> <input checked="checked" type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
                                             &nbsp;Send User Invitation</td>
                                     </tr>
                                 </table>
@@ -357,16 +355,17 @@ if (isset($_GET['viewFrom'])) {
 ?>"/>
 <script>
 $(document).ready(function() {
-   $(".password_requirement").click(function() {
-
-   if( $(".password_requirement:checked").val() == 2 ) {
-        $(".show_password_fields").show();
-    }
-    else {
-        $(".show_password_fields").hide();
-    }
-    
-   }); 
+    /*
+    //CAVMS-1168
+    $(".password_requirement").click(function() {
+        if( $(".password_requirement:checked").val() == 2 ) {
+            $(".show_password_fields").show();
+        }
+        else {
+            $(".show_password_fields").hide();
+        }
+    });
+    */
 });
     var radiochooseval = "";
     function call_radio1(){
@@ -580,7 +579,8 @@ $(document).ready(function() {
             $(createCompanyForm()+".password-border #pass_error_").hide();
             if ($('#Company_password_requirement_1').is(':checked')) {
                 $(createCompanyForm()+'.user_requires_password').css("display", "block");
-                $(createCompanyForm()+'.pass_option').prop('checked', false);
+                //CAVMS-1168
+                //$(createCompanyForm()+'.pass_option').prop('checked', false);
                 $('#Company_user_password').val('');
             }
             else {

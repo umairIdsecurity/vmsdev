@@ -40,6 +40,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' =>  'time_check_in',
             'header' => 'Time In',
+            'value' => 'formatTime($data->time_check_in)',
             'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
         ),
@@ -58,6 +59,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'time_check_out',
             'header' => 'Time Out',
+            'value' => 'formatTime($data->time_check_out)',
             'htmlOptions' => array('style'=>'width:15px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:15px; min-width: 0px !important;'),
         ),
@@ -70,6 +72,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
     )
 ));
+
+//because of cavms-1135
+function formatTime($time) {
+    if ($time == '' || $time == '00:00:00') {
+        return "-";
+    } else {
+        return date('h:i A', strtotime($time));
+    }
+}
+
+
 ?>
 <script>
     $(document).ready(function() {

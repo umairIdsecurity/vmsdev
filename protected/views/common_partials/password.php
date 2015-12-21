@@ -19,7 +19,7 @@ if (isset($company) && !empty($company)) {
                 <td>
                     <?php
                     if (!isset($model->password_requirement)) {
-                        $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                        $model->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
                     }
 
                     echo $form->radioButtonList($model, 'password_requirement', array(
@@ -30,7 +30,7 @@ if (isset($company) && !empty($company)) {
                     <?php echo $form->error($model, 'password_requirement'); ?>
                 </td>
             </tr>
-            <tr class="show_password_fields" style=" display:none;">
+            <tr class="show_password_fields" style="">
                 <td>
                     <table style="width:253px; border-left-style:none; border-top-style:none">
                         <tr>
@@ -110,16 +110,17 @@ if (isset($company) && !empty($company)) {
 <script>
     function show_hide_password_fields(t) {
         if ($(t).val() == 2) {
-            $(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').show();
+            //because of CAVMS-1168
+            //$(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').show();
         } else {
-            $(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').hide();
-            $(parentElement() + ' .pass_option').each(function (i, v) {
+            //$(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').hide();
+            /*$(parentElement() + ' .pass_option').each(function (i, v) {
                 if ($(v).val() == 2) {
                     $(v).prop('checked', true);
                 } else {
                     $(v).prop('checked', false);
                 }
-            });
+            });*/
         }
     }
     var radiochooseval = "";

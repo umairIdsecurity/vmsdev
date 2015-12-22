@@ -546,22 +546,22 @@ class Visitor extends CActiveRecord {
         } 
         else
         {
-                $this->password = User::model()->hashPassword($this->password);
+            $this->password = User::model()->hashPassword($this->password);
         }
 
-        if(!empty($this->date_of_birth)){
+        if($this->date_of_birth != ""){
             $this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));
         }else{
             $this->date_of_birth = NULL;
         }
 
-        if(!empty($this->asic_expiry)){
+        if($this->asic_expiry != ""){
             $this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));
         }else{
             $this->asic_expiry = NULL;
         }
 
-        if(!empty($this->identification_document_expiry)){
+        if($this->identification_document_expiry != ""){
             $this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
         }else{
             $this->identification_document_expiry = NULL;

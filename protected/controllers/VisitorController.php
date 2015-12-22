@@ -990,8 +990,17 @@ class VisitorController extends Controller {
             }
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
+                /*
+                CHECKPOINT:
+                    because of CAVMS-1004
+                    =====================
+                    This adds an ASIC SPONSOR to USER table as well
+                    which is listed under CVMS USERS and is not intended by the task. According to the
+                    task: "ASIC sponsor profile is also getting displayed in CVMS USERS list".
+
                 $company = Company::model()->findByPk($model->company);
-                if (!empty($userParams['company']) && $company) {
+                if (!empty($userParams['company']) && $company) 
+                {
                     $contact                 = new User('add_company_contact');
                     $contact->company        = $company->id;
                     $contact->first_name     = $model->first_name;
@@ -1013,7 +1022,7 @@ class VisitorController extends Controller {
                         echo 0;
                         Yii::app()->end();
                     }
-                }
+                }*/
                 echo 1;
                 Yii::app()->end();
             }

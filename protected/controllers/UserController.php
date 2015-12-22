@@ -110,7 +110,6 @@ class UserController extends Controller
                 }
             }
 
-
             if (isset($_POST['User']['password_option'])) {
                 $model->password_option = $_POST['User']['password_option'];
             } else {

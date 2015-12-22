@@ -614,6 +614,9 @@ nav.navigation ul li:last-child.active
     margin-top: -27px !important;
     position: absolute;
     right: 25px;
+
+    /*because of CAVMS-1140*/
+    width: 500px;
 }
 
 #page{

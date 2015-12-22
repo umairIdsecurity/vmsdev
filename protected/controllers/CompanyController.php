@@ -91,8 +91,7 @@ class CompanyController extends Controller
 
     public function actionCreate()
     {
-
-        //     $this->layout = '//layouts/contentIframeLayout';
+        //$this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = new Company;
         
@@ -151,8 +150,8 @@ class CompanyController extends Controller
                     }
                 } else {
 
-                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
-
+                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) 
+                    {
                         $lastId = $model->id;
                         $userModel = new User();
 
@@ -170,7 +169,7 @@ class CompanyController extends Controller
                             }
                         }
                         $userModel->tenant = $model->tenant;
-                        $userModel->role = 10;
+                        $userModel->role = 9;
                         $userModel->company = $lastId;
                         $userModel->asic_no = 10;
                         $userModel->asic_expiry_day = 10;

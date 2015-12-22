@@ -482,7 +482,7 @@ class User extends VmsActiveRecord {
     public function beforeSave() {
         $this->email = trim($this->email);
 		
-	   if(!empty($this->induction_expiry)){
+	   if($this->induction_expiry != ""){
             $this->induction_expiry = date("Y-m-d",strtotime($this->induction_expiry));
         }else{
 			$this->induction_expiry = NULL;

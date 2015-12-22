@@ -394,10 +394,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             </li>   <!-- end menu for AVMS Visitors -->
         <?php } ?>
 
-
-
-
-
             <!-- menu for companies -->
             <?php 
                 if ($session['role'] == Roles::ROLE_SUPERADMIN || 
@@ -484,8 +480,23 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <!-- <li><a href='<?php //echo Yii::app()->createUrl('auditLog/avms'); ?>'><span <?php //CHelper::is_selected_submenu('auditLog', 'avms');?>>Audit Log</span></a></li> -->
                     
                     <li><a href='<?php echo Yii::app()->createUrl('reports/notReturnedVic'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'notReturnedVic');?>>Lost VICs Report</span></a></li>
-                    <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsRecord'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsRecord');?>>EVIC Deposits Record </span></a></li>
-                    <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsReport'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsReport');?>>EVIC Deposits Report </span></a></li>
+                    <?php 
+                        $cardTypeList = Yii::app()->db->createCommand()
+                                        ->select('c.id,c.name')
+                                        ->from('card_type c')
+                                        ->join('workstation_card_type wc', 'wc.card_type = c.id')
+                                        ->join('workstation w', 'w.id = wc.workstation')
+                                        ->where("w.is_deleted = 0 and wc.user ='".Yii::app()->user->id."' and w.id='".$session['workstation']."' and c.id='".CardType::VIC_CARD_EXTENDED."'")
+                                        ->queryAll();
+                        $cardTypeCount = count($cardTypeList);
+                        if($cardTypeCount == 1)
+                    {?>
+                            <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsRecord'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsRecord');?>>EVIC Deposits Record </span></a></li>
+                            <li><a href='<?php echo Yii::app()->createUrl('reports/evicDepositsReport'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'evicDepositsReport');?>>EVIC Deposits Report </span></a></li>
+                    <?php
+                        }           
+                    ?>
+                    
                 
                 </ul>
             </li>

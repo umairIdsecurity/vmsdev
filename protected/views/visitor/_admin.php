@@ -48,7 +48,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'profile_type',
             'filter' => CHtml::activeTextField($model, 'profile_type', array('placeholder' => 'Visitor Profile Type')),
         ),
-
         array(
             'name' => 'id',
             'type' => 'raw',

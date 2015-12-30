@@ -652,6 +652,11 @@ function checkAlreadyVisitor()
                     checkAlreadyVisitorProfile();
                 }
             });
+        },
+        error: function(error){
+            if(error.responseText == "Login Required"){
+                location.reload();
+            }
         }
     });
 }
@@ -717,6 +722,11 @@ function checkAlreadyVisitorProfile()
                     $("#clicktabB").click();
                 }
             });
+        },
+        error: function(error){
+            if(error.responseText == "Login Required"){
+                location.reload();
+            }
         }
     });
 }
@@ -1147,7 +1157,11 @@ function checkReasonIfUnique() {
                     }
                 }
             });
-
+        },
+        error: function(error){
+            if(error.responseText == "Login Required"){
+                location.reload();
+            }
         }
     });
 }

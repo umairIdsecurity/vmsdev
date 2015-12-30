@@ -779,20 +779,14 @@ class PreregistrationController extends Controller
 				$msg = print_r($model->getErrors(),1);
 				throw new CHttpException(400,'Data not saved because: '.$msg );
 			}
-
 		}
-
 		$companyModel = new Company();
 		$companyModel->scenario = 'preregistration';
-
 		$this->render('companyadmin-create-login' , array('model'=>$model,'companyModel'=>$companyModel) );
-
 	}
 
 	public function actionAjaxAsicSearch(){
-
 		if(isset($_POST['search_value']) && !empty($_POST['search_value'])){
-
 			$searchValue = trim($_POST['search_value']);
 			$purifier = new CHtmlPurifier();
 			$searchValue = $purifier->purify($searchValue);
@@ -823,18 +817,13 @@ class PreregistrationController extends Controller
 						else{
 							$companyName = '-';
 						}
-
 						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value='.$data->id.'>',$data->first_name,$data->last_name,$companyName);
-
 					}
-
 					echo json_encode($dataSet);
-
 				}
 				else{
 					echo "No Record";
 				}
-
 			}
 			else{
 
@@ -848,7 +837,6 @@ class PreregistrationController extends Controller
 				$records = $command->queryAll();
 
 				if(!empty($records)){
-
 					foreach($records as $data){
 						//$dataSet = array();
 						$companyModel = Company::model()->findByPk($data['company']);
@@ -858,17 +846,13 @@ class PreregistrationController extends Controller
 						else{
 							$companyName = '-';
 						}
-
 						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">',$data['first_name'],$data['last_name'],$companyName);
-
 					}
-
 					echo json_encode($dataSet);
 				}
 				else{
 					echo "No Record";
 				}
-
 			}
 		}
 		else{

@@ -818,15 +818,15 @@ class VisitorController extends Controller {
      * 
      * @return View
      */
-    public function actionImportVisitHistory() {
-        
+    public function actionImportVisitHistory() 
+    { 
         $model = new ImportCsvForm;
         $session = new CHttpSession;
         if(isset($_POST['ImportCsvForm']))
-             {
+        {
                 $model->attributes=$_POST['ImportCsvForm'];
                 if($model->validate())
-                 {   
+                {   
                     //Delete all previous uploads of this user
                     ImportVisitor::model()->deleteAll(
                         "imported_by = :user_id",
@@ -839,8 +839,8 @@ class VisitorController extends Controller {
                     $handle = fopen($tempLoc, "r");
                     $i = 0; $duplicates = false;
                     
-                    while( $line = fgetcsv($handle, 2000) ){
-                        
+                    while( $line = fgetcsv($handle, 2000) )
+                    {  
                         if( !isset($line[12]))
                            $this->redirect(array("visitor/importVisitHistory"));
                         //Dont insert first row as it will be title
@@ -858,7 +858,7 @@ class VisitorController extends Controller {
                             $duplicates = $importVisits->saveVisitors($line);
                     
                         } else {
-                               // If not a duplicate Visitor then Add it to Visitor and Visits tables
+                            // If not a duplicate Visitor then Add it to Visitor and Visits tables
                             $visitorInfo = new Visitor;
                             $visitorInfo->first_name = $line[0];
                             $visitorInfo->last_name  = $line[1];

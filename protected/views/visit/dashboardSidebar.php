@@ -17,7 +17,6 @@ $session = new ChttpSession;
         <ul>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' class="submenu-icon log-current"><span >Log Visit</span></a></li>
             <!--<li class=''>
-
                 <a href='<?php /*echo Yii::app()->createUrl('visitor/create&action=preregister'); */?>' class="submenu-icon pre-visits">
                     <span >Preregister Visit</span>
                 </a>
@@ -31,9 +30,6 @@ $session = new ChttpSession;
                 ?>
             </li>
             <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
-       
-            
-
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' class="submenu-icon findrecord"><span >Search Visits</span></a></li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' class="submenu-icon evacuationreport"><span>Evacuation Report</span></a></li>
         </ul>

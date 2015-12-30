@@ -655,7 +655,6 @@ $defaultKey = key($asicCardTypes);
                 $("#searchTextHostErrorMessage").show();
                 $("#searchTextHostErrorMessage").html("Search Name cannot be blank.");
             }
-
         });
 
         $("#User_repeatpassword").keyup(checkPasswordMatch);

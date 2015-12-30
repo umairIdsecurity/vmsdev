@@ -693,9 +693,9 @@ class ReportsController extends Controller
     /**
      *  CAVMS- 802: 'EVIC Deposits Report'
      *  1. Deposit Paid [EVIC’s activated with Deposit Paid]
-        2. Expired [EVIC’s Expired (Inactive)]
-        3. Not Returned [EVIC’s Not Returned (Not refunded)]
-        4. Closed and Refunded [EVIC’s Closed and Deposit Refunded]
+     *  2. Expired [EVIC’s Expired (Inactive)]
+     *  3. Not Returned [EVIC’s Not Returned (Not refunded)]
+     *  4. Closed and Refunded [EVIC’s Closed and Deposit Refunded]
      */
     public function actionEvicDepositsReport() {
 

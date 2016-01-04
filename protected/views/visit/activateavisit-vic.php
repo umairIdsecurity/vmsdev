@@ -70,11 +70,20 @@ $asicEscort = new AddAsicEscort();
         </td>
     </tr>
     <tr>
-        <td class="vic-col">
-            <input type="checkbox" <?php echo $model->getAsicSponsor() ? 'checked="checked" disabled="disabled"' : '';?> value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
-            <a href="#" style="text-decoration: none !important;">ASIC Sponsor/Escort</a>
-        </td>
+        <!-- introduced because of CAVMS-1039 -->
+        <?php if($model->visit_status == VisitStatus::PREREGISTERED): ?>
+            <td class="vic-col">
+                <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
+                <a href="#" style="text-decoration: none !important;">ASIC Sponsor/Escort</a>
+            </td>
+        <?php else: ?>
+            <td class="vic-col">
+                <input type="checkbox" <?php echo $model->getAsicSponsor() ? 'checked="checked" disabled="disabled"' : '';?> value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
+                <a href="#" style="text-decoration: none !important;">ASIC Sponsor/Escort</a>
+            </td>
+        <?php endif; ?>
     </tr>
+    
     <?php endif; ?>
     <tr>
         <td>&nbsp;</td>

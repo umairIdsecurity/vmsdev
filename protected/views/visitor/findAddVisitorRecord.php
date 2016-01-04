@@ -467,7 +467,7 @@ $model->identification_country_issued = 13;
                             <!-- start VIC info -->
                             <tr class="vic-visitor-fields">
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type'));?>
+                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type'));?>
                                     <span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
                                 </td>

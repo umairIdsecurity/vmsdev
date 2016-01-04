@@ -296,7 +296,7 @@ if ($this->action->id == 'update') {
                                                         }
                                                         ?> ><?php echo $value["id0"]['name']; ?></option>
                                                 <?php
-                                                }
+                                                } 
                                                 ?>
                                             </select>
                                             <span class="required">*</span>

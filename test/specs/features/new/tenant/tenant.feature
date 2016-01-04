@@ -2,9 +2,10 @@
 Feature: Tenant
     Super administrator can manage Tenant
 
+    @javascript
     Scenario: Create Tenant with valid data
         #1. Login
-        Given I login with username as "superadmin@test.com" and password as "12345"
+        Given I log in as a Super Administrator
         Then I should see "Dashboard"
 
         #2. Create new Tenant

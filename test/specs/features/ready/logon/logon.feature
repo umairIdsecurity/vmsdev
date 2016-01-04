@@ -7,7 +7,6 @@ Feature: Logon
     @javascript
     Scenario: Logging on with the correct credentials using feature function
       Given I login with username as "superadmin@test.com" and password as "12345"
-      Then I should see "Dashboard"
 
     Scenario: Logging on with the correct credentials
         Given I am on "/index.php"

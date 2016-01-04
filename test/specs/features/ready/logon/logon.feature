@@ -4,25 +4,44 @@ Feature: Logon
 	As a website user
 	I need to authenticate with my credentials
 
+	@javascript
+	Scenario: Opening the logon page
+		Given I am on the login page
+
     @javascript
-    Scenario: Logging on with the correct credentials using feature function
-      Given I login with username as "superadmin@test.com" and password as "12345"
+    Scenario: Logging in as a Super Administrator
+		Given I am on "/index.php"
+        And I create a tenant
+		When I log in as a Super Administrator
+        Then I should see "Administration" appear
 
-    Scenario: Logging on with the correct credentials
+	@javascript
+	Scenario: Logging as Issuing Body Administrator
         Given I am on "/index.php"
-		When I fill in "Username or Email" with "superadmin@test.com"
-		And I fill in "Password" with "12345"
-	  	And I select "Kalgoorlie-Boulder Airport" from "LoginForm[tenant]"
-		And I press "Login"
-		Then I should see "Administration"
-        Then  I logout
-#
-#	Scenario: Logging on with the incorrect credentials
-#		Given I am on "/index.php"
-#		When I fill in "Username or Email" with "superadmin@test.com"
-#		And I fill in "Password" with "22222"
-#		And I press "Login"
-#		Then I should see "Incorrect username or password"
-#
+		And I create a tenant
+		When I log in as an Issuing Body Administrator
+		Then I should see "Administration" appear
 
-		
+	@javascript
+	Scenario: Logging as Airport Operator
+		Given I am on "/index.php"
+		And I create a tenant
+		When I log in as an Airport Operator
+		Then I should see "Dashboard" appear
+		And I should not see "Administration"
+
+	@javascript
+	Scenario: Logging as Agent Airport Administrator
+		Given I am on "/index.php"
+		And I create a tenant
+		When I log in as an Agent Airport Administrator
+		Then I should see "Administration" appear
+
+	@javascript
+	Scenario: Logging as Agent Airport Operator
+		Given I am on "/index.php"
+		And I create a tenant
+		When I log in as an Agent Airport Operator
+		Then I should see "Dashboard" appear
+        And I should not see "Administration"
+

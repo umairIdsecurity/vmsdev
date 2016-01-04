@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: geoffstewart
- * Date: 25/11/2015
- * Time: 10:59 PM
- */
 class PAPLMigrationCommand extends CConsoleCommand
 {
 
@@ -44,7 +38,7 @@ class PAPLMigrationCommand extends CConsoleCommand
     public function actionTest()
     {
         $fileName = "/Users/gistewart/Downloads/VIC Register-Deidentified.csv";
-        $rows = new CsvFileHelper();
+        $rows = new CSVFileReader();
         $skipped = 0;
         $rows->open($fileName);
         $i = 0;
@@ -73,11 +67,10 @@ class PAPLMigrationCommand extends CConsoleCommand
 
     }
 
-    public function actionMigrate()
+    public function actionMigrate($fileName = "/Users/geoffstewart/Downloads/vic-register-07-11-2015.csv")
     {
         // load the file
-        $fileName = "/Users/geoffstewart/Downloads/VIC Register-Deidentified.csv";
-        $rows = new CsvFileHelper();
+        $rows = new CSVFileReader();
         $rows->open($fileName);
 
         $vms = new DataHelper(Yii::app()->db);

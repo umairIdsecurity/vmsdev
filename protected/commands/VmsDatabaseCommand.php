@@ -8,7 +8,7 @@
  */
 class VmsDatabaseCommand extends CConsoleCommand
 {
-    public function actionVisitorsAndVisits()
+    public function actionClearAllVisitors()
     {
         $this->runQueries(['clear_all_visits_and_visitors.sql']);
     }
@@ -38,14 +38,18 @@ class VmsDatabaseCommand extends CConsoleCommand
         $manager->deleteWithCode($code);
     }
 
-    public function actionImportTenant($fileName){
+    public function actionImportTenant($fileName,$overrideName=null,$overrideCode=null){
         $manager = new TenantManager();
-        $manager->importFromJsonFile($fileName);
+        $manager->importFromJsonFile($fileName,$overrideName,$overrideCode);
     }
 
-    public function actionReloadTenant($fileName){
+    public function actionReloadTenant($fileName,$overrideName=null,$overrideCode=null){
         $manager = new TenantManager();
-        $manager->reloadTenantFromFile($fileName);
+        $manager->reloadTenantFromFile($fileName,$overrideName,$overrideCode);
+    }
+
+    public function clearVisitors($tenantCode){
+
     }
 
 

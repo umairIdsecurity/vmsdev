@@ -760,7 +760,7 @@ class Visit extends CActiveRecord {
         }
 
         if ($this->date_check_out) {
-            if (Yii::app()->params['dbDriver'] == 'mssql') {
+            if (Yii::app()->db->driverName == 'mssql') {
                 $criteria->addCondition("CONVERT(date, t.date_check_out, 102) > DATEADD(day, -2, GETDATE())");
             } else {
                 $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
@@ -1133,13 +1133,6 @@ class Visit extends CActiveRecord {
         $res_visitor = Yii::app()->db->createCommand("SELECT visitor FROM visit WHERE visit.id= " . $visitId)->queryAll();
         if ($res_visitor) {
             $visitor = $res_visitor[0]['visitor'];
-            $userTbl = Yii::app()->params['userTbl'];
-//            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
-//                                                        FROM visit
-//                                                        LEFT JOIN $userTbl ON $userTbl.id = visit.host
-//                                                        LEFT JOIN company ON $userTbl.company = company.id
-//                                                        WHERE company.is_deleted = 0
-//                                                        AND visit.id = " . $visitId)->queryAll();
             $res_company = Visit::model()->with("company0", "host0", "visitor0")->find("t.id = ".$visitId);
             
             if ($res_company) {
@@ -1148,12 +1141,6 @@ class Visit extends CActiveRecord {
                 $company = 0;
             }
 
-
-//            $res_host = Yii::app()->db->createCommand("SELECT id
-//                                                        FROM $userTbl
-//                                                        WHERE $userTbl.is_deleted=0
-//                                                        AND $userTbl.company=" . $company)->queryAll();
-            
             $res_host = User::model()->findAll();
 
             if ($res_host) {

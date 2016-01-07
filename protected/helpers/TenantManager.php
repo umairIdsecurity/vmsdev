@@ -111,6 +111,17 @@ class TenantManager
         return $data;
     }
 
+    public function getInfo($nameOrCode){
+        $row  = $this->dataHelper->getFirstRow("SELECT id FROM company WHERE code = '$nameOrCode' and is_deleted = 0 and company_type = 1");
+        if($row==null)
+            $row  = $this->dataHelper->getFirstRow("SELECT id FROM company WHERE name = '$nameOrCode' and is_deleted = 0 and company_type = 1");
+
+        if($row!=null){
+            return $row;
+        }
+        return null;
+    }
+
     public function exportWithCodeToArray($code){
         $id = $this->getTenantIdFromCode($code);
         return $this->exportWihIdToJson($id);
@@ -118,7 +129,7 @@ class TenantManager
 
     public function exportWihIdToJson($id)
     {
-        $data = $this->exportToArray($id);
+        $data = $this->exportWithCodeToArray($id);
         return json_encode($data, JSON_PRETTY_PRINT);
     }
 
@@ -138,6 +149,13 @@ class TenantManager
         Yii::app()->db->createCommand($sql)->execute();
     }
 
+    public function deleteWithName($name)
+    {
+        $id = $this->getTenantIdFromName($name);
+        $sql = $this->getDeleteSqlFromId($id);
+        Yii::app()->db->createCommand($sql)->execute();
+    }
+
     public function deleteWithId($id)
     {
         $sql = $this->getDeleteSqlFromId($id);
@@ -150,36 +168,72 @@ class TenantManager
         if($row!=null){
             return $row['id'];
         }
-        throw new CException("Can't find tenant with code '$code'.");
+        //throw new CException("Can't find tenant with code '$code'.");
+        return null;
     }
 
-    public function reloadTenantFromFile($fileName){
+    public function getTenantIdFromName($name)
+    {
+        $row  = $this->dataHelper->getFirstRow("SELECT id FROM company WHERE name = '$name' and is_deleted = 0 and company_type = 1");
+        if($row!=null){
+            return $row['id'];
+        }
+        //throw new CException("Can't find tenant with code '$code'.");
+        return null;
+    }
+
+
+    public function reloadTenantFromFile($fileName,$overrideName=null,$overrideCode=null){
 
         // load the data
-        $data=file_get_contents($fileName);
+        $data=(array) json_decode(file_get_contents($fileName),true);
 
         // delete the tenant if exists
-        $code = $this->getTenantCodeFromArray($data);
-        if($this->getTenantIdWithCode($code)!=null){
+        if($overrideCode!=null){
+            $code = $overrideCode;
+        } else {
+            $code = $this->getTenantCodeFromArray($data);
+        }
+        if($this->getTenantIdFromCode($code)!=null){
             $this->deleteWithCode($code);
         }
 
         // delete the tenant
-        $this->importTenantFromArray($data);
+        $this->importTenantFromArray($data,$overrideName,$overrideCode);
+
 
     }
 
-
-    public function importTenantFromJsonFile($fileName){
-        $data=file_get_contents($fileName);
-        $this->importTenantFromArray($data);
+    public function createTestTenantFromJsonFile($fileName){
+        $code = $this->generateNewTenantCode();
+        $name = "Test Tenant $code";
+        $this->importTenantFromJsonFile($fileName,$name,$code);
+        return ['id'=>$this->getTenantIdFromCode($code),'name'=>$name,'code'=>$code];
     }
 
-    public function importTenantFromArray($data)
+    public function importTenantFromJsonFile($fileName,$overrideName=null,$overrideCode=null){
+        $data=(array)json_decode(file_get_contents($fileName),true);
+        $this->importTenantFromArray($data,$overrideName,$overrideCode);
+    }
+
+    public function importTenantFromArray($data,$overrideName=null,$overrideCode=null)
     {
-        $obj = json_decode($data);
+        if($overrideCode!=null){
+            $data['company'][0]['code'] = $overrideCode;
+            if($overrideName==null){
+                $overrideName = "Test Tenant $overrideCode";
+            }
+        }  else if($overrideName!=null){
+            $data['company'][0]['code'] = $this->genarateNewTenantCode();
+        }
+
+        if($overrideName!=null){
+            $data['company'][0]['name'] = $overrideName;
+            $data['company'][0]['trading_name'] = $overrideName;
+        }
+
         /*** cast the object to array ***/
-        $contents = (array) $obj;
+        $contents = (array) $data;
 
         // create a mappings array
         $idMappings = [];
@@ -222,10 +276,23 @@ class TenantManager
         } catch (CException $e) {
 
             $transaction->rollback();
-            echo "<br><br>";
+            echo "\r\n<br>\r\n<br>";
             echo $e->getMessage();
             die();
         }
+    }
+
+    public function generateNewTenantCode(){
+        $alpha="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for($a=0;$a<26;$a=$a+1){
+            for($b=0;$b<26;$b=$b+1){
+                $code = "Z".substr($alpha,$a,1).substr($alpha,$b,1);
+                if($this->getTenantIdFromCode($code)==null){
+                    return $code;
+                }
+            }
+        }
+        throw new CException("Available tenant codes have been exhausted");
     }
 
     public function getDeleteSqlFromId($id)
@@ -271,7 +338,7 @@ class TenantManager
 
         $cols = [];
 
-        $isAutoIncrement = sizeof($rows) > 0 && isset($rows[0]->id) && Yii::app()->db->schema->tables[$tableName]->columns['id']->autoIncrement;
+        $isAutoIncrement = sizeof($rows) > 0 && isset($rows[0]['id']) && Yii::app()->db->schema->tables[$tableName]->columns['id']->autoIncrement;
 
         foreach ($rows as $rowKey => $row) {
             $row = (array)$row;
@@ -313,7 +380,7 @@ class TenantManager
             $sql = "INSERT INTO " . $quotedTableName . " (" . implode(', ', $colsQuoted) . ") VALUES (" . implode(', ', $vals) . ")";
 
             //RUN SQL
-            echo $sql . "<br>";
+            echo $sql . "\r\n<br>";
             Yii::app()->db->createCommand($sql)->execute();
 
             if ($isAutoIncrement) {
@@ -326,11 +393,11 @@ class TenantManager
 
             if (isset($row['id'])) {
                 $idMappings[$tableName][$oldId] = $row['id'];
-                echo $tableName . " " . $oldId . "=" . $row['id'] . "<br>";
+                echo $tableName . " " . $oldId . "=" . $row['id'] . "\r\n<br>";
             }
-            echo "<br><br>";
+            echo "\r\n<br>\r\n<br>";
         }
-        echo "<br><br>";
+        echo "\r\n<br>\r\n<br>";
     }
 
     function beforeInsertRow($tableName, &$row, $oldId,$idMappings)
@@ -386,7 +453,7 @@ class TenantManager
 
 
         foreach ($sql as $statement) {
-            echo $statement . "<br>";
+            echo $statement . "\r\n<br>";
             Yii::app()->db->createCommand($statement)->execute();
         }
 
@@ -441,7 +508,7 @@ class TenantManager
 
                         // set the reference value on the row
                         $row[$columnName] = $idMappings[$ref['referenced_table_name']][$value];
-                        echo $tableName . "." . $columnName . " " . $value . "=" . $row[$columnName] . "<br>";
+                        echo $tableName . "." . $columnName . " " . $value . "=" . $row[$columnName] . "\r\n<br>";
 
                     } else {
                         if (!in_array($tableName . "." . $columnName, $okToSkip)) {

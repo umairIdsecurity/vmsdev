@@ -11,6 +11,7 @@ use Behat\Gherkin\Node\PyStringNode,
 use Behat\MinkExtension\Context\MinkContext;
 
 
+
 //
 // Require 3rd-party libraries here:
 //
@@ -23,8 +24,6 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext
 {
-    private $driver;
-    private $session;
 
     /**
      * Initializes context.
@@ -34,71 +33,32 @@ class FeatureContext extends MinkContext
      */
     public function __construct(array $parameters)
     {
+        $this->useContext('yii', new SubContext\YiiContext($parameters));
+        $this->useContext('tenant', new SubContext\TenantContext($parameters));
+        $this->useContext('login', new SubContext\LoginContext($parameters));
         $this->useContext('notification', new SubContext\NotificationContext($parameters));
         $this->useContext('vicprofile', new SubContext\VicprofileContext($parameters));
         $this->useContext('workstation', new SubContext\WorkstationContext($parameters));
+        $this->useContext('dataIntegrity', new SubContext\DataIntegrityContext($parameters));
+
     }
 
     /** @BeforeScenario */
     public function before($event)
     {
-        //$this->printDebug("Resetting Database");
-        //$this->iLoginWithUsernameAndPassword("superadmin@test.com","123456");
-        //$this->visit("/index.php?r=resetDatabase/resetWithTestData");
-        //$this->visit("/index.php");
+        $this->getSession()->resizeWindow(1440, 900, 'current');
     }
+
     /** @AfterScenario */
     public function after($event){
-        //$this->iWaitForSeconds(5);
-    }
 
+        if ($event->getResult() == 4) {
+            if ($this->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
+                $screenshot = $this->getSession()->getDriver()->getScreenshot();
+                file_put_contents('/tmp/screenshot.png', $screenshot);
+            }
+        }
 
-    /**
-     * @Then /^I reset tenant "([^"]*)"$/
-     */
-    public function iResetTenant($tenantName){
-        $this->iDeleteTenant($tenantName);
-        $this->iImportTenant($tenantName);
-    }
-
-    /**
-     * @Then /^I import tenant "([^"]*)"$/
-     */
-    public function iImportTenant($tenantName){
-
-    }
-
-    /**
-     * @Then /^I delete tenant "([^"]*)"$/
-     */
-    public function iDeleteTenant($tenantName){
-
-    }
-
-    /**
-     * @Then /^I login with username as "([^"]*)" and password as "([^"]*)"$/
-     */
-    public function iLoginWithUsernameAndPassword($username, $password)
-    {
-        $this->getSession()->reset();
-        return array(
-            new Step\Given('I am on "/index.php"'),
-            new Step\Then('show me a screenshot'),
-            new Step\When('I fill in "Username or Email" with "'.$username.'"'),
-            new Step\When('I fill in "Password" with "'.$password.'"'),
-            new Step\When('I select "Kalgoorlie-Boulder Airport" from "LoginForm[tenant]"'),
-            new Step\When('I press "Login"'),
-            new Step\Then('I should see "Dashboard" appear'),
-        );
-    }
-
-    /**
-     * @Then /^I logout$/
-     */
-    public function iLogout(){
-        return array(
-            new Step\Given('I am on "/index.php?r=site/logout"'),
-        );
     }
 
 
@@ -123,7 +83,7 @@ class FeatureContext extends MinkContext
     }
 
 
-    public function spin ($lambda, $wait = 60)
+    public function spin ($lambda, $wait = 15)
     {
         for ($i = 0; $i < $wait; $i++)
         {
@@ -141,8 +101,8 @@ class FeatureContext extends MinkContext
         $backtrace = debug_backtrace();
 
         throw new Exception(
-            "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()\n" .
-            $backtrace[1]['file'] . ", line " . $backtrace[1]['line']
+            "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()\n"
+            //.$backtrace[1]['file'] . ", line " . $backtrace[1]['line']
         );
     }
 
@@ -192,6 +152,33 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @Then /^I select option number "([^"]*)" from select "([^"]*)"$/
+     */
+    public function iSelectOptionNumberFromSelect($number,$select){
+
+        $field = $this->getSession()->getPage()->findField($select);
+        $optionElements = $field->findAll('css','option');
+
+        $i = 0;
+        foreach ($optionElements as $optionElement) {
+            $i++;
+            if($i==intval($number)){
+                $field->selectOption($optionElement->getValue());
+            }
+        }
+    }
+
+    /**
+     * @Then /^I press the enter key$/
+     */
+    public function iPressTheEnterKey(){
+
+        $this->getSession()->executeScript("
+            $(':focus').trigger($.Event('keypress', {which: 9, keyCode: 9}));
+        ");
+
+    }
+    /**
      * @Then /^I edit "([^"]*)"$/
      */
     public function iEditItem($subject)
@@ -220,9 +207,6 @@ class FeatureContext extends MinkContext
             $tr = $element->getParent();
             $delete = $tr->find('css', '.delete');
             $delete->click();
-            #$url = $delete->getAttribute('href');
-            #$postdata = "";
-            #$this->getSession()->getDriver()->getClient()->request('POST', $url, $postdata);
         }
     }
 
@@ -240,12 +224,22 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^I wait for (\d+) seconds$/
+     * @Then /^I wait for (\d+) seconds$/
      */
     public function iWaitForSeconds($arg1)
     {
         $this->getSession()->wait($arg1*1000);
     }
+
+    /**
+     * @Given /^I reset this session$/
+     */
+    public function iResetThisSession()
+    {
+        $this->getSession()->reset();
+    }
+
+
 
 
 }

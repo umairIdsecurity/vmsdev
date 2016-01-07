@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 # install phantom js
 sudo curl -O https://phantomjs.googlecode.com/files/phantomjs-1.9.8-linux-x86_64.tar.bz2

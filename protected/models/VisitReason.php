@@ -127,7 +127,7 @@ class VisitReason extends CActiveRecord {
 
     public function GetAllReason() {
         $aArray = array();
-        $visitReason = VisitReason::model()->findAll();
+        $visitReason = VisitReason::model()->findAllReason();
         foreach ($visitReason as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],

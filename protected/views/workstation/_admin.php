@@ -43,23 +43,22 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Workstation',
             'htmlOptions' => array('width' => '180px', 'class' => 'ws-padding'),
         ),
-        
+
         array(
             'name' => 'moduleCorporate',
             'header' => '',
             'type' => 'raw',
             'value' => '$data->getCorporateCardType($data->id)',
-            /* 'htmlOptions'=>array('width'=>'300px' , 'height'=>'119px'), */
+            // 'htmlOptions'=>array('width'=>'300px' , 'height'=>'119px'), 
             'headerHtmlOptions' => array('class' => 'header-corporate'),
             'visible'=> ( $module == "CVMS" || $module == "Both"),
         ),
-         
         array(
             'name' => 'moduleVic',
             'type' => 'raw',
             'header' => '',
             'value' => '$data->getCorporateVic($data->id)',
-            /* 'htmlOptions'=>array('width'=>'400px' , 'height'=>'119px'), */
+            // 'htmlOptions'=>array('width'=>'400px' , 'height'=>'119px'), 
             'headerHtmlOptions' => array('class' => 'header-vic'),
             'visible'=> ( $module == "AVMS" || $module == "Both"),
         ),
@@ -102,6 +101,9 @@ function isVisitExistsInClosedVisits($workstationId) {
 }
 
 $ajaxUrlCardType = Yii::app()->createUrl('workstation/ajaxWorkstationCardtype');
+
+$ajaxUrlTenantDefaultCardType = Yii::app()->createUrl('company/ajaxTenantDefaultCardtype');
+
 Yii::app()->clientScript->registerScript('select_card_type_corporate', "
 
     $('.card_type_corporate').click( function(){
@@ -138,7 +140,50 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
 
     })
 ");
+
+
+Yii::app()->clientScript->registerScript('select_pre_card_type_vic', "
+    $('.pre_card_type_vic').click( function(){
+        var card_type_id = $(this).attr('value');
+        var data = {card_type_id: card_type_id};
+        $.ajax({
+            type: 'POST',
+            url: '$ajaxUrlTenantDefaultCardType',
+            data: data,
+            success: function (data) {
+                    
+            }
+        });
+
+    });
+");
+
+$tenant = Company::model()->findByPK(Yii::app()->user->tenant); 
+
 ?>
+
+
+<table>
+    <tr>
+        <td style="width:658px;">Select Preregistration Default Card Type</td>
+        <td style="">
+            <input type="radio" id="pre_Same_Day" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_SAMEDATE; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_SAMEDATE) ? "checked": "";  ?> />
+        </td>
+        <td style="">
+            <input type="radio" id="pre_24_Hour" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_24HOURS; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_24HOURS) ? "checked": "";  ?> />
+        </td>
+        <td style="">    
+            <input type="radio" id="pre_Extended" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_EXTENDED; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_EXTENDED) ? "checked": "";  ?> />
+        </td>
+        <td style="">   
+            <input type="radio" id="pre_Multi_Day" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_MULTIDAY; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_MULTIDAY) ? "checked": "";  ?> />
+        </td>
+        <td style="">  
+            <input type="radio" id="pre_Manual" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_MANUAL; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_MANUAL) ? "checked": "";  ?> />
+        </td>
+    </tr>
+</table>
+
 <div class="modal fade" id="form_modal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none">
     <div class="modal-dialog">
         <div class="modal-content">	
@@ -148,8 +193,6 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             </div>
             <?php echo CHtml::beginForm((CController::createAbsoluteUrl("cardType/edit")), 'post'); ?>
             <div class="modal-body">
-
-
                 <div class="form-group">
                     <?php echo CHtml::textArea('back-card', '', array('rows' => "9", 'cols' => "500", 'style' => "width:500px;")); ?>
                     <?php echo CHtml::hiddenField('card_id'); ?>
@@ -167,7 +210,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
 </div>
 </div>
 
-<script>
+<script type="text/javascript">
 
     $(document).ready(function () {
         generateRow();
@@ -216,6 +259,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
 
             return false;
         });
+
     });
 
     function generateRow() {

@@ -22,7 +22,7 @@ class CompanyController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact','getContacts', 'addContact', 'getContact','checkNameUnique'),
+                'actions' => array('ajaxTenantDefaultCardtype','GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact','getContacts', 'addContact', 'getContact','checkNameUnique'),
                 'users' => array('@'),
                 //'expression' => 'CHelper::check_module_authorization("CVMS")'
             ),
@@ -507,7 +507,28 @@ class CompanyController extends Controller
         Yii::app()->end();
     }
 
-
+    /**
+     * Receive ajax POST type request with one variable 
+     * card_type_id. This one variable is used as selected cardType to
+     * be inserted in table 'company' which is tenant of logged
+     * in user.
+     *
+     * @return void
+     *
+     * */
+    public function actionAjaxTenantDefaultCardtype() 
+    {
+        if (!empty($_POST['card_type_id'])) 
+        {
+            $cardTypeId = $_POST['card_type_id'];
+            $loggedUserTenantPK = Yii::app()->user->tenant;//logged in user's tenant primary key
+            Company::model()->updateByPK($loggedUserTenantPK,
+                array(
+                    'tenant_default_card_type' => $cardTypeId
+                )
+            );
+        }
+    }
 
     /**
      * PREREGISTRATION : Add company contact from ASIC SPONSOR 

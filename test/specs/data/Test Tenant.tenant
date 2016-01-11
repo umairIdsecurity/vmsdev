@@ -99,7 +99,7 @@
             "last_name": "Test",
             "email": "agentairportadmin@test.com",
             "contact_number": "12345",
-            "date_of_birth": "0000-00-00",
+            "date_of_birth": "1970-01-01",
             "company": "233",
             "department": null,
             "position": null,

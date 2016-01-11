@@ -106,7 +106,7 @@ class PreregistrationController extends Controller
 			{
 				$workstation = Workstation::model()->findByPk($model->entrypoint);
 				$session['workstation_model'] = $model;
-				//these will be used to ensure the nothing left in flow
+				//these will be used to ensure that nothing will left in the flow
 				$session['workstation'] = $workstation->id;
 				$session['created_by'] = $workstation->created_by;
 				$session['tenant'] = $workstation->tenant;
@@ -231,7 +231,11 @@ class PreregistrationController extends Controller
 			if($_POST['Visit']['other_reason'] != ""){
 				$model->visit_reason  = $_POST['Visit']['other_reason'];
 			}
-			$model->card_type = 6; //VIC 24 hour Card
+
+			//set tenant based default card type otherwise VIC_24_hours card type for preregistration
+			$tenant = (isset($session['tenant'])&& $session['tenant']!="") ? Company::model()->findByPk($session['tenant']) : "";
+			$model->card_type = (($tenant != "") && ($tenant->tenant_default_card_type != "")) ? $tenant->tenant_default_card_type : CardType::VIC_CARD_24HOURS; 
+			
 			$model->created_by = $session['created_by'];
 			$model->workstation  = $session['workstation'];
 			$model->tenant = $session['tenant'];

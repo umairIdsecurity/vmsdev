@@ -258,7 +258,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 if ($this->action->id == 'avmsagents') {
                     echo "style='display:block ;'";
                 }
-                
                
                 ?>>
                     <?php  if( Yii::app()->user->role  == Roles::ROLE_SUPERADMIN) { ?>

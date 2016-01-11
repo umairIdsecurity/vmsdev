@@ -282,7 +282,6 @@ class Workstation extends CActiveRecord {
                     "data-workstation" => $workstation_id,
                     "class"=>"card_type_corporate",
                     'disabled' => $disabled
-                   
                 ));
             }
 
@@ -301,7 +300,7 @@ class Workstation extends CActiveRecord {
         else
           return true;
     } 
-    
+
     public function getCorporateVic($workstation_id){
         
         $disabled =  $this->getEnableDisabledWorkstations ($workstation_id, 1 );
@@ -309,17 +308,15 @@ class Workstation extends CActiveRecord {
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>2)
         );
-
         $cardArr = "";
         foreach($cards as $card){
-
             $ws_card = WorkstationCardType::model()->findByPk(
                 array(
                     'workstation' => $workstation_id,
                     'card_type' => $card->id
                 )
             );
-
+            
             if(!empty($ws_card)){
                 $cardArr .= CHtml::checkBox($card->name,true,array(
                     "value"=>$card->id ,
@@ -352,6 +349,5 @@ class Workstation extends CActiveRecord {
                 'application.components.behaviors.AuditTrailBehaviors',
         );
     }
-
 
 }

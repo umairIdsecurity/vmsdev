@@ -50,8 +50,6 @@ class PAPLMigrationCommand extends CConsoleCommand
 
             if(isset($row['Residential Address']) && $row['Residential Address']>'') {
                 $result = AddressHelper::parse($row['Residential Address']);
-                //$result = AddressHelper::parseFromGoogleSpaces($row['Residential Address']);
-
 
                 if(!isset($result['PostCode']) || $result['PostCode']=='0000'){
                     $skipped++;
@@ -67,7 +65,7 @@ class PAPLMigrationCommand extends CConsoleCommand
 
     }
 
-    public function actionMigrate($fileName = "/Users/geoffstewart/Downloads/vic-register-07-11-2015.csv")
+    public function actionMigrate($fileName = "/Users/geoffstewart/Downloads/VIC Register-Deidentified.csv")
     {
         // load the file
         $rows = new CSVFileReader();
@@ -144,6 +142,7 @@ class PAPLMigrationCommand extends CConsoleCommand
             throw new CException("Workstation ".$row['LOCATION']."not found.");
         }
     }
+
 
     function ensureVisitorType(){
 

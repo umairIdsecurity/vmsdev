@@ -609,8 +609,6 @@ class VisitController extends Controller {
             }else{
                 $model->reason = (isset($_POST['Visit']['reason']) && ($_POST['Visit']['reason'] != "")) ? $_POST['Visit']['reason'] : NULL;
             }
-
-            
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
                 // Date  visit CLOSED by operator
@@ -651,7 +649,6 @@ class VisitController extends Controller {
                 $model->visit_status = $oldStatus;
             }
         }
-
 
         // Get visit count and remaining days
         $visitCount['totalVisits'] = $model->visitCounts;

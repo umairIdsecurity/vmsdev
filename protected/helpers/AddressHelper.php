@@ -85,7 +85,7 @@ class AddressHelper
 
     public static function getSuburbs(){
         $fileName = Yii::app()->basePath."/helpers/aus-postcodes.csv";
-        $rows = new CSVFileHelper();
+        $rows = new CSVFileReader();
         $rows->open($fileName);
         $suburbs = [];
         //$postCodes = [];

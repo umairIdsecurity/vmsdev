@@ -348,10 +348,10 @@ class Avms7MigrationCommand extends CConsoleCommand
             $company = null;
             if (isset($data['user'][$i]['tenant_agent'])) {
                 $data['user'][$i]['company'] = $data['user'][$i]['tenant_agent'];
-            } else if (isset($user['tenant'])) {
+            } else if (isset($data['user'][$i]['tenant'])) {
                 $data['user'][$i]['company'] = $data['user'][$i]['tenant'];
             } else {
-                throw new CException("Cant assign company for user ".$user['email']);
+                throw new CException("Cant assign company for user ".$data['user'][$i]['email']);
             }
         }
     }
@@ -715,6 +715,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                         on o.id = c.ownerid
                         and o.IBCode = '$airportCode'
                 where c.level = 4
+                and c.company > ''
             ",
             "user" => "
                 select u.ID as id,

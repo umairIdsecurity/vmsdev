@@ -5,8 +5,8 @@ $session = new CHttpSession;
 $workstationModel = Workstation::model()->findByPk($model->workstation);
 $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
-<div id='actionsCssMenu'>
 
+<div id='actionsCssMenu'>
     <ul>
         <?php if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED))) : ?>
         <li class='has-sub' id="closevisitLi"><span class="close-visit">Close Visit</span>
@@ -15,17 +15,16 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     <table id="actionsVisitDetails">
                         <tr>
                             <td></td>
-                            <td >
+                            <td>
 
                                 <div id="closeVisitDiv" class="form">
 
                                     <?php
-
-                                    $closeVisitForm = $this->beginWidget('CActiveForm', array(
-                                        'id' => 'close-visit-form',
-                                        'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
-                                        'enableAjaxValidation' => false,
-                                    ));
+                                        $closeVisitForm = $this->beginWidget('CActiveForm', array(
+                                            'id' => 'close-visit-form',
+                                            'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
+                                            'enableAjaxValidation' => false,
+                                        ));
                                     ?>
 
                                     <?php
@@ -40,7 +39,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                             'asic' => $asic
                                         ));
                                     } else {
-
                                         $this->renderPartial('closevisit', array(
                                             'model' => $model,
                                             'visitorModel' => $visitorModel,
@@ -585,6 +583,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             $btnIdentification.on('click', function(e) {
                                 if ($('#identificationChkBoxYes').is(':checked')) {
                                     $('#identificationModal').modal('hide');
+
                                     $('input[name="identificationActiveVisit"]').prop('checked', true);
                                     activeVisit();
                                 } else {
@@ -651,7 +650,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 alert('Please select an option.');
                 return false;
             }
-
+            
             if ($('#identificationChkBoxYes').is(':checked')) {
                 $('#identificationModal').modal('hide');
                 $('input[name="identificationActiveVisit"]').prop('checked', true);
@@ -659,9 +658,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 //     activeVisit();
                 //     return false;
                 // }
-            } else {
+            }else {
                 updateIdentificationDetails();
             }
+            
         });
 
         function updateIdentificationDetails() {

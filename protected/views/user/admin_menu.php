@@ -485,7 +485,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                                         ->from('card_type c')
                                         ->join('workstation_card_type wc', 'wc.card_type = c.id')
                                         ->join('workstation w', 'w.id = wc.workstation')
-                                        ->where("w.is_deleted = 0 and wc.user ='".Yii::app()->user->id."' and w.id='".$session['workstation']."' and c.id='".CardType::VIC_CARD_EXTENDED."'")
+                                        ->where("w.is_deleted = 0 and wc." + Yii::app()->db->schema->quoteColumnName('user') + " ='".Yii::app()->user->id."' and w.id='".$session['workstation']."' and c.id='".CardType::VIC_CARD_EXTENDED."'")
                                         ->queryAll();
                         $cardTypeCount = count($cardTypeList);
                         if($cardTypeCount == 1)

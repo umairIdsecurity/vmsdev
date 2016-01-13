@@ -212,6 +212,14 @@ class DataHelper
         $command->execute();
     }
 
+    public function isNullable($tableName,$columnName){
+        return $this->db->schema->tables[$tableName]->columns[$columnName]->allowNull;
+    }
+
+    public function isDateColumn($tableName,$columnName){
+        $this->db->schema->tables[$tableName]->columns[$columnName]->type=='date';
+    }
+
     public function quoteValue($tableName,$columnName,$value){
         $column = $this->db->schema->tables[$tableName]->columns[$columnName];
         $type = explode(' ',explode('(',$column->dbType)[0])[0];

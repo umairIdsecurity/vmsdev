@@ -12,6 +12,7 @@ foreach($folder in $folders){
     $accessControlType = "Allow"
     $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($identity, $fileSystemRights, $inheritanceFlags, $propagationFlags, $accessControlType)
 
+    Write-Host "setting permissions on folder $folder"
     $acl = Get-Acl $folder
     $acl.SetAccessRule($rule)
     Set-Acl $folder $acl

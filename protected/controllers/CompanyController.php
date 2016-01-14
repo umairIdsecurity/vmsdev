@@ -723,7 +723,7 @@ class CompanyController extends Controller
             //when $_POST['id'] is not set or is empty
             //then "company=" is throwing error
             //Therefore, to avoid this, make it like "company=''"
-            $cond = "company = " . (isset($_POST['id']) ? $_POST['id'] : "''"); 
+            $cond = "company = " . isset($_POST['id']) ? $_POST['id'] : "''"; 
             $contacts = User::model()->findAll($cond);
 
             if ($contacts) {
@@ -751,7 +751,7 @@ class CompanyController extends Controller
             } else {
                 // else get visitor on visitor table
                 $visitor = Visitor::model()->findByPk($id);
-                $userAsic = User::model()->find( 'id='.$visitor->staff_id );
+                $userAsic = User::model()->find( "id='".$visitor->staff_id."'" );
                 $asicList = Visitor::model()->findAllByAttributes(['company' => $visitor->company, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED,
                                                                     'email' => $userAsic->email]);
                 

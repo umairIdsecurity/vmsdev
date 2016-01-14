@@ -837,7 +837,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_check_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
+            url: '<?php echo Yii::app()->createUrl("visit/isDateConflictingWithAnotherVisit&date_in="); ?>' + $("#Visit_date_check_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
             dataType: 'json',
             success: function (r) { 
                 $.each(r.data, function (index, value) {
@@ -858,7 +858,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 });
             }
         }).fail(function() {
-            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            alert("Something went wrong. Please, try again.");
+            //window.location = '<?php //echo Yii::app()->createUrl('site/login');?>';
         });
     }
     

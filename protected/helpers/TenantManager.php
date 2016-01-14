@@ -415,7 +415,9 @@ class TenantManager
         if ($tableName == 'user') {
             echo 'found kris';
         }
-        foreach($row as $name=>$value){
+        foreach($row as $name=>$value)
+        {
+
 
             if($value=="0000-00-00" && ($this->dataHelper->db->driverName=="mssql" ||$this->dataHelper->db->driverName=="sqlsrv")){
                 $row[$name] = $this->dataHelper->isNullable($tableName,$name)?null:"1753-01-01";
@@ -424,9 +426,7 @@ class TenantManager
             }
         }
 
-        if ($tableName == 'user' and $row['first_name'] == 'Kris') {
-            echo 'found kris';
-        }
+
         if ($tableName == 'company') {
             if ($row['company_type'] == 1) {
                 $row['tenant'] = NULL;

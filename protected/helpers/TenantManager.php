@@ -149,6 +149,14 @@ class TenantManager
         Yii::app()->db->createCommand($sql)->execute();
     }
 
+    public function deleteAllTest(){
+        $sql = "select distinct code from company where code like 'Z%'";
+        $rows = $this->dataHelper->getRows($sql);
+        foreach($rows as $row){
+            $this->deleteWithCode($row['code']);
+        }
+    }
+
     public function deleteWithName($name)
     {
         $id = $this->getTenantIdFromName($name);
@@ -317,12 +325,14 @@ class TenantManager
                 if ($driverName == 'mssql' || $driverName == 'sqlsrv') {
                     $preStatement = "ALTER TABLE $tableName NOCHECK CONSTRAINT all;\r\n";
                     $postStatement = "ALTER TABLE $tableName WITH CHECK CHECK CONSTRAINT all;\r\n";
+                    $deleteStatement = "DELETE $tableName FROM $tableName $condition;\r\n";
                 } else {
                     $preStatement = "SET foreign_key_checks = 0;\r\n";
                     $postStatement = "SET foreign_key_checks = 1;\r\n";
+                    $deleteStatement = "DELETE $tableName.* FROM $tableName $condition;\r\n";
                 }
 
-                $sql = $sql . $preStatement . "DELETE $tableName.* FROM $tableName $condition;\r\n" . $postStatement;
+                $sql = $sql . $preStatement . $deleteStatement . $postStatement;
             }
         }
 

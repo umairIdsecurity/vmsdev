@@ -719,7 +719,12 @@ class CompanyController extends Controller
     public function actionGetContacts()
     {
         if (Yii::app()->request->isAjaxRequest) {
-            $contacts = User::model()->findAll("company = " . $_POST['id']);
+            //this is because to avoid error as 
+            //when $_POST['id'] is not set or is empty
+            //then "company=" is throwing error
+            //Therefore, to avoid this, make it like "company=''"
+            $cond = "company = " . (isset($_POST['id']) ? $_POST['id'] : "''"); 
+            $contacts = User::model()->findAll($cond);
 
             if ($contacts) {
                 $staffIds = CHtml::dropDownList('Visitor[staff_id]', '', CHtml::listData($contacts, 'id',

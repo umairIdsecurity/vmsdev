@@ -508,13 +508,13 @@ $asicEscort = new AddAsicEscort();
                     <hr style="border-color: black;"></td>
             </tr>
             <tr>
-                <td width="5%"><input type="radio" id="asicDecalarationRbtn1"  onclick="asicEscortDefault()"/></td>
+                <td width="5%"><input type="radio" id="asicDecalarationRbtn1" name="asicDecalarationRbtn" onclick="asicEscortDefault()"/></td>
                 <td><label for="asicDecalarationRbtn1">I <strong><?= $asic->first_name." ".$asic->last_name ?></strong> note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>Or</td><td>&nbsp;</td></tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="radio" id="asicEscortRbtn" onclick="asicEscort()"/></td>
+                <td width="5%"><input type="radio" id="asicEscortRbtn" name="asicDecalarationRbtn" onclick="asicEscort()"/></td>
                 <td><label for="asicEscortRbtn">Another ASIC holder will be supervising on this visit. Please add or search for another ASIC Escort.</label></td>
             </tr>
 
@@ -542,6 +542,7 @@ $asicEscort = new AddAsicEscort();
         <button type="button" class="btn btn-primary complete" id="btnAsicConfirm" style="width: auto !important; height: auto !important;">Confirm</button>
     </div>
 </div>
+
 
 <button id="btnActivate" style="display: none;"></button>
 <script type="text/javascript">
@@ -737,7 +738,6 @@ $asicEscort = new AddAsicEscort();
             $('#asicDecalarationRbtn1').prop('checked',false);
         });
         $('#findEscortBtn').on('click', function(){
-            
             if($('#search-escort').val() == ''){
                 $('#searchEscortErrorMessage').show();
                 return;

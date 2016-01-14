@@ -6,6 +6,7 @@ $workstationModel = Workstation::model()->findByPk($model->workstation);
 $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
 
+
 <div id='actionsCssMenu'>
     <ul>
         <?php if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED))) : ?>
@@ -546,6 +547,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 $btnASIC = $('#btnAsicConfirm');
                 $btnIdentification = $('#btnIdentificationConfirm');
 
+                
+
             var isWorkstationDelete = "<?php echo $isWorkstationDelete; ?>";
             if (isWorkstationDelete == 'true') {
                 alert('Workstation of this visit has been deleted, you can\'t activate it.');
@@ -602,10 +605,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
-                                if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                                if (!$('input[name="identificationActiveVisit"]').is(':checked')) 
+                                {
                                     $('#identificationModal').modal('show');
                                     $btnIdentification.on('click', function(e) {
-                                        if ($('#identificationChkBoxYes').is(':checked')) {
+                                        if ($('#identificationChkBoxYes').is(':checked')) 
+                                        {
                                             $('#identificationModal').modal('hide');
                                             $('input[name="identificationActiveVisit"]').prop('checked', true);
                                             activeVisit();
@@ -613,7 +618,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                             updateIdentificationDetails();
                                         }
                                     });
-                                } else {
+                                } 
+                                else {
                                     activeVisit();
                                     return false;
                                 }

@@ -210,7 +210,18 @@ class Avms7MigrationCommand extends CConsoleCommand
     }
 
 
+
+
     function beforeInsertRow($tableName, &$row,$oldId,$vms){
+
+
+        foreach($row as $name=>$value){
+            if($value=="0000-00-00" && $vms->db->driverName=="mssql"){
+                $row[$name] = $vms->isNullable($tableName,$name)?null:"1753-01-01";
+            } else if($value=="1753-01-01" && $vms->db->driverName=="mysql"){
+                $row[$name] = $vms->isNullable($tableName,$name)?null:"0000-00-00";
+            }
+        }
 
         if($tableName=='visit'){
 
@@ -325,11 +336,14 @@ class Avms7MigrationCommand extends CConsoleCommand
 
                         // set the reference value on the row
                         $row[$columnName] = $idMappings[$ref['referenced_table_name']][$value];
-                        echo $tableName.".".$columnName." ".$value."=".$row[$columnName]."\r\n";
+                        echo $tableName . "." . $columnName . " " . $value . "=" . $row[$columnName] . "\r\n";
 
+                    }else if($this->allowBrokenReference($tableName,$columnName)){
+                        $row[$columnName] = null;
+                        echo "\r\nWARNING: New id value for " . $tableName . "." . $columnName . "=" . $value . " does not exist. Value has been replaced with a null value.\r\n";
                     } else {
 
-                        echo "\r\nWARNING: New id value for " . $tableName . "." . $columnName . "=" . $value . " does not exist. perhaps tables are added in wrong order?";
+                        echo "\r\nWARNING: New id value for " . $tableName . "." . $columnName . "=" . $value . " does not exist. Perhaps tables are added in wrong order?\r\n";
                         return false;
                     }
                 }
@@ -337,6 +351,9 @@ class Avms7MigrationCommand extends CConsoleCommand
         }
         return true;
 
+    }
+    public function allowBrokenReference($tableName,$columnName){
+        return $tableName=="visit" && $columnName="host";
     }
 
 

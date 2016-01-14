@@ -412,13 +412,8 @@ class TenantManager
 
     function beforeInsertRow($tableName, &$row, $oldId,$idMappings)
     {
-        if ($tableName == 'user') {
-            echo 'found kris';
-        }
         foreach($row as $name=>$value)
         {
-
-
             if($value=="0000-00-00" && ($this->dataHelper->db->driverName=="mssql" ||$this->dataHelper->db->driverName=="sqlsrv")){
                 $row[$name] = $this->dataHelper->isNullable($tableName,$name)?null:"1753-01-01";
             } else if($value=="1753-01-01" && $this->dataHelper->db->driverName=="mysql"){

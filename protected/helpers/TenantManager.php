@@ -206,7 +206,7 @@ class TenantManager
             $this->deleteWithCode($code);
         }
 
-        // delete the tenant
+        // import the tenant
         $this->importTenantFromArray($data,$overrideName,$overrideCode);
 
 
@@ -412,8 +412,12 @@ class TenantManager
 
     function beforeInsertRow($tableName, &$row, $oldId,$idMappings)
     {
+        if ($tableName == 'user') {
+            echo 'found kris';
+        }
         foreach($row as $name=>$value){
-            if($value=="0000-00-00" && $this->dataHelper->db->driverName=="mssql"){
+
+            if($value=="0000-00-00" && ($this->dataHelper->db->driverName=="mssql" ||$this->dataHelper->db->driverName=="sqlsrv")){
                 $row[$name] = $this->dataHelper->isNullable($tableName,$name)?null:"1753-01-01";
             } else if($value=="1753-01-01" && $this->dataHelper->db->driverName=="mysql"){
                 $row[$name] = $this->dataHelper->isNullable($tableName,$name)?null:"0000-00-00";

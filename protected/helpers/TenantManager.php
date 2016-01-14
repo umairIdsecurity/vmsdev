@@ -149,6 +149,14 @@ class TenantManager
         Yii::app()->db->createCommand($sql)->execute();
     }
 
+    public function deleteAllTest(){
+        $sql = "select distinct code from company where code like 'Z%'";
+        $rows = $this->dataHelper->getRows($sql);
+        foreach($rows as $row){
+            $this->deleteWithCode($row['code']);
+        }
+    }
+
     public function deleteWithName($name)
     {
         $id = $this->getTenantIdFromName($name);
@@ -198,7 +206,7 @@ class TenantManager
             $this->deleteWithCode($code);
         }
 
-        // delete the tenant
+        // import the tenant
         $this->importTenantFromArray($data,$overrideName,$overrideCode);
 
 
@@ -317,12 +325,14 @@ class TenantManager
                 if ($driverName == 'mssql' || $driverName == 'sqlsrv') {
                     $preStatement = "ALTER TABLE $tableName NOCHECK CONSTRAINT all;\r\n";
                     $postStatement = "ALTER TABLE $tableName WITH CHECK CHECK CONSTRAINT all;\r\n";
+                    $deleteStatement = "DELETE $tableName FROM $tableName $condition;\r\n";
                 } else {
                     $preStatement = "SET foreign_key_checks = 0;\r\n";
                     $postStatement = "SET foreign_key_checks = 1;\r\n";
+                    $deleteStatement = "DELETE $tableName.* FROM $tableName $condition;\r\n";
                 }
 
-                $sql = $sql . $preStatement . "DELETE $tableName.* FROM $tableName $condition;\r\n" . $postStatement;
+                $sql = $sql . $preStatement . $deleteStatement . $postStatement;
             }
         }
 
@@ -402,17 +412,16 @@ class TenantManager
 
     function beforeInsertRow($tableName, &$row, $oldId,$idMappings)
     {
-        foreach($row as $name=>$value){
-            if($value=="0000-00-00" && $this->dataHelper->db->driverName=="mssql"){
+        foreach($row as $name=>$value)
+        {
+            if($value=="0000-00-00" && ($this->dataHelper->db->driverName=="mssql" ||$this->dataHelper->db->driverName=="sqlsrv")){
                 $row[$name] = $this->dataHelper->isNullable($tableName,$name)?null:"1753-01-01";
             } else if($value=="1753-01-01" && $this->dataHelper->db->driverName=="mysql"){
                 $row[$name] = $this->dataHelper->isNullable($tableName,$name)?null:"0000-00-00";
             }
         }
 
-        if ($tableName == 'user' and $row['first_name'] == 'Kris') {
-            echo 'found kris';
-        }
+
         if ($tableName == 'company') {
             if ($row['company_type'] == 1) {
                 $row['tenant'] = NULL;

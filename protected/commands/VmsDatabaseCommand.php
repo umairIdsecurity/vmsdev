@@ -38,6 +38,12 @@ class VmsDatabaseCommand extends CConsoleCommand
         $manager->deleteWithCode($code);
     }
 
+    public function actionDeleteTestTenants(){
+
+        $manager = new TenantManager();
+        $manager->deleteAllTest();
+    }
+
     public function actionImportTenant($fileName,$overrideName=null,$overrideCode=null){
         $manager = new TenantManager();
         $manager->importFromJsonFile($fileName,$overrideName,$overrideCode);

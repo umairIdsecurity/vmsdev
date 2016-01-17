@@ -216,6 +216,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
 
         foreach($row as $name=>$value){
+
             if($value=="0000-00-00" && $vms->db->driverName=="mssql"){
                 $row[$name] = $vms->isNullable($tableName,$name)?null:"1753-01-01";
             } else if($value=="1753-01-01" && $vms->db->driverName=="mysql"){
@@ -226,6 +227,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                 $value = str_replace($value,"\\'","'");
                 $value = str_replace($value,'\\"','"');
             }
+
         }
 
         if($tableName=='visit'){

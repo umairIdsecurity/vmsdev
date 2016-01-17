@@ -221,6 +221,11 @@ class Avms7MigrationCommand extends CConsoleCommand
             } else if($value=="1753-01-01" && $vms->db->driverName=="mysql"){
                 $row[$name] = $vms->isNullable($tableName,$name)?null:"0000-00-00";
             }
+            // clean up rogue escape characters
+            while(strpos($value,"\\'") > 0 || strpos($value,'\\"')){
+                $value = str_replace($value,"\\'","'");
+                $value = str_replace($value,'\\"','"');
+            }
         }
 
         if($tableName=='visit'){

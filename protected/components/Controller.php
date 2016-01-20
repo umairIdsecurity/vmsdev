@@ -13,6 +13,7 @@ class Controller extends CController
      */
     public $layout = '//layouts/column1';
 
+
     public function getAssetsBase()
     {
         if ($this->_assetsBase === null) {

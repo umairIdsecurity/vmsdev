@@ -285,7 +285,7 @@ class SiteController extends Controller {
         $log->action_datetime_new = date('Y-m-d H:i:s');
         $log->action = "LOGOUT";
         $log->detail = 'ID: ' . Yii::app()->user->id;
-        $log->user_email_address = Yii::app()->user->email;
+        $log->user_email_address = (isset(Yii::app()->user->email) && Yii::app()->user->email != "") ? Yii::app()->user->email : $session['email'];
         $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
         $log->tenant = Yii::app()->user->tenant;
         $log->tenant_agent = Yii::app()->user->tenant_agent;

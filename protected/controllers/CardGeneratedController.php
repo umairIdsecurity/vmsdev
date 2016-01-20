@@ -74,23 +74,23 @@ class CardGeneratedController extends Controller {
             }
 
             //$model->tenant = $session['tenant'];
-
+            //becasue of https://ids-jira.atlassian.net/browse/CAVMS-1197
             if ($model->save()) {
                 Visit::model()->updateByPk($visitId, array('card' => $model->id));
                 //$tenant = User::model()->findByPk($model->tenant);
 
                 $company = Company::model()->findByPk($_POST['CardGenerated']['tenant']);
 
-                if (!is_null($company)) {
+                if (!empty($company)) {
                     $cardCount = $company->card_count;
 
-                    if (!is_null($cardCount) || !empty($cardCount)) {
+                    if ($cardCount != "") {
                         $company->card_count = $cardCount + 1;
                     } else {
                         $company->card_count = 1;
                     }
 
-                    $company->save();
+                    $company->save(false);
                 }
                 
                 /*Company::model()->updateByPk($tenant->company, array(

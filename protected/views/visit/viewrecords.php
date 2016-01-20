@@ -24,7 +24,7 @@ $date_check_in = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 	'name'        => 'Visit[date_check_in]',
 	'language'    => 'id',
 	'value'       => $model->date_check_in,
-	                       // additional javascript options for the date picker plugin
+	// additional javascript options for the date picker plugin
 	'options'     => array(
 		'showAnim'       => 'fold',
 		'dateFormat'     => 'dd-mm-yy',

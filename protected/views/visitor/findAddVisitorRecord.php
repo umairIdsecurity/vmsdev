@@ -130,7 +130,7 @@ $model->identification_country_issued = 13;
                             </tr>
 
                         </table>
-
+                        
                         <table id="addvisitor-table" class="second-column" data-ng-app="PwordForm" style="width:262px;float:left;">
 
                             <tr id="limit-first-name">
@@ -760,12 +760,22 @@ $model->identification_country_issued = 13;
                 $("#Visitor_contact_country_em_").empty().removeClass("errorMessageImportant");
             }
 
-            if ($("#Visitor_identification_type").val() == "") {
-                is_error = true;
-                $("#Visitor_identification_type_em_").html("Please complete identification type").addClass("errorMessageImportant");
-            } else {
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1201
+            if($("#Visitor_u18_identification").is(":checked"))
+            {
                 $("#Visitor_identification_type_em_").empty().removeClass("errorMessageImportant");
             }
+            else
+            {
+                if ($("#Visitor_identification_type").val() == "") 
+                {
+                    is_error = true;
+                    $("#Visitor_identification_type_em_").html("Please complete identification type").addClass("errorMessageImportant");
+                } else {
+                    $("#Visitor_identification_type_em_").empty().removeClass("errorMessageImportant");
+                }
+            }
+            
 
             if ($("#Visitor_identification_country_issued").val() == "") {
                 is_error = true;
@@ -1317,14 +1327,11 @@ $model->identification_country_issued = 13;
 
     }
 
-    function populateAgentAdminWorkstations(isSearch) {
-        
-       
+    function populateAgentAdminWorkstations(isSearch) 
+    {
         isSearch = (typeof isSearch === "undefined") ? "defaultValue" : isSearch;
         var tenant;
         var tenant_agent;
-
-
         if (isSearch == 'search') {
             //    $("#searchVisitorTableDiv").show();
             $("#selectedVisitorInSearchTable").val("");
@@ -1366,9 +1373,6 @@ $model->identification_country_issued = 13;
                 });
             }
         });
-
-
-        
     }
 
 // company change

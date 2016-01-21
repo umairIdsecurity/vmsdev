@@ -653,8 +653,11 @@ function checkAlreadyVisitor()
                 }
             });
         },
-        error: function(error){
-            if(error.responseText == "Login Required"){
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1196
+        error: function(error)
+        {
+            if(error.responseText == "Login Required")
+            {
                 location.reload();
             }
         }

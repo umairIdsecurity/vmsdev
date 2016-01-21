@@ -1082,7 +1082,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     }
 
     var requestRunning = false;
-    function sendVisitorForm() {
+    function sendVisitorForm() 
+    {
         if (requestRunning) { // don't do anything if an AJAX request is pending
             return;
         }

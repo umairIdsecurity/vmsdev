@@ -516,7 +516,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             if( (isDefault > 0 || (profileImage == '' && isChanged > 0))  &&  VisitorPhotoID == "") {
                 
                 <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
-                    <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
+                    <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL, CardType::VIC_CARD_24HOURS])) : ?>
                         $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
                         $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
                         $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');

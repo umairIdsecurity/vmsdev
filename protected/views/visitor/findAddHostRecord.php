@@ -324,17 +324,15 @@ $defaultKey = key($asicCardTypes);
                                         <?php  echo $form->error($userModel, 'company', array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
-                            </tr> 
-                             
-                            
-                         <tr>
+                            </tr>
+                            <tr>
                                 <td>
                                     <div style="margin-bottom: 5px;" id="userStaffRow"></div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                   <a style="float: left; margin-right: 5px; width: 86px; height: 16px;   border: 1px solid #63B421; border-radius: 5px; background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12)); font-size: 12px; padding: 3px 15px 5px; color: #fff;   font-weight: bold;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addUserCompanyLink"  class="actionForward">Add Company</a>
+                                    <a style="float: left; margin-right: 5px; width: 86px; height: 16px;   border: 1px solid #63B421; border-radius: 5px; background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12)); font-size: 12px; padding: 3px 15px 5px; color: #fff;   font-weight: bold;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addUserCompanyLink"  class="actionForward">Add Company</a>
                                     <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addUserContactLink" class="btn btn-xs btn-info actionForward" role="button" data-toggle="modal" data-id="asic">Add Contact</a>
                                 </td>
                             </tr> 
@@ -926,7 +924,8 @@ $defaultKey = key($asicCardTypes);
     }
 
     // company change
-    $('#User_company').on('change', function() {
+    $('#User_company').on('change', function() 
+    {
         var companyId = $(this).val();
         $('#CompanySelectedId').val(companyId);
         $modal = $('#addCompanyContactModal');

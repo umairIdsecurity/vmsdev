@@ -723,7 +723,7 @@ class CompanyController extends Controller
             //when $_POST['id'] is not set or is empty
             //then "company=" is throwing error
             //Therefore, to avoid this, make it like "company=''"
-            $cond = "company = ".(isset($_POST['id']) ? $_POST['id'] : "''");
+            $cond = "company = ".((isset($_POST['id']) && $_POST['id'] != "") ? $_POST['id'] : "''");
             $contacts = User::model()->findAll($cond);
 
             if ($contacts) {

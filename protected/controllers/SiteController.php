@@ -274,10 +274,13 @@ class SiteController extends Controller {
     /**
      * Logs out the current user and redirect to homepage.
      */
-    public function actionLogout() {
-        $this->audit_log_logout(); //logs the logout of the user
+    public function actionLogout() 
+    {
+        //commented below statement because of https://ids-jira.atlassian.net/browse/CAVMS-1200
+        //$this->audit_log_logout(); //logs the logout of the user
         Yii::app()->user->logout();
         $this->redirect('index.php?r=site/login');
+
     }
 
     public function audit_log_logout(){

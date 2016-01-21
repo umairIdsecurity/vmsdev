@@ -44,8 +44,8 @@ class TenantController extends Controller {
             $this->performAjaxValidation($model);
         }
 
-        if (isset($_POST['TenantForm'])) {
-
+        if (isset($_POST['TenantForm'])) 
+        {
             $transaction = Yii::app()->db->beginTransaction();
             $tenantContact = new TenantContact;
             $tenantModel = new Tenant;
@@ -54,7 +54,6 @@ class TenantController extends Controller {
             $workstationModel = new Workstation;
 
             try {
-
                 if ($this->createCompany($companyModel)
                     && $this->createTenant($tenantModel, $companyModel)
                     && $this->createUser($userModel, $companyModel)

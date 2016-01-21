@@ -711,7 +711,7 @@ if ($this->action->id == 'update') {
             e.preventDefault();
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                url: '<?php echo Yii::app()->createUrl("visitor/AjaxCrop"); ?>',
                 data: {
                     x1: $("#x1").val(),
                     x2: $("#x2").val(),

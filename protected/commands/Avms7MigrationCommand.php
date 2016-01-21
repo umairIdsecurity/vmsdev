@@ -209,9 +209,6 @@ class Avms7MigrationCommand extends CConsoleCommand
         echo "\r\n\r\n";
     }
 
-
-
-
     function beforeInsertRow($tableName, &$row,$oldId,$vms){
 
 
@@ -222,13 +219,12 @@ class Avms7MigrationCommand extends CConsoleCommand
             } else if($value=="1753-01-01" && $vms->db->driverName=="mysql"){
                 $row[$name] = $vms->isNullable($tableName,$name)?null:"0000-00-00";
             }
-            // clean up rogue escape characters
-            while(strpos($value,"\\'") > 0 || strpos($value,'\\"')){
-                $value = str_replace($value,"\\'","'");
-                $value = str_replace($value,'\\"','"');
-            }
 
+            if(($name=='first_name' || $name=='last_name') && ($value==null  || trim($value)=='')){
+                $row[$name] = 'Unknown';
+            }
         }
+
 
         if($tableName=='visit'){
 
@@ -262,7 +258,6 @@ class Avms7MigrationCommand extends CConsoleCommand
             }
         }
     }
-
     function afterInsertRow($tableName,&$row, &$idMappings,$oldId){
 
         if($tableName=='company'){
@@ -276,7 +271,6 @@ class Avms7MigrationCommand extends CConsoleCommand
         }
 
     }
-
     function importImages(&$data){
 
         for($i=0;$i<sizeof($data['visitor']);$i++){
@@ -360,7 +354,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
     }
     public function allowBrokenReference($tableName,$columnName){
-        return $tableName=="visit" && $columnName="host";
+        return false;//$tableName=="visit" && $columnName="host";
     }
 
 
@@ -450,6 +444,44 @@ class Avms7MigrationCommand extends CConsoleCommand
                 'is_deleted'        => 0
             ];
     }
+
+
+    public function usersToVisitors($data){
+
+        // find all hosts that are not visitors but are users and make them visitors
+        foreach($data['visit'] as $visit){
+            if($this->findVisitor($data,$visit['host'])==null){
+                $user = $this->findUser($data,$visit['host']);
+                if($user!=null){
+                    $this->addUserAsVisitor($data,$user);
+                }
+            }
+        }
+
+    }
+    public function addUserAsVisitor($data,$user){
+        $data['visitor']+=[
+            'id' => $user['id'],
+            'first'
+        ];
+    }
+    public function findVisitor($data,$id){
+        foreach($data['visitor'] as $visitor){
+            if($visitor['id']==$id){
+                return $visitor;
+            }
+        }
+        return null;
+    }
+    public function findUser($data,$id){
+        foreach($data['user'] as $user){
+            if($user['id']==$id){
+                return $user;
+            }
+        }
+        return null;
+    }
+
     public function getLastCompanyIdFromData($data){
         $id = 0;
         foreach($data['company'] as $existingCompany){
@@ -778,9 +810,9 @@ class Avms7MigrationCommand extends CConsoleCommand
             ",
             'visitor' =>"
                 select distinct v.ID as id,
-                    v.FirstName as first_name,
+                    IFNULL(v.FirstName,'Unknown') as first_name,
                     v.MiddleName as middle_name,
-                    v.LastName as last_name,
+                    IFNULL(v.LastName,'Unknown') as last_name,
                     v.EmailAddress as email,
                     IFNULL(v.Mobile,v.Telephone) as contact_number,
                     v.DateOfBirth as date_of_birth,
@@ -814,8 +846,9 @@ class Avms7MigrationCommand extends CConsoleCommand
                     oc.AirportCode as tenant,
                     IFNULL(agent.agentid,agent_set.agentid) as tenant_agent
 
-                from users v
-                    join oc_set oc on v.id = oc.UserId and AirportCode = '$airportCode'
+                from oc_set oc
+                    join log_visit lv on lv.setId = oc.id and AirportCode = '$airportCode'
+                    join users v on v.id = lv.visitorid or v.id = lv.userid
                     left join agent_set on agent_set.ocid = oc.id
                     left join agent on agent.UserId = agent_set.agentid
                     left join asic_data ad on ad.UserID = v.id
@@ -843,14 +876,10 @@ class Avms7MigrationCommand extends CConsoleCommand
                                              where idCC.UserID = v.id
                                              order by id desc
                                              limit 2,1)
-                  where exists (select *
-                                  from log_visit lv
-                                  where lv.setid = oc.id
-                                  and lv.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
-                                  )
-                  order by v.id
-                ",
 
+                  order by 1
+
+                ",
             "card_generated"=>"
                 select t.id as id,
                     oc.usercode as card_number,
@@ -887,7 +916,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                        t.visitor_type as visitor_type,
                        l.ReasonNo as reason,
                        1 as visitor_status,
-                       c.UserId as host,
+                       l.UserId as host,
                        l.UserID as created_by,
                        l.Date as date_in,
                        l.Time as time_in,

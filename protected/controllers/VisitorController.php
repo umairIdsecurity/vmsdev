@@ -707,7 +707,8 @@ class VisitorController extends Controller {
         }
         return $model;
     }
-    public function actionAddVisitor() {
+    public function actionAddVisitor() 
+    {
         $model = new Visitor;
         $profile_type = Yii::app()->request->getParam("profile_type", "CORPORATE");
         $model->scenario = $this->getValidationScenario( $model, $profile_type );
@@ -717,8 +718,8 @@ class VisitorController extends Controller {
         $visitorService = new VisitorServiceImpl;
         $session = new CHttpSession;
 		
-        if (isset($_POST['Visitor'])) {
-                
+        if (isset($_POST['Visitor'])) 
+        {    
             $model->attributes = $_POST['Visitor'];
            
             if (isset($_POST['Visitor']['profile_type'])) {

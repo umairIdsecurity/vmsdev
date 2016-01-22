@@ -1833,14 +1833,16 @@ class PreregistrationController extends Controller
     }
 
 
-    public function actionDeclineVicholder(){
+    public function actionDeclineVicholder()
+    {
     	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
 			$this->redirect(array('preregistration/dashboard'));
 		}
     	$this->render('decline-vic');
     }
 
-    public function actionVicholderDeclined(){
+    public function actionVicholderDeclined()
+    {
 
     	if( !isset(Yii::app()->user->account_type) || (Yii::app()->user->account_type != "ASIC") ){
 			$this->redirect(array('preregistration/dashboard'));

@@ -138,7 +138,7 @@ $fontScale = 2;
     .card-print {
         width:<?php echo $labelWidthPx; ?>px;
         height:<?php echo $labelHeightPx; ?>px;
-         border:1px solid #000;
+        border:1px solid #000;
         border-radius:20px;
         background:<?= $bgcolor; ?>;
         position: relative;
@@ -151,7 +151,7 @@ $fontScale = 2;
         background:#fff;
         margin-left:<?php echo $imagePadLeftPx; ?>px;
         margin-top:<?php echo $imagePadTopPx; ?>px;
-        border:1px solid #000;
+        /*border:1px solid #000;*/ /*because of https://ids-jira.atlassian.net/browse/CAVMS-779*/
 
     }
     .card-print .img-visitor img {

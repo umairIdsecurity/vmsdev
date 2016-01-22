@@ -193,7 +193,7 @@ function getCardType() {
             }
 
         });
-
+        
         $(document).on("click", "#clicktabB", function (e) {
             e.preventDefault();
             var cardType = $('#VisitCardType').val();
@@ -594,7 +594,7 @@ function checkEmailIfUnique() {
     var email = $("#Visitor_email").val();
     $.ajax({
         type: 'POST',
-        url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
+        url: "<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>" + email,
         dataType: 'json',
         data: email,
         success: function (r) {
@@ -797,7 +797,7 @@ function populateTenantAgentAndCompanyField(isSearch) {
 
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#search_visitor_tenant").val(),
+            url: "<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>" + $("#search_visitor_tenant").val(),
             dataType: 'json',
             data: tenant,
             success: function (r) {
@@ -823,7 +823,7 @@ function populateTenantAgentAndCompanyField(isSearch) {
            
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#Visitor_tenant").val(),
+                url: "<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>" + $("#Visitor_tenant").val(),
                 dataType: 'json',
                 data: tenant,
                 success: function (r) {

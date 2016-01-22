@@ -83,7 +83,7 @@ if (!$cardTypeWorkstationModel) {
                 e.stopImmediatePropagation();
                 return false;
             }
-            
+        
 
             $("#searchInputDiv").empty();    
             // Remove to avoid validation

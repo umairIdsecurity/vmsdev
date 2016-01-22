@@ -58,7 +58,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" id="reasonActiveVisit" class="vic-active-visit vic-active-verification"/>
+            <input type="checkbox" <?php echo ($model->reason > 0 || $model->visit_reason != NULL) ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" id="reasonActiveVisit" class="vic-active-visit vic-active-verification"/>
             <a href="javascript:void(0)" style="text-decoration: none !important;">Visit Reason</a> <br>
             <div style="display:none; margin-top: 4px" id="visit_reason_checkbox_error" class="errorMessage">Please tick Visit Reason</div>
         </td>

@@ -436,7 +436,7 @@ class VisitController extends Controller {
             {
                 if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {$model->card_type = $_POST['Visit']['card_type'];}
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
-                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {$model->reason = $_POST['Visit']['reason'];}
+                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != ""){if($_POST['Visit']['reason'] == "Other"){$model->reason = NULL;}else{$model->reason = $_POST['Visit']['reason'];}}
                 if (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != "") {$model->visitor_type = $_POST['Visit']['visitor_type'];}
                 if(!isset($model->visit_status) || $model->visit_status == ""){$model->visit_status = $oldStatus;}
                 

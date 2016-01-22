@@ -197,7 +197,16 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             
             $condition = $model->card_type > 4 ? "module='AVMS'": "module='CVMS'";
             $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
-            echo $detailForm->dropDownList($model, 'reason', $reasons, array("empty"=>"Select Visit Reason"), array('options' => array($model->reason=>array('selected'=>true))));
+            if(($model->visit_reason != NULL)&&($model->visit_reason != ""))
+            {
+                $reasons['Other'] = 'Other';
+                echo $detailForm->dropDownList($model, 'reason', $reasons, array('options' => array($reasons['Other']=>array('selected'=>true)) ));
+            }
+            else
+            {
+                echo $detailForm->dropDownList($model, 'reason', $reasons, array("empty"=>"Select Visit Reason"), array('options' => array($model->reason=>array('selected'=>true)) ));
+            }
+            
             echo "<br />";
         //}
           ?> 

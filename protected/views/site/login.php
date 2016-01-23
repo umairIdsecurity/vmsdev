@@ -84,7 +84,10 @@ $this->pageTitle=Yii::app()->name . ' - Login';
         ?>
                 <tr>
                     <td colspan="3" class="form-group"><span class="add-on"><i class="b-tenant"></i></span>
-                        <?php echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAtLeast1Tenant(), 'id', 'name'), array('empty' =>'Select Airport', 'style' => 'height: 47px; ')); ?>
+                        <?php
+                                $previousSelectedTenantId = $value = (string)Yii::app()->request->cookies['tenant_selection'];
+                                echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAtLeast1Tenant(), 'id', 'name'), array('empty' =>'Select Airport', 'style' => 'height: 47px; ','options'=>array($previousSelectedTenantId=>array('selected'=>true))));
+                        ?>
 
                     </td>
                 </tr>

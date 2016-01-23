@@ -172,6 +172,7 @@ class SiteController extends Controller {
             if($tenantCompany!=null){
                 $session['tenant'] = $tenantCompany->id;
                 $model->tenant = $tenantCompany->id;
+                Yii::app()->request->cookies['tenant_selection'] = new CHttpCookie('tenant_selection', $tenantCompany->id);
             } else {
                 $session['tenant'] = 1;
                 $model['tenant'] = 1;
@@ -192,6 +193,10 @@ class SiteController extends Controller {
             if(isset($session['tenant']) && $model->tenant==''){
                 $model->tenant = $session['tenant'];
             }
+
+            // set a cookie based on the selection
+            Yii::app()->request->cookies['tenant_selection'] = new CHttpCookie('tenant_selection', $model->tenant);
+
             // validate user input and redirect to the previous page if valid
             if ($model->validate() && $model->login()) {
                 $session = new CHttpSession;

@@ -8,7 +8,7 @@
     } 
     $module = CHelper::get_allowed_module();
 ?>
-<!-- because of https://ids-jira.atlassian.net/browse/CAVMS-104-->
+
 <tr class='odd'>\
     <td width='180px' class='ws-padding'>Edit Card's Back Text</td>\
     <?php 

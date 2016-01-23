@@ -72,7 +72,8 @@ class VisitorController extends Controller {
 
                if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
                  //email sending
-                if(!empty($model->password_option)){
+                if(!empty($model->password_option))
+                {
 
                     $passwordRequire= intval($model->password_option);
 
@@ -762,11 +763,11 @@ class VisitorController extends Controller {
                     }
                 }
                 //email sending
-                if(!empty($model->password_option)){
-
+                if(!empty($model->password_option))
+                {
                     $passwordRequire= intval($model->password_option);
-
-                    if($passwordRequire == 1){
+                    if($passwordRequire == 1)
+                    {
                         $loggedUserEmail = Yii::app()->user->email;
                         $headers = "MIME-Version: 1.0" . "\r\n";
                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -787,11 +788,12 @@ class VisitorController extends Controller {
                         
                         /*EmailTransport::*/mail($to, $subject, $body, $headers);
                     }
-                    elseif ($passwordRequire == 2) {
+                    elseif ($passwordRequire == 2) 
+                    {
                         User::model()->restorePassword($model->email);
                     }
                 }
-                 Yii::app()->user->setFlash('success', 'Profile Added Successfully.');
+                Yii::app()->user->setFlash('success', 'Profile Added Successfully.');
                 if( $model->profile_type == "CORPORATE" ) {
                     $this->redirectAddUpdateRoleBased("vms=cvms");
                 }

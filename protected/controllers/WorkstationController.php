@@ -27,7 +27,7 @@ class WorkstationController extends Controller {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('delete', 'create'),
-                'expression' => 'Yii::app()->user->role == Roles::ROLE_SUPERADMIN',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
            
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions

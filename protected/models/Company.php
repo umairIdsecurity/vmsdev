@@ -491,7 +491,9 @@ class Company extends CActiveRecord {
             ->selectdistinct('*')
             ->from('company')
             ->where("id != 1 and company_type = 1 AND is_deleted = 0")
+            ->order("name")
             ->queryAll();
+
 
         foreach ($company as $index => $value) {
             $aArray[] = array(
@@ -512,6 +514,7 @@ class Company extends CActiveRecord {
             ->selectdistinct('*')
             ->from('company')
             ->where("id != 1 and company_type = 1 AND is_deleted = 0")
+            ->order("name")
             ->queryAll();
 
         if($company == null || sizeof($company)==0){
@@ -519,6 +522,7 @@ class Company extends CActiveRecord {
                 ->selectdistinct('*')
                 ->from('company')
                 ->where("company_type = 1 AND is_deleted = 0")
+                ->order("name")
                 ->queryAll();
         }
 

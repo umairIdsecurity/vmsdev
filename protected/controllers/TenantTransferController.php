@@ -32,7 +32,7 @@ class TenantTransferController extends Controller
         return array(
             array('allow', // allow user if same company
                 'actions' => array('export','import','deleteSql'),
-                'expression' => 'Yii::app()->user->role  == Roles::ROLE_SUPERADMIN',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),

@@ -8,9 +8,7 @@
     } 
     $module = CHelper::get_allowed_module();
 ?>
-
-<tr class='odd'>\
-    <td width='180px' class='ws-padding'>Edit Card's Back Text</td>\
+<tr class='odd'><td width='180px' class='ws-padding'>Edit Card's Back Text</td>\
     <?php 
         if(( $module == "CVMS" || $module == "Both") ) 
         {

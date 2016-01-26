@@ -135,6 +135,7 @@ $fontScale = 2;
     <title>Untitled Document</title>
 </head>
 <style>
+
     .card-print {
         width:<?php echo $labelWidthPx; ?>px;
         height:<?php echo $labelHeightPx; ?>px;
@@ -268,20 +269,29 @@ $fontScale = 2;
         padding: 10px !important;
         text-align: center;
     }
-
-      .card-text2 {
+    /*because of https://ids-jira.atlassian.net/browse/CAVMS-779*/
+    .card-text2 {
         /*width:256px;*/
-        width:230px;
+        /*width:230px;
+        height:<?php echo $labelHeightPx; ?>px;
+        border:1px solid #000;
+        border-radius:20px;
+        background:#fff;
+        float: left;*/
+        width:256px;
         height:<?php echo $labelHeightPx; ?>px;
         border:1px solid #000;
         border-radius:20px;
         background:#fff;
         float: left;
     }
-
+    /*because of https://ids-jira.atlassian.net/browse/CAVMS-779*/
     .card-text-content2 {
-        font-size: 20px;
+        /*font-size: 20px;
         padding: 15px !important;
+        text-align: center;*/
+        font-size: 20px;
+        padding: 10px !important;
         text-align: center;
     }
     .card-style-3  .card-print {
@@ -349,7 +359,7 @@ $fontScale = 2;
                     <td>
                         <!--Box 2-->
                         <div class="card-text">
-                            <div class="card-text-content"><?= $backText ?></div>
+                            <div class="card-text-content"><?php echo $backText ?></div>
                         </div>
                     </td>
                 </tr>
@@ -411,7 +421,7 @@ $fontScale = 2;
         <?php if($backText != ''){ ?>
         <!--Box 2-->
         <div class="card-text2">
-            <div class="card-text-content2"><?= $backText ?></div>
+            <div class="card-text-content2"><?php echo $backText ?></div>
         </div>
         <?php } ?>
     <?php

@@ -857,7 +857,7 @@ $defaultKey = key($asicCardTypes);
             $("#searchHostTable").html(data);
         }).fail(function() {
             Loading.hide();
-            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            //window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
        // $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
        return false;

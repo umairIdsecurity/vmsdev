@@ -481,20 +481,35 @@ class VisitorController extends Controller {
         if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
             $model = new Visitor('search');
             $model->unsetAttributes();
-            $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1188
+            if(is_numeric($searchInfo))//Returns TRUE whether a variable is a number or a numeric string 
+            {
+                $conditionString = $tenant. $tenant_agent . " (asic_no ='".$searchInfo."')";
+                $hostTitle = 'ASIC Sponsor';
+                // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+                $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
+                // Don't show Expired ASIC Sponsors
+                $conditionString .= " AND (visitor_card_status != '".Visitor::ASIC_EXPIRED."') ";
+
+            }
+            else
+            {
+                $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
                 . "%' or first_name like '%" . $searchInfo
                 . "%' or last_name like '%" . $searchInfo
                 . "%' or email like '%" . $searchInfo
-                . "%' or asic_no = '" . $searchInfo
-                . "' or identification_document_no LIKE '%" . $searchInfo
+                . "%' or identification_document_no LIKE '%" . $searchInfo
                 . "%' or identification_alternate_document_no1 LIKE '%" . $searchInfo
                 . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
                 . "%')";
-            $hostTitle = 'ASIC Sponsor';
-            // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
-            $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
-            // Don't show Expired ASIC Sponsors
-            $conditionString .= " AND (visitor_card_status != '".Visitor::ASIC_EXPIRED."') ";
+                $hostTitle = 'ASIC Sponsor';
+                // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+                $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
+                // Don't show Expired ASIC Sponsors
+                $conditionString .= " AND (visitor_card_status != '".Visitor::ASIC_EXPIRED."') ";
+            }
+            
         } else {
             $model = new User('search');
             $model->unsetAttributes();
@@ -1071,12 +1086,7 @@ class VisitorController extends Controller {
         if (isset($_GET['searchInfo'])) {
             $searchInfo = $_GET['searchInfo'];
             $merge = new CDbCriteria;
-            /*$conditionString = "profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
-                . "%' or first_name like '%" . $searchInfo
-                . "%' or last_name like '%" . $searchInfo
-                . "%' or email like '%" . $searchInfo
-                . "%')";*/
-            $conditionString = "profile_type = 'VIC' OR profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+            $conditionString = "(profile_type = 'VIC' OR profile_type = 'ASIC') AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
                 . "%' or first_name like '%" . $searchInfo
                 . "%' or last_name like '%" . $searchInfo
                 . "%' or email like '%" . $searchInfo

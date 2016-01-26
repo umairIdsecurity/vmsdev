@@ -228,7 +228,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     if(! data || data == '') {
                         $.fn.yiiGridView.update('vic-total-visit-count');
                     } else {
-                        window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+                        //commented because of the 
+                        //comment "When I reset visit 
+                        //count for active visit then system is logging me 
+                        //out of the application." in https://ids-jira.atlassian.net/browse/CAVMS-137
+                        //Why such statement was written, previously?
+                        //window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
                     }
                 }
             });

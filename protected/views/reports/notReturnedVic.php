@@ -81,7 +81,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
              
             'type' => 'raw',
-            'value' => '!is_null($data->card_lost_declaration_file)?CHtml::link("Download", Yii::app()->request->baseUrl.$data->card_lost_declaration_file, array("class" =>"statusLink")):""',
+            'value' => '!is_null($data->card_lost_declaration_file)?CHtml::link("Download", Yii::app()->request->baseUrl.$data->card_lost_declaration_file, array("class" =>"statusLink")):"Not returned"',
             'htmlOptions' => array('width' => '60px'),
             
         ),

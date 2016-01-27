@@ -346,16 +346,21 @@ class TenantController extends Controller {
                 $userModel->email = $_POST['Company']['email_address'];
                 $userModel->contact_number = $_POST['Company']['mobile_number'];               
                 $userModel->save(false);
-         
-                Yii::app()->user->setFlash('success', "Tenant updated Successfully");
-                $this->redirect(array('tenant/admin'));
-                //$this->redirect(array("tenant/update&id=".$id));
+            
+                //because of https://ids-jira.atlassian.net/browse/CAVMS-1208
+                Yii::app()->user->setFlash('success', "Tenant details are saved successfully!");
+                //$this->redirect(array('tenant/admin'));
+                $this->redirect(array("tenant/update&id=".$id));
 
-            }else{
-                //print_r($model->getErrors());
+            }
+            /*
+            *Let Yii to handle and show the errors
+            */
+            /*else{
+                print_r($model->getErrors());
                 Yii::app()->user->setFlash('error', "There was an error processing request");
                 $this->redirect(array("tenant/update&id=".$id));
-            }
+            }*/
 
         }
 

@@ -508,7 +508,8 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
         //$criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%Y-%m-%d")', $this->identification_document_expiry, true);
         $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
-        switch($this->card_type){
+        switch($this->card_type)
+        {
             case CardType::SAME_DAY_VISITOR:
             case CardType::MULTI_DAY_VISITOR:
             case CardType::MANUAL_VISITOR:
@@ -558,16 +559,17 @@ class Visit extends CActiveRecord {
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')";
 
-            switch($this->card_type){
+            switch($this->card_type)
+            {
                 case CardType::SAME_DAY_VISITOR:
                 case CardType::MULTI_DAY_VISITOR:
                 case CardType::MANUAL_VISITOR:
                 case CardType::CONTRACTOR_VISITOR:
-                    $query .= "OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    $query .= " OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
                     OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
                 default:
-                    $query .= "OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    $query .= " OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
                     OR visitor1.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
             }
@@ -795,11 +797,11 @@ class Visit extends CActiveRecord {
                 case CardType::MULTI_DAY_VISITOR:
                 case CardType::MANUAL_VISITOR:
                 case CardType::CONTRACTOR_VISITOR:
-                    $query .= "OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    $query .= " OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
                     OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
                 default:
-                    $query .= "OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    $query .= " OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
                     OR visitor1.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
             }

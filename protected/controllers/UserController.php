@@ -60,7 +60,7 @@ class UserController extends Controller
             ),
             array(
                 'allow',
-                'actions' => array('admin', 'adminAjax', 'delete', 'systemaccessrules', 'importHost'),
+                'actions' => array('admin', 'adminAjax', 'delete', 'systemAccessRules', 'importHost'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array(

@@ -364,11 +364,19 @@ class User extends VmsActiveRecord {
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     // $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
                     $avms_roles = Roles::get_admin_allowed_roles(true);
+                    
+                    //because of https://ids-jira.atlassian.net/browse/CAVMS-1209
+                    if(($key = array_search(Roles::ROLE_AGENT_AIRPORT_ADMIN, $avms_roles)) !== false) {
+                        unset($avms_roles[$key]);
+                    }
+                    if(($key = array_search(Roles::ROLE_AGENT_AIRPORT_OPERATOR, $avms_roles)) !== false) {
+                        unset($avms_roles[$key]);
+                    }
                     $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' .
                                     Roles::ROLE_OPERATOR . ',' .
                                     Roles::ROLE_VISITOR . ',' .
                                     Roles::ROLE_STAFFMEMBER . ', '.
-                                    Roles::ROLE_AGENT_AIRPORT_OPERATOR . ', '.
+                                    //Roles::ROLE_AGENT_AIRPORT_OPERATOR . ', '.
                                     implode(',',$avms_roles). ')';
                 } else {
                     $avms_roles = Roles::get_admin_allowed_roles(true);

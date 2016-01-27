@@ -266,7 +266,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     <table style="border-collapse: initial;">
                         <tbody>
                             <tr>
-                                <td><input type="text" style="width: 300px;" name="Visitor[identification_document_no]" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
+                                <td><input id="identiDocumentNo" type="text" style="width: 300px;" name="Visitor[identification_document_no]" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
                                 </td>
                                 <td>
                                 <?php
@@ -289,6 +289,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 ));
                                 ?> <span class="required primary-identification-require">*</span>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td><span id="identProofError" style="display:none" class="required primary-identification-require">Please enter drivers licence, passport or proof of age</span></td>
+                                <td><span id="identExpiryError" style="display:none" class="required primary-identification-require">Please enter Identification Document Expiry</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -650,40 +654,56 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             $('#identificationNotExpired').hide();
         });
 
-        $(document).on('click', '#btnIdentificationConfirm', function(e) {
+        $(document).on('click', '#btnIdentificationConfirm', function(e) 
+        {
             var isChecked = $('input[name="identification"]').filter(':checked');
-            if (isChecked.length == 0) {
+            if (isChecked.length == 0)
+            {
                 alert('Please select an option.');
                 return false;
-            }
+            }  
             
-            if ($('#identificationChkBoxYes').is(':checked')) {
+            if ($('#identificationChkBoxYes').is(':checked')) 
+            {
                 $('#identificationModal').modal('hide');
                 $('input[name="identificationActiveVisit"]').prop('checked', true);
                 // if ($('#VicHolderDecalarations').is(':checked') && $('#asicSponsorActiveVisitLink').is(':checked')) {
                 //     activeVisit();
                 //     return false;
                 // }
-            }else {
+            }
+            else 
+            {
                 updateIdentificationDetails();
             }
             
         });
 
-        function updateIdentificationDetails() {
-
-            if (isExpired()) {
-                var data = $("#identification_expired_form").serialize();
-            } else {
-                var data = $("#identification_not_expired_form").serialize();
+        function updateIdentificationDetails() 
+        {
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1206
+            if($('#identiDocumentNo').val() == ""){$('#identProofError').show();}else{$('#identProofError').hide();}
+            if($('#identification_document_expiry').val() == ""){$('#identExpiryError').show();}else{$('#identExpiryError').hide();}
+            if($('#identiDocumentNo').val() =="" || $('#identification_document_expiry').val() == ""){return false;}
+            
+            var data;
+            if (isExpired()) 
+            {
+                data = $("#identification_expired_form").serialize();
+            } 
+            else 
+            {
+                data = $("#identification_not_expired_form").serialize();
             }
-
-            var ajaxOpts = {
+            
+            $.ajax({
                 url: "<?php echo Yii::app()->createUrl('visitor/updateIdentificationDetails&id='.$visitorModel->id); ?>",
                 type: 'POST',
                 dataType: 'json',
                 data: data,
-                success: function (r) {
+                success: function (r) 
+                {
+                    console.log(r);
                     if (r == 1) {
                         $('#identificationModal').modal('hide');
                         $('input[name="identificationActiveVisit"]').prop('checked', true);
@@ -692,11 +712,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             return false;
                         }
                     }
+                },
+                error: function(error)
+                {
+                    //window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+                    console.log(error);
                 }
-            };
 
-            $.ajax(ajaxOpts).fail(function() {
-                window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
             });
             return false;
         }

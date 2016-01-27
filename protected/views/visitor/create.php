@@ -690,7 +690,8 @@ function checkAlreadyVisitorProfile()
         type: 'POST',
         url: '<?php echo Yii::app()->createUrl("visitor/checkAlreadyVisitorProfile&firstname=' + firstname + '&middlename=' + middlename + '&lastname=' +  lastname + '&dateofbirth=' + dateofbirth + '"); ?>',
         dataType: 'json',
-        data: {firstname,middlename,lastname,dateofbirth},
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1211
+        data: {"firstname":firstname,"middlename":middlename,"lastname":lastname,"dateofbirth":dateofbirth},
         success: function (r) 
         {
             $.each(r.data, function (index, value) {

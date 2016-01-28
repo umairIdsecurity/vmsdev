@@ -168,6 +168,45 @@ if (isset($_GET['id'])) {
                 <?php echo $model->isRequired('contact_number');  ?></td>
             <td><?php echo $form->error($model, 'contact_number'); ?></td>
         </tr>
+
+        <?php   // Match Current Role in AVMS Users
+                if (in_array($model->role, Roles::get_avms_roles())):
+        ?>
+            <tr>
+                <td><?php echo $form->textField($model, 'asic_no'
+                        ,array('placeholder' => $model->getAttributeLabel('asic_no'))
+                    ); ?>
+                    <?php echo $model->isRequired('asic_no');  ?></td>
+                <td><?php echo $form->error($model, 'asic_no'); ?></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'       => $model,
+                            'attribute'   => 'asic_expiry',
+                            'options'     => array(
+                                'minDate' => '0',
+                                'maxDate' => '+2y +2m',
+                                'changeYear' => true,
+                                'changeMonth' => true,
+                                'dateFormat' => 'dd-mm-yy',
+                            ),
+                            'htmlOptions' => array(
+                                'maxlength'   => '10',
+                                'placeholder' => $model->getAttributeLabel('asic_expiry'),
+                                'class' => 'form-control input-sm'
+                            ),
+                        ));
+                    ?>
+                    <?php echo $model->isRequired('asic_expiry');  ?></td>
+                <td><?php echo $form->error($model, 'asic_expiry'); ?></td>
+            </tr>
+
+        <?php endif; ?>
+
+
         <tr>
             <td colspan="2">
                 <div class="buttons" style="margin-top: 20px;">

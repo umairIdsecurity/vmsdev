@@ -106,7 +106,31 @@
 
                 <div class="row form-group">
                     <div class="col-xs-12 col-md-12 col-sm-12">
-                        <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
+                        <!-- <span class="">Date of Birth</span> -->
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'       => $model,
+                            'attribute'   => 'date_of_birth',
+                            'options'     => array(
+                                'maxDate'=>'0',
+                                'dateFormat' => 'dd-mm-yy',
+                                'changeMonth' => true,
+                                'changeYear' => true
+                            ),
+                            'htmlOptions' => array(
+                                'maxlength'   => '10',
+                                'placeholder' => 'Date of Birth',
+                                'class' => 'form-control input-sm'
+                            ),
+                        ));
+                        ?>
+                        <?php echo $form->error($model,'date_of_birth',array('style' => 'margin-left:0')); ?>
+                    </div>
+                </div>
+                <!-- because of https://ids-jira.atlassian.net/browse/CAVMS-1097 -->
+               <!--  <div class="row form-group">
+                    <div class="col-xs-12 col-md-12 col-sm-12">
+                        <?php //echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
                         <script>
                             $(function(){
                                 $('#Registration_date_of_birth').combodate({
@@ -117,9 +141,9 @@
                                 });
                             });
                         </script>
-                        <?php echo $form->error($model, 'date_of_birth',array('style' => 'margin-left:0')); ?>
+                        <?php //echo $form->error($model, 'date_of_birth',array('style' => 'margin-left:0')); ?>
                     </div>
-                </div>
+                </div> -->
 
 
                 <div class="form-group">

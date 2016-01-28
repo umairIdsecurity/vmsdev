@@ -233,7 +233,7 @@ $session = new CHttpSession;
                     <aside class="top_nav" style="margin-top:0px !important">
                         <ul id="icons">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login to AVMS</a></li>
+                                <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->params['vmsAddress']; ?>">Login to AVMS</a></li>
                                 <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
                             <?php } ?> 
                             <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>

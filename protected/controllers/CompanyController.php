@@ -592,7 +592,7 @@ class CompanyController extends Controller
                                                         'contact_number'=>$formInfo['user_contact_number'],
                                                         'timezone_id'=>1,
                                                         'photo'=>NULL,
-                                                        'tenant'=> $company->tenant,//empty($session['tenant']) ? NULL : $session['tenant'],
+                                                        'tenant'=> (isset($company->tenant) && $company->tenant != "") ? $company->tenant : NULL,
                                                         'user_type'=>2,
                                                         'user_status'=>1,
                                                         'role'=>10,

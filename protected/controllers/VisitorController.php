@@ -801,7 +801,7 @@ class VisitorController extends Controller {
                         }
                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
                         
-                        /*EmailTransport::*/mail($to, $subject, $body, $headers);
+                        EmailTransport::mail($to, $subject, $body, $headers);
                     }
                     elseif ($passwordRequire == 2) 
                     {

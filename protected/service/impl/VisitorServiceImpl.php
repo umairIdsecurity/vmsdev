@@ -81,27 +81,29 @@ class VisitorServiceImpl implements VisitorService {
             shuffle($chars);
             $password = implode(array_slice($chars, 0, $length));
             
-            /*$headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";*/
-            $headers = "From: admin@identitysecurity.com.au\r\nReply-To: admin@identitysecurity.com.au";
-            $subject = "Account Information from Visitor Management System";
-
-            /*$airport = Company::model()->findByPk(Yii::app()->user->tenant);
-            $airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name : "";
-            $body = "<html><body>Hi [".$visitor->first_name.", ".$visitor->last_name."]<br>".
-                                "[".$airportName."] has requested you create a [User Type] login to their Aviation Visitor Management System.<br>".
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1203
+            $headers = "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            $airport = Company::model()->findByPk(Yii::app()->user->tenant);
+            $airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+            $body = "<html><body>Hi ".$visitor->first_name.", ".$visitor->last_name."<br>"
+                                .$airportName." would like you to create a user profile and password for their Aviation Visitor Management System.<br>".
                                 "Please click the following link to create a login<br>".
                                 Yii::app()->request->baseUrl."/index.php?r=site/login<br>";
-            $body .= "Password: ".$password."<br>";                    
-            $body .="<br>"."Thanks"."<br>Identity Security Team</body></html>";*/
+            //$body .= "Password: ".$password."<br>";                    
+            $body .="<br>"."Thanks"."<br>Identity Security Team</body></html>";
 
+            /*
+            $headers = "From: admin@identitysecurity.com.au\r\nReply-To: admin@identitysecurity.com.au";
+            $subject = "Account Information from Visitor Management System";
             $body = sprintf("Hi %s,
                              We send for your account at VMS website
                              Your account: %s
                              Password: %s
-                             Regards", $visitor->first_name, $visitor->last_name, $visitor->email, $password);
+                             Regards", $visitor->first_name, $visitor->last_name, $visitor->email, $password);*/
 
-            if (EmailTransport::mail($visitor->email, $subject, $body, $headers)){
+            if (EmailTransport::mail($visitor->email, $subject, $body, $headers))
+            {
                 $visitor->password = $password;
             }
         }

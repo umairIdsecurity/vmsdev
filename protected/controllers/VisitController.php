@@ -833,7 +833,8 @@ class VisitController extends Controller {
         ));
     }
 
-    public function actionVicRegister() {
+    public function actionVicRegister() 
+    {
         $merge = new CDbCriteria;
         $merge->addCondition("visitor0.profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 

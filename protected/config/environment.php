@@ -9,9 +9,10 @@
                 'password' => 'HFz7c9dHrmPqwNGr',
             )
         ),
-//        'params' => array(
-//            'on_premises_airport_code' => 'MBW',
-//        )
+        'params' => array(
+            //'on_premises_airport_code' => 'MBW',
+            'vmsAddress' => 'https://vmsprdev.identitysecurity.info'
+        )
     );
     
  ?>

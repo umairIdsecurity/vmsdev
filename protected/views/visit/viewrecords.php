@@ -14,6 +14,17 @@
         <strong>Warning!</strong> <?php echo Yii::app()->user->getFlash('error');?>
     </div>
 <?php endif;?>
+
+<!-- //because of https://ids-jira.atlassian.net/browse/CAVMS-1147 -->      
+<?php if(in_array(Yii::app()->user->role, [7,8,12,14])): ?>
+	<?php if(Yii::app()->user->hasFlash('success')): ?>
+		<div class="flash-success" style="margin-top: 10px;">
+			<?php echo Yii::app()->user->getFlash('success'); ?>
+		</div>
+	<?php endif; ?>
+<?php endif; ?>
+
+
 <h1>Visit History</h1>
 <?php
 $session = new CHttpSession;

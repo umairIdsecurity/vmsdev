@@ -11,7 +11,7 @@
         ),
         'params' => array(
             //'on_premises_airport_code' => 'MBW',
-            'vmsAddress' => 'https://vmsprdev.identitysecurity.info'
+            'vmsAddress' => 'http://vmsdev.identitysecurity.info'
         )
     );
     

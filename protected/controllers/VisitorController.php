@@ -725,6 +725,7 @@ class VisitorController extends Controller {
     }
     public function actionAddVisitor() 
     {
+
         $model = new Visitor;
         $profile_type = Yii::app()->request->getParam("profile_type", "CORPORATE");
         $model->scenario = $this->getValidationScenario( $model, $profile_type );
@@ -1109,9 +1110,11 @@ class VisitorController extends Controller {
      */
     private function redirectAddUpdateRoleBased($queryString) {
         $userRole = Yii::app()->user->role;
-        
-        if( in_array($userRole, [7,8,12,14]) ) {
-             $this->redirect(array("dashboard"));
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1147
+        if( in_array($userRole, [7,8,12,14]) ) 
+        {
+            Yii::app()->user->setFlash('success','Profile has been saved successfully');
+            $this->redirect(array("visit/view"));
         } elseif ( $userRole == 9 ) {
              $this->redirect(array("visit/view"));
         } else {

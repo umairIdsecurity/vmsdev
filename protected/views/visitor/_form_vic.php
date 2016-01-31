@@ -920,7 +920,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         if (email != "<?php echo $model->email ?>") {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
+                url: "<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>" + email,
                 dataType: 'json',
                 data: email,
                 success: function (r) {
@@ -1103,9 +1103,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         var url;
 
         if ($("#currentAction").val() == 'update') {
-            url = "<?php echo CHtml::normalizeUrl(array("visitor/update&id=")); ?>" + $("#currentlyEditedVisitorId").val();
+            url = "<?php echo CHtml::normalizeUrl(array('visitor/update&id=')); ?>" + $("#currentlyEditedVisitorId").val();
         } else {
-            url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
+            url = "<?php echo CHtml::normalizeUrl(array('visitor/addvisitor')); ?>";
         }
 
         var ajaxOpts = {
@@ -1113,16 +1113,23 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             url: url,
             data: form,
             success: function (data, response) {
-                if(data == ''){
-                    if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
+                if(data == '')
+                {
+                    if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) 
+                    {
                         window.location = 'index.php?r=dashboard';
-                    } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                    } 
+                    else if ($("#currentRoleOfLoggedInUser").val() == 9) 
+                    {
                         window.location = 'index.php?r=dashboard/viewmyvisitors';
-                    } else {
+                    } 
+                    else 
+                    {
                         window.location = 'index.php?r=visitor/admin&vms=avms';
                     }
-                     
-                }else {
+                }
+                else 
+                {
                      alert(data); 
                       return;
                 }
@@ -1131,7 +1138,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 //$("#submitFormVisitor").data('requestRunning', false);
                 requestRunning = false;
             },
-            error: function (data) {
+            error: function (data) 
+            {
                 return;
                 if ($.inArray($("#currentRoleOfLoggedInUser").val(),[7,8,12,14])) {
                     window.location = 'index.php?r=dashboard';

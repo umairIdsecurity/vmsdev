@@ -19,11 +19,11 @@ class SendMailCommand extends CConsoleCommand
 
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= "From: vmsnotify@gmail.com\r\nReply-To: vmsuser@gmail.com";
+        $headers .= "From: mail@identitysecurity.com.au\r\nReply-To: mail@identitysecurity.com.au";
 
         $content = "Reason: because<br><br>Message: because <br><br>~This message was sent via Visitor Management System~";
 
-        EmailTransport::mail("gistewart@bigpond.com","test",$content,$headers);
+        EmailTransport::mail("geoffian@gmail.com","test",$content,$headers);
 
     }
 }

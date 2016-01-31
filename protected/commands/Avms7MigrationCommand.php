@@ -952,8 +952,17 @@ class Avms7MigrationCommand extends CConsoleCommand
                     left join close_visit c on l.ID = c.LoggedId and c.visitorid = l.VisitorID
                     left join log_negate n on l.Id = n.closedid
                 order by t.id
-            "
+            ",
+            "reset_history"=>"Select  distinct reset.id as id,
+                                      UserId as visitor_id,
+                                      reason as reason,
+                                      log_visit.date as reset_time
+                             from reset
+                                join oc_set on oc_set.id = reset.setid and oc_set.airportcode = '$airportCode'
+                                join log_visit on log_visit.setid = oc_set.id
 
+
+            "
         ];
 
     }

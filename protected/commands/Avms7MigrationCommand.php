@@ -84,7 +84,7 @@ class Avms7MigrationCommand extends CConsoleCommand
             unset($data['tenant_agent']);
 
             $foreignKeys = $this->getForeignKeys();
-            $tables = ['company','visitor_type','visit_reason','user', 'visitor','card_generated', 'visit'];
+            $tables = ['company','visitor_type','visit_reason','user', 'visitor','card_generated', 'visit','reset_history'];
             foreach ($tables as $table) {
                 $rows = $data[$table];
                 $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation','card_generated','user','visitor_type','visit_reason'], $idMappings,$vms);
@@ -108,8 +108,8 @@ class Avms7MigrationCommand extends CConsoleCommand
 
         $filteredVisitors = [];
         foreach($data['visitor'] as $visitor){
-            if($this->findVisitWithVisitorOrHost($data,$visitor)!=null){
-                $filteredVisitors+=$visitor;
+            if($this->findVisitWithVisitorOrHost($data,$visitor['id'])!=null){
+                $filteredVisitors[]=$visitor;
             }
         }
         $data['visitor'] = $filteredVisitors;
@@ -420,7 +420,7 @@ class Avms7MigrationCommand extends CConsoleCommand
 
     function findVisitWithVisitorOrHost($data,$id){
         foreach($data['visit'] as $visit){
-            if($visit['visitor']==$id || $visit['host']==$id || $visit['asic_host']==$id ){
+            if($visit['visitor']==$id || $visit['host']==$id  ){
                 return $visit;
             }
         }
@@ -748,6 +748,12 @@ class Avms7MigrationCommand extends CConsoleCommand
         return $data;
     }
 
+    public function getCleanUpQueries($airportCode){
+        return [
+
+        ];
+    }
+
     public function getQueries($airportCode)
     {
         return [
@@ -983,15 +989,16 @@ class Avms7MigrationCommand extends CConsoleCommand
                     left join log_negate n on l.Id = n.closedid
                 order by t.id
             ",
-            "reset_history"=>"Select  distinct reset.id as id,
-                                      UserId as visitor_id,
-                                      reason as reason,
+            "reset_history"=>"SELECT  DISTINCT
+                                      reset.id as id,
+                                      reset.UserId as visitor_id,
+                                      IFNULL(NULLIF(reset.reason,''),'Unkown') as reason,
                                       log_visit.date as reset_time
-                             from reset
-                                join oc_set on oc_set.id = reset.setid and oc_set.airportcode = '$airportCode'
+                              FROM reset
+                                join oc_set on oc_set.id = reset.setid
+                                    and oc_set.airportcode = '$airportCode'
                                 join log_visit on log_visit.setid = oc_set.id
-
-
+                                    and log_visit.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
             "
         ];
 

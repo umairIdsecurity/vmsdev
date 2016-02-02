@@ -78,12 +78,13 @@ class Avms7MigrationCommand extends CConsoleCommand
             $this->importImages($data);
             $this->mapExistingData($tenant,$data,$idMappings,$vms,$referenceData);
             $this->filterUserRecords($data,$idMappings,$vms,$tenant);
+            $this->filterVisitorRecords($data);
 
             unset($data['tenant']);
             unset($data['tenant_agent']);
 
             $foreignKeys = $this->getForeignKeys();
-            $tables = ['company','visitor_type','visit_reason','user', 'visitor','card_generated', 'visit'];
+            $tables = ['company','visitor_type','visit_reason','user', 'visitor','card_generated', 'visit','reset_history'];
             foreach ($tables as $table) {
                 $rows = $data[$table];
                 $this->importTable($table, $rows, $foreignKeys, ['company', 'visitor', 'visit','workstation','card_generated','user','visitor_type','visit_reason'], $idMappings,$vms);
@@ -96,6 +97,86 @@ class Avms7MigrationCommand extends CConsoleCommand
             $transaction->rollback();
             echo "\r\n".$e->getMessage();
         }
+
+    }
+
+    /*
+     * Remove any visitor records that have not had a visit in the last 12 months or havent been a
+     * host in the last 12 months
+     */
+    public function filterVisitorRecords(&$data){
+
+        $filteredVisitors = [];
+        foreach($data['visitor'] as $visitor){
+            if($this->findVisitWithVisitorOrHost($data,$visitor['id'])!=null){
+                $filteredVisitors[]=$visitor;
+            }
+        }
+        $data['visitor'] = $filteredVisitors;
+    }
+
+    /*
+     *
+     */
+    public function filterUserRecords(&$data,&$idMappings,$vms,$tenant){
+
+        $toKeep = [];
+        for($i=0;$i<sizeof($data['user']);$i++){
+            $user = &$data['user'][$i];
+
+            // get local tenant agent
+            $localTenantAgent = null;
+            if(isset($user['tenant_agent']) && $user['tenant_agent']>'' && isset($idMappings['company'][$user['tenant_agent']])){
+                $localTenantAgent = $idMappings['company'][$user['tenant_agent']];
+            }
+
+
+            // match the agent
+            $vmsUser = $vms->getFirstRow("SELECT * FROM ".Yii::app()->db->quoteTableName('user')."
+                                            where tenant = ".$tenant['id']."
+                                            and is_deleted=0
+                                            and (email like '".str_replace(".au","%",$user['email'])."'
+                                                or (first_name='".$user['first_name']."' and last_name='".$user['last_name']."'))".
+                ($localTenantAgent!=null?' and tenant_agent='.$localTenantAgent:'')
+            );
+
+            // if we don't have a first name or last name
+            if($vmsUser == null && !($user['first_name']> ''  && $user['last_name']>'')) {
+
+                // if we don't get a match then used someone at the company
+                if ($user['company'] > '') {
+                    $vmsUser = $vms->getFirstRow("SELECT u.* FROM " . Yii::app()->db->quoteTableName('user') . " u join company c on u.company = c.id
+                                            where u.tenant = " . $tenant['id'] . "
+                                            and u.is_deleted=0
+                                            and c.name = '" . $user['company'] . "' " .
+                        ($localTenantAgent!=null?'and u.tenant_agent='.$localTenantAgent:'')
+                    );
+                }
+
+                // if we don't get a match then use someone at the same domain
+                if ($vmsUser == null) {
+                    $vmsUser = $vms->getFirstRow("SELECT * FROM " . Yii::app()->db->quoteTableName('user') . "
+                                            where tenant = " . $tenant['id'] . "
+                                            and is_deleted=0
+                                            and email like '%" . str_replace(".au","%",substr($user['email'], strpos($user['email'], '@'))) . "' " .
+                        ($localTenantAgent!=null?'and tenant_agent='.$localTenantAgent:'')
+                    );
+                }
+            }
+
+            if($vmsUser==null){
+                if(!($user['first_name']>'')){$user['first_name'] = 'Unknown';}
+                if(!($user['last_name']>'')){$user['last_name'] = 'Unknown';}
+
+                $toKeep[] = $user;
+            } else {
+                $idMappings['user'][$user['id']] = $vmsUser['id'];
+            }
+        }
+        $data['user']=$toKeep;
+    }
+
+    public function setCardStatuses(&$data){
 
     }
 
@@ -168,6 +249,282 @@ class Avms7MigrationCommand extends CConsoleCommand
             }
         }
     }
+    function setUserCompanies(&$data)
+    {
+        //user companies should be a tenant or a tenant agent
+        $visitorCompany = [];
+        for ($i = 0; $i < sizeof($data['user']); $i++) {
+            $company = null;
+            if (isset($data['user'][$i]['tenant_agent'])) {
+                $data['user'][$i]['company'] = $data['user'][$i]['tenant_agent'];
+            } else if (isset($data['user'][$i]['tenant'])) {
+                $data['user'][$i]['company'] = $data['user'][$i]['tenant'];
+            } else {
+                throw new CException("Cant assign company for user ".$data['user'][$i]['email']);
+            }
+        }
+    }
+    function setVisitorCompanies(&$data,$referenceData,$avms7){
+
+        $visitorCompany = [];
+        for($i=0;$i<sizeof($data['visitor']);$i++){
+            $company = null;
+            if(!isset($referenceData['visitor_company'][$data['visitor'][$i]['id']])){
+                $company = $this->companyFromVisitor($data['visitor'][$i]);
+            } else {
+                $company = $referenceData['visitor_company'][$data['visitor'][$i]['id']];
+            }
+
+            $existingCompany = $this->findCompanyFromData($data,$company);
+            if($existingCompany!=null){
+                if(!isset($existingCompany['tenant_agent']) || $existingCompany['tenant_agent']==$data['visitor'][$i]['tenant_agent'])
+                {
+                    $data['visitor'][$i]['company'] = $existingCompany['id'];
+                } else {
+                    $id = $this->getLastCompanyIdFromData($data)+1;
+                    $data['visitor'][$i]['company'] = $id;
+                    $existingCompany['tenant_agent'] = $data['visitor'][$i]['tenant_agent'];
+                    $data['company'][] = $existingCompany;
+                }
+            } else {
+                $id = $this->getLastCompanyIdFromData($data)+1;
+                $data['visitor'][$i]['company'] = $id;
+                $data['company'][] = $this->companyFromReferenceData($company,$id,$data['visitor'][$i]);
+            }
+            $visitorCompany[$data['visitor'][$i]['id']] = $data['visitor'][$i]['company'];
+        }
+
+        for($i=0;$i<sizeof($data['visit']);$i++){
+            $visitorId = $data['visit'][$i]['visitor'];
+            if(isset($visitorCompany[$visitorId])) {
+                $data['visit'][$i]['company'] = $visitorCompany[$visitorId];
+            }
+
+        }
+    }
+    function importImages(&$data){
+
+        for($i=0;$i<sizeof($data['visitor']);$i++){
+            //foreach($data['visitor'] as $row){
+            $row = $data['visitor'][$i];
+            if(isset($row['photo']) && $row['photo'] > ''){
+                $url = "https://avms7.idsecurity.com.au/store/files_thumb/".$row['photo'];
+                echo "\r\n Downloading photo $url";
+                try {
+                    $client = new EHttpClient($url, array(
+                        'maxredirects' => 0,
+                        'timeout' => 30));
+
+                    $response = $client->request();
+                    if ($response->isSuccessful()) {
+                        $image = $response->getRawBody();
+
+                        try {
+                            $photo = new PhotoImport;
+                            $photo->filename = $row['photo'];
+                            $photo->db_image = $image;
+                            $photo->save();
+                            $data['visitor'][$i]['photo'] = $photo->id;
+
+                        } catch (CException $e) {
+                            echo "\r\n" . $e->getMessage();
+                        }
+
+                    } else {
+                        $data['visitor'][$i]['photo'] = null;
+                    }
+                } catch (CException $e){
+                    echo "\r\n".$e->getMessage();
+                    $data['visitor'][$i]['photo'] = null;
+                }
+
+
+            } else {
+                $data['visitor'][$i]['photo'] = null;
+            }
+        }
+
+    }
+
+    function allowBrokenReference($tableName,$columnName){
+        return false;//$tableName=="visit" && $columnName="host";
+    }
+
+    function companyFromVisitor($visitor){
+        return [
+            'companyId'         => null,
+            'contact_person'    => $visitor['first_name'].' '.$visitor['last_name'],
+            'email_address'     => $visitor['email'],
+            'code'              => $visitor['tenant'],
+            'phone_number'      => $visitor['contact_number'],
+            'company_name'      => $visitor['company']>''?$visitor['company']:'Unknown Company '.$visitor['id'],
+            'tenant'            => $visitor['tenant'],
+            'tenant_agent'      => $visitor['tenant_agent']
+        ];
+    }
+    function companyFromReferenceData($company,$id,$visitor){
+
+        return
+            [
+                'id'                => $id,
+                'name'              => $company['company_name'],
+                'trading_name'      => $company['company_name'],
+                'code'              => $company['code'],
+                'contact'           => $company['contact_person'],
+                'email_address'     => $company['email_address'],
+                'mobile_number'   => $company['phone_number'],
+                'created_by_user'   => 1,
+                'tenant'            => $visitor['tenant'],
+                'tenant_agent'      => $visitor['tenant_agent'],
+                'company_type'      => 3,
+                'is_deleted'        => 0
+            ];
+    }
+
+
+    function usersToVisitors($data){
+
+        // find all hosts that are not visitors but are users and make them visitors
+        foreach($data['visit'] as $visit){
+            if($this->findVisitor($data,$visit['host'])==null){
+                $user = $this->findUser($data,$visit['host']);
+                if($user!=null){
+                    $this->addUserAsVisitor($data,$user);
+                }
+            }
+        }
+
+    }
+    function addUserAsVisitor($data,$user){
+        $data['visitor']+=[
+            'id' => $user['id'],
+            'first'
+        ];
+    }
+    function findVisitor($data,$id){
+        foreach($data['visitor'] as $visitor){
+            if($visitor['id']==$id){
+                return $visitor;
+            }
+        }
+        return null;
+    }
+    function findUser($data,$id){
+        foreach($data['user'] as $user){
+            if($user['id']==$id){
+                return $user;
+            }
+        }
+        return null;
+    }
+
+    function findVisitWithVisitorOrHost($data,$id){
+        foreach($data['visit'] as $visit){
+            if($visit['visitor']==$id || $visit['host']==$id  ){
+                return $visit;
+            }
+        }
+        return null;
+    }
+
+    function getLastCompanyIdFromData($data){
+        $id = 0;
+        foreach($data['company'] as $existingCompany){
+            if(intval($existingCompany['id']) > $id){
+                $id = intval($existingCompany['id']);
+            }
+        }
+        return $id;
+    }
+
+    function findCompanyFromData($data,$company){
+        foreach($data['company'] as $existingCompany){
+
+            if($company['companyId']>0){
+                if($existingCompany['id'] == $company['companyId']){
+                    return $existingCompany;
+                }
+            } else {
+
+                // match on company name or email address
+                if(($existingCompany['name']==$company['company_name'] && $company['company_name'] > '')
+                    or ($existingCompany['email_address']==$company['email_address'] && $company['email_address'] > ''))
+                {
+                    return $existingCompany;
+                }
+            }
+        }
+        return null;
+    }
+
+    function setTenantAgents(&$data, $refernceData){
+
+        foreach(['visit','card_generated','user','company'] as $tableName) {
+            for ($i = 0; $i < sizeof($data[$tableName]); $i++) {
+                $operatorId = $data[$tableName][$i]['operator'];
+                if($operatorId!=null &&  $operatorId > '')
+                    if(!isset($refernceData['operator_owners'][$operatorId])){
+                        echo "\r\n cant find operator ".$operatorId;
+                    } else {
+                        if ($refernceData['operator_owners'][$operatorId]['agentLevel'] == 6) {
+                            $data[$tableName][$i]['tenant_agent'] = $refernceData['operator_owners'][$operatorId]['agentId'];
+                        } else {
+                            $data[$tableName][$i]['tenant_agent'] = null;
+                        }
+                    }
+                unset($data[$tableName][$i]['operator']);
+            }
+        }
+    }
+
+
+    function mapExistingData($tenant,$data,&$idMappings,$vms,$refernceData)
+    {
+        $idMappings['company'] = [];
+        $idMappings['company'][$tenant['code']] = $tenant['id'];
+        $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE  tenant=".$tenant['id']." ORDER BY id ASC");
+        $idMappings['workstation'][$tenant['code']] = $workstation['id'];
+
+
+        foreach($data['tenant_agent'] as $agent){
+
+            // match the agent
+            $vmsAgent = $vms->getFirstRow("SELECT * FROM company
+                                            where tenant = ".$tenant['id']."
+                                            and company_type=2
+                                            and is_deleted=0
+                                            and (email_address='".$agent['email_address']."'
+                                                or name='".$agent['name']."'
+                                                or instr(name,'".$agent['name']."') > 0
+                                                or instr('".$agent['name']."',name) > 0
+                                                or substr(email_address,instr('@',email_address))='".substr($agent['email_address'],strpos($agent['email_address'],'@'))."'
+                                                )"
+            );
+            if($vmsAgent==null){
+                echo "\r\nWARNING: Cant find agent ".$agent['email_address']." : ".$agent['name'];
+                continue;
+                //$this->createTenantAgent($agent,$tenant,$vms);
+                //$this->createWorkstation($agent,$tenant,$vms);
+            } else {
+                $idMappings['company'][$agent['tenant_agent']] = $vmsAgent['id'];
+            }
+
+            // map the workstation
+
+            $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE  tenant_agent=".$vmsAgent['id']." ORDER BY id ASC");
+            if($workstation==null) {
+                echo "\r\nWARNING: Cant find workstation for agent ".$agent['email_address']." : ".$agent['name'];
+                continue;
+            };
+
+
+            $idMappings['workstation'][$agent['tenant_agent']] = $workstation['id'];
+
+        }
+
+    }
+
+
     function importTable($tableName,&$rows,$foreignKeys,$targetTables,&$idMappings,$vms){
 
         $cols = [];
@@ -208,7 +565,6 @@ class Avms7MigrationCommand extends CConsoleCommand
         }
         echo "\r\n\r\n";
     }
-
     function beforeInsertRow($tableName, &$row,$oldId,$vms){
 
 
@@ -271,52 +627,6 @@ class Avms7MigrationCommand extends CConsoleCommand
         }
 
     }
-    function importImages(&$data){
-
-        for($i=0;$i<sizeof($data['visitor']);$i++){
-        //foreach($data['visitor'] as $row){
-            $row = $data['visitor'][$i];
-            if(isset($row['photo']) && $row['photo'] > ''){
-                $url = "https://avms7.idsecurity.com.au/store/files_thumb/".$row['photo'];
-                echo "\r\n Downloading photo $url";
-                try {
-                    $client = new EHttpClient($url, array(
-                        'maxredirects' => 0,
-                        'timeout' => 30));
-
-                    $response = $client->request();
-                    if ($response->isSuccessful()) {
-                        $image = $response->getRawBody();
-
-                        try {
-                            $photo = new PhotoImport;
-                            $photo->filename = $row['photo'];
-                            $photo->db_image = $image;
-                            $photo->save();
-                            $data['visitor'][$i]['photo'] = $photo->id;
-
-                        } catch (CException $e) {
-                            echo "\r\n" . $e->getMessage();
-                        }
-
-                    } else {
-                        $data['visitor'][$i]['photo'] = null;
-                    }
-                } catch (CException $e){
-                    echo "\r\n".$e->getMessage();
-                    $data['visitor'][$i]['photo'] = null;
-                }
-
-
-            } else {
-                $data['visitor'][$i]['photo'] = null;
-            }
-        }
-
-    }
-
-
-
     function setReferencingIds($tableName, &$row, $foreignKeys, &$idMappings,$targetTables){
 
         // go through each column
@@ -353,293 +663,12 @@ class Avms7MigrationCommand extends CConsoleCommand
         return true;
 
     }
-    public function allowBrokenReference($tableName,$columnName){
-        return false;//$tableName=="visit" && $columnName="host";
-    }
-
-
-    public function setUserCompanies(&$data)
-    {
-        //user companies should be a tenant or a tenant agent
-        $visitorCompany = [];
-        for ($i = 0; $i < sizeof($data['user']); $i++) {
-            $company = null;
-            if (isset($data['user'][$i]['tenant_agent'])) {
-                $data['user'][$i]['company'] = $data['user'][$i]['tenant_agent'];
-            } else if (isset($data['user'][$i]['tenant'])) {
-                $data['user'][$i]['company'] = $data['user'][$i]['tenant'];
-            } else {
-                throw new CException("Cant assign company for user ".$data['user'][$i]['email']);
-            }
-        }
-    }
-
-    public function setVisitorCompanies(&$data,$referenceData,$avms7){
-
-        $visitorCompany = [];
-        for($i=0;$i<sizeof($data['visitor']);$i++){
-            $company = null;
-            if(!isset($referenceData['visitor_company'][$data['visitor'][$i]['id']])){
-                $company = $this->companyFromVisitor($data['visitor'][$i]);
-            } else {
-                $company = $referenceData['visitor_company'][$data['visitor'][$i]['id']];
-            }
-
-            $existingCompany = $this->findCompanyFromData($data,$company);
-            if($existingCompany!=null){
-                if(!isset($existingCompany['tenant_agent']) || $existingCompany['tenant_agent']==$data['visitor'][$i]['tenant_agent'])
-                {
-                    $data['visitor'][$i]['company'] = $existingCompany['id'];
-                } else {
-                    $id = $this->getLastCompanyIdFromData($data)+1;
-                    $data['visitor'][$i]['company'] = $id;
-                    $existingCompany['tenant_agent'] = $data['visitor'][$i]['tenant_agent'];
-                    $data['company'][] = $existingCompany;
-                }
-            } else {
-                $id = $this->getLastCompanyIdFromData($data)+1;
-                $data['visitor'][$i]['company'] = $id;
-                $data['company'][] = $this->companyFromReferenceData($company,$id,$data['visitor'][$i]);
-            }
-            $visitorCompany[$data['visitor'][$i]['id']] = $data['visitor'][$i]['company'];
-        }
-
-        for($i=0;$i<sizeof($data['visit']);$i++){
-            $visitorId = $data['visit'][$i]['visitor'];
-            if(isset($visitorCompany[$visitorId])) {
-                $data['visit'][$i]['company'] = $visitorCompany[$visitorId];
-            }
-
-        }
-    }
-
-
-    public function companyFromVisitor($visitor){
-        return [
-            'companyId'         => null,
-            'contact_person'    => $visitor['first_name'].' '.$visitor['last_name'],
-            'email_address'     => $visitor['email'],
-            'code'              => $visitor['tenant'],
-            'phone_number'      => $visitor['contact_number'],
-            'company_name'      => $visitor['company']>''?$visitor['company']:'Unknown Company '.$visitor['id'],
-            'tenant'            => $visitor['tenant'],
-            'tenant_agent'      => $visitor['tenant_agent']
-        ];
-    }
-    public function companyFromReferenceData($company,$id,$visitor){
-
-        return
-            [
-                'id'                => $id,
-                'name'              => $company['company_name'],
-                'trading_name'      => $company['company_name'],
-                'code'              => $company['code'],
-                'contact'           => $company['contact_person'],
-                'email_address'     => $company['email_address'],
-                'mobile_number'   => $company['phone_number'],
-                'created_by_user'   => 1,
-                'tenant'            => $visitor['tenant'],
-                'tenant_agent'      => $visitor['tenant_agent'],
-                'company_type'      => 3,
-                'is_deleted'        => 0
-            ];
-    }
-
-
-    public function usersToVisitors($data){
-
-        // find all hosts that are not visitors but are users and make them visitors
-        foreach($data['visit'] as $visit){
-            if($this->findVisitor($data,$visit['host'])==null){
-                $user = $this->findUser($data,$visit['host']);
-                if($user!=null){
-                    $this->addUserAsVisitor($data,$user);
-                }
-            }
-        }
-
-    }
-    public function addUserAsVisitor($data,$user){
-        $data['visitor']+=[
-            'id' => $user['id'],
-            'first'
-        ];
-    }
-    public function findVisitor($data,$id){
-        foreach($data['visitor'] as $visitor){
-            if($visitor['id']==$id){
-                return $visitor;
-            }
-        }
-        return null;
-    }
-    public function findUser($data,$id){
-        foreach($data['user'] as $user){
-            if($user['id']==$id){
-                return $user;
-            }
-        }
-        return null;
-    }
-
-    public function getLastCompanyIdFromData($data){
-        $id = 0;
-        foreach($data['company'] as $existingCompany){
-            if(intval($existingCompany['id']) > $id){
-                $id = intval($existingCompany['id']);
-            }
-        }
-        return $id;
-    }
-
-    public function findCompanyFromData($data,$company){
-        foreach($data['company'] as $existingCompany){
-
-            if($company['companyId']>0){
-                if($existingCompany['id'] == $company['companyId']){
-                    return $existingCompany;
-                }
-            } else {
-
-                // match on company name or email address
-                if(($existingCompany['name']==$company['company_name'] && $company['company_name'] > '')
-                    or ($existingCompany['email_address']==$company['email_address'] && $company['email_address'] > ''))
-                {
-                    return $existingCompany;
-                }
-            }
-        }
-        return null;
-    }
-
-    public function setTenantAgents(&$data, $refernceData){
-
-        foreach(['visit','card_generated','user','company'] as $tableName) {
-         for ($i = 0; $i < sizeof($data[$tableName]); $i++) {
-             $operatorId = $data[$tableName][$i]['operator'];
-             if($operatorId!=null &&  $operatorId > '')
-                if(!isset($refernceData['operator_owners'][$operatorId])){
-                    echo "\r\n cant find operator ".$operatorId;
-                } else {
-                    if ($refernceData['operator_owners'][$operatorId]['agentLevel'] == 6) {
-                        $data[$tableName][$i]['tenant_agent'] = $refernceData['operator_owners'][$operatorId]['agentId'];
-                    } else {
-                        $data[$tableName][$i]['tenant_agent'] = null;
-                    }
-                }
-                unset($data[$tableName][$i]['operator']);
-            }
-        }
-    }
-
-    public function filterUserRecords(&$data,&$idMappings,$vms,$tenant){
-
-        $toKeep = [];
-        for($i=0;$i<sizeof($data['user']);$i++){
-            $user = &$data['user'][$i];
-
-        //foreach($data['user'] as $user){
-
-
-            // get local tenant agent
-            $localTenantAgent = null;
-            if(isset($user['tenant_agent']) && $user['tenant_agent']>'' && isset($idMappings['company'][$user['tenant_agent']])){
-                $localTenantAgent = $idMappings['company'][$user['tenant_agent']];
-            }
-
-
-            // match the agent
-            $vmsUser = $vms->getFirstRow("SELECT * FROM ".Yii::app()->db->quoteTableName('user')."
-                                            where tenant = ".$tenant['id']."
-                                            and is_deleted=0
-                                            and (email like '".str_replace(".au","%",$user['email'])."'
-                                                or (first_name='".$user['first_name']."' and last_name='".$user['last_name']."'))".
-                                            ($localTenantAgent!=null?' and tenant_agent='.$localTenantAgent:'')
-                                            );
-
-            // if we don't have a first name or last name
-            if($vmsUser == null && !($user['first_name']> ''  && $user['last_name']>'')) {
-
-                // if we don't get a match then used someone at the company
-                if ($user['company'] > '') {
-                    $vmsUser = $vms->getFirstRow("SELECT u.* FROM " . Yii::app()->db->quoteTableName('user') . " u join company c on u.company = c.id
-                                            where u.tenant = " . $tenant['id'] . "
-                                            and u.is_deleted=0
-                                            and c.name = '" . $user['company'] . "' " .
-                                            ($localTenantAgent!=null?'and u.tenant_agent='.$localTenantAgent:'')
-                    );
-                }
-
-                // if we don't get a match then use someone at the same domain
-                if ($vmsUser == null) {
-                    $vmsUser = $vms->getFirstRow("SELECT * FROM " . Yii::app()->db->quoteTableName('user') . "
-                                            where tenant = " . $tenant['id'] . "
-                                            and is_deleted=0
-                                            and email like '%" . str_replace(".au","%",substr($user['email'], strpos($user['email'], '@'))) . "' " .
-                                            ($localTenantAgent!=null?'and tenant_agent='.$localTenantAgent:'')
-                    );
-                }
-            }
-
-            if($vmsUser==null){
-                if(!($user['first_name']>'')){$user['first_name'] = 'Unknown';}
-                if(!($user['last_name']>'')){$user['last_name'] = 'Unknown';}
-
-                $toKeep[] = $user;
-            } else {
-                $idMappings['user'][$user['id']] = $vmsUser['id'];
-            }
-        }
-        $data['user']=$toKeep;
-    }
 
 
 
-    public function mapExistingData($tenant,$data,&$idMappings,$vms,$refernceData)
-    {
-        $idMappings['company'] = [];
-        $idMappings['company'][$tenant['code']] = $tenant['id'];
-        $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE  tenant=".$tenant['id']." ORDER BY id ASC");
-        $idMappings['workstation'][$tenant['code']] = $workstation['id'];
 
 
-        foreach($data['tenant_agent'] as $agent){
 
-            // match the agent
-            $vmsAgent = $vms->getFirstRow("SELECT * FROM company
-                                            where tenant = ".$tenant['id']."
-                                            and company_type=2
-                                            and is_deleted=0
-                                            and (email_address='".$agent['email_address']."'
-                                                or name='".$agent['name']."'
-                                                or instr(name,'".$agent['name']."') > 0
-                                                or instr('".$agent['name']."',name) > 0
-                                                or substr(email_address,instr('@',email_address))='".substr($agent['email_address'],strpos($agent['email_address'],'@'))."'
-                                                )"
-                                        );
-            if($vmsAgent==null){
-                echo "\r\nWARNING: Cant find agent ".$agent['email_address']." : ".$agent['name'];
-                continue;
-                //$this->createTenantAgent($agent,$tenant,$vms);
-                //$this->createWorkstation($agent,$tenant,$vms);
-            } else {
-                $idMappings['company'][$agent['tenant_agent']] = $vmsAgent['id'];
-            }
-
-            // map the workstation
-
-            $workstation = $vms->getFirstRow("SELECT * FROM workstation WHERE  tenant_agent=".$vmsAgent['id']." ORDER BY id ASC");
-            if($workstation==null) {
-                echo "\r\nWARNING: Cant find workstation for agent ".$agent['email_address']." : ".$agent['name'];
-                continue;
-            };
-
-
-            $idMappings['workstation'][$agent['tenant_agent']] = $workstation['id'];
-
-        }
-
-    }
 
     public function createWorkstation($agent,$tenant,$vms){
         $workstation = [
@@ -717,6 +746,12 @@ class Avms7MigrationCommand extends CConsoleCommand
         }
 
         return $data;
+    }
+
+    public function getCleanUpQueries($airportCode){
+        return [
+
+        ];
     }
 
     public function getQueries($airportCode)
@@ -847,7 +882,8 @@ class Avms7MigrationCommand extends CConsoleCommand
                     IFNULL(agent.agentid,agent_set.agentid) as tenant_agent
 
                 from oc_set oc
-                    join log_visit lv on lv.setId = oc.id and AirportCode = '$airportCode'
+                    join log_visit lv on lv.setId = oc.id
+                        and AirportCode = '$airportCode'
                     join users v on v.id = lv.visitorid or v.id = lv.userid
                     left join agent_set on agent_set.ocid = oc.id
                     left join agent on agent.UserId = agent_set.agentid
@@ -952,8 +988,18 @@ class Avms7MigrationCommand extends CConsoleCommand
                     left join close_visit c on l.ID = c.LoggedId and c.visitorid = l.VisitorID
                     left join log_negate n on l.Id = n.closedid
                 order by t.id
+            ",
+            "reset_history"=>"SELECT  DISTINCT
+                                      reset.id as id,
+                                      reset.UserId as visitor_id,
+                                      IFNULL(NULLIF(reset.reason,''),'Unkown') as reason,
+                                      log_visit.date as reset_time
+                              FROM reset
+                                join oc_set on oc_set.id = reset.setid
+                                    and oc_set.airportcode = '$airportCode'
+                                join log_visit on log_visit.setid = oc_set.id
+                                    and log_visit.date > DATE_ADD(CURRENT_DATE(),INTERVAL -1 YEAR)
             "
-
         ];
 
     }

@@ -1383,53 +1383,64 @@ class Visit extends CActiveRecord {
         * Manual *- Saved, Preregister, Active, Closed 
      * 
      */
-    public function setExpireOrClosedVisits( $tenant_Id, $visit_id = "" ) {
+    public function setExpireOrClosedVisits( $tenant_Id, $visit_id = "" ) 
+    {
         //Get All Active Visits of a Tenant
         $criteria = new CDbCriteria;
-        $criteria->addCondition("tenant = ".$tenant_Id ." AND visit_status = ".VisitStatus::ACTIVE);
+        $criteria->addCondition("tenant = '".$tenant_Id ."' AND visit_status = ".VisitStatus::ACTIVE);
         if( !empty( $visit_id) )
             $criteria->addCondition("id = ".$visit_id);
         $visits = $this->findAll($criteria);
         $session = new CHttpSession;
         $timezone = $session["timezone"]; 
         //Has Active visits?? Then
+
         if( $visits )
-        foreach( $visits as $key => $visit ) {
-      
-        // Set closed visit if time-checkout reached current time.   
-         $dateIn  = new DateTime($visit["date_check_in"]);
-         $dateOut = new DateTime($visit["date_check_out"]);
-         $dateNow = new DateTime("NOW", new DateTimeZone($timezone));
-         $isExpired = $dateOut->diff($dateNow)->format("%r%a");
-         if( $isExpired >= 0 )  { //   expired or will expire today 
-              
-             $status = "";
-            //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
-            if( $visit->card_type == CardType::VIC_CARD_24HOURS ) {
-                $status = VisitStatus::CLOSED;
-            } else if( $visit->card_type != CardType::VIC_CARD_24HOURS  ) {
-                $status = VisitStatus::EXPIRED;
-            } 
-             //Get current time to compare with current visit time
-             $current = new DateTime('NOW', new DateTimeZone($timezone));
-             $current_hour = $current->format("H");
-             $current_minutes = $current->format("i"); 
-             
-            // Visit Time
-             $time_checkout = $visit->time_check_out != "00:00:00"? $visit->time_check_out: $visit->finish_time;      
-             $checkoutdatetime = $visit->date_check_out." ".$time_checkout;
-             $checkout = new DateTime($checkoutdatetime); //  checkout is Already converted in users timezone
-             //compare Time hours and minutes
-             if( $isExpired > 0 || ( $current_hour > $checkout->format("H") && $isExpired == 0 )  
-                     || ( $isExpired == 0 && $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {
-                     //Update
-                        $insertArr = array();
-                        $insertArr["visit_status"] = $status;
-                            //update
-                            if( !empty($status) )
-                                $this->updateByPk( $visit->id, $insertArr ); 
-             }
-           }
+        {
+
+            foreach( $visits as $key => $visit ) 
+            {
+                // Set closed visit if time-checkout reached current time.   
+                $dateIn  = new DateTime($visit["date_check_in"]);
+                $dateOut = new DateTime($visit["date_check_out"]);
+                $dateNow = new DateTime("NOW", new DateTimeZone($timezone));
+                $isExpired = $dateOut->diff($dateNow)->format("%r%a");
+             if( $isExpired >= 0 )  
+             { //   expired or will expire today 
+                  
+                 $status = "";
+                //VIC 24Hours visit will be Closed and Manual visit will be Closed manaually, Other visits will be Expired.
+                if( $visit->card_type == CardType::VIC_CARD_24HOURS ) 
+                {
+                    $status = VisitStatus::CLOSED;
+                } else if( $visit->card_type != CardType::VIC_CARD_24HOURS  ) 
+                {
+                    $status = VisitStatus::EXPIRED;
+                } 
+                 //Get current time to compare with current visit time
+                 $current = new DateTime('NOW', new DateTimeZone($timezone));
+                 $current_hour = $current->format("H");
+                 $current_minutes = $current->format("i"); 
+                 
+                // Visit Time
+                 $time_checkout = $visit->time_check_out != "00:00:00"? $visit->time_check_out: $visit->finish_time;      
+                 $checkoutdatetime = $visit->date_check_out." ".$time_checkout;
+                 $checkout = new DateTime($checkoutdatetime); //  checkout is Already converted in users timezone
+                 //compare Time hours and minutes
+                 /*if( $isExpired > 0 || ( $current_hour > $checkout->format("H") && $isExpired == 0 )  
+                         || ( $isExpired == 0 && $current_hour == $checkout->format("H") && $current_minutes >= $checkout->format("i")) ) {*/
+                    //because of https://ids-jira.atlassian.net/browse/CAVMS-1199
+                    if($current >= $checkout)
+                    {
+                         //Update
+                            $insertArr = array();
+                            $insertArr["visit_status"] = $status;
+                                //update
+                                if( !empty($status) )
+                                    $this->updateByPk( $visit->id, $insertArr ); 
+                    }
+               }
+            }
         }
         
         // Closed Auto-Closed Visits

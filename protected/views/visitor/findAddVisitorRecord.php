@@ -269,7 +269,7 @@ $model->identification_country_issued = 13;
                             <!-- .end vic info -->
 
                             <tr>
-                                <td id="visitorCompanyRow">
+                                <td id="visitorCompanyRow" style="white-space: nowrap;">
                                     <div style="margin-bottom: 5px;">
                                         <?php
                                         $this->widget('application.extensions.select2.Select2', array(

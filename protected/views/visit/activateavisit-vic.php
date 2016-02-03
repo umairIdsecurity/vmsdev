@@ -693,20 +693,24 @@ $asicEscort = new AddAsicEscort();
         return document_expiry_date <= today;
     }
 
-    function activeVisit() {
+    function activeVisit() 
+    {
         var photoReview = $('#photoPreview').attr('src');
         var isDefault = photoReview.search('images/companylogohere1.png');
         var VisitorPhotoID =  $("#Visitor_photo").val(); 
         // Stop active visit if image is not uploaded
-        if (
-            ( (photoReview == '' || isDefault > 0) && VisitorPhotoID == "") &&
-            $("#Visit_card_type").val() != <?php echo CardType::SAME_DAY_VISITOR; ?> &&
-            $("#Visit_card_type").val() != <?php echo CardType::MANUAL_VISITOR; ?> &&
-            $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_SAMEDATE; ?> &&
-            $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
-        ) {  
+        //24Hours Visit Image is also not necessary because of https://ids-jira.atlassian.net/browse/CAVMS-1036
+        if  (
+                ((photoReview == '' || isDefault > 0) && VisitorPhotoID == "") &&
+                $("#Visit_card_type").val() != <?php echo CardType::SAME_DAY_VISITOR; ?> &&
+                $("#Visit_card_type").val() != <?php echo CardType::MANUAL_VISITOR; ?> &&
+                $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_24HOURS; ?> &&
+                $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_SAMEDATE; ?> &&
+                $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
+            ) 
+        {  
             <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
-                <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
+                <?php if(!in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
                     $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
                     $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');

@@ -308,7 +308,7 @@ $defaultKey = key($asicCardTypes);
                             </tr>
                             
                        <tr>
-                                <td id="userCompanyRow">
+                                <td id="userCompanyRow" style="white-space: nowrap;">
                                     <div style="margin-bottom: 5px;">
                                         <?php 
                                             $this->widget('application.extensions.select2.Select2', array(

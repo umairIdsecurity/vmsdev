@@ -422,6 +422,8 @@ class VisitController extends Controller {
             {
                 $errorMsg="Card type can not be updated whilst visit is active.";
                 //card type cannot be updated for Active Visit whereas other fields on left column can be updated
+                if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != "") {$visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];}
+
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
                 if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {$model->reason = $_POST['Visit']['reason'];}
                 if (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != "") {$model->visitor_type = $_POST['Visit']['visitor_type'];}
@@ -431,9 +433,17 @@ class VisitController extends Controller {
                 {
                     $model->save();
                 } 
+
+                if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != "") 
+                {
+                    $visitorModel->save(false);
+                }    
+
             }
             else
             {
+                if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != "") {$visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];}
+            
                 if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {$model->card_type = $_POST['Visit']['card_type'];}
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
                 if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != ""){if($_POST['Visit']['reason'] == "Other"){$model->reason = NULL;}else{$model->reason = $_POST['Visit']['reason'];}}
@@ -444,6 +454,11 @@ class VisitController extends Controller {
                 {
                     $model->save();
                 } 
+
+                if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != "") 
+                {
+                    $visitorModel->save(false);
+                }
             }
         }
 
@@ -461,9 +476,12 @@ class VisitController extends Controller {
              */
             $this->closedAsicPending($model, $visitorModel);
             $visitorModel->scenario = 'updateVic';
-            if ($visitorModel->save()) {
+
+            if ($visitorModel->save()) 
+            {
                 // If visitor card status is VIC ASIC Issued then add new card status convert
-                if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
+                if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) 
+                {
                     $logCardstatusConvert               = new CardstatusConvert;
                     $logCardstatusConvert->visitor_id   = $visitorModel->id;
                     $logCardstatusConvert->convert_time = date("Y-m-d");

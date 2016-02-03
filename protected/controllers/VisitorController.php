@@ -465,7 +465,8 @@ class VisitorController extends Controller {
             ), false, true);
     }
 
-    public function actionFindHost($id,$tenant,$tenant_agent, $cardType = null) {
+    public function actionFindHost($id,$tenant,$tenant_agent, $cardType = null) 
+    {
         $this->layout = '//layouts/column1';
         $visitorType = $_GET['visitortype'];
         $searchInfo = $_GET['id'];
@@ -474,17 +475,18 @@ class VisitorController extends Controller {
             $tenant_agent = "tenant_agent=" . $_GET["tenant_agent"] . " and";
         } else {
             $tenant_agent = "";
-        } $tenant_agent = ""; // 
+        } $tenant_agent = "";
 
         $criteria = new CDbCriteria;
 
-        if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
+        if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) 
+        {
             $model = new Visitor('search');
             $model->unsetAttributes();
 
             //because of https://ids-jira.atlassian.net/browse/CAVMS-1188
-            if(is_numeric($searchInfo))//Returns TRUE whether a variable is a number or a numeric string 
-            {
+            if(is_numeric($searchInfo))
+            {   //pure Numerics -- Search Only by ASIC No. (e.g. Asic No = 1234)
                 $conditionString = $tenant. $tenant_agent . " (asic_no ='".$searchInfo."')";
                 $hostTitle = 'ASIC Sponsor';
                 // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
@@ -495,22 +497,37 @@ class VisitorController extends Controller {
             }
             else
             {
-                $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
-                . "%' or first_name like '%" . $searchInfo
-                . "%' or last_name like '%" . $searchInfo
-                . "%' or email like '%" . $searchInfo
-                . "%' or identification_document_no LIKE '%" . $searchInfo
-                . "%' or identification_alternate_document_no1 LIKE '%" . $searchInfo
-                . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
-                . "%')";
-                $hostTitle = 'ASIC Sponsor';
-                // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
-                $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
-                // Don't show Expired ASIC Sponsors
-                $conditionString .= " AND (visitor_card_status != '".Visitor::ASIC_EXPIRED."') ";
+                if(preg_match('/[A-Za-z]/', $searchInfo) && preg_match('/[0-9]/', $searchInfo))//Contains at least one letter and one number
+                {   //English Alphabets with numbers -- Search Only by ASIC No. (e.g. Asic No = ROI1234)
+                    $conditionString = $tenant. $tenant_agent . " (asic_no ='".$searchInfo."')";
+                    $hostTitle = 'ASIC Sponsor';
+                    // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+                    $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
+                    // Don't show Expired ASIC Sponsors
+                    $conditionString .= " AND (visitor_card_status != '".Visitor::ASIC_EXPIRED."') ";
+                }
+                else
+                {   //pure English Alphabets -- Names do not have numbers
+                    $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                    . "%' or first_name like '%" . $searchInfo
+                    . "%' or last_name like '%" . $searchInfo
+                    . "%' or email like '%" . $searchInfo
+                    . "%' or identification_document_no LIKE '%" . $searchInfo
+                    . "%' or identification_alternate_document_no1 LIKE '%" . $searchInfo
+                    . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
+                    . "%')";
+                    $hostTitle = 'ASIC Sponsor';
+                    // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+                    $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
+                    // Don't show Expired ASIC Sponsors
+                    $conditionString .= " AND (visitor_card_status != '".Visitor::ASIC_EXPIRED."') ";
+
+                }
             }
             
-        } else {
+        } 
+        else 
+        {
             $model = new User('search');
             $model->unsetAttributes();
             if (isset($_GET['User'])){

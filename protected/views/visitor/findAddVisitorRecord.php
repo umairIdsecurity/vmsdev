@@ -454,7 +454,7 @@ $model->identification_country_issued = 13;
                                         <tr>
                                             <td>
                                                 <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128"
-                                                    style="text-transform: capitalize;" placeholder="Add Reason"></textarea>
+                                                    style="" placeholder="Add Reason"></textarea>
                                                 <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please complete Reason</div>
                                             </td>
                                         </tr>

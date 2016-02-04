@@ -96,7 +96,7 @@ class CompanyController extends Controller
         $model = new Company;
         
         $model->scenario = 'company_contact';
-        
+
         if (yii::app()->request->isAjaxRequest) {
             $this->performAjaxValidation($model);
         }
@@ -335,20 +335,18 @@ class CompanyController extends Controller
 
         if (Yii::app()->request->isPostRequest) 
         {
-
-            /*$sql = "UPDATE company SET is_deleted=1 WHERE id=$id";
-            $connection = Yii::app()->db;
-            $connection->createCommand($sql)->execute();*/
-
             //because of https://ids-jira.atlassian.net/browse/CAVMS-1220
+            //delete company and also delete company contact to avoid same email address conflicts
             $company = Company::model()->findByPk($id);
-            
-            //delete company
-            Company::model()->updateByPk($id,array('is_deleted'=>1));
-            //and also delete company contact
-            $sql = "UPDATE user SET is_deleted=1 WHERE email='".$company->email_address."'";
+            $sql = "DELETE FROM user WHERE email='".$company->email_address."'";
             $connection = Yii::app()->db;
             $connection->createCommand($sql)->execute();
+            Company::model()->deleteByPk($id);
+
+            //Company::model()->updateByPk($id,array('is_deleted'=>1));
+            /*$sql = "UPDATE user SET is_deleted=1 WHERE email='".$company->email_address."'";
+            $connection = Yii::app()->db;
+            $connection->createCommand($sql)->execute();*/
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))

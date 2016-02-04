@@ -244,7 +244,8 @@ $session = new CHttpSession;
         })
     });
 
-    function sendCompanyContactForm() {
+    function sendCompanyContactForm() 
+    {
         var currentController = "<?php echo Yii::app()->controller->id; ?>";
         var currentAction = "<?php echo Yii::app()->controller->action->id; ?>";
         if($("#AddCompanyContactForm_companyType").attr("disabled") == "disabled" && $("#AddCompanyContactForm_companyType").val() != ""){
@@ -257,14 +258,17 @@ $session = new CHttpSession;
             url: "<?php echo $this->createUrl('company/addCompanyContact') ?>",
             dataType: "json",
             data: formInfo,
-
-            success: function(data) {
+            success: function(data) 
+            {
                 $("#addCompanyContactModal").modal("hide");
-                if (data.type == "contact") {
+                if (data.type == "contact") 
+                {
                     //$("#visitorStaffRow").html(data.contactDropDown);
                      $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
                      $('#Visitor_staff_id').trigger('change');
-                } else {
+                } 
+                else 
+                {
                     //update company dropdown:
                     if(currentController == "visit" && currentAction == "detail") {
                          $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
@@ -286,7 +290,11 @@ $session = new CHttpSession;
                 }
                 return false;
             }
-        }).fail(function() {
+        }).fail(function(){
+            console.log("Ajax Call Failed!");
+            $("#AddCompanyContactForm_email_em_").empty();
+            $("#AddCompanyContactForm_email_em_").text("Email id already exists");
+            $("#AddCompanyContactForm_email_em_").show();
             //window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         });
     }

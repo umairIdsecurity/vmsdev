@@ -467,7 +467,8 @@
             }
         });
         
-        $("#addCompanyBtn").click(function(event){
+        $("#addCompanyBtn").click(function(event)
+        {
             
             $("#compDiv").show();
 
@@ -517,12 +518,20 @@
                             if(data.errors.user_email)
                             {
                                 if($('#Company_user_email').val() == ""){
-                                    if($('#companyEmailErr').is(':empty')){
+                                    $("#companyEmailErr").empty();
+                                    
                                         $("#companyEmailErr").append("<p>"+data.errors.user_email+"</p>").show();
-                                    }
+                                    
                                 }
                             }else{
                                 $("#companyEmailErr").empty().hide();
+                            }
+
+                            if(data.errors.email_address)
+                            {
+                                $("#companyEmailErr").empty();
+                                $("#companyEmailErr").append("<p>Email id already exists.</p>").show();
+                                
                             }
 
                             if(data.errors.user_contact_number)

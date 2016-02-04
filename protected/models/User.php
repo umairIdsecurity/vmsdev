@@ -163,8 +163,6 @@ class User extends VmsActiveRecord {
                 
             );
         } else {
-
-
             return array(
                 array("first_name, last_name, email, contact_number, user_type,is_deleted, tenant", 'required', 'message'=>'Please complete {attribute}'),
                 array('password', 'PasswordCustom'),

@@ -96,6 +96,7 @@ class CompanyController extends Controller
         $model = new Company;
         
         $model->scenario = 'company_contact';
+        
         if (yii::app()->request->isAjaxRequest) {
             $this->performAjaxValidation($model);
         }
@@ -332,9 +333,20 @@ class CompanyController extends Controller
     public function actionDelete($id)
     {
 
-        if (Yii::app()->request->isPostRequest) {
+        if (Yii::app()->request->isPostRequest) 
+        {
 
-            $sql = "UPDATE company SET is_deleted=1 WHERE id=$id";
+            /*$sql = "UPDATE company SET is_deleted=1 WHERE id=$id";
+            $connection = Yii::app()->db;
+            $connection->createCommand($sql)->execute();*/
+
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1220
+            $company = Company::model()->findByPk($id);
+            
+            //delete company
+            Company::model()->updateByPk($id,array('is_deleted'=>1));
+            //and also delete company contact
+            $sql = "UPDATE user SET is_deleted=1 WHERE email='".$company->email_address."'";
             $connection = Yii::app()->db;
             $connection->createCommand($sql)->execute();
 
@@ -440,18 +452,22 @@ class CompanyController extends Controller
      */
     public function actionAddCompanyContact()
     {
-        if (Yii::app()->request->isAjaxRequest) {
+        if (Yii::app()->request->isAjaxRequest) 
+        {
             $session = new CHttpSession;
             $formInfo = $_POST['AddCompanyContactForm'];
 
-            if ($_POST['typePostForm'] === 'contact') {
+            if ($_POST['typePostForm'] === 'contact')
+            {
                 if(isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0){
                     $company = Company::model()->findByPk($_POST['CompanySelectedId']);
                 } else {
                     $companyId = $this->findIdByName($formInfo['companyName']);
                     $company = Company::model()->findByPk($companyId);
                 }
-            } else {
+            } 
+            else 
+            {
                 $company = new Company();
 
                 $company->name = $formInfo['companyName'];
@@ -467,7 +483,8 @@ class CompanyController extends Controller
             }
 
             // save contact into company
-            if (isset($company->id) && $company->id > 0) {
+            if (isset($company->id) && $company->id > 0) 
+            {
                 $contact = new User('add_company_contact');
                 $contact->company = $company->id;
                 $contact->first_name = $formInfo['firstName'];
@@ -486,7 +503,8 @@ class CompanyController extends Controller
                 $contact->user_status = 1;
                 $contact->role = 9;
 
-                if ($contact->save()) {
+                if ($contact->save()) 
+                {
                     $options = [$contact->id, $contact->getFullName()];
                     $contactDropDown = '<option value="' . $contact->id . '" >' . $contact->getFullName() . '</option>'; // seriously why is this here?
                     if (isset($_POST['typePostForm']) && $_POST['typePostForm'] == 'company') {
@@ -497,9 +515,15 @@ class CompanyController extends Controller
                     $ret = array("id" => $id, "name" => $company->name, "contactDropDown" => $contactDropDown, 'type' => $_POST['typePostForm']);
                     echo json_encode($ret);
                     Yii::app()->end();
-                } else {
-                    print_r($contact->errors);
+                } 
+                else 
+                {
+                    $ret = array("errors" => $contact->errors);
+                    echo json_encode($ret);
                     die("--DONE--");
+                    //Yii::app()->end();
+                    //print_r($contact->errors);
+                    //die("--DONE--");
                 }
             }
             echo "0";

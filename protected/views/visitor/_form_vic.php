@@ -412,7 +412,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             </td>
                         </tr>
                         <tr>
-                            <td id="visitorCompanyRow">
+                            <td id="visitorCompanyRow" style="white-space: nowrap;">
                                 <div style="margin-bottom: 5px;">
                                     <?php
                                     $this->widget('application.extensions.select2.Select2', array(

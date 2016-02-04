@@ -618,9 +618,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         <li>
             <ul>
                 <li>
-                <?php if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) : ?>
+                    <!-- because of https://ids-jira.atlassian.net/browse/CAVMS-1222 -->
+                <?php //if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) : ?>
                     <button type="submit" class="greenBtn btnUpdateVisitorInfo actionForward" name="updateVisitorInfo">Update</button>
-                <?php endif; ?>
+                <?php //endif; ?>
                 </li>
             </ul>
         </li>

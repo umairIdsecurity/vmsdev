@@ -455,17 +455,19 @@ class CompanyController extends Controller
             $session = new CHttpSession;
             $formInfo = $_POST['AddCompanyContactForm'];
 
-            if ($_POST['typePostForm'] === 'contact')
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1221
+            /*if ($_POST['typePostForm'] === 'contact')
             {
                 if(isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0){
                     $company = Company::model()->findByPk($_POST['CompanySelectedId']);
-                } else {
+                } 
+                else {
                     $companyId = $this->findIdByName($formInfo['companyName']);
                     $company = Company::model()->findByPk($companyId);
                 }
             } 
             else 
-            {
+            {*/
                 $company = new Company();
 
                 $company->name = $formInfo['companyName'];
@@ -477,11 +479,13 @@ class CompanyController extends Controller
                 //todo: update Company Code later
                 $company->code = strtoupper(substr($company->name, 0, 3));
                 $companyService = new CompanyServiceImpl();
-                $companyService->save($company, $session['tenant'], $session['role'], 'addCompany');
-            }
+                //$companyService->save($company, $session['tenant'], $session['role'], 'addCompany');
+            //}
 
             // save contact into company
-            if (isset($company->id) && $company->id > 0) 
+            /*if (isset($company->id) && $company->id > 0) 
+            {*/
+            if ($companyService->save($company, $session['tenant'], $session['role'], 'addCompany')) 
             {
                 $contact = new User('add_company_contact');
                 $contact->company = $company->id;
@@ -524,7 +528,10 @@ class CompanyController extends Controller
                     //die("--DONE--");
                 }
             }
-            echo "0";
+            //echo "0";
+            $ret = array("errors" => $company->errors);
+            echo json_encode($ret);
+            die("--DONE--");
         }
         Yii::app()->end();
     }

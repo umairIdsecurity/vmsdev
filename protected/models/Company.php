@@ -63,7 +63,8 @@ class Company extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1){
+		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1)
+        {
 		return array(
 	         array('name', 'required','message'=>'Please complete {attribute}'),
                  array("name", "check_unique_name", 'company_name'=>$this->name, 'except'=>array("company_contact_update")),
@@ -108,7 +109,8 @@ class Company extends CActiveRecord {
 	            array('id,isTenant,card_count, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
 	        );
 		}
-		else{
+		else
+        {
 			return array(
  
                             array('name', 'required','message'=>'Please complete {attribute}'),

@@ -115,7 +115,8 @@
                                 'maxDate'=>'0',
                                 'dateFormat' => 'dd-mm-yy',
                                 'changeMonth' => true,
-                                'changeYear' => true
+                                'changeYear' => true,
+                                'yearRange' => "-97:+0",
                             ),
                             'htmlOptions' => array(
                                 'maxlength'   => '10',

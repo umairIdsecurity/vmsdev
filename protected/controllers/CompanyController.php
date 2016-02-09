@@ -338,9 +338,11 @@ class CompanyController extends Controller
             //because of https://ids-jira.atlassian.net/browse/CAVMS-1220
             //delete company and also delete company contact to avoid same email address conflicts
             $company = Company::model()->findByPk($id);
-            $sql = "DELETE FROM user WHERE email='".$company->email_address."'";
+            $cond = "email='".$company->email_address."'";
+            User::model()->deleteAll($cond);
+            /*$sql = "DELETE FROM user WHERE email='".$company->email_address."'";
             $connection = Yii::app()->db;
-            $connection->createCommand($sql)->execute();
+            $connection->createCommand($sql)->execute();*/
             Company::model()->deleteByPk($id);
 
             //Company::model()->updateByPk($id,array('is_deleted'=>1));

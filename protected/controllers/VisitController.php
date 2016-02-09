@@ -536,14 +536,20 @@ class VisitController extends Controller {
                 }
             }
 
-            if (isset($_POST['Company'])) {
+            if (isset($_POST['Company'])) 
+            {
                 $companyParams = Yii::app()->request->getPost('Company');
                 // If visitor has company id then save / continue
-                if (!empty($visitorModel->company)) {
+                if (!empty($visitorModel->company)) 
+                {
                     $companyModel = Company::model()->findByPk($visitorModel->company);
-
-                    if ($companyModel) {
-                        $companyModel->attributes = $companyParams;
+                    //because of https://ids-jira.atlassian.net/browse/CAVMS-1223
+                    if ($companyModel)
+                    {
+                        $companyModel->name = $companyParams['name'];
+                        $companyModel->contact = $companyParams['contact'];
+                        $companyModel->email_address = $companyParams['email_address'];
+                        $companyModel->mobile_number = $companyParams['mobile_number'];
                         $companyModel->save();
                     }
 

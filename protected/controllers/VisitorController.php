@@ -540,6 +540,7 @@ class VisitorController extends Controller {
                 . "%')";
             $hostTitle = 'Host';
         }
+        
         $criteria->addCondition($conditionString);
 
         $this->renderPartial('findHost', array(

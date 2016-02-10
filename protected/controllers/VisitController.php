@@ -550,7 +550,7 @@ class VisitController extends Controller {
                         $companyModel->contact = $companyParams['contact'];
                         $companyModel->email_address = $companyParams['email_address'];
                         $companyModel->mobile_number = $companyParams['mobile_number'];
-                        $companyModel->save();
+                        $companyModel->save(false);
                     }
 
                     // Update company contact process

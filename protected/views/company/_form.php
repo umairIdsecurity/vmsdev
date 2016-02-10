@@ -23,7 +23,13 @@ $dataId = '';
 if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
-?>
+
+    $companyList = CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name');
+    $companyList = array_unique($companyList);
+    $listsCom = implode('", "', $companyList);
+?>  
+    
+
 <style>
     div.form label {
         display: inline !important;
@@ -98,7 +104,7 @@ if ($this->action->id == 'update') {
                             <td style="width:160px;">&nbsp;</td>
                             <td style="width:240px;">
                                 <?php
-                                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name'));
+                                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name', 'class' => 'ui-autocomplete-input company-autocomplete', 'autocomplete' => 'on'));
                                 echo '<span class="required"> *</span><br>';
                                 echo $form->error($model, 'name');
                                 echo '<div id="Company_name_unique_em_" class="errorMessage" style="display: none">Company name has already been taken</div>';
@@ -367,6 +373,20 @@ $(document).ready(function() {
     });
     */
 });
+
+    $(function() {
+        var availableTags = ["<?php echo $listsCom; ?>"];
+        $(".company-autocomplete").autocomplete({
+            source: availableTags,
+            select: function(event, ui) {
+                event.preventDefault();
+                $(".company-autocomplete").val(ui.item.label);
+                //$('#typePostForm').val('contact');
+            }
+        });
+        $(".ui-front").css("z-index", 1051);
+    });
+
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();

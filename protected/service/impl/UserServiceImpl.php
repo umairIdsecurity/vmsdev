@@ -48,9 +48,12 @@ class UserServiceImpl implements UserService {
         }
 
 
-        if (!($user->save())) {
+        if (!($user->save())) 
+        {
             return false;
-        }else{
+        }
+        else
+        {
             /*if ($user->password_option==2)
                 User::model()->restorePassword($user['email']);*/
             #Send mail
@@ -71,7 +74,15 @@ class UserServiceImpl implements UserService {
                 EmailTransport::mail($to, $subject, $body, $headers);
             }
 
-            if (is_object($workstation)) {
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1204
+            if($user->role == Roles::ROLE_AIRPORT_OPERATOR || $user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR)
+            {
+                $session = new CHttpSession;
+                User::model()->saveWorkstation($user->id, $session['workstation'], $userLoggedIn->id);
+            }
+
+            if (is_object($workstation)) 
+            {
                 User::model()->saveWorkstation($user->id, $workstation->id, $userLoggedIn->id);
             }
         }

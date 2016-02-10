@@ -628,7 +628,8 @@ class User extends VmsActiveRecord {
             return false;
     }
 
-    public function saveWorkstation($userId, $workstationId, $currentUserId) {
+    public function saveWorkstation($userId, $workstationId, $currentUserId) 
+    {
 
         $post = new UserWorkstations;
         $post->user_id = $userId;

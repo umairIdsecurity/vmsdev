@@ -10,6 +10,10 @@
         $tenant = (isset($session['tenant']) && ($session['tenant'] != "")) ? $session['tenant'] : '';
     }
 
+    $companyList = CHtml::listData(Visitor::model()->findAllCompanyByTenant($tenant), 'id', 'name');
+    $companyList = array_unique($companyList);
+    $listsCom = implode('", "', $companyList);
+
 ?>
 
 <style type="text/css">
@@ -229,7 +233,7 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                                            <?php echo $form->textField($companyModel, 'name', array('placeholder' => 'Company Name','class'=>'form-control input-lg')); ?>
+                                            <?php echo $form->textField($companyModel, 'name', array('placeholder' => 'Company Name','class'=>'form-control input-lg ui-autocomplete-input company-autocomplete','autocomplete' => 'on')); ?>
                                         </div>
                                         <div class="errorMessage" id="companyNameErr" style="display:none;float:left"></div>
                                     </div>
@@ -427,6 +431,10 @@
 <!-- ************************************** -->
 <!-- ************************************************ -->
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  
 <script>
     $(document).ready(function() {
         
@@ -704,5 +712,18 @@
             } 
         });
 
+    });
+
+    $(function() {
+        var availableTags = ["<?php echo $listsCom; ?>"];
+        $(".company-autocomplete").autocomplete({
+            source: availableTags,
+            select: function(event, ui) {
+                event.preventDefault();
+                $(".company-autocomplete").val(ui.item.label);
+                //$('#typePostForm').val('contact');
+            }
+        });
+        $(".ui-front").css("z-index", 1051);
     });
 </script>

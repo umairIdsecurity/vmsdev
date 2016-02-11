@@ -16,7 +16,7 @@ $visitorName = $_GET['id'];
 
 $tenant_agent = "";
 if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-    $tenant_agent = "tenant_agent=" . $_GET["tenant_agent"] . " and";
+    $tenant_agent = "tenant_agent='" . $_GET["tenant_agent"] . "' AND";
 } 
 else {
     //$tenant_agent = "(tenant_agent IS NULL or tenant_agent =0 or tenant_agent='') and";
@@ -42,7 +42,8 @@ $tenant = '';
 
 
 $tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
-$conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
+//remove tenant_agent because of https://ids-jira.atlassian.net/browse/CAVMS-1157
+$conditionString = $tenant/*.$tenant_agent*/. " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
                  . "%' or first_name like '%" . $visitorName
                  . "%' or last_name like '%" . $visitorName
                  . "%' or email like '%" . $visitorName

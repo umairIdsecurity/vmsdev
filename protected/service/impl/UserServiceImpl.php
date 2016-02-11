@@ -75,7 +75,13 @@ class UserServiceImpl implements UserService {
             }
 
             //because of https://ids-jira.atlassian.net/browse/CAVMS-1204
-            if($user->role == Roles::ROLE_AIRPORT_OPERATOR || $user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR)
+            if($user->role == Roles::ROLE_AIRPORT_OPERATOR)
+            {
+                $session = new CHttpSession;
+                User::model()->saveWorkstation($user->id, $session['workstation'], $userLoggedIn->id);
+            }
+
+            if($user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR)
             {
                 $session = new CHttpSession;
                 User::model()->saveWorkstation($user->id, $session['workstation'], $userLoggedIn->id);

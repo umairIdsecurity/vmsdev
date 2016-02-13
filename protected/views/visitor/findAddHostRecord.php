@@ -872,7 +872,8 @@ $defaultKey = key($asicCardTypes);
         document.getElementById('findHostTableIframe').height = (newheight - 60) + "px";
     }
 
-    function sendHostForm() {
+    function sendHostForm() 
+    {
         if ($('#requestVerifyAsicSponsor').is(':checked') == true) {
             $("#visit_send_verfication_email").val("1"); // #id Exists in visitForm.php file
          } else {

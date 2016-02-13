@@ -77,20 +77,29 @@ class UserServiceImpl implements UserService {
             //because of https://ids-jira.atlassian.net/browse/CAVMS-1204
             if($user->role == Roles::ROLE_AIRPORT_OPERATOR)
             {
-                $session = new CHttpSession;
-                User::model()->saveWorkstation($user->id, $session['workstation'], $userLoggedIn->id);
+                if(Yii::app()->user->role == Roles::ROLE_SUPERADMIN)
+                {
+                    $userTenant = $user->tenant;
+                    $worksta = Workstation::model()->find('tenant=:tenant', array(':tenant'=>$userTenant));
+                    User::model()->saveWorkstation($user->id, $worksta['id'], $userLoggedIn->id);
+                }
+                else
+                {
+                    $session = new CHttpSession;
+                    User::model()->saveWorkstation($user->id, $session['workstation'], $userLoggedIn->id);
+                }
             }
-
-            if($user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR)
+            else if($user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR || $user->role == Roles::ROLE_AGENT_AIRPORT_ADMIN)
             {
-                $session = new CHttpSession;
-                User::model()->saveWorkstation($user->id, $session['workstation'], $userLoggedIn->id);
+                $userTenantAgent = $user->tenant_agent;
+                $worksta = Workstation::model()->find('tenant_agent=:tenant_agent', array(':tenant_agent'=>$userTenantAgent));
+                User::model()->saveWorkstation($user->id, $worksta->id, $userLoggedIn->id);
             }
-
-            if (is_object($workstation)) 
+            else if(is_object($workstation)) 
             {
                 User::model()->saveWorkstation($user->id, $workstation->id, $userLoggedIn->id);
             }
+            else{}
         }
         return true;
     }

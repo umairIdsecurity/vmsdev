@@ -45,7 +45,8 @@ class VisitorController extends Controller {
     /**
      * Creates a new model. Register and Preregister a visitor page
      */
-    public function actionCreate() {
+    public function actionCreate() 
+    {
         $session      = new CHttpSession;
         $model        = new Visitor;
         $userModel    = new User;

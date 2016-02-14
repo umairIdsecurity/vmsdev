@@ -134,8 +134,8 @@ $session = new CHttpSession;
 {
     /*margin: 7px 0 0;*/
     /*padding: 0;*/
-    margin-left:50%;margin-top:9%;
-    width: 70px;
+    margin-left:35%;margin-top:2%;
+    width: 100px;
 }
 
 .standardLogo img {
@@ -281,7 +281,7 @@ $session = new CHttpSession;
                                 <?php if(isset($session['tenant'])){
                                     $imageSource = Company::model()->getCurrentTenantImageSource();
                                     ?>
-                                    <img src="<?php echo $imageSource ?>" style="width: 70px" alt="Pre registration"/>
+                                    <img src="<?php echo $imageSource ?>"  alt="Pre registration"/>
                                 <?php } else { ?>
                                     <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.png" style="width: 60px" alt="Pre registration"/> 
                                 <?php } ?>

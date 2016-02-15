@@ -69,11 +69,10 @@ $result = CMap::mergeArray(
                     'class' => 'ext.yii-mail.YiiMail',
                     'transportType' => 'smtp',
                     'transportOptions' => array(
-                        'host' => 'smtp.gmail.com',
-                        'username' => 'vmsnotify@gmail.com',
-                        'password' => 'vms12345',
-                        'port' => '465',
-                        'encryption'=>'tls',
+                        'host' => 'mail.identitysecurity.com.au',
+                        'username' => 'test.mailer@identitysecurity.com.au',
+                        'password' => '~Mailer01',
+                        'port' => '110'
                     ),
                     'viewPath' => 'application.views.mail',
                 ),

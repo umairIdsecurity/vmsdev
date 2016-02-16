@@ -69,12 +69,15 @@ $result = CMap::mergeArray(
                     'class' => 'ext.yii-mail.YiiMail',
                     'transportType' => 'smtp',
                     'transportOptions' => array(
-                        'host' => 'mail.identitysecurity.com.au',
-                        'username' => 'test.mailer@identitysecurity.com.au',
-                        'password' => '~Mailer01',
-                        'port' => '110'
+                        'host' => 'webcloud49.au.syrahost.com',
+                        'username' => "test.mailer@identitysecurity.com.au",
+                        'password' =>"~Mailer01",
+                        'port' => '465',
+                        'encryption'=>'ssl',
                     ),
                     'viewPath' => 'application.views.mail',
+                    'logging' => true,
+                    'dryRun' => false,
                 ),
                 'ePdf' => array(
                     'class' => 'ext.yii-pdf.EYiiPdf',

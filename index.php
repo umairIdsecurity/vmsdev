@@ -16,6 +16,11 @@ if( (isset($_SERVER['HTTP_HOST']) && substr($_SERVER['HTTP_HOST'],0,5) =='vmspr'
     (isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg')
     ){
 
+    if(!isset($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO']==""){
+        header("Location: index.php/preregistration",302);
+        die();
+    }
+
     $config = require(dirname(__FILE__) . '/protected/config/prereg_main.php');
 
 

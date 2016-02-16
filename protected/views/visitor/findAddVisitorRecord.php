@@ -1236,23 +1236,23 @@ $model->identification_country_issued = 13;
             type: "POST",
             url: '<?php echo CHtml::normalizeUrl(array("visitor/create&view=1")); ?>',
             data: form,
-            success: function(data) {
+            success: function(data) 
+            {
 
-                if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
-
+                if ($("#selectedHostInSearchTable").val() != 0) 
+                { //if host is from search
                     $("#visitReasonFormField").val($("#Visit_reason").val());
                     $("#Visit_patient").val($("#hostId").val());
                     $("#Visit_host").val($("#hostId").val());
 
-
                     // if visitor is not from search;
-                    if ($("#selectedVisitorInSearchTable").val() == 0) {
+                    if ($("#selectedVisitorInSearchTable").val() == 0) 
+                    {
                         getLastVisitorId(function(data) {
                             populateVisitFormFields(); // Do what you want with the data returned
                         });
                     }
                 } else {
-
                     getLastVisitorId(function(data) {
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();

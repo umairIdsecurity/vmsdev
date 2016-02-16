@@ -81,7 +81,8 @@ class UserServiceImpl implements UserService {
                 {
                     $userTenant = $user->tenant;
                     $worksta = Workstation::model()->find('tenant=:tenant', array(':tenant'=>$userTenant));
-                    User::model()->saveWorkstation($user->id, $worksta['id'], $userLoggedIn->id);
+                    if($worksta)
+                        User::model()->saveWorkstation($user->id, $worksta['id'], $userLoggedIn->id);
                 }
                 else
                 {
@@ -92,8 +93,9 @@ class UserServiceImpl implements UserService {
             else if($user->role == Roles::ROLE_AGENT_AIRPORT_OPERATOR || $user->role == Roles::ROLE_AGENT_AIRPORT_ADMIN)
             {
                 $userTenantAgent = $user->tenant_agent;
-                $worksta = Workstation::model()->find('tenant_agent=:tenant_agent', array(':tenant_agent'=>$userTenantAgent));
-                User::model()->saveWorkstation($user->id, $worksta->id, $userLoggedIn->id);
+                $worksta = Workstation::model()->find('tenant_agent=:tenant_agent and tenant=:tenant', array(':tenant_agent'=>$userTenantAgent,':tenant'=>Yii::app()->user->tenant));
+                if($worksta)
+                    User::model()->saveWorkstation($user->id, $worksta->id, $userLoggedIn->id);
             }
             else if(is_object($workstation)) 
             {

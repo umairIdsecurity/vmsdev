@@ -336,7 +336,6 @@ function getCardType() {
 
         $(".btnBackTab2").click(function (e) {
             e.preventDefault();
-
             showHideTabs('selectCardB', 'selectCardA', 'selectCard', 'findVisitorA', 'findVisitor', 'findHostA', 'findHost');
             hidePreviousPage('step2Tab', 'stepTab');
         });
@@ -346,11 +345,14 @@ function getCardType() {
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
             hidePreviousPage('step3Tab', 'stepTab2');
         });
+
         $(".btnBackTab4").click(function (e) {
             e.preventDefault();
+            
             showHideTabs('findHostB', 'findHostA', 'findHost', 'selectCardA', 'selectCard', 'logVisitA', 'logVisit');
             hidePreviousPage('step4Tab', 'stepTab3');
         });
+
         function showHideTabs(showThisId, hideThisId, showThisRow, hideOtherA, showOtherRowA, hideOtherB, showOtherRowB) {
             $("#" + showThisId).click(); // findvisitorB dt
             $("#" + showThisId).show(); //findvisitorB dt

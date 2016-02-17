@@ -89,7 +89,7 @@ class PreregistrationController extends Controller
 		$session['stepTitle'] = 'PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)';
 		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration'>Preregister for a VIC</a>";
 
-		unset($session['requsetForVerificationEmail']);
+		unset($session['requestForVerificationEmail']);
 
 		$model = '';
 		if(isset($session['workstation']) && $session['workstation'] != ''){

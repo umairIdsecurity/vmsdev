@@ -61,13 +61,14 @@ $defaultKey = key($asicCardTypes);
             <input type="text" id="selectedHostInSearchTable" value="0"/>
         </div>
         <div class="register-a-visitor-buttons-div" id="subm" style="padding-right:20px;text-align: right;">
-            <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+            <!-- <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/> -->
+            <input type="button" onclick="javascript:backFillResetAsicForm();return false;" value="Back" id="btnBackTab3" class="neutral visitor-backBtn">
             <input type="button" id="clicktabB2" value="Save and Continue" class="actionForward"/>
         </div>
     </div>
 
     <!-- Tab panes -->
-    <div class="tab-content">
+    <div class="tab-content" id="addhostTabContent">
         <div role="tabpanel" class="tab-pane active" id="addhost">
 
             <div id="findAddHostRecordDiv" class="findAddHostRecordDiv" data-ng-app="PwordForm">
@@ -955,7 +956,18 @@ $defaultKey = key($asicCardTypes);
             if(obj.hasOwnProperty(prop))
                 return false;
         }
-
         return true;
     }
+
+    /*because of https://ids-jira.atlassian.net/browse/CAVMS-1156*/
+    function backFillResetAsicForm()
+    {
+        $('#addhostTabContent').show();
+        $("#searchHostTableDiv").hide();
+        $("#subm").hide();
+        $('#searchost').show();
+        $('#search-host').val('');
+        $('#search-host').placeholder = 'Search ASIC Sponsors by name, email or ASIC no.';
+    }
+
 </script>

@@ -797,7 +797,8 @@ $model->identification_country_issued = 13;
         return true;
     }
 
-    function afterValidate(form, data, hasError) {
+    function afterValidate(form, data, hasError) 
+    {
         if(is_error) return false;
         $("#selectedVisitorInSearchTable").val("");
         $("#register-host-form").show();
@@ -815,7 +816,7 @@ $model->identification_country_issued = 13;
         var bod_field = $("#vic-birth-date-field:hidden");
         if (bod_field.length != 1) {
 
-/*            var dt = new Date();
+        /* var dt = new Date();
             if(dt.getFullYear() < $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");

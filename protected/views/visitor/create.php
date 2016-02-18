@@ -348,8 +348,7 @@ function getCardType() {
 
         $(".btnBackTab4").click(function (e) {
             e.preventDefault();
-            
-            showHideTabs('findHostB', 'findHostA', 'findHost', 'selectCardA', 'selectCard', 'logVisitA', 'logVisit');
+            showHideTabs('findHostB', 'findHost', 'findHostA', 'selectCardA', 'selectCard', 'logVisitA', 'logVisit');
             hidePreviousPage('step4Tab', 'stepTab3');
         });
 

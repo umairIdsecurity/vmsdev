@@ -1196,6 +1196,7 @@ $model->identification_country_issued = 13;
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
+                            /*alert("sendHostForm from addReasonInDropdown in findAddVisitorRecord");*/
                             sendHostForm();
                         }
                     }
@@ -1258,7 +1259,8 @@ $model->identification_country_issued = 13;
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
-                            sendHostForm();
+                            /*alert("sendHostForm from sendVisitorForm in findAddVisitorRecord");
+                            sendHostForm();*/
                         }
                     });
 
@@ -1293,7 +1295,9 @@ $model->identification_country_issued = 13;
             });
         }
         else {
-            sendVisitorForm();
+            /*alert("sendVisitorForm from sendReasonForm in findAddVisitorRecord");
+            sendVisitorForm();*/
+            sendHostForm();
         }
     }
 

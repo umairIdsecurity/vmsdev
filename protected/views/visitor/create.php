@@ -724,6 +724,9 @@ function checkAlreadyVisitorProfile()
                         getHostCompanyWithSameTenant($("#Visitor_tenant").val());
                     }
 
+                    //***************************************************
+                    sendVisitorForm();
+                    //***************************************************
                     $("#clicktabB").click();
                 }
             });
@@ -774,9 +777,11 @@ function checkHostEmailIfUnique() {
                             sendReasonForm();
                         }
                         else if ($("#selectedVisitorInSearchTable").val() == 0) {
-                            sendVisitorForm();
+                            /*alert("sendVisitorForm from checkHostEmailIfUnique in create");
+                            sendVisitorForm();*/
+                            sendHostForm();
                         } else {
-
+                            /*alert("sendHostForm from checkHostEmailIfUnique in create");*/
                             sendHostForm();
                         }
                     } else {

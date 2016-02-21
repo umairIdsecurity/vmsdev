@@ -45,40 +45,10 @@ $result = CMap::mergeArray(
                 'application.extensions.yii-mail.*',
                 'application.models.preregistration.*',
             ),
-            'modules' => array(
-                // uncomment the following to enable the Gii tool
-                'api',
-                'gii' => array(
-                    'class' => 'system.gii.GiiModule',
-                    'password' => '12345',
-                    // If removed, Gii defaults to localhost only. Edit carefully to taste.
-                    'ipFilters' => array('127.0.0.1', '::1'),
-                ),
-            ),
+
             // application components
             'components' => array(
-                /* 'session' => array (
-                  'class'=> 'CDbHttpSession',
-                  'connectionID' => 'db',
-                  'sessionTableName' => 'yiisession',
-                  'timeout' => 10,
-                  'autoStart'=>false
-                  ),
-                 */
-                'mail'=>array(
-                    'class' => 'ext.yii-mail.YiiMail',
-                    'transportType' => 'smtp',
-                    'transportOptions' => array(
-                        'host' => 'webcloud49.au.syrahost.com',
-                        'username' => "test.mailer@identitysecurity.com.au",
-                        'password' =>"~Mailer01",
-                        'port' => '465',
-                        'encryption'=>'ssl',
-                    ),
-                    'viewPath' => 'application.views.mail',
-                    'logging' => true,
-                    'dryRun' => false,
-                ),
+
                 'ePdf' => array(
                     'class' => 'ext.yii-pdf.EYiiPdf',
                     'params' => array(

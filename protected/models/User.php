@@ -404,7 +404,9 @@ class User extends VmsActiveRecord {
                 break;
              // Show in Listing   
             case Roles::ROLE_AGENT_AIRPORT_ADMIN:
-                 $rolein = '('.     Roles::ROLE_AGENT_OPERATOR . ',' .
+                 $rolein = '('.     
+                                    Roles::ROLE_AGENT_AIRPORT_ADMIN . ',' . //because of https://ids-jira.atlassian.net/browse/CAVMS-1236
+                                    Roles::ROLE_AGENT_OPERATOR . ',' .
                                     Roles::ROLE_STAFFMEMBER . ',' .
                                     Roles::ROLE_VISITOR . ', '.
                                     Roles::ROLE_AGENT_AIRPORT_OPERATOR. ')';

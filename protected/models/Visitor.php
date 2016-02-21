@@ -128,7 +128,8 @@ class Visitor extends CActiveRecord {
         'APPROVED_MANAGER' => 'Approved Manager',
         'IMMICARD' => 'ImmiCard',
         'HIGH_RISK_WORK_LICENCE' => 'High Risk Work Licence',
-        'SENIORS_CARD' => 'Seniors Card',      
+        'SENIORS_CARD' => 'Seniors Card', 
+        'SECURITY_LICENCE' => 'Security Licence', 
     );
 
     public static $STREET_TYPES = array(

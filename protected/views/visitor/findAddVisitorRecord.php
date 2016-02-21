@@ -797,7 +797,8 @@ $model->identification_country_issued = 13;
         return true;
     }
 
-    function afterValidate(form, data, hasError) {
+    function afterValidate(form, data, hasError) 
+    {
         if(is_error) return false;
         $("#selectedVisitorInSearchTable").val("");
         $("#register-host-form").show();
@@ -815,7 +816,7 @@ $model->identification_country_issued = 13;
         var bod_field = $("#vic-birth-date-field:hidden");
         if (bod_field.length != 1) {
 
-/*            var dt = new Date();
+        /* var dt = new Date();
             if(dt.getFullYear() < $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
@@ -1195,6 +1196,7 @@ $model->identification_country_issued = 13;
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
+                            /*alert("sendHostForm from addReasonInDropdown in findAddVisitorRecord");*/
                             sendHostForm();
                         }
                     }
@@ -1257,7 +1259,8 @@ $model->identification_country_issued = 13;
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
-                            sendHostForm();
+                            /*alert("sendHostForm from sendVisitorForm in findAddVisitorRecord");
+                            sendHostForm();*/
                         }
                     });
 
@@ -1292,7 +1295,9 @@ $model->identification_country_issued = 13;
             });
         }
         else {
-            sendVisitorForm();
+            /*alert("sendVisitorForm from sendReasonForm in findAddVisitorRecord");
+            sendVisitorForm();*/
+            sendHostForm();
         }
     }
 

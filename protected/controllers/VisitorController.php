@@ -993,9 +993,10 @@ class VisitorController extends Controller {
     /**
      * Add asic sponsor for Log Visit process
      */
-    public function actionAddAsicSponsor() {
-        
+    public function actionAddAsicSponsor() 
+    {
         // If asic sponsor existed
+        $model='';
         if (isset($_POST['User']['email']) && !empty($_POST['User']['email'])) { 
 
             $userEmail = $_POST['User']['email'];

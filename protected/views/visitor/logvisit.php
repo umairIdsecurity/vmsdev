@@ -93,7 +93,8 @@ if ($visitModel->time_in != '') {
 
         });
 
-        $("#submitAllForms").click(function(e) {
+        $("#submitAllForms").click(function(e) 
+        {
             e.preventDefault();
             if ($("#proposedDateOut").val() == '') {
                 $("#preregisterdateoutError").show();
@@ -127,8 +128,10 @@ if ($visitModel->time_in != '') {
                         sendReasonForm();
                     }
                     else if ($("#selectedVisitorInSearchTable").val() == 0) {
+                        /*alert("sendVisitorForm from submitAllForms in logvisit");*/
                         sendVisitorForm();
                     } else {
+                        /*alert("sendHostForm from submitAllForms in logvisit");*/
                         sendHostForm();
                     }
                 }

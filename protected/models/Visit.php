@@ -1262,7 +1262,7 @@ class Visit extends CActiveRecord {
     public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id = "") {
         $criteria = new CDbCriteria;
         $this->visitor = ($visitor_id !="") ? $visitor_id : $this->visitor;
-        $criteria->addCondition(" ( id != " . $current_visit_id . "  ) AND "
+        $criteria->addCondition(" ( id != '" . $current_visit_id . "'  ) AND "
                 . " tenant = " . Yii::app()->user->tenant . " "
                 . " AND (visit_status != " . VisitStatus::SAVED . " AND visit_status != " . VisitStatus::PREREGISTERED . "  ) "
                 . " AND visitor = '" . $this->visitor . "' AND is_deleted = 0");

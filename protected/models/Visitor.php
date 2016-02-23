@@ -806,14 +806,21 @@ class Visitor extends CActiveRecord {
 
     public function getTotalVisit()
     {
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1241
         if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
             $totalVisit = 0;
             $activeVisits = $this->activeVisits;
             foreach($activeVisits as $visit) {
-                $totalVisit += $visit->visitCounts;
+                $totalVisit += 1;
+                //$totalVisit += $visit->visitCounts;
             }
             if($totalVisit > 0 ) {
-                return $totalVisit;
+                if( $totalVisit <= 28 ) {
+                    return $totalVisit;
+                } else {
+                    return 28;
+                }
+                //return $totalVisit;
             } else {
                 return "";
             }
@@ -827,7 +834,8 @@ class Visitor extends CActiveRecord {
         return Visit::model()->findAllByAttributes([
             'visitor' => $this->id,
             'reset_id'      => null,
-            'negate_reason' => null
+            'negate_reason' => null,
+            'visit_status' => VisitStatus::CLOSED
         ]);
     }
 

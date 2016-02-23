@@ -842,7 +842,8 @@ class VisitController extends Controller {
         ));
     }
 
-    public function actionVicTotalVisitCount() {
+    public function actionVicTotalVisitCount() 
+    {
         $merge = new CDbCriteria;
         $merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 

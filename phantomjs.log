@@ -36,3 +36,20 @@
 [ERROR - 2015-12-29T03:38:15.662Z] GhostDriver - main.fail - {"line":85,"sourceURL":":/ghostdriver/main.js","stack":"\tat global code (:/ghostdriver/main.js:85:56)"}
 
   :262 in error
+<<<<<<< HEAD
+[INFO  - 2016-02-21T05:09:37.164Z] GhostDriver - Main - running on port 8643
+[INFO  - 2016-02-21T05:09:38.744Z] Session [4e9e6300-d859-11e5-bae7-13f9c8c2b978] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.0.0 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2016-02-21T05:09:38.744Z] Session [4e9e6300-d859-11e5-bae7-13f9c8c2b978] - page.customHeaders:  - {}
+[INFO  - 2016-02-21T05:09:38.744Z] Session [4e9e6300-d859-11e5-bae7-13f9c8c2b978] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.0.0","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-10.9 (Mavericks)-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2016-02-21T05:09:38.744Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: 4e9e6300-d859-11e5-bae7-13f9c8c2b978
+[INFO  - 2016-02-21T05:52:21.222Z] GhostDriver - Main - running on port 8643
+[INFO  - 2016-02-21T05:52:22.390Z] Session [46ac0700-d85f-11e5-8d06-cfab9d8acd7f] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.0.0 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2016-02-21T05:52:22.390Z] Session [46ac0700-d85f-11e5-8d06-cfab9d8acd7f] - page.customHeaders:  - {}
+[INFO  - 2016-02-21T05:52:22.390Z] Session [46ac0700-d85f-11e5-8d06-cfab9d8acd7f] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.0.0","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-10.9 (Mavericks)-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2016-02-21T05:52:22.390Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: 46ac0700-d85f-11e5-8d06-cfab9d8acd7f
+=======
+[INFO  - 2016-02-21T02:41:41.960Z] GhostDriver - Main - running on port 8643
+[ERROR - 2016-02-21T02:54:23.263Z] GhostDriver - main.fail - {"line":85,"sourceURL":":/ghostdriver/main.js","stack":"\tat global code (:/ghostdriver/main.js:85:56)"}
+
+  :262 in error
+>>>>>>> c21dd71abc0f3e4733b8a6fc3fa5123693648f36

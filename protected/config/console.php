@@ -31,20 +31,7 @@ return CMap::mergeArray(
                     ),
                 ),
             ),
-            'mail'=>array(
-                'class' => 'ext.yii-mail.YiiMail',
-                'transportType' => 'smtp',
-                'transportOptions' => array(
-                    'host' => 'webcloud49.au.syrahost.com',
-                    'username' => "test.mailer@identitysecurity.com.au",
-                    'password' =>"~Mailer01",
-                    'port' => '465',
-                    'encryption'=>'ssl',
-                ),
-                'viewPath' => 'application.views.mail',
-                'logging' => true,
-                'dryRun' => false,
-            ),
+
             'foundation' => array("class" => "ext.foundation.components.Foundation"),
             'widgetFactory' => array(
                 'widgets' => array(

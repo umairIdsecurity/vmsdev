@@ -8,13 +8,19 @@ else
 fi
 
 #start phantomjs
+echo starting phantomjs
+
 phantomjs --webdriver=8643 >> phantomjs.log &
 phantomjs_pid=$!
 
+
 #run the tests
-behat --config=test/specs/tools/behat.yml --profile="$profile" --format=pretty
+echo startong behat
+behat --config=test/specs/tools/behat.yml --profile="$profile" --format=pretty --verbose --expand
+echo behat completed
 
 #close phantomjs
+echo stopping phantomjs
 kill $phantomjs_pid
 
 

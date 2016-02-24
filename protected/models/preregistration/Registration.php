@@ -566,7 +566,7 @@ class Registration extends CActiveRecord {
 
     public function checkAsicStatusById($id=0) {
         $allow = 1;
-        $visitor = Visitor::model()->findByPk($id);
+        $visitor = Registration::model()->findByPk($id);
 
         if($visitor){
             //If CardStatus is ASIC DENIED Return FALSE
@@ -582,7 +582,7 @@ class Registration extends CActiveRecord {
 
         $Criteria = new CDbCriteria();
         $Criteria->condition = "email = '$email'";
-        $visitorId = Visitor::model()->findAll($Criteria);
+        $visitorId = Registration::model()->findAll($Criteria);
 
         foreach ($visitorId as $index => $value) {
             $aArray[] = array(

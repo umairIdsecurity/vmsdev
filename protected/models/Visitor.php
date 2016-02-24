@@ -700,9 +700,8 @@ class Visitor extends CActiveRecord {
         //$tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
 
-        if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].") and company_type = 3  and (id != 1 and id != " . $tenantId. ")";
-        }
+        if(isset(Yii::app()->user->role) && Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
+                $Criteria->condition = "(tenant = '" . $session['id']  . "' OR tenant = '".$session['tenant']."') and company_type = 3  and (id != 1 and id != '" . $tenantId. "')";
         
         $result =  Company::model()->findAll($Criteria);
         return $result;

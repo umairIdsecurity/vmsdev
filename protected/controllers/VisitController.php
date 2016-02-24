@@ -400,8 +400,9 @@ class VisitController extends Controller {
         $reasonModel   = VisitReason::model()->findByPk($model->reason);
         $patientModel  = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
+
         $visitCount    = Visit::model()->getVisitCount($model->id);
-        
+
         $newPatient    = new Patient;
         $newHost       = new User;
 
@@ -677,6 +678,8 @@ class VisitController extends Controller {
         // Get visit count and remaining days
         $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
+
+
         $this->render('visitordetail', array(
             'model'         => $model,
             'visitorModel'  => $visitorModel ? $visitorModel : new Visitor,
@@ -1291,12 +1294,15 @@ class VisitController extends Controller {
 
         //if ($visitorModel->totalVisit > 0) {
         $activeVisit = $visitorModel->activeVisits;
+
         $resetErrorMessage = '';
         foreach ($activeVisit as $item) {
             if ($item->visit_status == VisitStatus::ACTIVE) {
                 $resetErrorMessage = 'Please close the active visit before resetting visit count.';
+                break;
             }
         }
+
         if ($resetErrorMessage == '') {
             $visitorModel->visitor_card_status = 3;
             $visitorModel->update();

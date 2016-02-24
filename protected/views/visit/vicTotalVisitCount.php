@@ -51,7 +51,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'type' => 'raw',
-            'value' => '"<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>"',
+            'value' => '$data->totalvisit ? "<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>" : "Reset"',
+            //'value' => '"<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>"',
         ),
         array(
             'type' => 'raw',
@@ -228,6 +229,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     if(! data || data == '') {
                         $.fn.yiiGridView.update('vic-total-visit-count');
                     } else {
+                        alert(data);
                         //commented because of the 
                         //comment "When I reset visit 
                         //count for active visit then system is logging me 

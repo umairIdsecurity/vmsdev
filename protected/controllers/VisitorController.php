@@ -983,10 +983,12 @@ class VisitorController extends Controller {
         $criteria->compare('visitor', $id);
         $criteria->addCondition('negate_reason IS NULL');
         $criteria->addCondition('reset_id IS NULL');
+        $criteria->addCondition('visit_status='.VisitStatus::CLOSED);
 
         $dataProvider=new CActiveDataProvider($model, array(
             'criteria'=>$criteria,
         ));
+
         return $this->renderPartial('activeVisit',array('dataProvider' => $dataProvider));
     }
 

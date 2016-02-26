@@ -26,6 +26,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'headerHtmlOptions' =>  array('style'=>'width:5px; min-width: 0px !important;', 'class'=>'visit-selected-header'),
         ),
         array(
+            'header' => 'Card No',
             'name' => 'card',
             'value' => 'isset($data->card0->card_number) ? $data->card0->card_number : ""',
             'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
@@ -44,12 +45,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
         ),
-        array(
+        /*array(
             'name' => 'host',
             'value' => 'User::model()->findByPk($data->host) != NULL ? User::model()->findByPk($data->host)->first_name . " " . User::model()->findByPk($data->host)->last_name : ""',
             'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
-        ),
+        ),*/
         array(
             'name' =>   'date_check_out',
             'header' => 'Date Out',
@@ -68,6 +69,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => '$data->visitStatus->name',
             'htmlOptions' => array('style'=>'width:15px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:15px; min-width: 0px !important;'),
+        ),
+        array(
+            'header' => 'Visit Count',
+            'value' => '$data->visitCountsForNegate',
+            'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
+            'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
         ),
 
     )

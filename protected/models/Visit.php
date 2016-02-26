@@ -1199,7 +1199,10 @@ class Visit extends CActiveRecord {
             }
         }
         return 0;
-        /*
+    }
+
+    public function getVisitCountsForNegate()
+    {
         if ($this->reset_id || $this->negate_reason) {
             return 0;
         }
@@ -1237,13 +1240,13 @@ class Visit extends CActiveRecord {
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
                 break;
         }
-          $totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
-          // If visit is greater than 28 days then send 28
-          if( $totalCount <= 28 ) {
-              return $totalCount;
-          } else {
-              return 28;
-          }*/
+        $totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
+            // If visit is greater than 28 days then send 28
+        if( $totalCount <= 28 ) {
+            return $totalCount;
+        } else {
+            return 28;
+        }
     }
 
     public function getRemainingDays() 

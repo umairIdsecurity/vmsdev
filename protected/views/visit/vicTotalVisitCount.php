@@ -32,9 +32,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'totalcount',
-            'value' => '$data->totalvisit ? $data->totalvisit : 0',
+            'value' => '$data->totalVisit ? $data->totalVisit : 0',
             'header' => 'Total Visits',
-            'filter'=>CHtml::activeTextField($model, 'totalvisit', array('placeholder'=>'Total Visits', 'disabled' => 'disabled')),
+            'filter'=>CHtml::activeTextField($model, 'totalVisit', array('placeholder'=>'Total Visits', 'disabled' => 'disabled')),
         ),
         array(
             'name' => 'first_name',
@@ -51,7 +51,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'type' => 'raw',
-            'value' => '$data->totalvisit ? "<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>" : "Reset"',
+            'value' => '$data->totalVisit ? "<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>" : "Reset"',
             //'value' => '"<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>"',
         ),
         array(

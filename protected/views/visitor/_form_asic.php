@@ -388,7 +388,8 @@ if ($this->action->id == 'update') {
                                             minYear: (new Date().getFullYear()-100),
                                             maxYear: (new Date().getFullYear()-10),
                                             smartDays: true,
-                                            customClass: 'date_of_birth_class'
+                                            customClass: 'date_of_birth_class',
+                                            namePrefix: 'date_of_birth'
                                         });
                                     });
                                 </script>

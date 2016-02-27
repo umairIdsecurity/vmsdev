@@ -75,6 +75,7 @@
         getTemplate: function() {
             var tpl = this.options.template;
             var customClass = this.options.customClass;
+            var namePrefix = this.options.namePrefix;
 
             //first pass
             $.each(this.map, function(k, v) {
@@ -92,8 +93,8 @@
             $.each(this.map, function(k, v) {
                 v = v[0];
                 var token = v.length > 1 ? v.substring(1, 2) : v;
-                    
-                tpl = tpl.replace('{'+token+'}', '<select class="'+k+' '+customClass+'"></select>');
+
+                tpl = tpl.replace('{'+token+'}', '<select class="'+k+' '+customClass+'" id="'+namePrefix+'_'+k+'" ></select>');
             });   
 
             return tpl;
@@ -482,6 +483,7 @@
         firstItem: 'empty', //'name', 'empty', 'none'
         errorClass: null,
         customClass: '',
+        namePrefix: '',
         roundTime: true, // whether to round minutes and seconds if step > 1
         smartDays: false // whether days in combo depend on selected month: 31, 30, 28
     };

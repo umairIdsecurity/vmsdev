@@ -62,6 +62,7 @@ class FeatureContext extends MinkContext
     }
 
 
+
     /**
      * @When /^I wait for "([^"]*)" to appear$/
      * @Then /^I should see "([^"]*)" appear$/
@@ -164,8 +165,37 @@ class FeatureContext extends MinkContext
             $i++;
             if($i==intval($number)){
                 $field->selectOption($optionElement->getValue());
+                return;
             }
         }
+    }
+
+    /**
+     * @Then /^I select  "([^"]*)" from  "([^"]*)"$/
+     */
+    public function iSelectValueFromSelect($value,$select){
+
+        $field = $this->getSession()->getPage()->findField($select);
+        $optionElements = $field->findAll('css','option');
+
+        foreach ($optionElements as $optionElement) {
+            if($optionElement->getValue() == $value || $optionElement->getText() == $value){
+                $field->selectOption($optionElement->getValue());
+                return;
+            }
+        }
+    }
+
+
+    /**
+     * @Then /^I fill in date "([^"]*)" with "([^"]*)"$/
+     */
+    public function iFillDateCombos($name,$date){
+        $parts = explode('-',$date);
+        $this->iSelectValueFromSelect($parts[0],$name."_day");
+        $this->iSelectValueFromSelect($parts[1],$name."_month");
+        $this->iSelectValueFromSelect($parts[2],$name."_year");
+
     }
 
     /**
@@ -178,6 +208,8 @@ class FeatureContext extends MinkContext
         ");
 
     }
+
+
     /**
      * @Then /^I edit "([^"]*)"$/
      */
@@ -193,6 +225,7 @@ class FeatureContext extends MinkContext
             $update->click();
         }
     }
+
 
     /**
      * @Then /^I delete "([^"]*)"$/

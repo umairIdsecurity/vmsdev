@@ -22,5 +22,10 @@ uploads/card_lost_declaration
 /protected/runtime/gii-1.1.14/ModelCode.php
 /protected/runtime/gii-1.1.14/ControllerCode.php
 *.phar
+/uploads/company_logo/**
+/uploads/visitor/**
+/uploads/*.csv
+
+
 phantomjs.log
 test/specs/tools/behat_results.xml

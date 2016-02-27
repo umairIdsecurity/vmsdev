@@ -2,7 +2,6 @@
 .idea/**
 composer.phar
 /vendor/**
-**/vendor/**
 **/bin/**
 /build/**
 /protected/runtime/*.log*

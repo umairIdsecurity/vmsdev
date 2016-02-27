@@ -1179,11 +1179,36 @@ class Visit extends CActiveRecord {
      * Visit Count method
      * @return int
      */
-    public function getVisitCounts() {
+    public function getVisitCounts() 
+    {
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1242
+        $totalVisit = 0;
+        $closedVisits = Visit::model()->findAllByAttributes([
+            'visitor' => $this->visitor,
+            'reset_id'      => null,
+            'negate_reason' => null,
+            'is_deleted' => 0,
+            'visit_status' => VisitStatus::CLOSED
+        ]);
+        foreach($closedVisits as $visit) {
+            $totalVisit += 1;
+        }
+        if($totalVisit > 0 ) 
+        {
+            if( $totalVisit <= 28 ) {
+                return $totalVisit;
+            } else {
+                return 28;
+            }
+        }
+        return 0;
+    }
+
+    public function getVisitCountsForNegate()
+    {
         if ($this->reset_id || $this->negate_reason) {
             return 0;
         }
-
         $dateIn = new DateTime($this->date_check_in);
         $dateOut = new DateTime($this->date_check_out);
         $dateNow = new DateTime(date('Y-m-d'));
@@ -1218,16 +1243,17 @@ class Visit extends CActiveRecord {
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
                 break;
         }
-          $totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
-          // If visit is greater than 28 days then send 28
-          if( $totalCount <= 28 ) {
-              return $totalCount;
-          } else {
-              return 28;
-          }
+        $totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
+            // If visit is greater than 28 days then send 28
+        if( $totalCount <= 28 ) {
+            return $totalCount;
+        } else {
+            return 28;
+        }
     }
 
-    public function getRemainingDays() {
+    public function getRemainingDays() 
+    {
         $dateNow = new DateTime(date('Y-m-d'));
         $dateOut = new DateTime($this->date_check_out);
         $dateIn  = new DateTime($this->date_check_in);
@@ -1265,7 +1291,7 @@ class Visit extends CActiveRecord {
     public function getOldVisitsCountForThisYear($current_visit_id, $visitor_id = "") {
         $criteria = new CDbCriteria;
         $this->visitor = ($visitor_id !="") ? $visitor_id : $this->visitor;
-        $criteria->addCondition(" ( id != " . $current_visit_id . "  ) AND "
+        $criteria->addCondition(" ( id != '" . $current_visit_id . "'  ) AND "
                 . " tenant = " . Yii::app()->user->tenant . " "
                 . " AND (visit_status != " . VisitStatus::SAVED . " AND visit_status != " . VisitStatus::PREREGISTERED . "  ) "
                 . " AND visitor = '" . $this->visitor . "' AND is_deleted = 0");

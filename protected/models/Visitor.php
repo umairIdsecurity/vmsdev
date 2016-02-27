@@ -713,9 +713,8 @@ class Visitor extends CActiveRecord {
         //$tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
 
-        if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].") and company_type = 3  and (id != 1 and id != " . $tenantId. ")";
-        }
+        if(isset(Yii::app()->user->role) && Yii::app()->user->role != Roles::ROLE_SUPERADMIN)
+                $Criteria->condition = "(tenant = '" . $session['id']  . "' OR tenant = '".$session['tenant']."') and company_type = 3  and (id != 1 and id != '" . $tenantId. "')";
         
         $result =  Company::model()->findAll($Criteria);
         return $result;
@@ -819,20 +818,27 @@ class Visitor extends CActiveRecord {
 
     public function getTotalVisit()
     {
-        if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1241
+        //if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
             $totalVisit = 0;
-            $activeVisits = $this->activeVisits;
-            foreach($activeVisits as $visit) {
-                $totalVisit += $visit->visitCounts;
+            $closedVisits = $this->closedVisits;
+            foreach($closedVisits as $visit) {
+                $totalVisit += 1;
+                //$totalVisit += $visit->visitCounts;
             }
             if($totalVisit > 0 ) {
-                return $totalVisit;
-            } else {
+                if( $totalVisit <= 28 ) {
+                    return $totalVisit;
+                } else {
+                    return 28;
+                }
+                //return $totalVisit;
+            } //else {
                 return "";
-            }
-        } else {
-            return "";
-        }
+            //}
+        //} else {
+            //return "";
+       // }
     }
 
     public function getActiveVisits()
@@ -840,7 +846,19 @@ class Visitor extends CActiveRecord {
         return Visit::model()->findAllByAttributes([
             'visitor' => $this->id,
             'reset_id'      => null,
-            'negate_reason' => null
+            'negate_reason' => null,
+            'is_deleted' => 0
+        ]);
+    }
+
+    public function getClosedVisits()
+    {
+        return Visit::model()->findAllByAttributes([
+            'visitor' => $this->id,
+            'reset_id'      => null,
+            'negate_reason' => null,
+            'is_deleted' => 0,
+            'visit_status' => VisitStatus::CLOSED
         ]);
     }
 

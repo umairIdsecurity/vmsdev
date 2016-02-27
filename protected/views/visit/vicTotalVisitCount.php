@@ -32,9 +32,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'totalcount',
-            'value' => '$data->totalvisit ? $data->totalvisit : 0',
+            'value' => '$data->totalVisit ? $data->totalVisit : 0',
             'header' => 'Total Visits',
-            'filter'=>CHtml::activeTextField($model, 'totalvisit', array('placeholder'=>'Total Visits', 'disabled' => 'disabled')),
+            'filter'=>CHtml::activeTextField($model, 'totalVisit', array('placeholder'=>'Total Visits', 'disabled' => 'disabled')),
         ),
         array(
             'name' => 'first_name',
@@ -51,7 +51,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'type' => 'raw',
-            'value' => '"<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>"',
+            'value' => '$data->totalVisit ? "<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>" : "Reset"',
+            //'value' => '"<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>"',
         ),
         array(
             'type' => 'raw',
@@ -228,6 +229,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     if(! data || data == '') {
                         $.fn.yiiGridView.update('vic-total-visit-count');
                     } else {
+                        alert(data);
                         //commented because of the 
                         //comment "When I reset visit 
                         //count for active visit then system is logging me 

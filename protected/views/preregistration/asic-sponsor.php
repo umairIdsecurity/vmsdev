@@ -10,7 +10,7 @@
         $tenant = (isset($session['tenant']) && ($session['tenant'] != "")) ? $session['tenant'] : '';
     }
 
-    $companyList = CHtml::listData(Visitor::model()->findAllCompanyByTenant($tenant), 'id', 'name');
+    $companyList = CHtml::listData(Registration::model()->findAllCompanyByTenant($tenant), 'id', 'name');
     $companyList = array_unique($companyList);
     $listsCom = implode('", "', $companyList);
 

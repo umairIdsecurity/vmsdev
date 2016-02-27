@@ -74,7 +74,11 @@ class Company extends CActiveRecord {
                 array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
                 array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
                 array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
-                 array("email_address", "unique", 'except'=>array("company_contact_update"), 'message'=>"Email already exist."),
+                 
+                //array("email_address", "unique", 'except'=>array("company_contact_update"), 'message'=>"Email already exist."),
+                array('email_address','unique',
+                                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1',
+                                    'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant'])),'except'=>array("company_contact_update")),
                     
                 array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
                 array('password_requirement,password_option,user_password','safe'),
@@ -112,7 +116,6 @@ class Company extends CActiveRecord {
 		else
         {
 			return array(
- 
                             array('name', 'required','message'=>'Please complete {attribute}'),
                             array("name", "check_unique_name", 'company_name'=>$this->name, 'except'=>array('company_contact_update')),
                             array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
@@ -121,7 +124,12 @@ class Company extends CActiveRecord {
                             array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
                             array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
                             array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
-                            array("email_address", "unique", 'except'=>array("company_contact_update")),
+                            
+                            //array("email_address", "unique", 'except'=>array("company_contact_update")),
+                            array('email_address','unique',
+                                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1',
+                                    'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant'])),'except'=>array("company_contact_update")),
+
                             array('code', 'required', 'except' => 'preregistration', 'message'=>'Please complete {attribute}'),
                             array('email_address , mobile_number', 'required' , 'on' => 'updatetenant', 'message'=>'Please complete {attribute}'),
                             // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),

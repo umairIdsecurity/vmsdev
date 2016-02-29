@@ -675,9 +675,30 @@ class VisitController extends Controller {
             }
         }
 
+        //introduced because of https://ids-jira.atlassian.net/browse/CAVMS-1241, 1242 and 1243
+        $totalVisit = 0;
+        $remainingDays = 0;
+        $closedVisits = Visit::model()->findAllByAttributes([
+            'visitor' => $model->visitor,
+            'reset_id'      => null,
+            'negate_reason' => null,
+            'is_deleted' => 0,
+            'visit_status' => VisitStatus::CLOSED
+        ]);
+        foreach($closedVisits as $visit) {
+            $totalVisit += $visit->visitCounts;
+        }
+        if($totalVisit > 28 ) {
+            $totalVisit = 28;
+        } 
+        $remainingDays = 28 - $totalVisit;
+        
         // Get visit count and remaining days
-        $visitCount['totalVisits'] = $model->visitCounts;
-        $visitCount['remainingDays'] = $model->remainingDays;
+        //$visitCount['totalVisits'] = $model->visitCounts;
+        //$visitCount['remainingDays'] = $model->remainingDays;
+
+        $visitCount['totalVisits'] = $totalVisit;
+        $visitCount['remainingDays'] = $remainingDays;
 
 
         $this->render('visitordetail', array(

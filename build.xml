@@ -28,7 +28,7 @@
             description=""/>
 
     <target name="check-code"
-            depends="prepare,lint,phpcs-ci"
+            depends="prepare,lint"
             description="Run coding standards checks" />
 
     <target name="bdd-tests"

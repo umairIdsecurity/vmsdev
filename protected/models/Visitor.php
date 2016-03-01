@@ -806,12 +806,14 @@ class Visitor extends CActiveRecord {
     public function getTotalVisit()
     {
         //because of https://ids-jira.atlassian.net/browse/CAVMS-1241
-        //if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
+        /*if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) 
+        {*/
             $totalVisit = 0;
             $closedVisits = $this->closedVisits;
             foreach($closedVisits as $visit) {
-                $totalVisit += 1;
-                //$totalVisit += $visit->visitCounts;
+                //$totalVisit += 1;
+                $totalVisit += $visit->visitCounts;
+                //echo $totalVisit." ";
             }
             if($totalVisit > 0 ) {
                 if( $totalVisit <= 28 ) {
@@ -819,13 +821,14 @@ class Visitor extends CActiveRecord {
                 } else {
                     return 28;
                 }
-                //return $totalVisit;
-            } //else {
-                return "";
-            //}
-        //} else {
-            //return "";
-       // }
+                return $totalVisit;
+            } 
+            return "";
+        /*} 
+        else 
+        {
+            return "";
+        }*/
     }
 
     public function getActiveVisits()

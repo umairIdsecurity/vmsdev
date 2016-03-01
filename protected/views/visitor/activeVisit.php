@@ -72,7 +72,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'header' => 'Visit Count',
-            'value' => '$data->visitCountsForNegate',
+            'value' => '$data->visitCounts',
             'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
         ),

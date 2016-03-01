@@ -1178,31 +1178,7 @@ class Visit extends CActiveRecord {
      */
     public function getVisitCounts() 
     {
-        //because of https://ids-jira.atlassian.net/browse/CAVMS-1242
-        $totalVisit = 0;
-        $closedVisits = Visit::model()->findAllByAttributes([
-            'visitor' => $this->visitor,
-            'reset_id'      => null,
-            'negate_reason' => null,
-            'is_deleted' => 0,
-            'visit_status' => VisitStatus::CLOSED
-        ]);
-        foreach($closedVisits as $visit) {
-            $totalVisit += 1;
-        }
-        if($totalVisit > 0 ) 
-        {
-            if( $totalVisit <= 28 ) {
-                return $totalVisit;
-            } else {
-                return 28;
-            }
-        }
-        return 0;
-    }
-
-    public function getVisitCountsForNegate()
-    {
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1241, 1242 and 1243
         if ($this->reset_id || $this->negate_reason) {
             return 0;
         }
@@ -1214,14 +1190,25 @@ class Visit extends CActiveRecord {
         $criteria = new CDbCriteria;
         
         // Get old visits count for this year. 
-        $oldVisitsCount = $this->getOldVisitsCountForThisYear($this->id, $this->visitor);
+        /*$oldVisitsCount = $this->getOldVisitsCountForThisYear($this->id, $this->visitor);
         if (in_array($this->visit_status, [VisitStatus::PREREGISTERED])) {
             return $oldVisitsCount;
-        }
+        }*/
         
         //  Current Visit Count below 
         $totalCount = 0;
-        switch ($this->visit_status) {
+
+        if($dateClosed == $dateOut || $dateClosed > $dateOut)
+        {
+            $totalCount += $dateIn->diff($dateOut)->days /*+ 1*/;
+        }       
+        else if($dateClosed < $dateOut)
+        {
+            $totalCount += $dateIn->diff($dateClosed)->days /*+ 1*/;
+        } 
+
+
+        /*switch ($this->visit_status) {
             case VisitStatus::CLOSED:
             case VisitStatus::AUTOCLOSED:
                 if ($dateOut < $dateClosed) // back-date issue Manual Visits
@@ -1239,9 +1226,9 @@ class Visit extends CActiveRecord {
             default :
                 $totalCount += $dateIn->diff($dateOut)->days + 1;
                 break;
-        }
-        $totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
-            // If visit is greater than 28 days then send 28
+        }*/
+        //$totalCount += $oldVisitsCount;  // New Visit Count + Old Visits count 
+        // If visit is greater than 28 days then send 28
         if( $totalCount <= 28 ) {
             return $totalCount;
         } else {

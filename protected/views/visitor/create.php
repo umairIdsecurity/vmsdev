@@ -265,6 +265,7 @@ function getCardType() {
         });
 
         $("#clicktabB2").click(function (e) {
+
             e.preventDefault();
             var currentURL = $("#getcurrentUrl").val();
             
@@ -740,6 +741,7 @@ function checkAlreadyVisitorProfile()
 }
 
 function checkHostEmailIfUnique() {
+   
     var email = $("#User_email").val();
     var tenant;
     if ($("#currentRoleOfLoggedInUser").val() == 5) { //check if superadmin
@@ -752,7 +754,7 @@ function checkHostEmailIfUnique() {
 
     // ASIC Sponsor
     if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
-        url = '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email;
+        url = '<?php echo Yii::app()->createUrl("visitor/checkEmailIfUnique&email="); ?>' + email;
     }
 
     $.ajax({
@@ -780,8 +782,14 @@ function checkHostEmailIfUnique() {
                             /*alert("sendVisitorForm from checkHostEmailIfUnique in create");
                             sendVisitorForm();*/
                             sendHostForm();
-                        } else {
-                            /*alert("sendHostForm from checkHostEmailIfUnique in create");*/
+                        } 
+                        /*else {
+                            alert("sendHostForm from checkHostEmailIfUnique in create");
+                            sendHostForm();
+                        }*/
+                        //because of https://ids-jira.atlassian.net/browse/CAVMS-1262
+                        if($("#User_first_name").val()!="" && $("#User_last_name").val()!="" && email!="" && $("#User_contact_number").val()!="" && $("#User_company").val()!="" && $("#Visitor_visitor_card_status").val()!="" && $("#User_asic_no").val()!="" && $("#User_asic_expiry").val()!="")
+                        {
                             sendHostForm();
                         }
                     } else {

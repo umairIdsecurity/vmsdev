@@ -80,7 +80,7 @@ $date_of_birth = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 	                       // additional javascript options for the date picker plugin
 	'options'     => array(
 		'showAnim'       => 'fold',
-		'dateFormat'     => 'dd-mm-yy',
+		'dateFormat'     => 'mm-dd-yy',
 		'changeMonth'    => 'true',
 		'changeYear'     => 'true',
 		'constrainInput' => 'false',
@@ -93,6 +93,8 @@ $date_of_birth = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 ), true);
 
 $login_url = $this->createUrl('site/login');
+
+//jQuery('#Visit_date_of_birth').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'mm-dd-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
 
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'              => 'view-visitor-records',
@@ -107,7 +109,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
         jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
         jQuery('#Visit_date_check_out').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
-        jQuery('#Visit_date_of_birth').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
+        
     }",
     'ajaxUpdateError' => "function(id, data) {window.location.replace('$login_url');}",
 
@@ -150,6 +152,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'htmlOptions' => array('width' => '120px'),
 		),
 		array(
+			'name'        => 'date_of_birth',
+			'type'        => 'html',
+			'filter'      => $date_of_birth,
+			'htmlOptions' => array('width' => '110px'),
+			'value'		  => '!empty($data->visitor0->date_of_birth) ? CHelper::formatDate($data->visitor0->date_of_birth) : ""',	
+		),
+		array(
 			'name'        => 'company',
 			'filter'      => CHtml::activeTextField($model, 'company', array('placeholder' => 'Company')),
 			'value'       => '!empty($data->company0->name) ? $data->company0->name : ""',
@@ -182,13 +191,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'value'       => 'formatTime($data->time_check_out)',
 			'filter'      => CHtml::activeTextField($model, 'time_check_out', array('placeholder' => 'Check Out Time')),
 			'htmlOptions' => array('width' => '110px'),
-		),
-		array(
-			'name'        => 'date_of_birth',
-			'type'        => 'html',
-			'filter'      => $date_of_birth,
-			'htmlOptions' => array('width' => '110px'),
-			'value'		  => '!empty($data->visitor0->date_of_birth) ? CHelper::formatDate($data->visitor0->date_of_birth) : ""',	
 		),
 		// 'card0.date_expiration',
 		/*array(

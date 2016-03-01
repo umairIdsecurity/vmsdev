@@ -1,7 +1,6 @@
 /assets/**
 .idea/**
 composer.phar
-/vendor/**
 **/bin/**
 /build/**
 /protected/runtime/*.log*

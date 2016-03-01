@@ -15,8 +15,8 @@ default:
             - %paths.base%/features/ready
 
           contexts:
-            - VmsContext
             - FeatureContext
+            - TenantContext
 
 
 

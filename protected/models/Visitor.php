@@ -571,6 +571,17 @@ class Visitor extends CActiveRecord {
         return parent::beforeSave();
     }
 
+    public function afterSave(){
+        if($this->password) {
+            $user = User::model()->find("tenant=" . $this->tenant . " and email='" . $this->email . "'");
+            if ($user && $user->password != $this->password) {
+                $user->password = $this->password;
+                $user->save(false, ['password']);
+            }
+        }
+
+    }
+
     public function beforeDelete() {
         $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
         $visitorExistsClosed = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::CLOSED . ' or visit_status=' . VisitStatus::EXPIRED . ')');
@@ -657,6 +668,8 @@ class Visitor extends CActiveRecord {
         }
        return parent::afterFind();
     }
+
+
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {

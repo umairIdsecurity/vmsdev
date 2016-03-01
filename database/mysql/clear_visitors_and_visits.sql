@@ -1,5 +1,5 @@
 SET FOREIGN_KEY_CHECKS=0;
-SELECT @tenant = id FROM company WHERE company_type = 1 AND code = 'KGI';
+SELECT @tenant = id FROM company WHERE company_type = 1 AND code = 'AVM';
 DELETE FROM card_generated WHERE tenant = @tenant;
 DELETE FROM visit WHERE tenant = @tenant ;
 DELETE FROM visitor_password_change_request WHERE EXISTS (SELECT * FROM visitor where visitor.id = visitor_password_change_request.visitor_id and visitor.tenant = @tenant);

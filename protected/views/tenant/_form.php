@@ -186,7 +186,8 @@ $currentLoggedUserId = $session['id'];
                                             minYear: (new Date().getFullYear()),
                                             maxYear: (new Date().getFullYear()+10),
                                             smartDays: true,
-                                            customClass: 'yearSelect'
+                                            customClass: 'yearSelect',
+                                            namePrefix: 'asic_expiry'
                                         });
                                     });
                                 </script>

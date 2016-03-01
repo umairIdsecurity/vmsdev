@@ -246,8 +246,8 @@ class CardGeneratedController extends Controller {
         $userPhotoModel = Photo::model()->findByPk($visitorModel->photo);
 
         //needs photo of the comapny as stored in DB to be shown in the footer while printing the card
-        $tenant = User::model()->findByPk($visitorModel->created_by);
-        $company = Company::model()->findByPk($tenant->company);
+        //$tenant = User::model()->findByPk($visitorModel->created_by);
+        $company = Company::model()->findByPk($visitorModel->tenant);
         $companyPhotoModel =  Photo::model()->findByPk($company->logo);
 
         

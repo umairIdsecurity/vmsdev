@@ -319,7 +319,8 @@ $form = $this->beginWidget('CActiveForm', array(
                     minYear: (new Date().getFullYear()-100),
                     maxYear: (new Date().getFullYear()-10),
                     smartDays: true,
-                    customClass: 'yearSelect'
+                    customClass: 'yearSelect',
+                    namePrefix: 'date_of_birth'
                 });
             });
         </script>
@@ -361,7 +362,8 @@ $form = $this->beginWidget('CActiveForm', array(
                         minYear: (new Date().getFullYear()),
                         maxYear: (new Date().getFullYear()+10),
                         smartDays: true,
-                        customClass: 'yearSelect'
+                        customClass: 'yearSelect',
+                        namePrefix: 'asic_expiry'
                     });
                 });
             </script>

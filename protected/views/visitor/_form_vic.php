@@ -324,7 +324,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             minYear: (new Date().getFullYear()-100),
                                             maxYear: (new Date().getFullYear()-10),
                                             smartDays: true,
-                                            customClass: 'date_of_birth_class'
+                                            customClass: 'date_of_birth_class',
+                                            namePrefix: 'date_of_birth'
                                         });
                                     });
                                 </script>

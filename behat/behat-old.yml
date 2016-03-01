@@ -1,0 +1,40 @@
+imports:
+  - behat-web-server-config.yml
+
+default:
+
+  paths:
+    features: features/ready
+    bootstrap: bootstrap
+
+  extensions:
+    Behat\MinkExtension\Extension:
+      base_url: http://localhost:8888
+      goutte: ~
+      selenium2:
+        wd_host: "http://localhost:8643/wd/hub"
+
+  formatter:
+    name: pretty,junit
+    parameters:
+      output_path: ,results.xml
+
+
+features:
+  paths:
+    features: features/ready
+
+features-new:
+  paths:
+    features: features/new
+
+bugs:
+  paths:
+    features: bugs/fixed
+
+bugs-new:
+  paths:
+    features: bugs/new
+
+
+

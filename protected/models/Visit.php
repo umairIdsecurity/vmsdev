@@ -602,8 +602,11 @@ class Visit extends CActiveRecord {
              // Airport Operator, Agent Airport Operator & Agent Airport Administrator can not see other's visit except their own visits created by them.
             case Roles::ROLE_AGENT_AIRPORT_ADMIN:
             case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
+                $criteria->addCondition("t.tenant = " . Yii::app()->user->tenant ." and tenant_agent = ". Yii::app()->user->tenant_agent);//. " AND t.created_by = " . Yii::app()->user->id);
+                break;
+
             case Roles::ROLE_AIRPORT_OPERATOR:
-                $criteria->addCondition("t.tenant = " . Yii::app()->user->tenant . " AND t.created_by = " . Yii::app()->user->id);
+                $criteria->addCondition("t.tenant = " . Yii::app()->user->tenant );//. " AND t.created_by = " . Yii::app()->user->id);
                 break;
 
             case Roles::ROLE_OPERATOR:

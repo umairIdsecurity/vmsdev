@@ -136,7 +136,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                                             where tenant = ".$tenant['id']."
                                             and is_deleted=0
                                             and (email like '".str_replace(".au","%",$user['email'])."'
-                                                or (first_name='".$user['first_name']."' and last_name='".$user['last_name']."'))".
+                                                or (first_name=". Yii::app()->db->quoteValue($user['first_name'])." and last_name=".Yii::app()->db->quoteValue($user['last_name'])."))".
                 ($localTenantAgent!=null?' and tenant_agent='.$localTenantAgent:'')
             );
 
@@ -148,7 +148,7 @@ class Avms7MigrationCommand extends CConsoleCommand
                     $vmsUser = $vms->getFirstRow("SELECT u.* FROM " . Yii::app()->db->quoteTableName('user') . " u join company c on u.company = c.id
                                             where u.tenant = " . $tenant['id'] . "
                                             and u.is_deleted=0
-                                            and c.name = '" . $user['company'] . "' " .
+                                            and c.name = " . Yii::app()->db->quoteValue($user['company']) . " " .
                         ($localTenantAgent!=null?'and u.tenant_agent='.$localTenantAgent:'')
                     );
                 }

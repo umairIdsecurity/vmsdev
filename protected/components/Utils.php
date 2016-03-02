@@ -40,6 +40,7 @@ class Utils
                 break;
 
             case Roles::ROLE_ADMIN:
+            case Roles::ROLE_ISSUING_BODY_ADMIN:
                 /*$Criteria = new CDbCriteria();
                 $Criteria->condition = "tenant = ".$session['tenant']." AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);*/

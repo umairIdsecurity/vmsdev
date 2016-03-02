@@ -58,7 +58,7 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 
     <table class="login-area inputSize" style="border-collapse: unset !important;">
         <tr>
-            <td align="center" class="form-group"><span style="color:#428bca;font-size:27px">OPERATOR LOGIN</span></td>
+            <td align="center" class="form-group"><span style="color:#428bca;font-size:27px">LOGIN</span></td>
         </tr>
 
         <tr>

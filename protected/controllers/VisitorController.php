@@ -47,6 +47,7 @@ class VisitorController extends Controller {
      */
     public function actionCreate() 
     {
+
         $session      = new CHttpSession;
         $model        = new Visitor;
         $userModel    = new User;
@@ -134,7 +135,6 @@ class VisitorController extends Controller {
             }
             
         }
-
         $this->render('create', array(
             'model'        => $model,
             'userModel'    => $userModel,

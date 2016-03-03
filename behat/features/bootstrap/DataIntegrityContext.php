@@ -1,10 +1,6 @@
 <?php
-namespace SubContext;
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException,
-    Behat\Behat\Context\Step;
+
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
@@ -24,7 +20,7 @@ use Yii,
 /**
  * Features context.
  */
-class DataIntegrityContext extends BehatContext
+class DataIntegrityContext implements Context, \Behat\Behat\Context\SnippetAcceptingContext
 {
 
     /**

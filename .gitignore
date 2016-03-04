@@ -23,7 +23,5 @@ uploads/card_lost_declaration
 /uploads/company_logo/**
 /uploads/visitor/**
 /uploads/*.csv
-
-
 phantomjs.log
 test/specs/tools/behat_results.xml

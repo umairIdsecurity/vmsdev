@@ -15,6 +15,7 @@ default:
             - %paths.base%/features/ready
 
           contexts:
+            - LoginContext
             - FeatureContext
             - TenantContext
             - DataIntegrityContext

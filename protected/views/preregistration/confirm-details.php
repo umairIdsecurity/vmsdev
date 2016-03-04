@@ -444,7 +444,7 @@
                             backdrop: 'static'
                         });
                         $("#login_fail").empty();
-                        $("#login_fail").append('A User Profile already exists for this email address. Please Login to AVMS or use another email address.');
+                        $("#login_fail").append('A User Profile already exists for this email address. Please Login or use another email address.');
                         $("#login_fail").show();
                     }
                 }
@@ -485,7 +485,7 @@
                                     backdrop: 'static'
                                 });
                                 $("#login_fail").empty();
-                                $("#login_fail").append('A User Profile already exists for this email address. Please Login to AVMS or use another email address.');
+                                $("#login_fail").append('A User Profile already exists for this email address. Please Login or use another email address.');
                                 $("#login_fail").show();
                             }else{
                                 $("#confirm-details-form").submit();
@@ -524,7 +524,7 @@
                                         backdrop: 'static'
                                     });
                                     $("#login_fail").empty();
-                                    $("#login_fail").append('A User Profile already exists for these credentials. Please Login to AVMS.');
+                                    $("#login_fail").append('A User Profile already exists for these credentials. Please Login.');
                                     $("#login_fail").show();
                                 }
                                 else{

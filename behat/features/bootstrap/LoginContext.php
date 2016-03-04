@@ -1,14 +1,12 @@
 <?php
 
 use Behat\Behat\Context\Context,
-    \Behat\Behat\Context\SnippetAcceptingContext;
+    Behat\Behat\Context\SnippetAcceptingContext,
+    \Behat\MinkExtension\Context\MinkContext;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
-
-use Behat\MinkExtension\Context\MinkContext;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Yii;
-
-
 
 
 //
@@ -21,8 +19,10 @@ use Yii;
 /**
  * Features context.
  */
-class LoginContext implements Context, SnippetAcceptingContext
+class LoginContext extends MinkContext
 {
+    private $environment;
+
     /**
      * Initializes context.
      * Every scenario gets its own context object.
@@ -34,116 +34,120 @@ class LoginContext implements Context, SnippetAcceptingContext
 
     }
 
+    /*
+     * @bBeforeScenario
+     */
+    public function GetEnvironment(BeforeScenarioScope $scope)
+    {
+        $this->environment = $scope->getEnvironment();
+
+    }
 
     /*
      * @AfterFeature
      */
-    function afterFeature($event){
-        $this->getMainContext()->getSubcontext("tenant")->iDeleteCreatedTenants();
+    function afterFeature($event)
+    {
+        $this->environment->getContext("TenantContext")->iDeleteCreatedTenants();
     }
 
     /*
      * @BeforeFeature
      */
-    function beforeFeature($event){
-        $this->getMainContext()->getSubcontext("tenant")->iCreateATenant();
+    function beforeFeature($event)
+    {
+        $this->environment->getContext("TenantContext")->iCreateATenant();
     }
 
 
-    function getCurrentTenant(){
-        return  $this->getMainContext()->getSubcontext("tenant")->getCurrentTenant();
+    function getCurrentTenant()
+    {
+        return $this->environment->getContext("TenantContext")->getCurrentTenant();
     }
 
 
     /**
-    * @Given /^I am on the login page$/
-    */
+     * @Given /^I am on the login page$/
+     */
     public function iAmOnTheLoginPage()
     {
-        return [new Step\Given('I am on "/index.php"')];
+        $this->visit("/index.php");
 
     }
 
     /**
      * @Then /^I log in as an Issuing Body Administrator$/
      */
-    public function iLogInAsAnIssuingBodyAdministrator(){
-        return $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("issuingbody@test.com","12345",$this->getCurrentTenant()['name'],'Test Airport Workstation');
+    public function iLogInAsAnIssuingBodyAdministrator()
+    {
+        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("issuingbody@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Airport Workstation');
     }
 
     /**
      * @Then /^I log in as an Airport Operator$/
      */
-    public function iLogInAsAnAirportOperator(){
-        return $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("airportoperator@test.com","12345",$this->getCurrentTenant()['name'],'Test Airport Workstation');
+    public function iLogInAsAnAirportOperator()
+    {
+        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("airportoperator@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Airport Workstation');
     }
 
     /**
      * @Then /^I log in as an Agent Airport Administrator$/
      */
-    public function iLogInAsAnAgentAirportAdministrator(){
-        return $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportadmin@test.com","12345",$this->getCurrentTenant()['name'],'Test Agent Airport Workstation');
+    public function iLogInAsAnAgentAirportAdministrator()
+    {
+        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportadmin@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Agent Airport Workstation');
     }
+
     /**
      * @Then /^I log in as an Agent Airport Operator$/
      */
-    public function iLogInAsAnAgentAirportOperator(){
-        return $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportoperator@test.com","12345",$this->getCurrentTenant()['name'],'Test Agent Airport Workstation');
+    public function iLogInAsAnAgentAirportOperator()
+    {
+        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportoperator@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Agent Airport Workstation');
     }
 
     /**
      * @Then /^I log in as a Super Administrator$/
      */
-    public function iLogInAsASuperAdministrator()
+    public function iLogInAsASuperAdministrator($username="superadmin@test.com", $password="12345")
     {
-        //$this->getMainContext()->getSession()->reset();
 
-        return array(
-            new Step\Given('I reset this session'),
-            new Step\Given('I am on "/index.php"'),
-            new Step\Then('I fill in "Username or Email" with "superadmin@test.com"'),
-            new Step\Then('I fill in "Password" with "12345"'),
-            new Step\Then('I select "'.$this->getCurrentTenant()['name'].'" from "LoginForm_tenant"'),
-            new Step\Then('I should see "Login"'),
-            new Step\Then('I press "Login"'),
-            new Step\Then('I should see "Administration" appear'),
-        );
+        $this->iAmOnTheLoginPage();
+        $this->fillField("Username",$username);
+        $this->fillField("Password",$password);
+        $this->selectOption("LoginForm_tenant",$this->getCurrentTenant());
+        $this->assertPageContainsText("Login");
+        $this->pressButton("Login");
+        $this->assertPageContainsText("Administration");
 
     }
 
     /**
      * @Then /^I login with username as "([^"]*)" and password as "([^"]*)" for tenant "([^"]*)" at workstation "([^"]*)" $/
      */
-    public function iLoginWithUsernameAndPasswordForTenantAtWorkstation($username, $password,$tenant=null,$workstation=null)
+    public function iLoginWithUsernameAndPasswordForTenantAtWorkstation($username, $password, $tenant = null, $workstation = null)
     {
-        //$this->getMainContext()->getSession()->reset();
-
-        return array(
-            new Step\Given('I reset this session'),
-            new Step\Given('I am on "/index.php"'),
-            new Step\Then('I fill in "Username or Email" with "'.$username.'"'),
-            new Step\Then('I fill in "Password" with "'.$password.'"'),
-            new Step\Then('I select "'.$tenant.'" from "LoginForm_tenant"'),
-            new Step\Then('I press "Login"'),
-            new Step\Then('I should see "Continue" appear'),
-            new Step\Then('I select "'.$workstation.'" from "userWorkstation"'),
-            new Step\Then('I press "Continue"'),
-            new Step\Then('I should see "Dashboard" appear')
-
-        );
+        $this->iAmOnTheLoginPage();
+        $this->fillField("Username",$username);
+        $this->fillField("Password",$password);
+        $this->selectOption("LoginForm_tenant",$tenant);
+        $this->assertPageContainsText("Login");
+        $this->pressButton("Login");
+        $this->assertPageContainsText("Continue");
+        $this->selectOption("LoginForm_tenant",$tenant);
+        $this->pressButton("Continue");
+        $this->assertPageContainsText("Administration");
 
     }
 
     /**
      * @Then /^I logout$/
      */
-    public function iLogout(){
-        return array(
-            new Step\Given('I am on "/index.php?r=site/logout"'),
-        );
+    public function iLogout()
+    {
+        $this->visit("/index.php?r=site/logout");
     }
-
-
 
 
 }

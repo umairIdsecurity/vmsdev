@@ -781,7 +781,10 @@ function checkHostEmailIfUnique() {
                         else if ($("#selectedVisitorInSearchTable").val() == 0) {
                             /*alert("sendVisitorForm from checkHostEmailIfUnique in create");
                             sendVisitorForm();*/
-                            sendHostForm();
+                            if($("#User_first_name").val()!="" && $("#User_last_name").val()!="" && email!="" && $("#User_contact_number").val()!="" && $("#User_company").val()!="" && $("#Visitor_visitor_card_status").val()!="" && $("#User_asic_no").val()!="" && $("#User_asic_expiry").val()!="")
+                            {
+                                sendHostForm();
+                            }
                         } 
                         /*else {
                             alert("sendHostForm from checkHostEmailIfUnique in create");

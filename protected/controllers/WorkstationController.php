@@ -33,8 +33,14 @@ class WorkstationController extends Controller {
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin', 'adminAjax', 'update', 'ajaxWorkstationCardtype'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
-
             ),
+
+            array('deny', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin'),
+                'expression' => '!UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+                'message' => 'Please contact your administrator to assign card type for the assigned workstation.'
+            ),
+
             array('deny', // deny all users
                 'users' => array('*'),
             ),

@@ -496,14 +496,18 @@ class Visitor extends CActiveRecord {
             $criteria->compare('first_name', $this->first_name, true);
         }
 
-        $user = User::model()->findByPK(Yii::app()->user->id);
-    
-        if($user->role != Roles::ROLE_SUPERADMIN){
+        if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN){
             //if(Yii::app()->controller->id === 'visit'){
                // if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
                     $criteria->addCondition("t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant);
                 //}
             //}
+        }
+
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1250
+        if(Yii::app()->user->role == Roles::ROLE_AGENT_AIRPORT_ADMIN)
+        {
+            $criteria->addCondition("created_by = ".Yii::app()->user->id);
         }
 
         if ($merge !== null) {
@@ -887,6 +891,7 @@ class Visitor extends CActiveRecord {
     public function avms_visitor()
     {
         $condition = "profile_type = '". Visitor::PROFILE_TYPE_VIC ."' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."'";
+
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
         ));

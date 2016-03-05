@@ -11,6 +11,7 @@ cache.properties
 /.project
 /.settings
 /.idea
+composer.lock
 my-behat-config.yml
 uploads/card_lost_declaration
 /protected/runtime/gii-1.1.14

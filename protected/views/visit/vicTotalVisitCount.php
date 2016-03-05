@@ -56,7 +56,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'type' => 'raw',
-            'value' => '"<a data-id=\'$data->id\' data-link=\'" . Yii::app()->createUrl("visitor/getActiveVisit") . "\' class=\'statusLink listNegateVisit\' href=\'#\'>Negate</a>"',
+            //'value' => '"<a data-id=\'$data->id\' data-link=\'" . Yii::app()->createUrl("visitor/getActiveVisit") . "\' class=\'statusLink listNegateVisit\' href=\'#\'>Negate</a>"',
+            'value' => '$data->totalVisit ? "<a data-id=\'$data->id\' data-link=\'" . Yii::app()->createUrl("visitor/getActiveVisit") . "\' class=\'statusLink listNegateVisit\' href=\'#\'>Negate</a>" : "Negate"',
+            
         ),
         array(
             'type' => 'raw',

@@ -10,9 +10,8 @@ cache.properties
 /.buildpath
 /.project
 /.settings
-composer.lock
-**/composer.lock
 /.idea
+composer.lock
 my-behat-config.yml
 uploads/card_lost_declaration
 /protected/runtime/gii-1.1.14
@@ -23,7 +22,5 @@ uploads/card_lost_declaration
 /uploads/company_logo/**
 /uploads/visitor/**
 /uploads/*.csv
-
-
 phantomjs.log
 test/specs/tools/behat_results.xml

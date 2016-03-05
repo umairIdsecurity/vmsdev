@@ -19,12 +19,14 @@ use Behat\MinkExtension\Context\MinkContext;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class FeatureContext extends MinkContext implements Context
+class FeatureContext extends MinkContext
 {
+
     /**
      * @var string
      */
     private $phpBin;
+
     /**
      * @var Process
      */
@@ -33,6 +35,8 @@ class FeatureContext extends MinkContext implements Context
      * @var string
      */
     private $workingDir;
+
+
 
     /**
      * Cleans test folders in the temporary directory.
@@ -46,6 +50,7 @@ class FeatureContext extends MinkContext implements Context
             self::clearDirectory($dir);
         }
     }
+
 
     /**
      * Prepares test folders in the temporary directory.

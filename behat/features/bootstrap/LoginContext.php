@@ -1,54 +1,32 @@
 <?php
 
-use Behat\Behat\Context\Context,
-    Behat\Behat\Context\SnippetAcceptingContext,
-    \Behat\MinkExtension\Context\MinkContext;
-use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+
+use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Yii;
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 
-
-//
-// Require 3rd-party libraries here:
-//
-//   require_once 'PHPUnit/Autoload.php';
-//   require_once 'PHPUnit/Framework/Assert/Functions.php';
-//
+use Yii,
+    TenantManager;
 
 /**
- * Features context.
+ * Created by PhpStorm.
+ * User: gistewart
+ * Date: 4/03/2016
+ * Time: 10:57 PM
  */
-class LoginContext extends MinkContext implements Context
+class LoginContext implements Context, SnippetAcceptingContext
 {
+
     private $environment;
 
     /**
-     * Initializes context.
-     * Every scenario gets its own context object.
-     *
-     * @param array $parameters context parameters (set them up through behat.yml)
+     * @BeforeScenario
      */
-    public function __construct(array $parameters)
-    {
-
-    }
-
-    /*
-     * @bBeforeScenario
-     */
-    public function GetEnvironment(BeforeScenarioScope $scope)
+    public function getEnvironment(BeforeScenarioScope $scope)
     {
         $this->environment = $scope->getEnvironment();
-
-    }
-
-    /*
-     * @AfterFeature
-     */
-    function afterFeature($event)
-    {
-        $this->environment->getContext("TenantContext")->iDeleteCreatedTenants();
     }
 
     /*
@@ -56,13 +34,65 @@ class LoginContext extends MinkContext implements Context
      */
     function beforeFeature($event)
     {
-        $this->environment->getContext("TenantContext")->iCreateATenant();
+        $this->getTenantContext()->iCreateATenant();
     }
 
 
     function getCurrentTenant()
     {
-        return $this->environment->getContext("TenantContext")->getCurrentTenant();
+        //return $this->getTenantContext()->getCurrentTenant();
+    }
+
+
+    function getTenantContext()
+    {
+        return $this->environment->getContext("TenantContext");
+    }
+
+
+    function getFeatureContext(){
+        return $this->environment->getContext("FeatureContext");
+    }
+
+
+    /*
+     * @AfterFeature
+     */
+    function afterFeature($event)
+    {
+        $this->getTenantContext()->iDeleteCreatedTenants();
+    }
+
+    /**
+     * @Then /^I log in as an Issuing Body Administrator$/
+     */
+    public function iLogInAsAnIssuingBodyAdministrator()
+    {
+        $this->getFeatureContext()->iLoginWithUsernameAndPasswordForTenantAtWorkstation("issuingbody@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Airport Workstation');
+    }
+
+    /**
+     * @Then /^I log in as an Airport Operator$/
+     */
+    public function iLogInAsAnAirportOperator()
+    {
+        $this->getFeatureContext()->iLoginWithUsernameAndPasswordForTenantAtWorkstation("airportoperator@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Airport Workstation');
+    }
+
+    /**
+     * @Then /^I log in as an Agent Airport Administrator$/
+     */
+    public function iLogInAsAnAgentAirportAdministrator()
+    {
+        $this->getFeatureContext()->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportadmin@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Agent Airport Workstation');
+    }
+
+    /**
+     * @Then /^I log in as an Agent Airport Operator$/
+     */
+    public function iLogInAsAnAgentAirportOperator()
+    {
+        $this->getFeatureContext()->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportoperator@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Agent Airport Workstation');
     }
 
 
@@ -71,55 +101,25 @@ class LoginContext extends MinkContext implements Context
      */
     public function iAmOnTheLoginPage()
     {
-        $this->visit("/index.php");
-
+        $mink = $this->getFeatureContext();
+        $mink->visit("/index.php");
     }
 
-    /**
-     * @Then /^I log in as an Issuing Body Administrator$/
-     */
-    public function iLogInAsAnIssuingBodyAdministrator()
-    {
-        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("issuingbody@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Airport Workstation');
-    }
 
-    /**
-     * @Then /^I log in as an Airport Operator$/
-     */
-    public function iLogInAsAnAirportOperator()
-    {
-        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("airportoperator@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Airport Workstation');
-    }
-
-    /**
-     * @Then /^I log in as an Agent Airport Administrator$/
-     */
-    public function iLogInAsAnAgentAirportAdministrator()
-    {
-        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportadmin@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Agent Airport Workstation');
-    }
-
-    /**
-     * @Then /^I log in as an Agent Airport Operator$/
-     */
-    public function iLogInAsAnAgentAirportOperator()
-    {
-        $this->iLoginWithUsernameAndPasswordForTenantAtWorkstation("agentairportoperator@test.com", "12345", $this->getCurrentTenant()['name'], 'Test Agent Airport Workstation');
-    }
 
     /**
      * @Then /^I log in as a Super Administrator$/
      */
     public function iLogInAsASuperAdministrator($username="superadmin@test.com", $password="12345")
     {
-
+        $mink = $this->getFeatureContext();
         $this->iAmOnTheLoginPage();
-        $this->fillField("Username",$username);
-        $this->fillField("Password",$password);
-        $this->selectOption("LoginForm_tenant",$this->getCurrentTenant());
-        $this->assertPageContainsText("Login");
-        $this->pressButton("Login");
-        $this->assertPageContainsText("Administration");
+        $mink->fillField("Username",$username);
+        $mink->fillField("Password",$password);
+        $mink->selectOption("LoginForm_tenant",$this->getCurrentTenant());
+        $mink->assertPageContainsText("Login");
+        $mink->pressButton("Login");
+        $mink->assertPageContainsText("Administration");
 
     }
 
@@ -128,16 +128,18 @@ class LoginContext extends MinkContext implements Context
      */
     public function iLoginWithUsernameAndPasswordForTenantAtWorkstation($username, $password, $tenant = null, $workstation = null)
     {
+        $mink = $this->getFeatureContext();
+
         $this->iAmOnTheLoginPage();
-        $this->fillField("Username",$username);
-        $this->fillField("Password",$password);
-        $this->selectOption("LoginForm_tenant",$tenant);
-        $this->assertPageContainsText("Login");
-        $this->pressButton("Login");
-        $this->assertPageContainsText("Continue");
-        $this->selectOption("LoginForm_tenant",$tenant);
-        $this->pressButton("Continue");
-        $this->assertPageContainsText("Administration");
+        $mink->fillField("Username",$username);
+        $mink->fillField("Password",$password);
+        $mink->selectOption("LoginForm_tenant",$tenant);
+        $mink->assertPageContainsText("Login");
+        $mink->pressButton("Login");
+        $mink->assertPageContainsText("Continue");
+        $mink->selectOption("LoginForm_tenant",$tenant);
+        $mink->pressButton("Continue");
+        $mink->assertPageContainsText("Administration");
 
     }
 
@@ -146,7 +148,8 @@ class LoginContext extends MinkContext implements Context
      */
     public function iLogout()
     {
-        $this->visit("/index.php?r=site/logout");
+        $mink = $this->getFeatureContext();
+        $mink->visit("/index.php?r=site/logout");
     }
 
 

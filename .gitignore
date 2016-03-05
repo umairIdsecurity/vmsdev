@@ -1,7 +1,6 @@
 /assets/**
 .idea/**
 composer.phar
-**/bin/**
 /build/**
 /protected/runtime/*.log*
 company_css/**

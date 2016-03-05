@@ -17,6 +17,7 @@ default:
           contexts:
             - FeatureContext
             - TenantContext
+            - DataIntegrityContext
 
 
 

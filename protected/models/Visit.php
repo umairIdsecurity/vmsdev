@@ -1348,19 +1348,30 @@ class Visit extends CActiveRecord {
                   . " AND t.visit_status = ".VisitStatus::AUTOCLOSED . $cond;
                           
         $visits = $this->with("visitor0")->findAll( $condition );  
-      
+
+        $user_timezone;
+        $session = new CHttpSession;
+        if($session['timezone'] != ""){
+            $user_timezone = $session['timezone'];
+        } else {
+            $user_timezone = "Australia/Perth";
+        }
+        
         foreach( $visits as $v ) {
             
             $update = array();
             
-            $dateNow = new DateTime("NOW");
-            $dateOut = new DateTime( $v->date_check_out." ".$v->time_check_out );
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1263
+            $dateNow = new DateTime("NOW", new DateTimeZone($user_timezone));
+            $dateOut = new DateTime( $v->date_check_out." ".$v->time_check_out, new DateTimeZone($user_timezone) );
+            
             $dateIn = new DateTime( $v->date_check_in." ".$v->time_check_in );
             $dateDiff = $dateOut->diff($dateNow)->format("%r%a");
             $status = "";
-            
+
             // Set all expires visit to close 
-            if ( $dateDiff >= 1 ) { 
+            /*if ( $dateDiff >= 1 ) { */
+            if ( $dateNow >= $dateOut ) { 
                 $update["visit_closed_date"] = $dateNow->format("Y-m-d H:i:s");
                 $update["visit_status"] = VisitStatus::CLOSED;
                 // CLOSE and Reset Visit for the first time only

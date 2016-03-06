@@ -9,6 +9,7 @@
  */
 
 use Behat\Behat\Context\Context;
+
 use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -36,6 +37,52 @@ class FeatureContext extends MinkContext
      */
     private $workingDir;
 
+
+
+
+    /**
+     * @When /^I wait for "([^"]*)" to appear$/
+     * @Then /^I should see "([^"]*)" appear$/
+     * @param $text
+     * @throws \Exception
+     */
+    public function iWaitForTextToAppear($text)
+    {
+        $this->spin(function(FeatureContext $context) use ($text) {
+            try {
+                $context->assertPageContainsText($text);
+                return true;
+            }
+            catch(Exception $e) {
+                // NOOP
+            }
+            return false;
+        });
+    }
+
+
+    public function spin ($lambda, $wait = 60)
+    {
+        for ($i = 0; $i < $wait; $i++)
+        {
+            try {
+                if ($lambda($this)) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                // do nothing
+            }
+
+            sleep(1);
+        }
+
+        $backtrace = debug_backtrace();
+
+        throw new Exception(
+            "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()\n" .
+            $backtrace[1]['file'] . ", line " . $backtrace[1]['line']
+        );
+    }
 
 
     /**

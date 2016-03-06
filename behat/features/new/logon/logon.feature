@@ -7,6 +7,7 @@ Feature: Logon
 	@javascript
 	Scenario: Opening the logon page
 		Given I am on the login page
+		Then I should see "Login"
 
     @javascript
     Scenario: Logging in as a Super Administrator
@@ -27,8 +28,8 @@ Feature: Logon
 		Given I am on "/index.php"
 		And I create a tenant
 		When I log in as an Airport Operator
-		Then I should see "Dashboard" appear
-		And I should not see "Administration"
+		Then I should see "Dashboard"
+		And I should see "Logged in as Airport Operator" appear
 
 	@javascript
 	Scenario: Logging as Agent Airport Administrator
@@ -42,6 +43,6 @@ Feature: Logon
 		Given I am on "/index.php"
 		And I create a tenant
 		When I log in as an Agent Airport Operator
-		Then I should see "Dashboard" appear
-        And I should not see "Administration"
+		Then I should see "Dashboard"
+       # And I should not see "Administration" appear
 

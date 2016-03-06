@@ -1,15 +1,9 @@
 <?php
-namespace SubContext;
 
-
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException,
-    Behat\Behat\Context\Step;
-use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
-use Behat\MinkExtension\Context\MinkContext;
+use Behat\Behat\Context\Context;
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 use Yii;
 
 
@@ -23,9 +17,9 @@ use Yii;
 /**
  * Features context.
  */
-class YiiContext extends BehatContext
+class YiiContext implements Context
 {
-    const PATH_TO_YII = "yii/framework/yii.php";
+    const PATH_TO_YII = "../yii/framework/yii.php";
     static $APP = null;
 
     /**
@@ -48,7 +42,7 @@ class YiiContext extends BehatContext
         if(YiiContext::$APP==null) {
             defined('YII_DEBUG') or define('YII_DEBUG', true);
             require_once(YiiContext::PATH_TO_YII);
-            Yii::createConsoleApplication("protected/config/console.php");
+            Yii::createConsoleApplication("../protected/config/console.php");
             YiiContext::$APP = Yii::app();
         }
     }

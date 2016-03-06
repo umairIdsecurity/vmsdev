@@ -266,13 +266,60 @@
             "is_primary": "1"
         }
     ],
-    "visitor_type": [],
+    "visitor_type": [
+        {
+            "id": "41",
+            "name": "Contractor",
+            "created_by": "1639",
+            "tenant": "232",
+            "tenant_agent": "0",
+            "is_deleted": "0",
+            "is_default_value": "1",
+            "module": "AVMS"
+        }
+    ],
     "visit_reason": [],
     "visitor": [],
     "reset_history": [],
     "card_generated": [],
     "visit": [],
-    "visitor_type_card_type": [],
+    "visitor_type_card_type": [
+        {
+            "visitor_type": "41",
+            "card_type": "5",
+            "tenant": "232",
+            "tenant_agent": null,
+            "is_deleted": "\u0000"
+        },
+        {
+            "visitor_type": "41",
+            "card_type": "6",
+            "tenant": "232",
+            "tenant_agent": null,
+            "is_deleted": "\u0000"
+        },
+        {
+            "visitor_type": "41",
+            "card_type": "7",
+            "tenant": "232",
+            "tenant_agent": null,
+            "is_deleted": "\u0000"
+        },
+        {
+            "visitor_type": "41",
+            "card_type": "8",
+            "tenant": "232",
+            "tenant_agent": null,
+            "is_deleted": "\u0000"
+        },
+        {
+            "visitor_type": "41",
+            "card_type": "9",
+            "tenant": "232",
+            "tenant_agent": null,
+            "is_deleted": "\u0000"
+        }
+    ],
     "visitor_password_change_request": [],
     "cardstatus_convert": []
 }

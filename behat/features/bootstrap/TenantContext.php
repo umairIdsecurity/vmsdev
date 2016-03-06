@@ -5,8 +5,8 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-use Yii,
-    TenantManager;
+use Yii;
+use TenantManager;
 
 /**
  * Defines application features from the specific context.
@@ -48,7 +48,7 @@ class TenantContext implements Context, SnippetAcceptingContext
     public function iCreateAnAvmsTenant(){
 
         $manager = new TenantManager();
-        $info = $manager->createTestTenantFromJsonFile("test/specs/data/Test Tenant.tenant");
+        $info = $manager->createTestTenantFromJsonFile("data/Test Tenant.tenant");
         $this->createdTenants[] = $info;
         $this->currentTenant = $info;
     }

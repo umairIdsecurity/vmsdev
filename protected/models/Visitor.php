@@ -576,13 +576,13 @@ class Visitor extends CActiveRecord {
     }
 
     public function afterSave(){
-        if($this->password) {
-            $user = User::model()->find("tenant=" . $this->tenant . " and email='" . $this->email . "'");
-            if ($user && $user->password != $this->password) {
-                $user->password = $this->password;
-                $user->save(false, ['password']);
-            }
-        }
+//        if($this->password) {
+//            $user = User::model()->find("tenant=" . $this->tenant . " and email='" . $this->email . "'");
+//            if ($user && $user->password != $this->password) {
+//                $user->password = $this->password;
+//                $user->save(false, ['password']);
+//            }
+//        }
 
     }
 

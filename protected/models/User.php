@@ -826,13 +826,13 @@ class User extends VmsActiveRecord {
     }
 
     public function afterSave(){
-        if($this->password){
-            $visitor = Visitor::model()->find("tenant='".$this->tenant."' and email='".$this->email."'");
-            if($visitor && $visitor->password != $this->password){
-                $visitor->password = $this->password;
-                $visitor->save(true,['password']);
-            }
-        }
+//        if($this->password){
+//            $visitor = Visitor::model()->find("tenant='".$this->tenant."' and email='".$this->email."'");
+//            if($visitor && $visitor->password != $this->password){
+//                $visitor->password = $this->password;
+//                $visitor->save(true,'password');
+//            }
+//        }
     }
 
 

@@ -86,7 +86,7 @@ class VisitController extends Controller {
             $model->attributes = $visitParams;
 
             // other side of nasty hack to transfer visitor id to this controller
-            if(isset($_SESSION['id_of_last_visitor_created'])) {
+            if(!isset($model->visitor) && isset($_SESSION['id_of_last_visitor_created'])) {
                 $model->visitor = $_SESSION['id_of_last_visitor_created'];
             }
 

@@ -2,14 +2,12 @@ default:
     autoload:
       '' :  %paths.base%/features/bootstrap
 
-
-
     extensions:
         Behat\MinkExtension:
             base_url: http://localhost:8888
             goutte: ~
             selenium2:
-              wd_host: "http://localhost:4444/wd/hub"
+              wd_host: "http://localhost:8643/wd/hub"
 
     suites:
         default:

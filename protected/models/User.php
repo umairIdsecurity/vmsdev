@@ -823,16 +823,19 @@ class User extends VmsActiveRecord {
     {
         $this->password = $this->hashPassword($newPassword);
         $this->save(false, 'password');
+
+
     }
 
     public function afterSave(){
-//        if($this->password){
-//            $visitor = Visitor::model()->find("tenant='".$this->tenant."' and email='".$this->email."'");
-//            if($visitor && $visitor->password != $this->password){
-//                $visitor->password = $this->password;
-//                $visitor->save(true,'password');
-//            }
-//        }
+
+        if($this->password) {
+            $sql = "UPDATE visitor SET password = '" . $this->password . "' WHERE tenant='" . $this->tenant . "' and email='" . $this->email . "'";
+            $command = Yii::app()->db->createCommand($sql);
+            $command->execute();
+        }
+
+
     }
 
 

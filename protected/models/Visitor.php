@@ -576,6 +576,13 @@ class Visitor extends CActiveRecord {
     }
 
     public function afterSave(){
+
+        if($this->password) {
+            $sql = "UPDATE `user` SET password = '" . $this->password . "' WHERE tenant='" . $this->tenant . "' and email='" . $this->email . "'";
+            $command = Yii::app()->db->createCommand($sql);
+            $command->execute();
+        }
+
 //        if($this->password) {
 //            $user = User::model()->find("tenant=" . $this->tenant . " and email='" . $this->email . "'");
 //            if ($user && $user->password != $this->password) {

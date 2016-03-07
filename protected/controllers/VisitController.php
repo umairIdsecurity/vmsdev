@@ -86,7 +86,9 @@ class VisitController extends Controller {
             $model->attributes = $visitParams;
 
             // other side of nasty hack to transfer visitor id to this controller
-            $model->visitor = $_SESSION['id_of_last_visitor_created'];
+            if(isset($_SESSION['id_of_last_visitor_created'])) {
+                $model->visitor = $_SESSION['id_of_last_visitor_created'];
+            }
 
             // If datepicker is disabled then date check out is empty
             if (!isset($visitParams['date_check_out'])) {

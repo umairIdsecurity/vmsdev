@@ -43,7 +43,9 @@ $result = CMap::mergeArray(
                 'application.extensions.*',
                 'application.extensions.EHttpClient.*',
                 'application.extensions.yii-mail.*',
+                'application.extensions.datepicker.*',
                 'application.models.preregistration.*',
+
             ),
 
             // application components

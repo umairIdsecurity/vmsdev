@@ -265,21 +265,10 @@ $session = new CHttpSession;
                     <td>
                         <?php echo $form->textField($model, 'identification_document_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width:175px;')); ?>
                         <?php
-                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            $this->widget('EDatePicker', array(
                                 'model'       => $model,
                                 'attribute'   => 'identification_document_expiry',
-                                'options'     => array(
-                                    'dateFormat' => 'dd-mm-yy',
-                                    'changeMonth' => true,
-                                    'changeYear' => true
-                                ),
-                                'htmlOptions' => array(
-                                    'size'        => '0',
-                                    'maxlength'   => '10',
-                                    'placeholder' => 'Expiry',
-                                    'style'       => 'width:145px;margin-top:-34px;margin-left:180px',
-                                    'class' => 'form-control input-xs',
-                                ),
+                                'mode'        => 'expiry'
                             ));
                         ?>
                         <span class="required primary-identification-require">*</span>
@@ -296,21 +285,10 @@ $session = new CHttpSession;
                         <?php echo $form->textField($model, 'asic_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Asic No.', 'style' => 'width:175px;')); ?>
 
                         <?php
-                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            $this->widget('EDatePicker', array(
                                 'model'       => $model,
                                 'attribute'   => 'asic_expiry',
-                                'options'     => array(
-                                    'dateFormat' => 'dd-mm-yy',
-                                    'changeMonth' => true,
-                                    'changeYear' => true
-                                ),
-                                'htmlOptions' => array(
-                                    'size'        => '0',
-                                    'maxlength'   => '10',
-                                    'placeholder' => 'Expiry',
-                                    'style'       => 'width:145px;margin-top:-34px;margin-left:180px',
-                                    'class' => 'form-control input-xs',
-                                ),
+                                'mode'        => 'asic_expiry',
                             ));
                         ?>
                         <span class="required primary-identification-require">*</span>
@@ -327,21 +305,10 @@ $session = new CHttpSession;
                     <td class="">
                         <!-- <span>Date of Birth</span> <br/> -->
                         <?php
-                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            $this->widget('EDatePicker', array(
                                 'model'       => $model,
                                 'attribute'   => 'date_of_birth',
-                                'options'     => array(
-                                    'dateFormat' => 'dd-mm-yy',
-                                    'changeMonth' => true,
-                                    'changeYear' => true
-                                ),
-                                'htmlOptions' => array(
-                                    
-                                    'maxlength'   => '10',
-                                    'placeholder' => 'Date of birth',
-                                    /*'style'       => 'width: 80px;',*/
-                                    'class' => 'form-control input-xs'
-                                ),
+                                'mode'        => 'date_of_birth',
                             ));
                             ?>
                         <span class="required">*</span>

@@ -1,8 +1,8 @@
 <?php
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 
 $session = new CHttpSession;
 
@@ -381,18 +381,13 @@ if ($this->action->id == 'update') {
                         <tr>
                             <td class="birthdayDropdown">
                                <span>Date of Birth</span> <br/>
-                                <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
-                                <script>
-                                    $(function(){
-                                        $('#Visitor_date_of_birth').combodate({
-                                            minYear: (new Date().getFullYear()-100),
-                                            maxYear: (new Date().getFullYear()-10),
-                                            smartDays: true,
-                                            customClass: 'date_of_birth_class',
-                                            namePrefix: 'date_of_birth'
-                                        });
-                                    });
-                                </script>
+                                <?php $this->widget('EDatePicker', array(
+                                    'model'=>$model,
+                                    'attribute'=>'date_of_birth',
+                                    'mode'=>'date_of_birth',
+                                    'htmlOptions'=>[]
+                                ));
+                                ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
@@ -465,20 +460,10 @@ if ($this->action->id == 'update') {
 
                                     <?php
 
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'changeMonth' => true,
-                                            'changeYear' => true
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'expiry',
                                     ));
                                     ?>
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
@@ -490,25 +475,10 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
-                                    $now         = new DateTime(date('Y-m-d'));
-                                    $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +2 year')));
-                                    $interval    = $asicMaxDate->diff($now);
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'model'       => $model,
+                                    $this->widget('EDatePicker', array(
+                                        'model'       =>  $model,
                                         'attribute'   => 'asic_expiry',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'minDate' => '0',
-                                            'maxDate' => $interval->days,
-                                            'changeMonth' => true,
-                                            'changeYear' => true
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'asic_expiry',
                                     ));
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'asic_no'); ?>
@@ -539,21 +509,6 @@ if ($this->action->id == 'update') {
 <script>
 
     function afterValidate(form, data, hasError) {  
-
-/*        var dt = new Date();
-        if(dt.getFullYear()< $("#fromYear").val()) {
-            $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-            $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-            $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
-            return false;
-        }*/
 
         var companyValue = $("#Visitor_company").val();
         var passwordConfirmed = false;

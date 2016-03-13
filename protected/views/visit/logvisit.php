@@ -27,17 +27,13 @@ $logform = $this->beginWidget('CActiveForm', array(
     </tr>
     <tr>
         <td><?php
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_in',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
                     'readonly' => 'readonly',
                 ),
-                'value' => date('mm/dd/Y'),
                 'options' => array(
-                    'dateFormat' => 'mm/dd/yy',
                     'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
                 )
             ));
@@ -49,17 +45,14 @@ $logform = $this->beginWidget('CActiveForm', array(
     </tr>
     <tr>
         <td><?php
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_out',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
                     'disabled' => 'disabled',
                     'readonly' => 'readonly',
                 ),
                 'options' => array(
-                    'dateFormat' => 'mm/dd/yy',
                     'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "maxDate", selectedDate); }',
                 )
             ));

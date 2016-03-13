@@ -200,21 +200,10 @@
                 <div class="row form-group">
                     <div class="col-sm-12">
                         <?php
-                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        $this->widget('EDatePicker', array(
                             'model'       => $model,
                             'attribute'   => 'asic_expiry',
-                            'options'     => array(
-                                'minDate' => '0',
-                                'maxDate' => '+2y +2m',
-                                'changeYear' => true,
-                                'changeMonth' => true,
-                                'dateFormat' => 'dd-mm-yy',
-                            ),
-                            'htmlOptions' => array(
-                                'maxlength'   => '10',
-                                'placeholder' => 'Expiry',
-                                'class' => 'form-control input-sm'
-                            ),
+                            'mode'        => 'asic_expiry',
                         ));
                         ?>
                         <?php echo $form->error($model, 'asic_expiry'); ?>

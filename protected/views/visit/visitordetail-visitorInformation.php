@@ -132,25 +132,13 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 <?php
                                 $visitorModel->date_of_birth = !is_null($visitorModel->date_of_birth) ? date('d-m-Y', strtotime($visitorModel->date_of_birth)) : date('d-m-Y');
                                 $options = [];
-                                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                $this->widget('EDatePicker', array(
                                     'model' => $visitorModel,
                                     'attribute' => 'date_of_birth',
                                     'htmlOptions' => array(
-                                        'size'        => '10', // textField size
-                                        'maxlength'   => '10', // textField maxlength
-                                        'placeholder' => 'dd-mm-yyyy',
                                         'readOnly'    => 'readOnly',
                                         'disabled'    => $model->visit_status == VisitStatus::CLOSED ? 'disabled' : '',
-                                        'style'       => $datePickerStyle
                                     ),
-                                    'options' => [
-                                        'showOn'          => $model->visit_status == VisitStatus::CLOSED ? "focus" : "button",
-                                        'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        'buttonImageOnly' => true,
-                                        'dateFormat'      => "dd-mm-yy",
-                                        'changeMonth'     => true,
-                                        'changeYear'      => true
-                                    ]
                                 ));
                                 ?>
 
@@ -375,19 +363,13 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             Document Expiry
                         </td>
                         <td style="padding-left: 0 !important;">
+
                             <?php
-                            $visitorModel->identification_document_expiry = !is_null($visitorModel->identification_document_expiry) ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
-                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model'     => $visitorModel,
+                            $this->widget('EDatePicker', array(
+                                'model' => $visitorModel,
                                 'attribute' => 'identification_document_expiry',
-                                'htmlOptions' => array(
-                                    'size'        => '10', // textField size
-                                    'maxlength'   => '10', // textField maxlength
-                                    'placeholder' => 'dd-mm-yyyy',
-                                    'readOnly'    => 'readOnly',
-                                    'style'       => $datePickerStyle
-                                ),
-                                'options' => $datePickerOptionAttributes
+                                'mode' => 'expiry',
+                                'options' => ['readOnly' => 'readOnly']
                             ));
                             ?>
 
@@ -448,20 +430,12 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             </td>
 
                             <td style="padding-left: 0 !important;">
+
                                 <?php
-                                $asic->asic_expiry = !is_null($asic->asic_expiry) ? date('d-m-Y', strtotime($asic->asic_expiry)) : date('d-m-Y');
-                                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                $this->widget('EDatePicker', array(
                                     'model' => $asic,
                                     'attribute' => 'asic_expiry',
-                                    'htmlOptions' => array(
-                                        'size' => '10', // textField size
-                                        'maxlength' => '10', // textField maxlength
-                                        'placeholder' => 'dd-mm-yyyy',
-                                        'readOnly' => 'readOnly',
-                                        'style' => $datePickerStyle,
-                                        'name' => 'ASIC[asic_expiry]'
-                                    ),
-                                    'options' => array_merge($datePickerOptionAttributes, array('maxDate' => date('d-m-Y', strtotime('+2 years 2 months', strtotime("NOW")))))
+                                    'mode' => 'asic_expiry',
                                 ));
                                 ?>
 
@@ -544,20 +518,11 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <?php
-                                $asicEscort->asic_expiry = !is_null($asicEscort->asic_expiry) ? date('d-m-Y', strtotime($asicEscort->asic_expiry)) : date('d-m-Y');
-                                $this->widget('zii.widgets.jui.CJuiDatePicker', [
-                                    'model'     => $asicEscort,
+                                $this->widget('EDatePicker', array(
+                                    'model' => $asicEscort,
                                     'attribute' => 'asic_expiry',
-                                    'htmlOptions' => [
-                                        'size'        => '10', // textField size
-                                        'maxlength'   => '10', // textField maxlength
-                                        'placeholder' => 'dd-mm-yyyy',
-                                        'readOnly'    => 'readOnly',
-                                        'name'        => 'Escort[asic_expiry]',
-                                        'style'       => $datePickerStyle
-                                    ],
-                                    'options' => $datePickerOptionAttributes
-                                ]);
+                                    'mode' => 'asic_expiry',
+                                ));
                                 ?>
                             </td>
                         </tr>

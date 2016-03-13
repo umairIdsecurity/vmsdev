@@ -16,7 +16,8 @@ if ($visitModel->time_in != '') {
     <tr id="dateoutDiv">
         <td>Proposed Check Out Date
             <br><?php
-    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+    $this->widget('EDatePicker', array(
+        'value' => Date('d/m/y'),
         'htmlOptions' => array(
             'id' => 'proposedDateOut',
             'name' => 'proposedDateOut',

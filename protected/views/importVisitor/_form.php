@@ -46,16 +46,9 @@
 	<div class="row">
           
 		<?php echo $form->labelEx($model,'check_in_date'); ?> <br>
-		 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                'name'=>'ImportVisitor[check_in_date]',
-                'value'=>$model->check_in_date,  
+		 <?php $this->widget('EDatePicker', array(
+                'value'=>$model->check_in_date,
                 'model'=>$model,
-                // additional javascript options for the date picker plugin
-                'options'=>array(
-                    'showAnim'=>'fold',
-                    'dateFormat'=>'dd-mm-yy',
-                ),
-                 
                 ));
             ?>
 		<?php echo $form->error($model,'check_in_date'); ?>
@@ -67,16 +60,10 @@
 	</div>
 	<div class="row">
 		<?php echo $form->labelEx($model,'check_out_date'); ?> <br>
-		 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+		 <?php $this->widget('EDatePicker', array(
                 'name'=>'ImportVisitor[check_out_date]',
                 'value'=>$model->check_out_date,  
                 'model'=>$model,
-                // additional javascript options for the date picker plugin
-                'options'=>array(
-                    'showAnim'=>'fold',
-                    'dateFormat'=>'dd-mm-yy',
-                ),
-                 
                 ));
             ?>
 		<?php echo $form->error($model,'check_out_date'); ?>

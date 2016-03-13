@@ -42,14 +42,14 @@ class User extends VmsActiveRecord {
 
     public $assignedWorkstations;
     public $repeatpassword;
-    public $birthdayMonth;
-    public $birthdayYear;
-    public $birthdayDay;
+    //public $birthdayMonth;
+    ///public $birthdayYear;
+    //public $birthdayDay;
     public $password_requirement;
     public $helpdesk_group;
-    public $asic_expiry_day;
-    public $asic_expiry_month;
-    public $asic_expiry_year;
+    //public $asic_expiry_day;
+    //public $asic_expiry_month;
+    //public $asic_expiry_year;
 
     public $is_required_induction;
     public $is_completed_induction;
@@ -734,10 +734,10 @@ class User extends VmsActiveRecord {
     }
 
     protected function afterFind() {
-        $date_of_birth = $this->date_of_birth;
-        $this->birthdayDay = date('d', strtotime($date_of_birth));
-        $this->birthdayMonth = date('n', strtotime($date_of_birth));
-        $this->birthdayYear = date('o', strtotime($date_of_birth));
+        //$date_of_birth = $this->date_of_birth;
+        //$this->birthdayDay = date('d', strtotime($date_of_birth));
+        //$this->birthdayMonth = date('n', strtotime($date_of_birth));
+        //$this->birthdayYear = date('o', strtotime($date_of_birth));
 
         return parent::afterFind();
     }

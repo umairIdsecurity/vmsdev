@@ -193,18 +193,10 @@ else
                 <div class="row form-group">
                     <div class="col-sm-12">
                         <?php
-                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        $this->widget('EDatePicker', array(
                             'model'       => $model,
                             'attribute'   => 'asic_expiry',
-                            'options'     => array(
-                                'minDate' => '0',
-                                'dateFormat' => 'dd-mm-yy',
-                            ),
-                            'htmlOptions' => array(
-                                'maxlength'   => '10',
-                                'placeholder' => 'Expiry',
-                                'class' => 'form-control input-sm'
-                            ),
+                            'mode'        => 'asic_expiry',
                         ));
                         ?>
                         <?php echo $form->error($model, 'asic_expiry'); ?>
@@ -226,13 +218,6 @@ else
                 <div class="form-group" id="addCompanyDiv">
                     <?php
                         echo $form->dropDownList($model, 'company', CHtml::listData(Registration::model()->findAllCompanyByTenant($tenant), 'id', 'name'), array('prompt' => 'Select Company', 'class'=>'form-control input-sm'));
-                       /* $this->widget('application.extensions.select2.Select2', array(
-                                'model' => $model,
-                                'attribute' => 'company',
-                                'items' =>  CHtml::listData(Registration::model()->findAllCompanyByTenant($tenant), 'id', 'name'),
-                                'selectedItems' => array(), // Items to be selected as default
-                                'placeHolder' => 'Please select a company',        
-                        ));*/
                     ?>
                 </div>
                  <?php echo $form->error($model,'company'); ?>

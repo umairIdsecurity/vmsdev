@@ -1,8 +1,8 @@
 <?php
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 
 $session = new CHttpSession;
 
@@ -317,18 +317,13 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         <tr>
                             <td class="birthdayDropdown">
                                <span>Date of Birth</span> <br/>
-                                <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
-                                <script>
-                                    $(function(){
-                                        $('#Visitor_date_of_birth').combodate({
-                                            minYear: (new Date().getFullYear()-100),
-                                            maxYear: (new Date().getFullYear()-10),
-                                            smartDays: true,
-                                            customClass: 'date_of_birth_class',
-                                            namePrefix: 'date_of_birth'
-                                        });
-                                    });
-                                </script>
+                                <?php $this->widget('EDatePicker', array(
+                                    'model'=>$model,
+                                    'attribute'=>'date_of_birth',
+                                    'mode'=>'date_of_birth',
+                                    'htmlOptions'=>[]
+                                ));
+                                ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
@@ -473,20 +468,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'changeMonth' => true,
-                                            'changeYear' => true
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'expiry',
                                     ));
                                     ?><!-- <span class="required primary-identification-require">*</span> -->
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
@@ -532,18 +517,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php echo $form->textField($model, 'identification_alternate_document_no1', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
 
                                     <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_alternate_document_expiry1',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'expiry',
                                     ));
                                     ?><span class="required alternate-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no1'); ?>
@@ -563,18 +540,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php echo $form->textField($model, 'identification_alternate_document_no2', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
 
                                     <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_alternate_document_expiry2',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'expiry',
                                     ));
                                     ?><span class="required alternate-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no2'); ?>

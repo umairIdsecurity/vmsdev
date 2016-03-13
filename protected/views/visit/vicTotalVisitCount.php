@@ -105,17 +105,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     <div class="form-group">
                         <label style="float: left" class="col-md-2">ASIC Application Lodgement Date : </label>
                         <?php
-                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        $this->widget('EDatePicker', array(
                             'name' => 'datePicker',
                             'id' => 'lodgementDatePicker',
-                            'options' => array(
-                                'dateFormat' => 'yy-mm-dd',
-                            ),
-                            'htmlOptions' => array(
-                                'size' => '0',
-                                'maxlength' => '20',
-                                'style' => 'width: 80px;',
-                            ),
                         ));
                         ?>
                         <br>

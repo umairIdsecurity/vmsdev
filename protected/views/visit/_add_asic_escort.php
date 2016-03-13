@@ -38,21 +38,10 @@
                 <?php echo "<br>" .$form->error($model, 'asic_no'); ?>
             </td>
             <td class="asic-escort-field">
-                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                <?php $this->widget('EDatePicker', array(
                     'model' => $model,
                     'attribute' => 'asic_expiry',
-                    'options' => array(
-                        'dateFormat' => 'dd-mm-yy',
-                        'changeMonth' => true,
-                        'changeYear' => true,
-                        'minDate' => '0',
-                        'maxDate' => "+2y +2m",
-                    ),
-                    'htmlOptions' => array(
-                        'maxlength' => '10',
-                        'placeholder' => 'Expiry',
-                        'style' => 'width: 205px;',
-                    ),
+                    'mode' => 'asic_expiry',
                 )); ?>
                 <span class="required">*</span>
                 <?php echo "<br>" .$form->error($model, 'asic_expiry'); ?>

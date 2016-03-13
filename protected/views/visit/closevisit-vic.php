@@ -61,21 +61,11 @@
 
             <?php
             $model->finish_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'finish_date',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    'placeholder' => 'dd-mm-yyyy',
                     'readOnly' => 'readOnly'
-                ),
-                'options' => array(
-                    'showOn' => "button",
-                    'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                    'buttonImageOnly' => true,
-                    'minDate' => "0",
-                    'dateFormat' => "dd-mm-yy",
                 )
             ));
             ?>
@@ -142,22 +132,11 @@
         <td>
             <?php
             $model->card_returned_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'card_returned_date',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    'placeholder' => 'dd-mm-yyyy',
                     'readOnly' => 'readOnly'
-                ),
-                'options' => array(
-                    'dateFormat' => 'dd-mm-yy',
-                    'showOn' => "button",
-                    'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                    'buttonImageOnly' => true,
-                    'minDate' => "0",
-                    'dateFormat' => "dd-mm-yy",
                 )
             ));
             ?>

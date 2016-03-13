@@ -64,27 +64,15 @@ $session = new CHttpSession;
             if (!strtotime($model->date_check_in) || in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED ]) ) {
                 $model->date_check_in = date('d-m-Y');
             }
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_in',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
                     'readonly' => 'readonly',
                     'placeholder' => 'dd-mm-yyyy',
-                    //'disabled' => 'disabled'
-                ),
-                'options' => array(
-                    'dateFormat' => 'dd-mm-yy',
                 )
             ));
             ?>
-            <?php /*if ($model->card_type == CardType::SAME_DAY_VISITOR) { */?><!--
-                <input type="text" style="display:none;" value="<?php
-/*                echo date("d-m-Y");
-                */?>" id='Visit_date_out'
-                       name="Visit[date_out]" >
-                   --><?php /*} */?>
         </td>
     </tr>
 
@@ -96,18 +84,11 @@ $session = new CHttpSession;
             if (!strtotime($model->date_check_out) || in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED ]) ) {
                 $model->date_check_out = date('d-m-Y');
             }
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_out',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    //'disabled' => 'disabled',
                     'readonly' => 'readonly',
-                    'placeholder' => 'dd-mm-yyyy',
-                ),
-                'options' => array(
-                   'dateFormat' => 'dd-mm-yy',
                 )
             ));
             ?>

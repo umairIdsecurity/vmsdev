@@ -226,10 +226,7 @@ class Visitor extends CActiveRecord {
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),
             array(
-
                 'date_of_birth,
-
-               
                 notes,
                 birthdayYear,
                 birthdayMonth,

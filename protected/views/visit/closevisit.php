@@ -91,22 +91,11 @@
                 if (empty($model->card_returned_date)) {
                     $model->card_returned_date = date('d-m-Y');
                 }
-                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                $this->widget('EDatePicker', array(
                     'model' => $model,
                     'attribute' => 'card_returned_date',
                     'htmlOptions' => array(
-                        'size' => '10', // textField size
-                        'maxlength' => '10', // textField maxlength
-                        'placeholder' => 'dd-mm-yyyy',
                         'readOnly' => 'readOnly'
-                    ),
-                    'options' => array(
-                        'dateFormat' => 'dd-mm-yy',
-                        'showOn' => "button",
-                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                        'buttonImageOnly' => true,
-                        'minDate' => "0",
-                        'dateFormat' => "dd-mm-yy",
                     )
                 ));
                 ?>

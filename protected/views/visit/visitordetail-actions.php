@@ -270,21 +270,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 </td>
                                 <td>
                                 <?php
-                                $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                $this->widget('EDatePicker',array(
                                     'id' => 'identification_document_expiry',
                                     'name'=>'Visitor[identification_document_expiry]',
                                     // additional javascript options for the date picker plugin
-                                    'options'=>array(
-                                        'dateFormat'  => 'dd-mm-yy',
-                                        'minDate'     => '0',
-                                        'changeYear'  => true,
-                                        'changeMonth' => true
-                                    ),
                                     'htmlOptions'=>array(
-                                        'size'        => '0',
-                                        'maxlength'   => '10',
-                                        'placeholder' => 'Expiry',
                                         'style'       => 'width: 120px;',
+                                        'placeHolder' => 'Expiry'
                                     ),
                                 ));
                                 ?> <span class="required primary-identification-require">*</span>
@@ -338,16 +330,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     <input type="text" name="Visitor[identification_document_no]" id="identification_document_no" placeholder="Document No." style="width: 110px;">
 
                                     <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                    $this->widget('EDatePicker',array(
                                         'id' => '_identification_document_expiry',
                                         'name'=>'Visitor[identification_document_expiry]',
-                                        // additional javascript options for the date picker plugin
-                                        'options'=>array(
-                                            'dateFormat'  => 'dd-mm-yy',
-                                            'minDate'     => '0',
-                                            'changeYear'  => true,
-                                            'changeMonth' => true
-                                        ),
                                         'htmlOptions'=>array(
                                             'size'        => '0',
                                             'maxlength'   => '10',

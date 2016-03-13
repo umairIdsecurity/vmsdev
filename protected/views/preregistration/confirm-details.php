@@ -1,8 +1,8 @@
 <?php
 
     $cs = Yii::app()->clientScript;
-    $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
-    $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+    //$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+    //$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 
     //this is because below country model become ambigious for name values on Window Server
     $countryList = CHtml::listData(Yii::app()->db->createCommand('select a.* from country a inner join (select distinct name, min(id) as id from country group by name) as b on a.name = b.name and a.id = b.id order by name asc')->queryAll(),'id', 'name');
@@ -106,46 +106,16 @@
 
                 <div class="row form-group">
                     <div class="col-xs-12 col-md-12 col-sm-12">
-                        <!-- <span class="">Date of Birth</span> -->
                         <?php
-                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        $this->widget('EDatePicker', array(
                             'model'       => $model,
                             'attribute'   => 'date_of_birth',
-                            'options'     => array(
-                                'maxDate'=>'0',
-                                'dateFormat' => 'dd-mm-yy',
-                                'changeMonth' => true,
-                                'changeYear' => true,
-                                'yearRange' => "-97:+0",
-                            ),
-                            'htmlOptions' => array(
-                                'maxlength'   => '10',
-                                'placeholder' => 'Date of Birth',
-                                'class' => 'form-control input-sm'
-                            ),
+                            'mode'        => 'date_of_birth'
                         ));
                         ?>
                         <?php echo $form->error($model,'date_of_birth',array('style' => 'margin-left:0')); ?>
                     </div>
                 </div>
-                <!-- because of https://ids-jira.atlassian.net/browse/CAVMS-1097 -->
-               <!--  <div class="row form-group">
-                    <div class="col-xs-12 col-md-12 col-sm-12">
-                        <?php //echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
-                        <script>
-                            $(function(){
-                                $('#Registration_date_of_birth').combodate({
-                                    minYear: (new Date().getFullYear()-100),
-                                    maxYear: (new Date().getFullYear()-10),
-                                    smartDays: true,
-                                    customClass: 'date_of_birth_class'
-                                });
-                            });
-                        </script>
-                        <?php //echo $form->error($model, 'date_of_birth',array('style' => 'margin-left:0')); ?>
-                    </div>
-                </div> -->
-
 
                 <div class="form-group">
                     <?php echo $form->dropDownList($model, 'identification_type', Registration::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type' , 'class'=>'form-control input-sm')); ?>
@@ -168,20 +138,10 @@
                     <div class="col-xs-12 col-md-12 col-sm-12">
                         <!-- <span class="">Expiry</span> -->
                         <?php
-                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        $this->widget('EiDatePicker', array(
                             'model'       => $model,
                             'attribute'   => 'identification_document_expiry',
-                            'options'     => array(
-                                'minDate'=>'0',
-                                'dateFormat' => 'dd-mm-yy',
-                                'changeMonth' => true,
-                                'changeYear' => true
-                            ),
-                            'htmlOptions' => array(
-                                'maxlength'   => '10',
-                                'placeholder' => 'Expiry',
-                                'class' => 'form-control input-sm'
-                            ),
+                            'mode'        => 'expiry',
                         ));
                         ?>
                         <?php echo $form->error($model, 'identification_document_expiry'); ?>

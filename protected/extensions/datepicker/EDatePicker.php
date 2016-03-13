@@ -6,7 +6,9 @@
  * Date: 10/03/2016
  * Time: 6:05 PM
  */
-class EDatePicker extends CInputWidget
+Yii::import('zii.widgets.jui.CJuiInputWidget');
+
+class EDatePicker extends CJuiInputWidget
 {
 
     public $mode = null;
@@ -41,44 +43,66 @@ class EDatePicker extends CInputWidget
 
 
         $displayId = $id."_container";
-        $displayName = $name."_container";
-
-
-
+        $displayName = $displayId;
+        $dateValue = null;
+        $displayValue = null;
 
         if($this->model){
-            $displayValue = $this->reformatDate($this->model[$this->attribute],'d/m/y');
-            echo CHtml::activeHiddenField($this->model,$this->attribute,$this->htmlOptions);
-            echo CHtml::textField($displayName,$displayValue,$this->htmlOptions);
-            $this->options['defaultDate'] = $displayValue;
-
+            $dateValue = $this->model[$this->attribute];
         } else {
-            $displayValue = $this->reformatDate($this->value,'d/m/y');
-            echo CHtml::hiddenField($this->name,$this->value,$this->htmlOptions);
-            echo CHtml::textField($displayName,$displayValue,$this->htmlOptions);
+            $dateValue = $this->value;
+        }
+        $displayValue = $dateValue?$this->reformatDate($dateValue,'d/m/Y'):'';
+
+        if(!isset($this->htmlOptions['placeholder'])) {
+            if(isset($this->attribute) && isset($this->model)) {
+                $this->htmlOptions['placeholder'] = $this->model->getAttributeLabel($this->attribute);
+            } else {
+                $this->htmlOptions['placeholder'] = "DD/MM/YYYY";
+            }
         }
 
-        $this->options['altField'] = '#'.$id;
-        $this->options['altFormat'] = 'yyyy-mm-dd';
-        $this->options['dateFormat'] = 'dd/mm/yy';
-        $this->options['changeMonth'] = true;
-        $this->options['changeYear'] = true;
-        $this->options['constrainInput'] = true;
-        $this->options['gotoCurrent'] = true;
+        echo CHtml::textField($displayName,$displayValue,$this->htmlOptions);
+        echo CHtml::hiddenField($name,$dateValue,$this->htmlOptions);
+
+        $this->ensureOption('dateFormat','dd/mm/yy');
+        $this->ensureOption('changeMonth',true);
+        $this->ensureOption('changeYear',true);
+        $this->ensureOption('constrainInput',false);
+        $this->ensureOption('gotoCurrent',true);
+        $this->ensureOption('defaultValue',$dateValue);
+
 
         if($this->mode == 'date_of_birth'){
-            $this->options['yearRange'] = (Date('Y')-100).':'.(Date('Y')-10);
+            $this->ensureOption('yearRange',(Date('Y')-100).':'.(Date('Y')-10));
+
+        } elseif($this->mode == 'asic_expiry'){
+            $now         = new DateTime(date('Y-m-d'));
+            $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +2 year')));
+            $interval    = $asicMaxDate->diff($now);
+            $this->ensureOption('yearRange',(Date('Y')).':'.(Date('Y')+10));
+            $this->ensureOption('minDate','0');
+            $this->ensureOption('maxDate', $interval->days);
+
         } elseif($this->mode == 'expiry'){
-            $this->options['yearRange'] = (Date('Y')).':'.(Date('Y')+10);
-            $this->options['minDate'] = Date('Y-m-d');
+            $now         = new DateTime(date('Y-m-d'));
+            $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +5 year')));
+            $interval    = $asicMaxDate->diff($now);
+            $this->ensureOption('minDate','0');
+            $this->ensureOption('maxDate',$interval->days);
         }
 
-        $this->htmlOptions['id']=$displayId;
-        $this->htmlOptions['name'] = $displayName;
+        $this->language = 'en';
+        //$this->ensureOption('language','en');
 
+        $this->ensureOption('altField','#'.$id);
+        $this->ensureOption('altFormat','dd-mm-yy');
 
-        //$this->htmlOptions['id']=$displayId;
-        //$this->htmlOptions['name']=$displayName;
+        $this->ensureHtmlOption('id',$displayId);
+        $this->ensureHtmlOption('name',$displayName);
+        $this->ensureHtmlOption('size','0');
+        $this->ensureHtmlOption('maxlength','10');
+
 
         $options=CJavaScript::encode($this->options);
         $js = "jQuery('#{$displayId}').datepicker($options);";
@@ -97,13 +121,26 @@ class EDatePicker extends CInputWidget
             $cs->registerScript(__CLASS__,$this->defaultOptions!==null?'jQuery.datepicker.setDefaults('.CJavaScript::encode($this->defaultOptions).');':'');
         }
         $cs->registerScript(__CLASS__.'#'.$displayId,$js);
+
     }
 
+    private function ensureOption($name,$value){
+        if(!isset($this->options[$name])){
+            $this->options[$name] = $value;
+        }
+    }
+
+    private function ensureHtmlOption($name,$value){
+        if(!isset($this->htmlOptions[$name])){
+            $this->htmlOptions[$name] = $value;
+        }
+    }
 
     private function reformatDate($date,$format){
 
-        $ts = CDateTimeParser::parse($date,'yyyy-MM-dd');
-        return date('d/m/Y',$ts);
+        $ts = CDateTimeParser::parse($date,'d-m-y');
+        $result = date($format,$ts);
+        return $result;
 
     }
 }

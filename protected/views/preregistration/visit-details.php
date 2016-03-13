@@ -45,14 +45,9 @@ $timeIn[1] = date("i");
                     <div class="col-sm-3" style="line-height:30px">Date of Visit</div>
                     <div class="col-sm-6" style="line-height:30px">
                         <?php
-                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            $this->widget('EDatePicker', array(
                                 'model'       => $model,
                                 'attribute'   => 'date_in',
-                                'htmlOptions' => array(
-                                    'placeholder' => 'DD-MM-YYYY',
-                                    'value'=>date("d-m-Y"),
-                                    'class'=>'form-control input-sm from_date',
-                                ),
                             ));
                         ?>
                     </div>

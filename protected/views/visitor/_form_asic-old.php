@@ -472,20 +472,10 @@ if ($this->action->id == 'update') {
 
                                     <?php
 
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'changeMonth' => true,
-                                            'changeYear' => true
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'expiry',
                                     ));
                                     ?>
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
@@ -497,25 +487,10 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
-                                    $now         = new DateTime(date('Y-m-d'));
-                                    $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +2 year')));
-                                    $interval    = $asicMaxDate->diff($now);
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'asic_expiry',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'minDate' => '0',
-                                            'maxDate' => $interval->days,
-                                            'changeMonth' => true,
-                                            'changeYear' => true
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'asic_expiry',
                                     ));
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'asic_no'); ?>

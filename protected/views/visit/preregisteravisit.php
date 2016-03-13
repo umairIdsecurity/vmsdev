@@ -56,19 +56,13 @@ echo VisitStatus::PREREGISTERED;
 
         <td><?php
 $mindate = date("d-m-Y");
-$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+$this->widget('EDatePicker', array(
     'model' => $model,
     'attribute' => 'date_in',
     'htmlOptions' => array(
-        'size' => '10', // textField size
-        'maxlength' => '10', // textField maxlength
-        'placeholder' => 'dd-mm-yyyy',
         'disabled' => 'disabled',
     ),
     'options' => array(
-        'showButtonPanel' => false,
-        'showOn' => 'both',
-        'dateFormat' => 'dd-mm-yy',
         'minDate' => $mindate,
         'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
     )

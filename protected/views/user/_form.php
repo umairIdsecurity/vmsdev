@@ -4,8 +4,8 @@
 /* @var $form CActiveForm */
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
 $session = new CHttpSession;
 
@@ -310,21 +310,13 @@ $form = $this->beginWidget('CActiveForm', array(
 <?php } ?>
 <tr>
     <td class="birthdayDropdown">
-        Date Of Birth<span class="required">*</span><br/>
-
-        <?php echo $form->hiddenField($model,'date_of_birth',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
-        <script>
-            $(function(){
-                $('#User_date_of_birth').combodate({
-                    minYear: (new Date().getFullYear()-100),
-                    maxYear: (new Date().getFullYear()-10),
-                    smartDays: true,
-                    customClass: 'yearSelect',
-                    namePrefix: 'date_of_birth'
-                });
-            });
-        </script>
-
+        <?php $this->widget('EDatePicker', array(
+            'model'=>$model,
+            'attribute'=>'date_of_birth',
+            'htmlOptions'=>[]
+            ));
+        ?>
+        <span class="required">*</span><br/>
     </td>
 </tr>
 
@@ -354,19 +346,13 @@ $form = $this->beginWidget('CActiveForm', array(
     </tr>
     <tr>
         <td class="AsicExpiryDropdown">
-            ASIC Expiry<span class="required">*</span><br/>
-            <?php echo $form->hiddenField($model,'asic_expiry',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
-            <script>
-                $(function(){
-                    $('#User_asic_expiry').combodate({
-                        minYear: (new Date().getFullYear()),
-                        maxYear: (new Date().getFullYear()+10),
-                        smartDays: true,
-                        customClass: 'yearSelect',
-                        namePrefix: 'asic_expiry'
-                    });
-                });
-            </script>
+            <?php $this->widget('EDatePicker', array(
+                'model'=>$model,
+                'attribute'=>'asic_expiry',
+                'mode'=>'expiry',
+            ));
+            ?>
+            <span class="required">*</span><br/>
             <?php echo "<br>" . $form->error($model, 'asic_expiry'); ?>
 
         </td>
@@ -476,18 +462,14 @@ $form = $this->beginWidget('CActiveForm', array(
                         
                         <tr <?php if((($model->is_completed_induction == "1")) && !empty($model->induction_expiry) && ($this->action->id == "update")){}else{ echo 'style="display:none"'; } ?> class="induction_expiry_tr" id="induction_expiry_tr_id">
                             <td>
-                                Induction Expiry <span class="required">*</span>
-                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                                            'name'=>'User[induction_expiry]',
-                                            'value'=>$model->induction_expiry,
-                                            'options'=>array(
-                                                 'changeYear' => true,
-                                                'dateFormat'=>'dd-mm-yy',
-                                                'changeMonth'=> true,
-                                            ),
-                                            'htmlOptions'=>array("style"=>"width:30%","id"=>"induction_expiry_id","readonly"=>"readonly")
-                                )); ?> 
+                                Induction Expiry
+                                <?php $this->widget('EDatePicker', array(
+                                    'model'         => $model,
+                                    'attribute'     => 'induction_expiry',
+                                    'mode' =>'expiry'
+                                )); ?>
                                 <br>
+                                <span class="required">*</span>
                                 <span id="induction_expiry_error" style="display:none;color:red;">
                                     Please select an expiry date
 				</span>

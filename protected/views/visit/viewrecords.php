@@ -30,66 +30,23 @@
 $session = new CHttpSession;
 
 // this is the date picker
-$date_check_in = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-	// 'model'=>$model,
-	'name'        => 'Visit[date_check_in]',
+$date_check_in = $this->widget('EDatePicker', array(
 	'language'    => 'id',
-	'value'       => $model->date_check_in,
-	// additional javascript options for the date picker plugin
-	'options'     => array(
-		'showAnim'       => 'fold',
-		'dateFormat'     => 'dd-mm-yy',
-		'changeMonth'    => 'true',
-		'changeYear'     => 'true',
-		'constrainInput' => 'false',
-	),
-	'htmlOptions' => array(
-		'placeholder' => 'Check In Date',
-		/*'style'=>'height:20px;width:70px;',*/
-	),
-// DONT FORGET TO ADD TRUE this will create the datepicker return as string
+	'model'       => $model,
+	'attribute'   => 'date_check_in',
 ), true);
 
 // this is the date picker
-$date_check_out = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-	// 'model'=>$model,
-	'name'        => 'Visit[date_check_out]',
-	'language'    => 'id',
-	'value'       => $model->date_check_out,
-	                       // additional javascript options for the date picker plugin
-	'options'     => array(
-		'showAnim'       => 'fold',
-		'dateFormat'     => 'dd-mm-yy',
-		'changeMonth'    => 'true',
-		'changeYear'     => 'true',
-		'constrainInput' => 'false',
-	),
-	'htmlOptions' => array(
-		'placeholder' => 'Check Out Date',
-		/*'style'=>'height:20px;width:70px;',*/
-	),
-// DONT FORGET TO ADD TRUE this will create the datepicker return as string
+$date_check_out = $this->widget('EDatePicker', array(
+	'model'=>$model,
+	'attribute'        => 'date_check_out',
 ), true);
 
 // this is the date picker
-$date_of_birth = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-	// 'model'=>$model,
-	'name'        => 'Visit[date_of_birth]',
-	'language'    => 'id',
-	'value'       => $model->date_of_birth,
-	                       // additional javascript options for the date picker plugin
-	'options'     => array(
-		'showAnim'       => 'fold',
-		'dateFormat'     => 'mm-dd-yy',
-		'changeMonth'    => 'true',
-		'changeYear'     => 'true',
-		'constrainInput' => 'false',
-	),
-	'htmlOptions' => array(
-		'placeholder' => 'Date Of Birth',
-		/*'style'=>'height:20px;width:70px;',*/
-	),
-// DONT FORGET TO ADD TRUE this will create the datepicker return as string
+$date_of_birth = $this->widget('EDatePicker', array(
+	'model'       => $model,
+	'attribute'  => 'date_of_birth',
+	'mode' 		=> 'date_of_birth'
 ), true);
 
 $login_url = $this->createUrl('site/login');

@@ -65,16 +65,10 @@
 	<div class="row">
 		<?php echo $form->labelEx($model,'date_of_birth'); ?>
             <br>
-		 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                'name'=>'ImportHosts[date_of_birth]',
-                'value'=>$model->date_of_birth,  
+		 <?php $this->widget('EDatePicker', array(
+                'attribute'=>'date_of_birth',
                 'model'=>$model,
-                // additional javascript options for the date picker plugin
-                'options'=>array(
-                    'showAnim'=>'fold',
-                    'dateFormat'=>'dd-mm-yy',
-                ),
-                 
+			 	'mode' => 'date_of_birth',
                 ));
             ?>
 		<?php echo $form->error($model,'date_of_birth'); ?>

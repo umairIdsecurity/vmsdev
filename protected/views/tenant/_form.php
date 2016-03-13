@@ -7,8 +7,8 @@
 
 
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/combodate.js');
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/moment.min.js');
 $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
 
 $session = new CHttpSession;
@@ -178,19 +178,13 @@ $currentLoggedUserId = $session['id'];
 
                         <tr>
                             <td class="AsicExpiryDropdown">
-                                ASIC Expiry<span class="required">*</span><br/>
-                                <?php echo $form->hiddenField($model,'asic_expiry',['data-format'=>"DD-MM-YYYY",'data-template'=>"DD MMM YYYY"]) ?>
-                                <script>
-                                    $(function(){
-                                        $('#TenantForm_asic_expiry').combodate({
-                                            minYear: (new Date().getFullYear()),
-                                            maxYear: (new Date().getFullYear()+10),
-                                            smartDays: true,
-                                            customClass: 'yearSelect',
-                                            namePrefix: 'asic_expiry'
-                                        });
-                                    });
-                                </script>
+                                <?php $this->widget('EDatePicker', array(
+                                    'model'=>$model,
+                                    'attribute'=>'asic_expiry',
+                                    'mode'=>'expiry',
+                                ));
+                                ?>
+                                <span class="required">*</span><br/>
                                 <?php echo "<br>" . $form->error($model, 'asic_expiry'); ?>
 
                             </td>

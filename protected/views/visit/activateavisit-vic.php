@@ -167,20 +167,12 @@ $asicEscort = new AddAsicEscort();
             if( ($model->visit_status == VisitStatus::CLOSED || $model->visit_status == VisitStatus::AUTOCLOSED ) && $model->card_type != CardType::VIC_CARD_MANUAL ) {
                 $model->date_check_in = CHelper::getNextDate($model->date_check_out);
             }
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_in',
                 'htmlOptions' => array(
-                    'size'        => '10', // textField size
-                    'maxlength'   => '10', // textField maxlength
                     'readonly'    => 'readonly',
-                    'placeholder' => 'dd-mm-yyyy',
                 ),
-                'options' => array(
-                    'dateFormat'  => 'dd-mm-yy',
-                    'changeYear'  => true,
-                    'changeMonth' => true
-                )
             ));
             ?>
         </td>
@@ -245,19 +237,11 @@ $asicEscort = new AddAsicEscort();
             }*/
 
 
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            $this->widget('EDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_out',
                 'htmlOptions' => array(
-                    'size'        => '10', // textField size
-                    'maxlength'   => '10', // textField maxlength
                     'readonly'    => 'readonly',
-                    'placeholder' => 'dd-mm-yyyy',
-                ),
-                'options' => array(
-                   'dateFormat'  => 'dd-mm-yy',
-                   'changeYear'  => true,
-                   'changeMonth' => true
                 )
             ));
             ?>

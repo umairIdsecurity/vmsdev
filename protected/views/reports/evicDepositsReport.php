@@ -7,15 +7,11 @@
 )); ?>
         <label>Check In Date From:  </label>
             <?php
-                $this->widget( 'zii.widgets.jui.CJuiDatePicker',array(
+                $this->widget( 'EDatePicker',array(
                     'attribute'   => 'date_from_filter',
-                    'language'=> 'en',
                     'name'=>'date_from_filter',
                     'value'=>Yii::app()->request->getParam("date_from_filter")? Yii::app()->request->getParam("date_from_filter"):$dateFrom,
                     'options'=>array(
-                            'changeYear' => true,
-                            'dateFormat'=>'dd-mm-yy',
-                            'changeMonth'=> true,
                             'onClose' => 'js:function (selectedDate) { $("#date_to_filter").datepicker("option", "minDate", selectedDate); }',
                     ),
                    'htmlOptions'=>array('readonly'=>"readonly"),
@@ -25,17 +21,11 @@
         <br><br>
         <label>Check In Date To: </label>
                 <?php 
-                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                    $this->widget('EDatePicker', array(
                         'attribute'   => 'date_to_filter',
                         'language'=> 'en',
                         'name'=>'date_to_filter',
                         'value'=>Yii::app()->request->getParam("date_to_filter")?Yii::app()->request->getParam("date_to_filter"):$dateTo,
-                        // additional javascript options for the date picker plugin
-                        'options'=>array(
-                            'changeYear' => true,
-                            'dateFormat'=>'dd-mm-yy',
-                            'changeMonth'=> true,
-                        ),
                         'htmlOptions'=>array('readonly'=>"readonly"),
                     )); 
                 ?>

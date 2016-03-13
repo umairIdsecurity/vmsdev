@@ -154,22 +154,12 @@ $model->identification_country_issued = 13;
 
                             <tr class="vic-visitor-fields" id="vic-birth-date-field">
                                 <td class="birthdayDropdown">
-                                    <span>Date of Birth</span> <br/>
-                                    <?php
-                                    if (!strtotime($model->date_of_birth)) {
-                                        $model->date_of_birth = date('Y-m-d');
-                                    }
+                                    <?php $this->widget('EDatePicker', array(
+                                        'model'=>$model,
+                                        'attribute'=>'date_of_birth',
+                                        'htmlOptions'=>[]
+                                    ));
                                     ?>
-                                    <input type="hidden" id="dateofBirthBreakdownValueYear"
-                                           value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
-                                    <input type="hidden" id="dateofBirthBreakdownValueMonth"
-                                           value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
-                                    <input type="hidden" id="dateofBirthBreakdownValueDay"
-                                           value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                                    <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
-                                    <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
-                                    <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
                                     <span class="required">*</span>
                                     <br />
                                     <?php
@@ -482,21 +472,10 @@ $model->identification_country_issued = 13;
                                     <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'changeMonth' => 'true',
-                                            'changeYear' => 'true',
-                                            'minDate' => '0'
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'expiry',
                                     ));
                                     ?><!-- <span class="required primary-identification-require">*</span> -->
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
@@ -534,21 +513,10 @@ $model->identification_country_issued = 13;
                                     <?php echo $form->textField($model, 'identification_alternate_document_no1', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
 
                                     <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_alternate_document_expiry1',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'changeMonth' => 'true',
-                                            'changeYear' => 'true',
-                                            'minDate' => '0'
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'       =>  'expiry',
                                     ));
                                     ?><span class="required alternate-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no1'); ?>
@@ -568,21 +536,10 @@ $model->identification_country_issued = 13;
                                     <?php echo $form->textField($model, 'identification_alternate_document_no2', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
 
                                     <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_alternate_document_expiry2',
-                                        'options'     => array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'changeMonth' => 'true',
-                                            'changeYear' => 'true',
-                                            'minDate' => '0'
-                                        ),
-                                        'htmlOptions' => array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
+                                        'mode'        => 'expiry',
                                     ));
                                     ?><span class="required alternate-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no2'); ?>

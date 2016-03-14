@@ -1225,6 +1225,11 @@ $model->identification_country_issued = 13;
                     });
 
                 }
+            },
+            error: function(jqXHR,textStatus,errorThrown){
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
             }
         });
     }

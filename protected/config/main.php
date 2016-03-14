@@ -101,6 +101,7 @@ $result = CMap::mergeArray(
                     'allowAutoLogin' => true,
                     'loginUrl' => array('site/login'),
                     'authTimeout' => 1800, // 30 Minutes
+                    //'authTimeout' => 15
                 ),
                 'bootstrap' => array(
                     'class' => 'bootstrap.components.Bootstrap'),

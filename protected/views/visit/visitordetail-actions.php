@@ -21,7 +21,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <div id="closeVisitDiv" class="form">
 
                                     <?php
-                                        $closeVisitForm = $this->beginWidget('EActiveForm', array(
+                                        $closeVisitForm = $this->beginWidget('CActiveForm', array(
                                             'id' => 'close-visit-form',
                                             'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
                                             'enableAjaxValidation' => false,

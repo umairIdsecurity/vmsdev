@@ -37,7 +37,12 @@ class EDatePicker extends CJuiInputWidget
     public $options = [];
 
 
-    public function run(){
+    public function run()
+    {
+        echo $this->build();
+    }
+    public function build()
+    {
 
         list($name,$id)=$this->resolveNameID();
 
@@ -62,8 +67,6 @@ class EDatePicker extends CJuiInputWidget
             }
         }
 
-        echo CHtml::textField($displayName,$displayValue,$this->htmlOptions);
-        echo CHtml::hiddenField($name,$dateValue,$this->htmlOptions);
 
         $this->ensureOption('dateFormat','dd/mm/yy');
         $this->ensureOption('changeMonth',true);
@@ -113,6 +116,11 @@ class EDatePicker extends CJuiInputWidget
             $js = "jQuery('#{$displayId}').datepicker(jQuery.extend({showMonthAfterYear:false},jQuery.datepicker.regional['{$this->language}'],{$options}));";
         }
 
+
+        #render the conrrol
+        $html =  CHtml::textField($displayName,$displayValue,$this->htmlOptions)
+            ." ". CHtml::hiddenField($name,$dateValue,$this->htmlOptions);
+
         $cs = Yii::app()->getClientScript();
 
         if(isset($this->defaultOptions))
@@ -120,8 +128,15 @@ class EDatePicker extends CJuiInputWidget
             $this->registerScriptFile($this->i18nScriptFile);
             $cs->registerScript(__CLASS__,$this->defaultOptions!==null?'jQuery.datepicker.setDefaults('.CJavaScript::encode($this->defaultOptions).');':'');
         }
+
+
         $cs->registerScript(__CLASS__.'#'.$displayId,$js);
 
+        return $html;
+    }
+
+    public static function formatDate($date){
+        return EDatePicker::reformatDate($date,"d/m/Y");
     }
 
     private function ensureOption($name,$value){
@@ -136,11 +151,14 @@ class EDatePicker extends CJuiInputWidget
         }
     }
 
-    private function reformatDate($date,$format){
+    private static function reformatDate($date,$format){
 
         $ts = CDateTimeParser::parse($date,'d-m-y');
         $result = date($format,$ts);
         return $result;
 
     }
+
+
+
 }

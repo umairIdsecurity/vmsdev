@@ -64,11 +64,12 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
 }
 ?>
 <?php
-$visitorForm = $this->beginWidget('CActiveForm', [
+$visitorForm = $this->beginWidget('EActiveForm', [
     'id' => 'update-visitor-information-form',
     'htmlOptions' => ['name' => 'update-visitor-information-form'],
     'enableAjaxValidation'   => false,
     'enableClientValidation' => true,
+    'readOnly'               => in_array($model->visit_status, [VisitStatus::CLOSED,VisitStatus::AUTOCLOSED]),
     'clientOptions'          => [
         'validateOnSubmit' => false,
         'afterValidate'    => 'js:function(form, data, hasError){
@@ -365,12 +366,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         <td style="padding-left: 0 !important;">
 
                             <?php
-                            $this->widget('EDatePicker', array(
-                                'model' => $visitorModel,
-                                'attribute' => 'identification_document_expiry',
-                                'mode' => 'expiry',
-                                'options' => ['readOnly' => 'readOnly']
-                            ));
+                               echo $visitorForm->dateField($visitorModel,'identification_document_expiry',['mode'=>'expiry']);
                             ?>
 
                         </td>
@@ -432,11 +428,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td style="padding-left: 0 !important;">
 
                                 <?php
-                                $this->widget('EDatePicker', array(
-                                    'model' => $asic,
-                                    'attribute' => 'asic_expiry',
-                                    'mode' => 'asic_expiry',
-                                ));
+                                    echo $visitorForm->dateField($asic,'asic_expiry',['mode'=>'asic_expiry']);
                                 ?>
 
                                 <br />
@@ -583,10 +575,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         <li>
             <ul>
                 <li>
-                    <!-- because of https://ids-jira.atlassian.net/browse/CAVMS-1222 -->
-                <?php //if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) : ?>
-                    <button type="submit" class="greenBtn btnUpdateVisitorInfo actionForward" name="updateVisitorInfo">Update</button>
-                <?php //endif; ?>
+                    <?php echo $visitorForm->submitButton('Update',['id'=>'updateVisitorInfo','class'=>"greenBtn btnUpdateVisitorInfo actionForward"]) ?>
                 </li>
             </ul>
         </li>

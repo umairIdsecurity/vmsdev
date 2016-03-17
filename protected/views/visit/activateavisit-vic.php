@@ -37,7 +37,7 @@ $asicEscort = new AddAsicEscort();
     <tr>
         <td>&nbsp;</td>
     </tr>
-    <?php if ($model->visit_status != VisitStatus::AUTOCLOSED): ?>
+    <?php if (!in_array($model->visit_status, [VisitStatus::AUTOCLOSED,VisitStatus::CLOSED])): ?>
     <tr>
         <td class="vic-col">
             <input type="checkbox" value="1" name="VicHolderDecalarations" disabled="disabled" id="VicHolderDecalarations" class="vic-active-visit vic-active-declarations"/>

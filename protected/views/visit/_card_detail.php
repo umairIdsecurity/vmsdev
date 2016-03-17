@@ -1,4 +1,4 @@
-<?php
+    <?php
 $tenant = Company::model()->findByPk($visitorModel->tenant);
 if ($tenant) {
     //$company = Company::model()->findByPk($tenant->company);
@@ -48,9 +48,9 @@ if ($card) {
                 if ($model->card_type == CardType::VIC_CARD_24HOURS) {     
                         echo strtoupper(date('d M y', strtotime($model->date_check_in . '+ 1 DAY')));
                   } else {
-                        if($model->visit_status != VisitStatus::SAVED )  
+                        if($model->visit_status != VisitStatus::SAVED ) {
                             echo strtoupper(date('d M y', strtotime($model->date_check_out)));
-                        else { 
+                        } else {
                             echo strtoupper(date('d M y')); 
                         }
                   }

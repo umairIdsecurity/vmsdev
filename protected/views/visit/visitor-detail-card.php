@@ -132,11 +132,12 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 <?php endif; ?>
 
 <?php
-    $detailForm = $this->beginWidget('CActiveForm', array(
+    $detailForm = $this->beginWidget('EActiveForm', array(
         'id'          => 'update-visitor-detail-form',
         'htmlOptions' => array('name' => 'update-visitor-detail-form'),
         'enableAjaxValidation'   => false,
         'enableClientValidation' => true,
+        'readOnly'  => in_array($model->visit_status,[VisitStatus::CLOSED,VisitStatus::AUTOCLOSED]),
         'clientOptions'          => array(
             'validateOnSubmit' => false,
             'afterValidate'    => 'js:function(form, data, hasError){
@@ -254,7 +255,8 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 
     ?>
         <input type="hidden" name="updateVisitorDetailForm">
-        <button type="submit" name="updateVisitorDetailForm" id="updateVisitorDetailForm" class="greenBtn btnUpdateVisitorDetailForm actionForward">Update</button>
+        <?php echo $detailForm->submitButton("Update",['name'=>"updateVisitorDetailForm", 'id'=>"updateVisitorDetailForm",'class'=>"greenBtn btnUpdateVisitorDetailForm actionForward"]) ?>
+<!--        <button type="submit" name="updateVisitorDetailForm" id="updateVisitorDetailForm" class="greenBtn btnUpdateVisitorDetailForm actionForward">Update</button>-->
     </div>
 <?php $this->endWidget(); ?>
 

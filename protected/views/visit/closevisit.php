@@ -56,28 +56,6 @@
     <tr>
         <td>
             <?php echo $closeVisitForm->timeField($model,'finish_time',[]) ?>
-<!--            --><?php // if( !is_null($model->finish_time) ) {
-//
-//                $timeArr = explode(":", $model->finish_time );
-//                $hours = $timeArr[0]; $minutes = $timeArr[1];
-//               ?>
-<!--             <select class="time visit_time_in_hours_" id='Visit_time_check_out_hours' disabled style="width:70px;">-->
-<!--                --><?php //for ($i = 1; $i <= 24; $i++): ?>
-<!--                    <option value="--><?//= $i; ?><!--" --><?//= $hours == $i?"selected":"";?><!-->--><?//= date("H", strtotime("$i:00")); ?><!--</option>-->
-<!--                --><?php //endfor; ?>
-<!--            </select> :-->
-<!--            <select class='time visit_time_in_minutes_'  id='Visit_time_check_out_minutes' disabled style="width:70px;">-->
-<!--                --><?php //for ($i = 1; $i <= 60; $i++): ?>
-<!--                    <option value="--><?//= $i; ?><!--" --><?//= $minutes == $i?"selected":"";?><!-->--><?php
-//                        if ($i > 0 && $i < 10) {
-//                            echo '0' . $i;
-//                        } else {
-//                            echo $i;
-//                        };
-//                        ?><!--</option>-->
-<!--                --><?php //endfor; ?>
-<!--            </select>-->
-<!--            --><?php //} ?>
         </td>
     </tr>
 
@@ -92,13 +70,7 @@
                 if (empty($model->card_returned_date)) {
                     $model->card_returned_date = date('d-m-Y');
                 }
-                $this->widget('EDatePicker', array(
-                    'model' => $model,
-                    'attribute' => 'card_returned_date',
-                    'htmlOptions' => array(
-                        'readOnly' => 'readOnly'
-                    )
-                ));
+                $closeVisitForm->dateField($model,'card_returned_date',[]);
                 ?>
             </td>
         </tr>

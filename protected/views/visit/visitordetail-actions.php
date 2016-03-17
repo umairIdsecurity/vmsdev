@@ -931,7 +931,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
 <div style='display:none;'>
     <?php
-    $cancelForm = $this->beginWidget('CActiveForm', array(
+    $cancelForm = $this->beginWidget('EActiveForm', array(
         'id' => 'cancel-visit-form',
         'htmlOptions' => array("name" => "cancel-visit-form"),
         'enableAjaxValidation' => false,
@@ -961,7 +961,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <?php $this->endWidget(); ?>
 
     <?php
-    $cardForm = $this->beginWidget('CActiveForm', array(
+    $cardForm = $this->beginWidget('EActiveForm', array(
         'id' => 'update-card-form',
         'action' => Yii::app()->createUrl('/cardGenerated/create&visitId=' . $model->id),
         'htmlOptions' => array("name" => "update-card-form"),

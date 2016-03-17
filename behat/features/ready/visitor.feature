@@ -10,7 +10,7 @@ Feature: Visitor
     And I fill in "Visitor_first_name" with "First"
     And I fill in "Visitor_middle_name" with "Middle"
     And I fill in "Visitor_last_name" with "Last"
-    And I fill in "Visitor[date_of_birth]" with "01-01-1970"
+    And I fill in "Visitor_date_of_birth_container" with "01/01/1970"
     And I fill in "Visitor_email" with "issuingbody@test.com"
     And I fill in "Visitor_contact_number" with "0418936555"
     And I fill in "Visitor_contact_street_no" with "1"
@@ -21,6 +21,8 @@ Feature: Visitor
     And I select "Western Australia" from "Visitor[contact_state]"
     And I fill in "Visitor_contact_postcode" with "6000"
     And I select "Australia" from "Visitor_contact_country"
+    And I press "submitFormVisitor"
+
 
 
 

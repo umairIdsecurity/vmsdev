@@ -11,11 +11,11 @@ fi
 PATH=vendor/bin:$PATH
 
 #start phantomjs
-echo starting phantomjs
+#echo starting phantomjs
+#phantomjs --webdriver=8643 >> phantomjs.log &
+#phantomjs_pid=$!
 
-phantomjs --webdriver=8643 >> phantomjs.log &
-phantomjs_pid=$!
-
+java -jar selenium-server.jar -port=8643
 
 #run the tests
 echo starting behat

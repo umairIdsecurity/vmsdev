@@ -117,9 +117,9 @@ class EDatePicker extends CJuiInputWidget
         }
 
 
-        #render the conrrol
+        #render the control
         $html =  CHtml::textField($displayName,$displayValue,$this->htmlOptions)
-            ." ". CHtml::hiddenField($name,$dateValue,$this->htmlOptions);
+            ." ". CHtml::hiddenField($name,$dateValue,['id'=>$id]);
 
         $cs = Yii::app()->getClientScript();
 

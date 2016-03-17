@@ -138,7 +138,7 @@
                     <div class="col-xs-12 col-md-12 col-sm-12">
                         <!-- <span class="">Expiry</span> -->
                         <?php
-                        $this->widget('EiDatePicker', array(
+                        $this->widget('EDatePicker', array(
                             'model'       => $model,
                             'attribute'   => 'identification_document_expiry',
                             'mode'        => 'expiry',

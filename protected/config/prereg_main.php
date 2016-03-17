@@ -38,6 +38,7 @@ return CMap::mergeArray(
             'application.models.*',
             'application.components.*',
             'application.components.*',
+            'application.extensions.*',
             'application.extensions.bootstrap.widgets.*',
             'application.service.impl.*',
             'application.service.*',

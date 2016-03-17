@@ -412,10 +412,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
-            
+
+            /** Check for ASIC Pending **/
+            var asicPending = checkForAsicPending();
+
             /** Check Visit Count if exceed 28 days than don;t activate it */
             var countExceeds = checkForVisitCountLimit();
-            if( countExceeds == 0) {
+            if( countExceeds == 0 && asicPending==0) {
                 $("#visit_cannot_be_activate").html("Visitor has reached 28 days limit.");
                 $("#visit_cannot_be_activate").show();
                  return false;
@@ -904,6 +907,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             }
                 
     }
+
+    // Check for ASIC Pending
+    function checkForAsicPending() {
+        return '<?php echo Visitor::model()->findByPk($model->visitor)->visitor_card_status == Visitor::VIC_ASIC_PENDING?"1":"0"; ?>';
+    }
+
     // Check if user tries to activate it with future dates
     function CheckIfThisWithFutureDate() {
          var checkInDate = $("#Visit_date_check_in").datepicker('getDate');

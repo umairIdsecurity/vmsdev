@@ -124,7 +124,7 @@ function displaySelectVisitorButton($visitorData) {
 
 function returnVisitorDetailLink($visitorId) {
     // Dont Allow to select if visit count greator or equal to 28
-    if(Visit::model()->getOldVisitsCountForThisYear(0, $visitorId) >= 28) {
+    if(Visit::model()->getOldVisitsCountForThisYear(0, $visitorId) >= 28 && Visitor::model()->findByPk($visitorId)->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
         return "<span class='red'> Visitor has reached 28 days limit. </span>";
     }
     $criteria = new CDbCriteria;

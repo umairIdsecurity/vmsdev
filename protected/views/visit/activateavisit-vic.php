@@ -3,6 +3,7 @@ $session = new CHttpSession;
 
 $identification_document_expiry = date('Y-m-d', strtotime($visitorModel->identification_document_expiry));
 $asicEscort = new AddAsicEscort();
+
 ?>
 <style>
     .vic-active-visit {margin-top: 0px !important;padding-top: 5px;}
@@ -95,28 +96,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td>
-            <?php
-                $hours = '';
-                $minutes = '';
-                if(!empty($model->time_check_in) && !is_null($model->time_check_in)) 
-                {   
-                    $hours = date("H",strtotime($model->time_check_in));
-                    $minutes = date("i",strtotime($model->time_check_in));
-                }
-            ?>
-
-            <select style="width:70px;">
-                <?php for ($i = 1; $i <= 24; $i++): ?>
-                    <option value="<?php echo $i; ?>" <?php echo ($i==$hours) ? "selected":""; ?>><?php echo ($i > 0 && $i < 10) ? '0' . $i : $i; ?></option>
-                <?php endfor; ?>
-            </select> :
-
-            <select style="width:70px;">
-                <?php for ($i = 0; $i <= 59; $i++): ?>
-                    <option value="<?php echo $i; ?>" <?php echo ($i==$minutes) ? "selected":""; ?>><?php echo ($i >= 0 && $i < 10) ? '0' . $i : $i; ?></option>
-                <?php endfor; ?>
-            </select>
-            
+            <?php echo $logform->timeField($model,'time_check_in',[]) ?>
         </td>
     </tr>
 
@@ -126,7 +106,6 @@ $asicEscort = new AddAsicEscort();
     <tr>
         <td>
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
-            <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
             <?php
 
             if (!strtotime($model->date_check_in) || $model->date_check_out == '0000-00-00') {
@@ -140,40 +119,14 @@ $asicEscort = new AddAsicEscort();
             else{
                 $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));    
             }
-            
 
-            /*
-            CAV -- 788
-            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_MANUAL])) {
-                $model->date_check_in = date('d-m-Y');
-            }*/
-
-            // Extended Card Type (EVIC) or 24h
-            /*if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                switch ($model->card_type) {
-                    case CardType::VIC_CARD_24HOURS:
-                        $model->date_check_in = date('d-m-Y', strtotime('+ 1 day'));
-                        break;
-                    case CardType::VIC_CARD_EXTENDED:
-                        $model->date_check_in = date('d-m-Y', strtotime($model->finish_date . '+ 1 day'));
-                        break;
-                    default:
-                        $model->date_check_in = date('d-m-Y');
-                        break;
-                }
-            }*/
-            
-             // Checkin date for Closed and Auto Closed should be Next day from the checkOut date
+            // Checkin date for Closed and Auto Closed should be Next day from the checkOut date
             if( ($model->visit_status == VisitStatus::CLOSED || $model->visit_status == VisitStatus::AUTOCLOSED ) && $model->card_type != CardType::VIC_CARD_MANUAL ) {
                 $model->date_check_in = CHelper::getNextDate($model->date_check_out);
             }
-            $this->widget('EDatePicker', array(
-                'model' => $model,
-                'attribute' => 'date_check_in',
-                'htmlOptions' => array(
-                    'readonly'    => 'readonly',
-                ),
-            ));
+
+            echo $logform->dateField($model,'date_check_in',[]);
+
             ?>
         </td>
     </tr>
@@ -212,38 +165,8 @@ $asicEscort = new AddAsicEscort();
             }
 
 
+            echo $logform->dateField($model,'date_check_out',[]);
 
-            //$model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
-
-            // Extended Card Type (EVIC) or Multiday
-            /*if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                switch ($model->card_type) {
-                    case CardType::VIC_CARD_24HOURS:
-                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
-                        break;
-                    case CardType::VIC_CARD_EXTENDED:
-                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
-                        break;
-                    default:
-                        $model->date_check_out = date('d-m-Y');
-                        break;
-                }
-            }
-            // Update date check out for Saved, Closed, AutoClosed Visit
-            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
-                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out. ' +1 day'));
-
-                $model->time_check_out = $model->time_check_in;
-            }*/
-
-
-            $this->widget('EDatePicker', array(
-                'model' => $model,
-                'attribute' => 'date_check_out',
-                'htmlOptions' => array(
-                    'readonly'    => 'readonly',
-                )
-            ));
             ?>
             <br>
             <span id="checkout_date_warning" style="display: none;" class="label label-warning"></span>

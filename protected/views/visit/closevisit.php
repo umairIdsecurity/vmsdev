@@ -46,7 +46,7 @@
                 }
             }?>
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
-            <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
+<!--            <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">-->
             <input type="text" value="<?php echo $model->date_check_out;//echo isset($model->date_check_out) ? date('d-m-Y', strtotime($model->date_check_out)) : date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
         </td>
     </tr>
@@ -55,28 +55,29 @@
     </tr>
     <tr>
         <td>
-            <?php  if( !is_null($model->finish_time) ) {
-                
-                $timeArr = explode(":", $model->finish_time );
-                $hours = $timeArr[0]; $minutes = $timeArr[1];
-               ?>
-             <select class="time visit_time_in_hours_" id='Visit_time_check_out_hours' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 24; $i++): ?>
-                    <option value="<?= $i; ?>" <?= $hours == $i?"selected":"";?>><?= date("H", strtotime("$i:00")); ?></option>
-                <?php endfor; ?>
-            </select> :
-            <select class='time visit_time_in_minutes_'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 60; $i++): ?>
-                    <option value="<?= $i; ?>" <?= $minutes == $i?"selected":"";?>><?php
-                        if ($i > 0 && $i < 10) {
-                            echo '0' . $i;
-                        } else {
-                            echo $i;
-                        };
-                        ?></option>
-                <?php endfor; ?>
-            </select>
-            <?php } ?>
+            <?php echo $closeVisitForm->timeField($model,'finish_time',[]) ?>
+<!--            --><?php // if( !is_null($model->finish_time) ) {
+//
+//                $timeArr = explode(":", $model->finish_time );
+//                $hours = $timeArr[0]; $minutes = $timeArr[1];
+//               ?>
+<!--             <select class="time visit_time_in_hours_" id='Visit_time_check_out_hours' disabled style="width:70px;">-->
+<!--                --><?php //for ($i = 1; $i <= 24; $i++): ?>
+<!--                    <option value="--><?//= $i; ?><!--" --><?//= $hours == $i?"selected":"";?><!-->--><?//= date("H", strtotime("$i:00")); ?><!--</option>-->
+<!--                --><?php //endfor; ?>
+<!--            </select> :-->
+<!--            <select class='time visit_time_in_minutes_'  id='Visit_time_check_out_minutes' disabled style="width:70px;">-->
+<!--                --><?php //for ($i = 1; $i <= 60; $i++): ?>
+<!--                    <option value="--><?//= $i; ?><!--" --><?//= $minutes == $i?"selected":"";?><!-->--><?php
+//                        if ($i > 0 && $i < 10) {
+//                            echo '0' . $i;
+//                        } else {
+//                            echo $i;
+//                        };
+//                        ?><!--</option>-->
+<!--                --><?php //endfor; ?>
+<!--            </select>-->
+<!--            --><?php //} ?>
         </td>
     </tr>
 

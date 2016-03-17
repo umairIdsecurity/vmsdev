@@ -24,29 +24,8 @@
     </tr>
     <tr>
         <td>
-            <?php  if( !is_null($model->finish_time) ) {
-                
-                $timeArr = explode(":", $model->finish_time );
-                $hours = $timeArr[0]; $minutes = $timeArr[1];
-              ?>
-            
-            <select class="time visit_time_in_hours_" id='Visit_time_check_out_hours' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 24; $i++): ?>
-                    <option value="<?= $i; ?>" <?= $hours == $i?"selected":"";?>><?= date("H", strtotime("$i:00")); ?></option>
-                <?php endfor; ?>
-            </select> :
-            <select class='time visit_time_in_minutes_'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 60; $i++): ?>
-                    <option value="<?= $i; ?>" <?= $minutes == $i?"selected":"";?>><?php
-                        if ($i > 0 && $i < 10) {
-                            echo '0' . $i;
-                        } else {
-                            echo $i;
-                        };
-                        ?></option>
-                <?php endfor; ?>
-            </select>
-            <?php } ?>
+            <?php echo $closeVisitForm->timeField($model,'finish_time',[]) ?>
+
         </td>
     </tr>
 
@@ -61,13 +40,7 @@
 
             <?php
             $model->finish_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
-            $this->widget('EDatePicker', array(
-                'model' => $model,
-                'attribute' => 'finish_date',
-                'htmlOptions' => array(
-                    'readOnly' => 'readOnly'
-                )
-            ));
+            echo $closeVisitForm->dateField($model,'finish_date',[]);
             ?>
         </td>
     </tr>
@@ -132,13 +105,7 @@
         <td>
             <?php
             $model->card_returned_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
-            $this->widget('EDatePicker', array(
-                'model' => $model,
-                'attribute' => 'card_returned_date',
-                'htmlOptions' => array(
-                    'readOnly' => 'readOnly'
-                )
-            ));
+            echo $closeVisitForm->dateField($model,'card_returned_date',[]);
             ?>
         </td>
     </tr>

@@ -82,22 +82,10 @@ class EActiveForm extends CActiveForm
 
     public function dateField($model, $attribute,$options = [], $htmlOptions = [])
     {
-        if($this->readOnly){
-
-            Chtml::resolveNameID($model,$attribute,$htmlOptions);
-            return Chtml::textField($htmlOptions['name'],
-                                    EDatePicker::formatDate($model->attributes[$attribute]),
-                                    array_merge($htmlOptions, $this->readOnly ? ['readOnly' => 'readOnly','disabled'=>'disabled'] : []));
-        } else {
-            $picker = $this->widget('EDatePicker',
-                                    array_merge(['model'=>$model,'attribute'=>$attribute,'htmlOptions'=>$htmlOptions]
-                                                ,$options));
-            //return $picker->build();
+            $this->widget('EDatePicker',
+                        array_merge(['model'=>$model,'attribute'=>$attribute,'htmlOptions'=>array_merge($htmlOptions, $this->readOnly ? ['readOnly' => 'readOnly','disabled'=>'disabled'] : [])]
+                                    ,$options));
             return "";
-        }
-
-        //return parent::dateField($model, $attribute, array_merge($htmlOptions, $this->readOnly ? ['readOnly' => 'readOnly'] : []));
-        //return parent::dateField($model, $attribute, $htmlOptions);
     }
 
     public function dateTimeField($model, $attribute, $htmlOptions = [])

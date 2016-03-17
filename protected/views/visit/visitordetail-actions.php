@@ -21,7 +21,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <div id="closeVisitDiv" class="form">
 
                                     <?php
-                                        $closeVisitForm = $this->beginWidget('CActiveForm', array(
+                                        $closeVisitForm = $this->beginWidget('EActiveForm', array(
                                             'id' => 'close-visit-form',
                                             'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
                                             'enableAjaxValidation' => false,
@@ -72,11 +72,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 <ul>
                     <li>
                         <?php
-                        $logform = $this->beginWidget('CActiveForm', array(
+                        $logform = $this->beginWidget('EActiveForm', array(
                             'id' => 'activate-a-visit-form',
                             'htmlOptions' => array("name" => "activate-a-visit-form"),
                             'enableAjaxValidation' => false,
                             'enableClientValidation' => true,
+                            'readOnly' => in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                                 'afterValidate' => 'js:function(form, data, hasError){

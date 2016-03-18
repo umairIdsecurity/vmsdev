@@ -34,7 +34,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'readonly' => 'readonly',
                 ),
                 'options' => array(
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
+                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "minDate", selectedDate); }',
                 )
             ));
             ?>
@@ -53,7 +53,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'readonly' => 'readonly',
                 ),
                 'options' => array(
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "maxDate", selectedDate); }',
+                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "maxDate", selectedDate); }',
                 )
             ));
             ?>

@@ -230,7 +230,7 @@ $asicEscort = new AddAsicEscort();
                     break;
             } 
         }
-        $("#Visit_date_check_in").datepicker({
+        $("#Visit_date_check_in_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -267,7 +267,7 @@ $asicEscort = new AddAsicEscort();
                         break;
                 }
 
-                $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
+                $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "getDate"));
                               
                 var currentDate2  =   new Date(); 
                 var sD= selectedDate.split("-");
@@ -300,9 +300,9 @@ $asicEscort = new AddAsicEscort();
         });
   
 
-        $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
+        $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "getDate"));
         
-        $("#dateoutDiv #Visit_date_check_out").datepicker({
+        $("#dateoutDiv #Visit_date_check_out_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",

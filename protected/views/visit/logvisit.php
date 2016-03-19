@@ -34,7 +34,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'readonly' => 'readonly',
                 ),
                 'options' => array(
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
+                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_in_container").datepicker("option", "minDate", selectedDate); }',
                 )
             ));
             ?>
@@ -53,7 +53,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'readonly' => 'readonly',
                 ),
                 'options' => array(
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "maxDate", selectedDate); }',
+                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_out_container").datepicker("option", "maxDate", selectedDate); }',
                 )
             ));
             ?>
@@ -115,7 +115,7 @@ $logform = $this->beginWidget('CActiveForm', array(
             }
         }
 
-        $("#Visit_date_in").datepicker({
+        $("#Visit_date_in_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -124,10 +124,10 @@ $logform = $this->beginWidget('CActiveForm', array(
             buttonText: "Select Date From",
             dateFormat: "yy-mm-dd",
             onClose: function(selectedDate) {
-                $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
+                $("#Visit_date_out_container").datepicker("option", "minDate", selectedDate);
             }
         });
-        $("#Visit_date_out").datepicker({
+        $("#Visit_date_out_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -136,12 +136,12 @@ $logform = $this->beginWidget('CActiveForm', array(
             buttonText: "Select Date From",
             dateFormat: "yy-mm-dd",
             onClose: function(selectedDate) {
-                $("#Visit_date_in").datepicker("option", "maxDate", selectedDate);
+                $("#Visit_date_in_container").datepicker("option", "maxDate", selectedDate);
             }
         });
         
         $('#update-log-visit-form').bind('submit', function() {
-            $(this).find('#Visit_date_out').removeAttr('disabled');
+            $(this).find('#Visit_date_out_container').removeAttr('disabled');
         });
 
     });

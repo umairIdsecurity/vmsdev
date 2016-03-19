@@ -916,7 +916,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
     // Check if user tries to activate it with future dates
     function CheckIfThisWithFutureDate() {
-         var checkInDate = $("#Visit_date_check_in").datepicker('getDate');
+         var checkInDate = $("#Visit_date_check_in_container").datepicker('getDate');
          checkInDate = new Date(checkInDate);
          var currentDate = new Date();
          var visitStatus = "<?php echo $model->visit_status?>";

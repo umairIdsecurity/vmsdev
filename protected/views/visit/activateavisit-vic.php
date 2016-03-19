@@ -230,7 +230,7 @@ $asicEscort = new AddAsicEscort();
                     break;
             } 
         }
-        $("#Visit_date_check_in").datepicker({
+        $("#Visit_date_check_in_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -248,26 +248,26 @@ $asicEscort = new AddAsicEscort();
                     case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":
                         var checkOutDate = new Date(checkInSelectedDate);
                         checkOutDate.setDate(checkOutDate.getDate() + <?php echo $visitCount['remainingDays'];?>);
-                        $("#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", checkInSelectedDate);
-                        $("#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "maxDate", checkOutDate);
-                        $("#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkOutDate);
+                        $("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "option", "minDate", checkInSelectedDate);
+                        $("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "option", "maxDate", checkOutDate);
+                        $("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "setDate", checkOutDate);
                         break;
                     case "<?php echo CardType::VIC_CARD_MANUAL; ?>":
-                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkInSelectedDate);
+                        $( "#dateoutDiv #Visit_date_check_out_container" ).datepicker( "setDate", checkInSelectedDate);
                         break;
                     case "<?php echo CardType::VIC_CARD_24HOURS; ?>":
                         var checkOutDate = new Date(checkInSelectedDate);
                         checkOutDate.setDate(checkOutDate.getDate() + 1);
-                        $("#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkOutDate);
+                        $("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "setDate", checkOutDate);
                         $("#registerNewVisit").removeAttr("disabled"); /* Can be preregistered */
                         break;
                     default:
-                        $("#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", checkInSelectedDate);
-                        $("#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkInSelectedDate);
+                        $("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "option", "minDate", checkInSelectedDate);
+                        $("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "setDate", checkInSelectedDate);
                         break;
                 }
 
-                $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
+                $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "getDate"));
                               
                 var currentDate2  =   new Date(); 
                 var sD= selectedDate.split("-");
@@ -300,9 +300,9 @@ $asicEscort = new AddAsicEscort();
         });
   
 
-        $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
+        $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out_container" ).datepicker( "getDate"));
         
-        $("#dateoutDiv #Visit_date_check_out").datepicker({
+        $("#dateoutDiv #Visit_date_check_out_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",

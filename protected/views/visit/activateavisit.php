@@ -119,7 +119,7 @@ $session = new CHttpSession;
 
         refreshTimeIn();
 
-        $("#Visit_date_check_in").datepicker({
+        $("#Visit_date_check_in_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -129,9 +129,9 @@ $session = new CHttpSession;
             dateFormat: "dd-mm-yy",
             onClose: function (selectedDate) {
                 var currentDate  = d.getDate() + '-0' + (d.getMonth() + 1) + '-' + d.getFullYear();
-                var checkInSelectedDate = $("#Visit_date_check_in").datepicker('getDate');
+                var checkInSelectedDate = $("#Visit_date_check_in_container").datepicker('getDate');
 
-                $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                $( "#dateoutDiv #Visit_date_check_out_container" ).datepicker( "option", "minDate", selectedDate);
 
                 //update text of visit button
                  function updateTextVisitButton(text, id, val) {
@@ -166,7 +166,7 @@ $session = new CHttpSession;
             }
         });
 
-        $("#dateoutDiv #Visit_date_check_out").datepicker({
+        $("#dateoutDiv #Visit_date_check_out_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",

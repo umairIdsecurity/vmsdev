@@ -103,9 +103,13 @@ class EActiveForm extends CActiveForm
         return parent::textArea($model, $attribute, array_merge($htmlOptions, $this->readOnly ? ['readOnly' => 'readOnly'] : []));
     }
 
-    public function timeField($model, $attribute, $htmlOptions = [])
+    public function timeField($model, $attribute,$htmlOptions = [])
     {
-        return parent::timeField($model, $attribute, array_merge($htmlOptions, $this->readOnly ? ['readOnly' => 'readOnly'] : []));
+        $this->widget('ETimePicker',
+            array_merge(['model'=>$model,'attribute'=>$attribute,'htmlOptions'=>array_merge($htmlOptions, $this->readOnly ? ['readOnly' => 'readOnly','disabled'=>'disabled'] : [])]
+                ,[]));
+        return "";
+        //return parent::timeField($model, $attribute, array_merge($htmlOptions, $this->readOnly ? ['readOnly' => 'readOnly'] : []));
     }
 
     public function urlField($model, $attribute, $htmlOptions = [])

@@ -123,6 +123,7 @@ class EDatePicker extends CJuiInputWidget
 
         $cs = Yii::app()->getClientScript();
 
+
         if(isset($this->defaultOptions))
         {
             $this->registerScriptFile($this->i18nScriptFile);

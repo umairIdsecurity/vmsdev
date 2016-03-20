@@ -1191,9 +1191,9 @@ class VisitController extends Controller {
         $model->attributes     = Yii::app()->request->getPost('Visit');
         $model->card_option = "Returned";
         // set status to pre-registered
-        if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
+        //if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
             $model->visit_status = VisitStatus::PREREGISTERED;
-        }
+        //}
 
         // If type not null & is backdate
         if ($type == 'backdate') {

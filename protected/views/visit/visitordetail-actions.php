@@ -164,8 +164,11 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                           ?>
                             
                              <div style="display:none;" id="visit_cannot_be_activate" class="errorMessage">VIC can not be activated in the future</div>
-                            <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
-                             
+                            <?php if(in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
+                                <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Create New Visit</button>
+                            <?php } else { ?>
+                                <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
+                            <?php }; ?>
                               
                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>

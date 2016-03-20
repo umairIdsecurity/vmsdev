@@ -1180,8 +1180,8 @@ class VisitController extends Controller {
         $model->time_in        = '';
         $model->time_out       = '';
         $model->date_out       = '';
-        $model->date_check_in  = '';
-        $model->time_check_in  = '';
+        $model->date_check_in  = date('d/m/Y');
+        $model->time_check_in  = date('H:i');
         $model->time_check_out = '';
         $model->date_check_out = '';
         $model->card           = NULL;

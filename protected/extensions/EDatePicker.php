@@ -46,7 +46,6 @@ class EDatePicker extends CJuiInputWidget
 
         list($name,$id)=$this->resolveNameID();
 
-
         $displayId = $id."_container";
         $displayName = $displayId;
         $dateValue = null;
@@ -57,7 +56,8 @@ class EDatePicker extends CJuiInputWidget
         } else {
             $dateValue = $this->value;
         }
-        $displayValue = $dateValue?$this->reformatDate($dateValue,'d/m/Y'):'';
+
+        $displayValue = $dateValue?DateUtil::reformat($dateValue,'dd/MM/yyyy'):'';
 
         if(!isset($this->htmlOptions['placeholder'])) {
             if(isset($this->attribute) && isset($this->model)) {
@@ -108,6 +108,8 @@ class EDatePicker extends CJuiInputWidget
 
 
         $options=CJavaScript::encode($this->options);
+        //$js = "if(!$('#{$displayId}').datepicker('options','dateFormat)){jQuery('#{$displayId}').datepicker();};";
+        //$js = $js."jQuery('#{$displayId}').datepicker('option', $options);";
         $js = "jQuery('#{$displayId}').datepicker($options);";
 
         if($this->language!='' && $this->language!='en')
@@ -133,11 +135,12 @@ class EDatePicker extends CJuiInputWidget
 
         $cs->registerScript(__CLASS__.'#'.$displayId,$js);
 
+
         return $html;
     }
 
     public static function formatDate($date){
-        return EDatePicker::reformatDate($date,"d/m/Y");
+        return DateUtil::reformat($date,"d/m/Y");
     }
 
     private function ensureOption($name,$value){
@@ -152,13 +155,7 @@ class EDatePicker extends CJuiInputWidget
         }
     }
 
-    private static function reformatDate($date,$format){
 
-        $ts = CDateTimeParser::parse($date,'d-m-y');
-        $result = date($format,$ts);
-        return $result;
-
-    }
 
 
 

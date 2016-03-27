@@ -44,14 +44,14 @@ class Visit extends CActiveRecord {
 
     public $time_in_minutes;
     public $time_in_hours;
-    private $_visitor;
-    private $_firstname;
-    private $_lastname;
-    private $_company;
-    private $_contactnumber;
-    private $_contactemail;
-    private $_datecheckin1;
-    private $_cardnumber;
+    public $visitor;
+    public $firstname;
+    public $lastname;
+    public $company;
+    public $contactnumber;
+    public $contactemail;
+    public $datecheckin1;
+    public $cardnumber;
     public $filterProperties;
     public $companycode;
     public $date_of_birth;
@@ -68,12 +68,24 @@ class Visit extends CActiveRecord {
     public $asic_no;
     public $asic_expiry;
     public $contact_state;
-    public $_contactperson;
-    public $_contactphone;
-    public $_asicname;
+    public $contactperson;
+    public $contactphone;
+    public $asicname;
     public $other_reason;
     public $deposit_paid;
     public $sendMail;
+
+    public $max_visit_duration;
+    public $max_time;
+    public $max_duration;
+    public $min_duration;
+    public $min_start_date;
+    public $max_start_date;
+    public $max_end_date;
+    public $allow_update_end_date;
+    public $photo_required_after_3_days;
+    public $photo_required;
+
 
     public $visitClockTime = array(
                 '5:00' => '5:00',
@@ -115,6 +127,13 @@ class Visit extends CActiveRecord {
         return 'visit';
     }
 
+    public function populateRecord($data,$callAfterFind=true,$index=NULL)
+    {
+        $result = parent::populateRecord($data,$callAfterFind,$index);
+        $result->beforeShowDetail();
+        return $result;
+    }
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -122,16 +141,10 @@ class Visit extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
+
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('visitor', 'required', 'on' => 'api'),
-            
-            //array('other_reason', 'unique','className'=>'VisitReason','attributeName'=>'reason','message'=>"Reason must be unique"),
-            //array('other_reason','required','on'=>'preregistration','message'=>'Please complete {attribute}'),
-
             array('visitor_type,reason','required','on' => 'preregistration','message'=>'Please complete {attribute}'),
-            
-            
-
             array('reason,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('closed_by, visit_closed_date, date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
@@ -143,28 +156,147 @@ class Visit extends CActiveRecord {
             array('id,datecheckin1,cardnumber,company,firstname,lastname,email, contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date, police_report_number, card_option, closed_by', 'safe', 'on' => 'search'),
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date, closed_by', 'safe', 'on' => 'search_history'),
             array('card_lost_declaration_file', 'file', 'types' => 'pdf,doc,docx,jpg,jpeg,gif,png', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * 10, 'wrongType'=>'Please upload file with these extensions pdf, doc, docx, jpg, jpeg, gif, png.'),
-            
+
+
         );
+    }
+
+    public function beforeShowDetail(){
+        if($this->scenario!='search') {
+            $this->setDefaultCheckInOutValues();
+            $this->setDateRangeValues();
+        }
     }
 
     public function getVisitor() {
         // return private attribute on search
         if ($this->scenario == 'search') {
-            return $this->_visitor;
+            return $this->visitor;
         }
     }
 
     public function setVisitor($value) {
         // set private attribute for search
-        $this->_visitor = $value;
+        $this->visitor = $value;
     }
 
     public function getDatecheckin1() {
         // return private attribute on search
         if ($this->scenario == 'search') {
-            return $this->_datecheckin1;
+            return $this->datecheckin1;
         }
     }
+
+    public function getDateRangeOptions(){
+
+
+        return [
+            'min_start_date' => DateUtil::reformat($this->min_start_date,'dd/MM/yyyy'),
+            'max_start_date' => DateUtil::reformat($this->max_start_date,'dd/MM/yyyy'),
+            'min_duration' => $this->min_duration,
+            'max_duration' => $this->max_duration,
+            'max_end_date' => DateUtil::reformat($this->max_end_date,'dd/MM/yyyy'),
+        ];
+    }
+
+    public function setDefaultCheckInOutValues(){
+
+        $this->date_check_in = DateUtil::reformatForDisplay($this->date_check_in);
+        $this->date_check_out = DateUtil::reformatForDisplay($this->date_check_out);
+
+
+        if($this->isNullDate($this->date_check_in)){
+            $this->date_check_in = $this->date_in = date('Y-m-d');
+        }
+
+        if($this->time_check_in == null){
+            $this->time_check_in = $this->time_in  = date('h:ma');
+        }
+
+        $endDateUnfixed = in_array($this->visit_status,[VisitStatus::ACTIVE,VisitStatus::PREREGISTERED,VisitStatus::SAVED]);
+
+        if($this->isNullDate($this->date_check_out) || ($endDateUnfixed && $this->visit_status!=VisitStatus::PREREGISTERED) ){
+            $this->date_out = $this->date_check_out = date('Y-m-d');
+        }
+
+        if($this->time_check_out == null || ($endDateUnfixed && $this->visit_status!=VisitStatus::PREREGISTERED)){
+            $this->time_check_out = $this->time_out = $this->finish_time = date('h:ma');
+        }
+
+
+
+    }
+
+
+    public function isNullDate($dateStr){
+        return $dateStr == null || $dateStr == '00-00-0000';
+    }
+
+    public function setDateRangeValues(){
+
+        $currentDate = new DateTime("NOW");
+        $dateCheckIn = DateUtil::parse($this->date_check_in);
+        $this->max_time = null;
+        $this->min_start_date
+            = $this->max_start_date
+            = $this->date_check_in;
+
+        $this->max_duration = null;
+        $this->min_duration = 0;
+        $this->allow_update_end_date = false;
+        $this->photo_required_after_3_days = true;
+        $this->photo_required = true;
+
+        switch( $this->card_type) {
+
+            case CardType::VIC_CARD_SAMEDATE:
+            case CardType::SAME_DAY_VISITOR:
+                $this->max_time = '11:59PM';
+                $this->max_end_date = $this->min_end_date = $this->date_check_in;
+                $this->allow_update_end_date = false;
+                break;
+
+            case CardType::MANUAL_VISITOR:
+            case CardType::MULTI_DAY_VISITOR:
+            case CardType::CONTRACTOR_VISITOR:
+                break;
+
+            case CardType::VIC_CARD_MULTIDAY:
+                $maxEndDate = $dateCheckIn->add(new DateInterval("P28D"));
+                $this->max_end_date = DateUtil::formatForDisplay($maxEndDate);
+                $this->max_duration = 28;
+                $this->photo_required_after_3_days = true;
+                break;
+
+            case CardType::VIC_CARD_EXTENDED:
+                $this->max_end_date = DateUtil::formatForDisplay($dateCheckIn->add(new DateInterval("P28D")));
+                $this->max_duration = 28;
+                $this->min_duration = 5;
+                $this->photo_required = true;
+                break;
+
+            case CardType::VIC_CARD_MANUAL:
+                $this->min_start_date = DateUtil::formatForDisplay($currentDate->sub(new DateInterval("P1Y")));
+                $this->max_start_date = DateUtil::formatForDisplay($currentDate->add(new DateInterval("P3D")));
+                $this->max_duration = 3;
+                break;
+
+            case CardType::VIC_CARD_24HOURS:
+                $endDate = DateUtil::formatForDisplay($dateCheckIn->add(new DateInterval("P1D")));
+                $this->max_time = DateUtil::formatTime($endDate);
+                $this->max_end_date = $this->min_end_date = DateUtil::formatForDisplay($endDate);
+                $this->allow_update_end_date = false;
+                $this->max_duration = 1;
+                break;
+
+            default :
+                break;
+        }
+
+        
+
+    }
+
     
    /* 
     * Below is rule for check out time for all VIC visits:
@@ -179,8 +311,9 @@ class Visit extends CActiveRecord {
        
          $checkin = new DateTime($this->date_check_in);
          $currendDate = new DateTime("NOW");
-         //if($this->visit_status == VisitStatus::ACTIVE)
+
          switch( $this->card_type) {
+
              case CardType::VIC_CARD_SAMEDATE:
              case CardType::SAME_DAY_VISITOR:  
              
@@ -240,209 +373,7 @@ class Visit extends CActiveRecord {
         }
         return parent::beforeSave();
      }
- 
-    public function setDatecheckin1($value) {
-        // set private attribute for search
-        $this->_datecheckin1 = $value;
-    }
 
-    public function getFirstname() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_firstname;
-        }
-    }
-
-    public function setFirstname($value) {
-        // set private attribute for search
-        $this->_firstname = $value;
-    }
-
-    public function getCardNumber() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_cardnumber;
-        }
-    }
-
-    public function setCardNumber($value) {
-        // set private attribute for search
-        $this->_cardnumber = $value;
-    }
-
-    public function getLastname() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_lastname;
-        }
-        // return $this->_lastname;
-    }
-
-    public function setLastname($value) {
-        // set private attribute for search
-        $this->_lastname = $value;
-    }
-
-    public function getCompany() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_company;
-        }
-    }
-
-    public function setCompany($value) {
-        // set private attribute for search
-        $this->_company = $value;
-    }
-
-    public function getContactNumber() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_contactnumber;
-        }
-
-//        if (isset($this->_contactnumber) && is_object($this->contactnumber)) {
-//            return $this->user->lastname;
-//        }
-    }
-
-    public function setContactNumber($value) {
-        // set private attribute for search
-        $this->_contactnumber = $value;
-    }
-
-    public function getContactEmail() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_contactemail;
-        }
-    }
-
-    public function setContactEmail($value) {
-        // set private attribute for search
-        $this->_contactemail = $value;
-    }
-
-    public function getContactPerson() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_contactperson;
-        }
-    }
-
-    public function setContactPerson($value) {
-        // set private attribute for search
-        $this->_contactperson = $value;
-    }
-    public function getContactPhone() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_contactphone;
-        }
-    }
-
-    public function setContactPhone($value) {
-        // set private attribute for search
-        $this->_contactphone = $value;
-    }
-    public function getAsicName() {
-
-        if ($this->scenario == 'search') {
-            return $this->_asicname;
-        }
-    }
-
-    public function setAsicName($value) {
-        // set private attribute for search
-        $this->_asicname = $value;
-    }
-
-    public function getHost() {
-        // return private attribute on search
-        if($this->card_type < 5) {
-            $visitHost = User::model()->findByPk($this->host);
-        } else {
-            $visitHost = Visitor::model()->findByPk($this->host);
-        }
-
-        return $visitHost;
-
-    }
-
-    /**
-     * @return array relational rules.
-     */
-    public function relations() {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array(
-            'tenantAgent' => array(self::BELONGS_TO, 'User', 'tenant_agent'),
-            'visitor0' => array(self::BELONGS_TO, 'Visitor', 'visitor'),
-            'card0' => array(self::BELONGS_TO, 'CardGenerated', 'card'),
-            'reason0' => array(self::BELONGS_TO, 'VisitReason', 'reason'),
-            'visitorType' => array(self::BELONGS_TO, 'VisitorType', 'visitor_type'),
-            'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
-            'host0' => array(self::BELONGS_TO, 'User', 'host'),
-            'visitor1' => array(self::BELONGS_TO, 'Visitor', 'host'),
-            'patient0' => array(self::BELONGS_TO, 'Patient', 'patient'),
-            'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
-            'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
-
-            'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
-            // 'company0' => array(self::BELONGS_TO, 'Company', 'visitor0->company'),
-            'company0' => array(
-                self::BELONGS_TO, 'Company', array('company' => 'id'), 'through' => 'visitor0'
-            ),
-            'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
-        );
-    }
-
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
-    public function attributeLabels() {
-        return array(
-            'id' => 'ID',
-            'visitor' => 'Visitor',
-            'card' => 'Card Generated',
-            'card_type' => 'Card Type',
-            'visitor_type' => 'Visitor Type',
-            'reason' => 'Reason',
-            'visitor_status' => 'Visitor Status',
-            'host' => 'Host',
-            'patient' => 'Patient',
-            'created_by' => 'Created By',
-            'date_in' => 'Proposed Check In Date',
-            'time_in' => 'Proposed Check In Time',
-            'date_out' => 'Proposed Check Out Date',
-            'time_out' => 'Proposed Time Out',
-            'date_check_in' => 'Check In Date',
-            'time_check_in' => 'Check In Time',
-            'date_check_out' => 'Check Out Date',
-            'time_check_out' => 'Check Out Time',
-            'tenant' => 'Tenant',
-            'tenant_agent' => 'Tenant Agent',
-            'is_deleted' => 'Is Deleted',
-            'visit_status' => 'Visit Status',
-            'workstation' => 'Workstation',
-            'firstname' => 'First Name',
-            'deposit_paid' => 'Deposit Paid',
-            'closed_by' => 'Closed By'
-        );
-    }
-
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search($merge = null) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -493,9 +424,9 @@ class Visit extends CActiveRecord {
         $criteria->compare('workstation0.name', $this->workstation);
 
         $criteria->compare('company0.code', $this->companycode, true);
-        $criteria->compare('company0.contact', $this->_contactperson, true);
-        $criteria->compare('company0.email_address', $this->_contactemail, true);
-        $criteria->compare('company0.mobile_number', $this->_contactphone, true);
+        $criteria->compare('company0.contact', $this->contactperson, true);
+        $criteria->compare('company0.email_address', $this->contactemail, true);
+        $criteria->compare('company0.mobile_number', $this->contactphone, true);
         //$criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%Y-%m-%d")', $this->date_of_birth, true);
         $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
 
@@ -514,10 +445,10 @@ class Visit extends CActiveRecord {
             case CardType::MULTI_DAY_VISITOR:
             case CardType::MANUAL_VISITOR:
             case CardType::CONTRACTOR_VISITOR:
-                $criteria->compare("CONCAT(host0.first_name,' ',host0.last_name)",$this->_asicname,true);
+                $criteria->compare("CONCAT(host0.first_name,' ',host0.last_name)",$this->asicname,true);
                 break;
             default:
-                $criteria->compare("CONCAT(visitor1.first_name,' ',visitor1.last_name)",$this->_asicname,true);
+                $criteria->compare("CONCAT(visitor1.first_name,' ',visitor1.last_name)",$this->asicname,true);
                 break;
         }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
@@ -598,8 +529,8 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_AGENT_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
-            
-             // Airport Operator, Agent Airport Operator & Agent Airport Administrator can not see other's visit except their own visits created by them.
+
+            // Airport Operator, Agent Airport Operator & Agent Airport Administrator can not see other's visit except their own visits created by them.
             case Roles::ROLE_AGENT_AIRPORT_ADMIN:
             case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
                 $criteria->addCondition("t.tenant = " . Yii::app()->user->tenant ." and t.tenant_agent = ". Yii::app()->user->tenant_agent);//. " AND t.created_by = " . Yii::app()->user->id);
@@ -610,7 +541,7 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_OPERATOR:
-            case Roles::ROLE_AGENT_OPERATOR:           
+            case Roles::ROLE_AGENT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
                 if (!empty($workstations)) {
                     $text = "";
@@ -681,6 +612,84 @@ class Visit extends CActiveRecord {
         ));
     }
 
+
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'tenantAgent' => array(self::BELONGS_TO, 'User', 'tenant_agent'),
+            'visitor0' => array(self::BELONGS_TO, 'Visitor', 'visitor'),
+            'card0' => array(self::BELONGS_TO, 'CardGenerated', 'card'),
+            'reason0' => array(self::BELONGS_TO, 'VisitReason', 'reason'),
+            'visitorType' => array(self::BELONGS_TO, 'VisitorType', 'visitor_type'),
+            'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
+            'host0' => array(self::BELONGS_TO, 'User', 'host'),
+            'visitor1' => array(self::BELONGS_TO, 'Visitor', 'host'),
+            'patient0' => array(self::BELONGS_TO, 'Patient', 'patient'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
+
+            'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
+            // 'company0' => array(self::BELONGS_TO, 'Company', 'visitor0->company'),
+            'company0' => array(
+                self::BELONGS_TO, 'Company', array('company' => 'id'), 'through' => 'visitor0'
+            ),
+            'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'visitor' => 'Visitor',
+            'card' => 'Card Generated',
+            'card_type' => 'Card Type',
+            'visitor_type' => 'Visitor Type',
+            'reason' => 'Reason',
+            'visitor_status' => 'Visitor Status',
+            'host' => 'Host',
+            'patient' => 'Patient',
+            'created_by' => 'Created By',
+            'date_in' => 'Proposed Check In Date',
+            'time_in' => 'Proposed Check In Time',
+            'date_out' => 'Proposed Check Out Date',
+            'time_out' => 'Proposed Time Out',
+            'date_check_in' => 'Check In Date',
+            'time_check_in' => 'Check In Time',
+            'date_check_out' => 'Check Out Date',
+            'time_check_out' => 'Check Out Time',
+            'tenant' => 'Tenant',
+            'tenant_agent' => 'Tenant Agent',
+            'is_deleted' => 'Is Deleted',
+            'visit_status' => 'Visit Status',
+            'workstation' => 'Workstation',
+            'firstname' => 'First Name',
+            'deposit_paid' => 'Deposit Paid',
+            'closed_by' => 'Closed By'
+        );
+    }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+
+
     public function search_history($merge = null) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -729,9 +738,9 @@ class Visit extends CActiveRecord {
         $criteria->compare('workstation', $this->workstation);
 
         $criteria->compare('company0.code', $this->companycode, true);
-        $criteria->compare('company0.contact', $this->_contactperson, true);
-        $criteria->compare('company0.email_address', $this->_contactemail, true);
-        $criteria->compare('company0.mobile_number', $this->_contactphone, true);
+        $criteria->compare('company0.contact', $this->contactperson, true);
+        $criteria->compare('company0.email_address', $this->contactemail, true);
+        $criteria->compare('company0.mobile_number', $this->contactphone, true);
         
         //$criteria->compare('visitor0.date_of_birth',$this->date_of_birth,true);
         $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth));
@@ -749,10 +758,10 @@ class Visit extends CActiveRecord {
             case CardType::MULTI_DAY_VISITOR:
             case CardType::MANUAL_VISITOR:
             case CardType::CONTRACTOR_VISITOR:
-                $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+                $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->asicname,true);
                 break;
             default:
-                $criteria->compare('CONCAT(visitor1.first_name,\' \',visitor1.last_name)',$this->_asicname,true);
+                $criteria->compare('CONCAT(visitor1.first_name,\' \',visitor1.last_name)',$this->asicname,true);
                 break;
         }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
@@ -926,6 +935,9 @@ class Visit extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+
+
+
 
     public function behaviors() {
         return array(
@@ -1349,7 +1361,7 @@ class Visit extends CActiveRecord {
                           
         $visits = $this->with("visitor0")->findAll( $condition );  
 
-        $user_timezone;
+        $user_timezone = null;
         $session = new CHttpSession;
         if($session['timezone'] != ""){
             $user_timezone = $session['timezone'];

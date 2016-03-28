@@ -41,16 +41,7 @@ $photoForm = $this->beginWidget('CActiveForm', [
 </div>
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);
-/*
-This is wrong according to https://ids-jira.atlassian.net/browse/CAVMS-1184: Card Color is dependent on CARD TYPE and not on PROFILE TYPE
-$bgcolor = "";
-if ($vstr) {
-	if ($vstr->profile_type == "CORPORATE") {
-	    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
-	} elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
-	     $bgcolor = CardGenerated::VIC_CARD_COLOR;
-	}
-}*/
+
 ?>
 
 <?php

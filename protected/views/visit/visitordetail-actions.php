@@ -90,7 +90,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                             $("#Visit_card_type").val() != ' . CardType::VIC_CARD_MANUAL . '
                                         ){
                                             alert("Please upload a photo.");
-                                        }else if ($("#Visit_card_type").val() == "9" && $("#pre_issued_card_no").val() == "" ) {
+                                        }else if ($("#Visit_card_type").val() == ' . CardType::VIC_CARD_MANUAL . ' && $("#pre_issued_card_no").val() == "" && $("#Visit_visit_status").value() == '.VisitStatus::PREREGISTERED.' ) {
                                             $("#card_number_required").show();
                                         } else {
                                            checkIfActiveVisitConflictsWithAnotherVisit();

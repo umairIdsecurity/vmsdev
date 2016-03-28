@@ -120,15 +120,16 @@ $asicEscort = new AddAsicEscort();
         </td>
     </tr>
 
-    <?php if($model->card_type == CardType::VIC_CARD_MANUAL && $model->visit_status!=VisitStatus::CLOSED) : ?>
+    <?php if($model->card_type == CardType::VIC_CARD_MANUAL && $model->visit_status==VisitStatus::PREREGISTERED) : ?>
     <tr>
         <td>
             <div id="card_no_manual">
                 Pre Issued Card No.
                 <br>
-                <input name="pre_issued_card_no" id="pre_issued_card_no" class="" type="text" placeholder="Enter Card No."
-                    <?php if($logform->readOnly){echo "disabled='disabled'";} ?>
-                >
+                <input name="pre_issued_card_no" id="pre_issued_card_no" class="" type="text" placeholder="Enter Card No." >
+                <script>
+
+                </script>
 
                 <span class="required">*</span>
                 <div style="display: none" id="card_number_required" class="errorMessage">Please enter a Card Number</div>

@@ -96,15 +96,14 @@ $vstr = Visitor::model()->findByPk($model->visitor);
 <?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;margin-right: 69px;">
 <?php
-$companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
-$totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
-$remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
+    $totalCompanyVisit = $visitCount['allVisitsByVisitor'];
+    $remainingDays = max(0,(28-$totalCompanyVisit))
 ?>
-    Total Visits at <?php //echo $companyName; ?>: <?php echo $totalCompanyVisit; ?>
+    Total Visits : <?php echo $totalCompanyVisit; ?>
   <?php
         /**
          * EVIC only, ASIC_Pending(during Auto-closed), Show reset option if this is not the first time.
-         * The Auto Closed script actually reset it first time. 
+         * The Auto Closed script actually reset it first time.
          */
       if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit >= 28 &&
                 $model->card_type == CardType::VIC_CARD_EXTENDED && !is_null($model->parent_id)):   

@@ -1089,7 +1089,45 @@ class Visit extends CActiveRecord {
         }
     }
 
-    public function getVisitCount($visitId) {
+    public function getVisitCount($visitId){
+        $startDate = (new DateTime("NOW"))->sub(new DateInterval("P1Y"));
+        $startDateString = $startDate->format('Y-m-d');
+        $endDate = (new DateTime("NOW"));
+        $endDateString = $endDate->format('Y-m-d');
+
+
+        $allVisitorVisits = Yii::app()->db->createCommand(
+            "SELECT a.card_type, a.visit_status, a.date_check_in, a.date_check_out 
+                FROM visit AS a
+                  JOIN visit AS b 
+                    ON a.visitor = b.visitor AND b.id = $visitId
+                WHERE a.date_check_out >= '$startDateString' 
+                AND   a.date_check_in <= '$endDateString'
+                AND   a.visit_status NOT IN (".implode([VisitStatus::SAVED,VisitStatus::PREREGISTERED]).")
+            "
+        )->queryAll();
+
+        $visitCount = 0;
+        $remainingDays = 28;
+        foreach($allVisitorVisits as $visit){
+            if ($visit['card_type']==CardType::VIC_CARD_24HOURS){
+                $visitCount++;
+            } else {
+                $visitCount += max(DateUtil::parse($visit['date_check_in']),$startDate)
+                        ->diff(
+                            min($endDate,DateUtil::parse($visit['date_check_in']))
+                        )->days + 1;
+            }
+        }
+        $remainingDays-=$visitCount;
+
+        return ['allVisitsByVisitor' => $visitCount,
+                'companyVisitsByVisitor' => $visitCount,
+                'remainingDays' => max(0,$remainingDays),
+                'companyName' => ''];
+    }
+
+    public function getVisitCountOld($visitId) {
 
         $allVisitsByVisitor = Yii::app()->db->createCommand("SELECT COUNT(*) as cnt "
                         . "FROM visit "

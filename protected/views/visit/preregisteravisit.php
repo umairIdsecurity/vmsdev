@@ -64,7 +64,7 @@ $this->widget('EDatePicker', array(
     ),
     'options' => array(
         'minDate' => $mindate,
-        'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
+        'onClose' => 'js:function(selectedDate) { $("#Visit_date_in_container").datepicker("option", "minDate", selectedDate); }',
     )
 ));
 ?>
@@ -148,25 +148,25 @@ if ($model->visit_status == VisitStatus::CLOSED) {
 
         if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
             if('<?php echo $model->visit_status?>' == 3){
-                $("#Visit_date_in").val(currentDate);
-                $("#Visit_date_out").val(currentDate);
-                $("#Visit_date_in").attr("disabled", true);
+                $("#Visit_date_in_container").val(currentDate);
+                $("#Visit_date_out_container").val(currentDate);
+                $("#Visit_date_in_container").attr("disabled", true);
             }
             else if ('<?php echo $model->date_out; ?>' != '') {
-                $("#Visit_date_out").val("<?php echo $model->date_out; ?>");
-                $("#Visit_date_in").val("<?php echo $model->date_in; ?>");
+                $("#Visit_date_out_container").val("<?php echo $model->date_out; ?>");
+                $("#Visit_date_in_container").val("<?php echo $model->date_in; ?>");
             } else {
-                $("#Visit_date_in").val(currentDate);
-                $("#Visit_date_out").val(currentDate);
-                $("#Visit_date_in").attr("disabled", true);
+                $("#Visit_date_in_container").val(currentDate);
+                $("#Visit_date_out_container").val(currentDate);
+                $("#Visit_date_in_container").attr("disabled", true);
             }
         } else {
-            $("#Visit_date_in").val(currentDate);
-            $("#Visit_date_out").val($("#curDateMultiDay").val());
-            $("#dateoutDiv #Visit_date_out").val($("#curDateMultiDay").val());
+            $("#Visit_date_in_container").val(currentDate);
+            $("#Visit_date_out_container").val($("#curDateMultiDay").val());
+            $("#dateoutDiv #Visit_date_out_container").val($("#curDateMultiDay").val());
             if ('<?php echo $model->date_out; ?>' != '') {
-                $("#Visit_date_out").val("<?php echo $model->date_out; ?>");
-                $("#Visit_date_in").val("<?php echo $model->date_in; ?>");
+                $("#Visit_date_out_container").val("<?php echo $model->date_out; ?>");
+                $("#Visit_date_in_container").val("<?php echo $model->date_in; ?>");
             }
         }
 
@@ -181,17 +181,17 @@ if ($model->visit_status == VisitStatus::CLOSED) {
            // $("#confirmPreregisterSubmit").click();
         });
 
-        $('#Visit_date_in').on('change', function(e) {
+        $('#Visit_date_in_container').on('change', function(e) {
             assignValuesForProposedDateOutDependingOnCardType();
         });
 
         function assignValuesForProposedDateOutDependingOnCardType() {
             if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
-                $("#Visit_date_out").val($("#Visit_date_in").val());
+                $("#Visit_date_out_container").val($("#Visit_date_in_container").val());
             }
         }
 
-        $("#Visit_date_in").datepicker({
+        $("#Visit_date_in_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -204,19 +204,19 @@ if ($model->visit_status == VisitStatus::CLOSED) {
 
 
                 if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //same day
-                    $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
+                    $("#Visit_date_out_container").datepicker("option", "minDate", selectedDate);
                     $('.ui-datepicker-trigger[title="Select Proposed Check Out Date"]').hide();
                 } else {
 
                     var newDateString = ('0' + (parseInt(test.selectedDay) + 1)).slice(-2) + '-'
                             + ('0' + (test.selectedMonth + 1)).slice(-2) + '-'
                             + test.selectedYear;
-                    $("#Visit_date_out").datepicker("option", "minDate", newDateString);
+                    $("#Visit_date_out_container").datepicker("option", "minDate", newDateString);
                 }
 
             }
         });
-        $("#Visit_date_out").datepicker({
+        $("#Visit_date_out_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -225,15 +225,15 @@ if ($model->visit_status == VisitStatus::CLOSED) {
             buttonText: "Select Proposed Check Out Date",
             dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
-                $("#Visit_date_in").datepicker("option", "maxDate", selectedDate);
+                $("#Visit_date_in_container").datepicker("option", "maxDate", selectedDate);
             }
         });
 
         $('#update-log-visit-form').bind('submit', function() {
-            $(this).find('#Visit_date_out').removeAttr('disabled');
-            $(this).find('#Visit_date_in').removeAttr('disabled');
-            $(this).find('#Visit_date_check_in').removeAttr('disabled');
-            $(this).find('#Visit_date_check_out').removeAttr('disabled');
+            $(this).find('#Visit_date_out_containert').removeAttr('disabled');
+            $(this).find('#Visit_date_in_container').removeAttr('disabled');
+            $(this).find('#Visit_date_check_in_container').removeAttr('disabled');
+            $(this).find('#Visit_date_check_out_container').removeAttr('disabled');
         });
 
     });

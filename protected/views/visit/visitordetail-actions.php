@@ -164,8 +164,11 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                           ?>
                             
                              <div style="display:none;" id="visit_cannot_be_activate" class="errorMessage">VIC can not be activated in the future</div>
-                            <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
-                             
+                            <?php if(in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
+                                <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Create New Visit</button>
+                            <?php } else { ?>
+                                <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Activate Visit</button>
+                            <?php }; ?>
                               
                             <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
@@ -916,7 +919,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
     // Check if user tries to activate it with future dates
     function CheckIfThisWithFutureDate() {
-         var checkInDate = $("#Visit_date_check_in").datepicker('getDate');
+         var checkInDate = $("#Visit_date_check_in_container").datepicker('getDate');
          checkInDate = new Date(checkInDate);
          var currentDate = new Date();
          var visitStatus = "<?php echo $model->visit_status?>";

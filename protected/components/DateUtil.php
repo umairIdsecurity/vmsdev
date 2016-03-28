@@ -8,7 +8,7 @@
  */
 class DateUtil
 {
-    private static $knownFormats = ['dd/MM/yyyy','yyyy-MM-dd','dd-MM-yyyy'];
+    private static $knownFormats = ['dd/MM/yyyy','yyyy-MM-dd','dd-MM-yyyy','dd/MM/yy'];
 
     public static function reformat($dateString,$format){
 

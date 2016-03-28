@@ -12,7 +12,7 @@
         'name' => 'date_from_filter',
         'value' => Yii::app()->request->getParam("date_from_filter"),
         'options' => array(
-            'onClose' => 'js:function (selectedDate) { $("#date_to_filter").datepicker("option", "minDate", selectedDate); }',
+            'onClose' => 'js:function (selectedDate) { $("#date_to_filter_container").datepicker("option", "minDate", selectedDate); }',
         ),
         'htmlOptions' => array('readonly' => "readonly"),
     ));

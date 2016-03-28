@@ -34,7 +34,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'readonly' => 'readonly',
                 ),
                 'options' => array(
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "minDate", selectedDate); }',
+                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_in_container").datepicker("option", "minDate", selectedDate); }',
                 )
             ));
             ?>
@@ -53,7 +53,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'readonly' => 'readonly',
                 ),
                 'options' => array(
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "maxDate", selectedDate); }',
+                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_out_container").datepicker("option", "maxDate", selectedDate); }',
                 )
             ));
             ?>
@@ -66,7 +66,7 @@ $logform = $this->beginWidget('CActiveForm', array(
         <td>
             <select class="time" name='Visit[time_in_hours]' id='Visit_time_in_hours' >
                 <?php for ($i = 1; $i <= 24; $i++): ?>
-                    <option 
+                    <option
                     <?php
                     if ($timeIn[0] == $i) {
                         echo " selected ";
@@ -77,7 +77,7 @@ $logform = $this->beginWidget('CActiveForm', array(
             </select> :
             <select class='time' name='Visit[time_in_minutes]' id='Visit_time_in_minutes'>
                 <?php for ($i = 1; $i <= 60; $i++): ?>
-                    <option 
+                    <option
                     <?php
                     if ($timeIn[1] == $i) {
                         echo " selected ";
@@ -103,19 +103,19 @@ $logform = $this->beginWidget('CActiveForm', array(
 <script>
     $(document).ready(function() {
 
-        $('#Visit_date_in').on('change', function(e) {
+        $('#Visit_date_in_container').on('change', function(e) {
             assignValuesForProposedDateOutDependingOnCardType();
         });
 
         function assignValuesForProposedDateOutDependingOnCardType() {
             if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
-                $("#Visit_date_out").val($("#Visit_date_in").val());
+                $("#Visit_date_out_container").val($("#Visit_date_in_container").val());
             } else {
-                $("#Visit_date_out").attr("disabled", false);
+                $("#Visit_date_out_container").attr("disabled", false);
             }
         }
 
-        $("#Visit_date_in").datepicker({
+        $("#Visit_date_in_container_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -124,10 +124,10 @@ $logform = $this->beginWidget('CActiveForm', array(
             buttonText: "Select Date From",
             dateFormat: "yy-mm-dd",
             onClose: function(selectedDate) {
-                $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
+                $("#Visit_date_out_container").datepicker("option", "minDate", selectedDate);
             }
         });
-        $("#Visit_date_out").datepicker({
+        $("#Visit_date_out_container").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
@@ -136,12 +136,12 @@ $logform = $this->beginWidget('CActiveForm', array(
             buttonText: "Select Date From",
             dateFormat: "yy-mm-dd",
             onClose: function(selectedDate) {
-                $("#Visit_date_in").datepicker("option", "maxDate", selectedDate);
+                $("#Visit_date_in_container").datepicker("option", "maxDate", selectedDate);
             }
         });
-        
+
         $('#update-log-visit-form').bind('submit', function() {
-            $(this).find('#Visit_date_out').removeAttr('disabled');
+            $(this).find('#Visit_date_out_container').removeAttr('disabled');
         });
 
     });

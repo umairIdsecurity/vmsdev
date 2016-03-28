@@ -705,6 +705,7 @@ class VisitController extends Controller {
         $visitCount['totalVisits'] = $totalVisit;
         $visitCount['remainingDays'] = $remainingDays;
 
+        $model->beforeShowDetail($visitCount);
 
         $this->render('visitordetail', array(
             'model'         => $model,
@@ -1180,8 +1181,8 @@ class VisitController extends Controller {
         $model->time_in        = '';
         $model->time_out       = '';
         $model->date_out       = '';
-        $model->date_check_in  = '';
-        $model->time_check_in  = '';
+        $model->date_check_in  = date('d/m/Y');
+        $model->time_check_in  = date('H:i');
         $model->time_check_out = '';
         $model->date_check_out = '';
         $model->card           = NULL;
@@ -1191,9 +1192,9 @@ class VisitController extends Controller {
         $model->attributes     = Yii::app()->request->getPost('Visit');
         $model->card_option = "Returned";
         // set status to pre-registered
-        if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
+        //if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
             $model->visit_status = VisitStatus::PREREGISTERED;
-        }
+        //}
 
         // If type not null & is backdate
         if ($type == 'backdate') {

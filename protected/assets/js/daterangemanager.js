@@ -11,7 +11,11 @@ function DateRangeManager(startControl,endControl,options)
     this.startControl.datepicker('option','minDate',options['min_start_date']);
     this.startControl.datepicker('option','maxDate',options['max_start_date']);
 
-    this.checkEndDate = function(startControl,endControl,options){
+    startControl.daterangemanager = this;
+    endControl.daterangemanager = this;
+
+
+    this.checkEndDate = function(){
 
         var maxDurationDate = null;
         var minDurationDate = null;
@@ -24,7 +28,8 @@ function DateRangeManager(startControl,endControl,options)
         }
 
         if(options['max_duration']){
-            maxDurationDate = $.datepicker.parseDate(dateFormat,startControl.val()) + (options['max_duration'] * 1000*60*60*24);
+            maxDurationDate = startControl.datepicker('getDate');
+            maxDurationDate.setDate(maxDurationDate.getDate() + options['max_duration']);
             if(maxEndDate == null || maxDurationDate < maxEndDate){
                 maxEndDate = maxDurationDate;
             }
@@ -33,7 +38,8 @@ function DateRangeManager(startControl,endControl,options)
         minEndDate = $.datepicker.parseDate(dateFormat,startControl.val());
 
         if(options['min_duration']){
-            minDurationDate = $.datepicker.parseDate(dateFormat,startControl.val());
+            minDurationDate = startControl.datepicker('getDate');
+            minDurationDate.setDate(mindurationDate.getDate() + options['min_duration']);
             if(minDurationDate > minEndDate){
                 minEndDate = minDurationDate;
             }
@@ -64,8 +70,8 @@ function DateRangeManager(startControl,endControl,options)
 
     }
 
-    this.startControl.datepicker('option','onClose',this.checkEndDate(startControl,endControl,options));
-    this.endControl.datepicker('option','onClose',this.checkEndDate(startControl,endControl,options));
+    startControl.datepicker('option','onClose',startControl.daterangemanager.checkEndDate);
+    endControl.datepicker('option','onClose',endControl.daterangemanager.checkEndDate);
 
 }
 

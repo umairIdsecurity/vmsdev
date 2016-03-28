@@ -272,13 +272,13 @@ class Visit extends CActiveRecord {
                 break;
 
             case CardType::VIC_CARD_MANUAL:
-                $this->min_start_date = DateUtil::formatForDisplay($currentDate->sub(new DateInterval("P1Y")));
-                $this->max_start_date = DateUtil::formatForDisplay($currentDate->add(new DateInterval("P3D")));
+                $this->min_start_date = DateUtil::formatForDisplay((new DateTime("NOW"))->sub(new DateInterval("P1Y")));
+                $this->max_start_date = DateUtil::formatForDisplay((new DateTime("NOW"))->add(new DateInterval("P3D")));
                 $this->max_duration = 3;
                 break;
 
             case CardType::VIC_CARD_24HOURS:
-                $endDate = DateUtil::formatForDisplay($dateCheckIn->add(new DateInterval("P1D")));
+                $endDate = DateUtil::formatForDisplay(DateUtil::parse($this->date_check_in)->add(new DateInterval("P1D")));
                 $this->max_time = DateUtil::formatTime($endDate);
                 $this->allow_update_end_date = false;
                 $this->max_duration = 1;

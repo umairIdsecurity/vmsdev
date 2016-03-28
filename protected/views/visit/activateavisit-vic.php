@@ -120,13 +120,16 @@ $asicEscort = new AddAsicEscort();
         </td>
     </tr>
 
-    <?php if($model->card_type == CardType::VIC_CARD_MANUAL) : ?>
+    <?php if($model->card_type == CardType::VIC_CARD_MANUAL && $model->visit_status!=VisitStatus::CLOSED) : ?>
     <tr>
         <td>
             <div id="card_no_manual">
                 Pre Issued Card No.
                 <br>
-                <input name="pre_issued_card_no" id="pre_issued_card_no" class="" type="text" placeholder="Enter Card No." >
+                <input name="pre_issued_card_no" id="pre_issued_card_no" class="" type="text" placeholder="Enter Card No."
+                    <?php if($logform->readOnly){echo "disabled='disabled'";} ?>
+                >
+
                 <span class="required">*</span>
                 <div style="display: none" id="card_number_required" class="errorMessage">Please enter a Card Number</div>
             </div>
@@ -140,8 +143,31 @@ $asicEscort = new AddAsicEscort();
     $(document).ready(function() {
 
 
-        var dateInPicker =  $("#dateoutDiv #Visit_date_check_in_container");
-        var dateOutPicker =  $("#dateoutDiv #Visit_date_check_out_container");
+        var dateIn =  $("#dateoutDiv #Visit_date_check_in_container");
+        var dateOut =  $("#dateoutDiv #Visit_date_check_out_container");
+        var boundControl =  dateIn?dateOut:dateIn;
+
+        if(boundControl){
+
+            boundControl.change(function(){
+
+                var dateIn =  $("#dateoutDiv #Visit_date_check_in_container");
+                var dateOut =  $("#dateoutDiv #Visit_date_check_out_container");
+                var boundControl =  dateIn?dateOut:dateIn;
+                var selectedDate = boundControl.datepicker('getDate');
+                var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
+
+                $("#cardDateText").html(cardDate);
+                $("#cardDetailsTable span.cardDateText").html(cardDate);
+                $('#CardGenerated_date_expiration').val(selectedDate);
+
+            });
+
+        }
+
+        //var cardType = "<?php echo $model->card_type; ?>";
+
+
 
         // set the 
 

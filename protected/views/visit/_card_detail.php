@@ -44,6 +44,7 @@ if ($card) {
         <div style=" text-align:center; line-height:20px; margin:10px 0 0 5px; color:#000;height: 128px; overflow: hidden;">
             <p style="font-size:22px; font-weight:bold; margin:0 0 5px 0;"><?= $companyCode ?></p>
             <strong style="font-size: 37px; text-align: left; width: 100%; float: left; /*margin-bottom: 3px;*/ margin-left: 10px; /*line-height: 32px;*/ margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 7px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small>
+                <span id="cardDateText">
             <?php
                 if ($model->card_type == CardType::VIC_CARD_24HOURS) {     
                         echo strtoupper(date('d M y', strtotime($model->date_check_in . '+ 1 DAY')));
@@ -55,6 +56,7 @@ if ($card) {
                         }
                   }
             ?>
+                    </span>
             <br><span style="font-size:18px; margin-left:43px"> <?php if($model->card_type == CardType::VIC_CARD_24HOURS && $model->time_check_in != "00:00:00") echo substr($model->time_check_in, 0, 5); ?></span>
             </strong>
            <p style="font-size:18px; font-weight:bold; line-height:18.9px; margin:0 0 3px 0;"><?php echo ($visitorModel->first_name != "")?substr($visitorModel->first_name, 0, 20):"N/A"; ?><br>

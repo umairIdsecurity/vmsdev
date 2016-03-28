@@ -292,8 +292,6 @@ class Visit extends CActiveRecord {
             $this->max_start_date = null;
         }
 
-        
-
     }
 
     

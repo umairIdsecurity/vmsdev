@@ -139,32 +139,12 @@ $asicEscort = new AddAsicEscort();
 
     $(document).ready(function() {
 
-//        // Set min & max date for check out datepicker
-//        var d = new Date(),
-//            minDate, maxDate;
-//        var disabled = true;
-//        var cardType = "<?php //echo $model->card_type; ?>//";
-//        switch(cardType) {
-//            case "<?php //echo CardType::VIC_CARD_MANUAL; ?>//":
-//                minDate = "-12m";
-//                maxDate = "+2y";
-//                break;
-//            case "<?php //echo CardType::VIC_CARD_EXTENDED; ?>//":
-//            case "<?php //echo CardType::VIC_CARD_MULTIDAY; ?>//":
-//                var minDate = "0";
-//                var checkInDate = "<?php //echo date('m-d-Y', strtotime($model->date_check_in)); ?>//";
-//                var checkOutDate = new Date(checkInDate);
-//                checkOutDate.setDate(checkOutDate.getDate() + <?php //echo $visitCount['remainingDays'];?>//);
-//                var maxDate = checkOutDate;
-//                break;
-//            default:
-//                minDate = "0";
-//                maxDate = "+2y";
-//                break;
-//        }
-//
-//        refreshTimeIn();
-        
+
+        var dateInPicker =  $("#dateoutDiv #Visit_date_check_in_container");
+        var dateOutPicker =  $("#dateoutDiv #Visit_date_check_out_container");
+
+        // set the 
+
         // Expected: Today's date should not be to select for Auto Closed visits for 24 hour & EVIC.
 //        if( $("#visitStatus").val() == 6) {
 //           switch(cardType) {

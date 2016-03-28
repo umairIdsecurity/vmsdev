@@ -48,6 +48,7 @@ class DateUtil
     }
 
     public static function format($format,$datetime){
+        if($datetime==null) return null;
         $formatter = new CDateFormatter(Yii::app()->locale);
         return $formatter->format($format,$datetime->getTimestamp());
     }
@@ -64,8 +65,8 @@ class DateUtil
             }
 
         }
-
-        throw new CException("Unrecognised date format ".$dateString);
+        return null;
+        //throw new CException("Unrecognised date format ".$dateString);
 
     }
 }

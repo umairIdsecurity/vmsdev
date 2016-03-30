@@ -1095,17 +1095,17 @@ class Visit extends CActiveRecord {
         $endDate = (new DateTime("NOW"));
         $endDateString = $endDate->format('Y-m-d');
 
-
-        $allVisitorVisits = Yii::app()->db->createCommand(
-            "SELECT a.card_type, a.visit_status, a.date_check_in, a.date_check_out 
+        $sql = "SELECT a.card_type, a.visit_status, a.date_check_in, a.date_check_out 
                 FROM visit AS a
                   JOIN visit AS b 
                     ON a.visitor = b.visitor AND b.id = $visitId
                 WHERE a.date_check_out >= '$startDateString' 
                 AND   a.date_check_in <= '$endDateString'
-                AND   a.visit_status NOT IN (".implode([VisitStatus::SAVED,VisitStatus::PREREGISTERED]).")
-            "
-        )->queryAll();
+                AND   a.visit_status NOT IN (".implode(',',[VisitStatus::SAVED,VisitStatus::PREREGISTERED]).")
+                AND   a.is_deleted = 0
+            ";
+
+        $allVisitorVisits = Yii::app()->db->createCommand($sql)->queryAll();
 
         $visitCount = 0;
         $remainingDays = 28;
@@ -1119,6 +1119,7 @@ class Visit extends CActiveRecord {
                         )->days + 1;
             }
         }
+
         $remainingDays-=$visitCount;
 
         return ['allVisitsByVisitor' => $visitCount,

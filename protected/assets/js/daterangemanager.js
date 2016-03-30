@@ -23,13 +23,15 @@ function DateRangeManager(startControl,endControl,options)
         var maxEndDate = null;
         var dateFormat = startControl.datepicker('option','dateFormat');
 
-        if(options['max_end_date']){
-            maxEndDate = $.datepicker.parseDate(dateFormat,options['max_end_date']);
+        if(!endControl.is(':disabled')) {
+
+            if(options['max_end_date']){
+            maxEndDate = $.datepicker.parseDate(dateFormat,options['max_end_date']-1);
         }
 
         if(options['max_duration']){
             maxDurationDate = startControl.datepicker('getDate');
-            maxDurationDate.setDate(maxDurationDate.getDate() + options['max_duration']);
+            maxDurationDate.setDate(maxDurationDate.getDate() + Math.max(options['max_duration']-1,0));
             if(maxEndDate == null || maxDurationDate < maxEndDate){
                 maxEndDate = maxDurationDate;
             }
@@ -39,7 +41,7 @@ function DateRangeManager(startControl,endControl,options)
 
         if(options['min_duration']){
             minDurationDate = startControl.datepicker('getDate');
-            minDurationDate.setDate(mindurationDate.getDate() + options['min_duration']);
+            minDurationDate.setDate(mindurationDate.getDate() + Math.max(0,options['min_duration']-1));
             if(minDurationDate > minEndDate){
                 minEndDate = minDurationDate;
             }
@@ -49,29 +51,31 @@ function DateRangeManager(startControl,endControl,options)
             minEndDate = $.datepicker.parseDate(dateFormat,option['min_end_date']);
         }
 
-        var currentEndDate = $.datepicker.parseDate(dateFormat,endControl.val());
 
-        if(currentEndDate > maxEndDate){
-            currentEndDate = maxEndDate;
-        } else if(currentEndDate < minEndDate)  {
-            currentEndDate = minEndDate;
-        }
+            var currentEndDate = $.datepicker.parseDate(dateFormat, endControl.val());
 
-        endControl.datepicker("setDate", $.datepicker.formatDate(dateFormat,currentEndDate));
+            if (currentEndDate > maxEndDate) {
+                currentEndDate = maxEndDate;
+            } else if (currentEndDate < minEndDate) {
+                currentEndDate = minEndDate;
+            }
+
+            endControl.datepicker("setDate", $.datepicker.formatDate(dateFormat, currentEndDate));
 
 
-        if(minEndDate){
-            endControl.datepicker("option","minDate", $.datepicker.formatDate(dateFormat,minEndDate));
-        }
+            if (minEndDate) {
+                endControl.datepicker("option", "minDate", $.datepicker.formatDate(dateFormat, minEndDate));
+            }
 
-        if(maxEndDate){
-            endControl.datepicker("option","maxDate", $.datepicker.formatDate(dateFormat,maxEndDate));
+            if (maxEndDate) {
+                endControl.datepicker("option", "maxDate", $.datepicker.formatDate(dateFormat, maxEndDate));
+            }
         }
 
     }
 
     startControl.datepicker('option','onClose',startControl.daterangemanager.checkEndDate);
     endControl.datepicker('option','onClose',endControl.daterangemanager.checkEndDate);
-
+    this.checkEndDate();
 }
 

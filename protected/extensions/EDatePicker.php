@@ -96,7 +96,7 @@ class EDatePicker extends CJuiInputWidget
         $this->ensureOption('changeYear',true);
         $this->ensureOption('constrainInput',false);
         $this->ensureOption('gotoCurrent',true);
-        $this->ensureOption('defaultDate',$dateValue);
+        $this->ensureOption('defaultDate',$displayValue);
 
         $this->language = 'en';
         //$this->ensureOption('language','en');

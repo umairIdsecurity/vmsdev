@@ -1102,6 +1102,8 @@ class Visit extends CActiveRecord {
         $endDate = (new DateTime("NOW"));
         $endDateString = $endDate->format('Y-m-d');
 
+
+
         $sql = "SELECT a.card_type, a.visit_status, a.date_check_in, a.date_check_out 
                 FROM visit AS a
                   JOIN visit AS b 
@@ -1110,6 +1112,7 @@ class Visit extends CActiveRecord {
                 AND   a.date_check_in <= '$endDateString'
                 AND   a.visit_status NOT IN (".implode(',',[VisitStatus::SAVED,VisitStatus::PREREGISTERED]).")
                 AND   a.is_deleted = 0
+                AND NOT EXISTS( SELECT * FROM visit c WHERE c.visitor = b.visitor and c.reset_id > 0 and a.id <= c.id )
             ";
 
         $allVisitorVisits = Yii::app()->db->createCommand($sql)->queryAll();

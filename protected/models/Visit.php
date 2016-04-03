@@ -200,26 +200,26 @@ class Visit extends CActiveRecord {
 
     public function setDefaultCheckInOutValues($visitCount){
 
-        $this->date_check_in = DateUtil::reformatForDisplay($this->date_check_in);
-        $this->date_check_out = DateUtil::reformatForDisplay($this->date_check_out);
+        $this->date_check_in = DateUtil::reformatDateForDisplay($this->date_check_in);
+        $this->date_check_out = DateUtil::reformatDateForDisplay($this->date_check_out);
 
 
         if($this->isNullDate($this->date_check_in)){
-            $this->date_check_in = $this->date_in = date('Y-m-d');
+            $this->date_check_in = $this->date_in =  DateUtil::formatUserLocalDateForDisplay();
         }
 
         if($this->time_check_in == null){
-            $this->time_check_in = $this->time_in  = date('h:ma');
+            $this->time_check_in = $this->time_in  = DateUtil::formatUserLocalTime();
         }
 
         $endDateUnfixed = in_array($this->visit_status,[VisitStatus::ACTIVE,VisitStatus::PREREGISTERED,VisitStatus::SAVED]);
 
         if($this->isNullDate($this->date_check_out) || ($endDateUnfixed && $this->visit_status!=VisitStatus::PREREGISTERED) ){
-            $this->date_out = $this->date_check_out = date('Y-m-d');
+            $this->date_out = $this->date_check_out = DateUtil::formatUserLocalDateForDisplay();
         }
 
         if($this->time_check_out == null || ($endDateUnfixed && $this->visit_status!=VisitStatus::PREREGISTERED)){
-            $this->time_check_out = $this->time_out = $this->finish_time = date('h:ma');
+            $this->time_check_out = $this->time_out = $this->finish_time = DateUtil::formatUserLocalTime();
         }
 
 
@@ -234,7 +234,7 @@ class Visit extends CActiveRecord {
     public function setDateRangeValues($visitCount){
 
         $currentDate = new DateTime("NOW");
-        $dateCheckIn = DateUtil::parse($this->date_check_in);
+        $dateCheckIn = DateUtil::parseDate($this->date_check_in);
         $this->max_time = null;
         $this->min_start_date
             = $this->max_start_date
@@ -272,14 +272,14 @@ class Visit extends CActiveRecord {
                 break;
 
             case CardType::VIC_CARD_MANUAL:
-                $this->min_start_date = DateUtil::formatForDisplay((new DateTime("NOW"))->sub(new DateInterval("P1Y")));
-                $this->max_start_date = DateUtil::formatForDisplay((new DateTime("NOW"))->add(new DateInterval("P3D")));
+                $this->min_start_date = DateUtil::formatDateForDisplay((new DateTime("NOW"))->sub(new DateInterval("P1Y")));
+                $this->max_start_date = DateUtil::formatDateForDisplay((new DateTime("NOW"))->add(new DateInterval("P3D")));
                 $this->max_duration = 3;
                 break;
 
             case CardType::VIC_CARD_24HOURS:
-                $endDate = DateUtil::formatForDisplay(DateUtil::parse($this->date_check_in)->add(new DateInterval("P1D")));
-                $this->max_time = DateUtil::formatTime($endDate);
+                $endDate = DateUtil::formatDateForDisplay(DateUtil::parseDate($this->date_check_in)->add(new DateInterval("P1D")));
+                $this->max_time = DateUtil::formatTimeforDisplay($endDate);
                 $this->allow_update_end_date = false;
                 $this->max_duration = 1;
                 break;
@@ -309,16 +309,23 @@ class Visit extends CActiveRecord {
          $checkin = new DateTime($this->date_check_in);
          $currendDate = new DateTime("NOW");
 
-        // Date Format to YYYY-MM-DD for MSSQL
-        if(!empty($this->date_check_in)){$this->date_check_in = date("Y-m-d",strtotime($this->date_check_in));}else{$this->date_check_in = NULL;}
-        if(!empty($this->date_check_out)){$this->date_check_out = date("Y-m-d",strtotime($this->date_check_out));}else{$this->date_check_out = NULL;}
-        if(!empty($this->finish_date)){$this->finish_date = date("Y-m-d",strtotime($this->finish_date));} else {$this->finish_date = $this->date_check_out;}
-        if(!empty($this->card_returned_date)){$this->card_returned_date = date("Y-m-d",strtotime($this->card_returned_date));}else{$this->card_returned_date = NULL;}
-        
-        // fOR Preregister a Visit if check In date is greater than the current
+         // Date Format to YYYY-MM-DD for MSSQL
+         $this->date_check_in       = DateUtil::reformatDateForDatabase($this->date_check_in);
+         $this->date_check_out      = DateUtil::reformatDateForDatabase($this->date_check_out);
+         $this->finish_date         = DateUtil::reformatDateForDatabase($this->finish_date);
+         $this->card_returned_date  = DateUtil::reformatDateForDatabase($this->card_returned_date);
+
+         $this->time_check_in       = DateUtil::reformatTimeForDatabase($this->time_check_in);
+         $this->time_check_out      = DateUtil::reformatTimeForDatabase($this->time_check_out);
+         $this->time_in       = DateUtil::reformatTimeForDatabase($this->time_in);
+         $this->time_out      = DateUtil::reformatTimeForDatabase($this->time_out);
+         $this->finish_time      = DateUtil::reformatTimeForDatabase($this->finish_time);
+
+
+         // fOR Preregister a Visit if check In date is greater than the current
         $PDate = $currendDate->diff($checkin)->format("%r%a");
         if($PDate > 1) {
-            $this->visit_status = VisitStatus::PREREGISTERED;
+        $this->visit_status = VisitStatus::PREREGISTERED;
         }
         return parent::beforeSave();
      }
@@ -1113,9 +1120,9 @@ class Visit extends CActiveRecord {
             if ($visit['card_type']==CardType::VIC_CARD_24HOURS){
                 $visitCount++;
             } else {
-                $visitCount += max(DateUtil::parse($visit['date_check_in']),$startDate)
+                $visitCount += max(DateUtil::parseDate($visit['date_check_in']),$startDate)
                         ->diff(
-                            min($endDate,DateUtil::parse($visit['date_check_in']))
+                            min($endDate,DateUtil::parseDate($visit['date_check_in']))
                         )->days + 1;
             }
         }

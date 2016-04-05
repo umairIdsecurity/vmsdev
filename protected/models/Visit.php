@@ -1097,6 +1097,7 @@ class Visit extends CActiveRecord {
     }
 
     public function getVisitCount($visitId){
+
         $startDate = (new DateTime("NOW"))->sub(new DateInterval("P1Y"));
         $startDateString = $startDate->format('Y-m-d');
         $endDate = (new DateTime("NOW"));
@@ -1136,6 +1137,7 @@ class Visit extends CActiveRecord {
                 'companyVisitsByVisitor' => $visitCount,
                 'remainingDays' => max(0,$remainingDays),
                 'companyName' => ''];
+
     }
 
     public function getVisitCountOld($visitId) {

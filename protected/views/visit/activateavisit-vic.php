@@ -139,19 +139,59 @@ $asicEscort = new AddAsicEscort();
 
     $(document).ready(function() {
 
-
-        var dateIn =  $("#dateoutDiv #Visit_date_check_in_container");
-        var dateOut =  $("#dateoutDiv #Visit_date_check_out_container");
+        var cardType = "<?php echo $model->card_type; ?>";
+        var dateIn =  $("#Visit_date_check_in_container");
+        var dateOut =  $("#Visit_date_check_out_container");
         var boundControl =  dateIn?dateOut:dateIn;
 
-        if(boundControl){
+        if(dateIn){
 
-            boundControl.change(function(){
+            dateIn.change(function() {
 
-                var dateIn =  $("#dateoutDiv #Visit_date_check_in_container");
+                var dateFormat = dateIn.datepicker('option', 'dateFormat');
+                var selectedDate = dateIn.datepicker('getDate');
+                var selectedDateStr = $.datepicker.formatDate(dateFormat, selectedDate);
+                var currentDate = new Date();
+                var currentDateStr = $.datepicker.formatDate(dateFormat, currentDate);
+
+                if (currentDate >= selectedDate) {
+
+                    if (currentDateStr == selectedDateStr) {
+
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
+                        $("#registerNewVisit").removeAttr("disabled");
+
+                    } else {
+
+                        updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
+                        var status = "<?php echo $model->visit_status; ?>";
+
+                    }
+
+                } else {
+
+                    if (cardType == '<?php echo CardType::VIC_CARD_MANUAL; ?>' && (selectedDate < currentDate)) {
+                        updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
+                    } else {
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
+                        $("#registerNewVisit").removeAttr("disabled");
+                    }
+
+                    $('#card_no_manual').show();
+
+                }
+            });
+
+        }
+
+
+        if(dateOut){
+
+            dateOut.change(function(){
+
+                var dateFormat = dateIn.datepicker('option','dateFormat');
                 var dateOut =  $("#dateoutDiv #Visit_date_check_out_container");
-                var boundControl =  dateIn?dateOut:dateIn;
-                var selectedDate = boundControl.datepicker('getDate');
+                var selectedDate = dateOut.datepicker('getDate');
                 var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
 
                 $("#cardDateText").html(cardDate);
@@ -161,120 +201,6 @@ $asicEscort = new AddAsicEscort();
             });
 
         }
-
-        //var cardType = "<?php echo $model->card_type; ?>";
-
-
-
-        // set the 
-
-        // Expected: Today's date should not be to select for Auto Closed visits for 24 hour & EVIC.
-//        if( $("#visitStatus").val() == 6) {
-//           switch(cardType) {
-//               case "6": // 24 Hour VIC
-//                    minDate = 1;
-//                    break;
-//                case "7": // Evic
-//                    minDate = 1;
-//                    break;
-//                default:
-//                    minDate = 0;
-//                    break;
-//            }
-//        }
-
-
-//        dateCheckInPicker.datepicker('option', {
-//            minDate: minDate,
-//            dateFormat: "dd/mm/yy",
-//            onClose: function (selectedDate) {
-//
-//                console.log('updated check in date picker');
-//
-//                var currentDate = d.getDate() + '-0' + (d.getMonth() + 1) + '-' + d.getFullYear();
-//                var checkInSelectedDate = $("#Visit_date_check_in_container").datepicker('getDate');
-//
-//                switch (cardType) {
-//                    case "<?php //echo CardType::VIC_CARD_EXTENDED; ?>//":
-//                    case "<?php //echo CardType::VIC_CARD_MULTIDAY; ?>//":
-//                        var checkOutDate = new Date(checkInSelectedDate);
-//                        checkOutDate.setDate(checkOutDate.getDate() + <?php //echo $visitCount['remainingDays'];?>//);
-//                        $("#dateoutDiv #Visit_date_check_out_container").datepicker("option", "minDate", checkInSelectedDate);
-//                        $("#dateoutDiv #Visit_date_check_out_container").datepicker("option", "maxDate", checkOutDate);
-//                        $("#dateoutDiv #Visit_date_check_out_container").datepicker("setDate", checkOutDate);
-//                        break;
-//                    case "<?php //echo CardType::VIC_CARD_MANUAL; ?>//":
-//                        $("#dateoutDiv #Visit_date_check_out_container").datepicker("setDate", checkInSelectedDate);
-//                        break;
-//                    case "<?php //echo CardType::VIC_CARD_24HOURS; ?>//":
-//                        var checkOutDate = new Date(checkInSelectedDate);
-//                        checkOutDate.setDate(checkOutDate.getDate() + 1);
-//                        $("#dateoutDiv #Visit_date_check_out_container").datepicker("setDate", checkOutDate);
-//                        $("#registerNewVisit").removeAttr("disabled");
-//                        /* Can be preregistered */
-//                        break;
-//                    default:
-//                        $("#dateoutDiv #Visit_date_check_out_container").datepicker("option", "minDate", checkInSelectedDate);
-//                        $("#dateoutDiv #Visit_date_check_out_container").datepicker("setDate", checkInSelectedDate);
-//                        break;
-//                }
-//
-//                $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out_container").datepicker("getDate"));
-//
-//                var currentDate2 = new Date();
-//                var sD = selectedDate.split("-");
-//                var dSelected = new Date(sD[2] + '-' + sD[1] + '-' + sD[0]);
-//                if (dSelected >= currentDate2) {
-//                    if (sD[2] == d.getFullYear() && sD[1] == (d.getMonth() + 1) && sD[0] == d.getDate()) {
-//                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
-//                        // Preregistered visits can be activated if someone selects todays date to activate
-//                        $("#registerNewVisit").removeAttr("disabled");
-//                    } else {
-//                        updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
-//                        var status = "<?php //echo $model->visit_status; ?>//";
-//
-//                    }
-//                    // update card date
-//                    var cardDate = $.datepicker.formatDate('dd M y', checkInSelectedDate);
-//                    $("#cardDetailsTable span.cardDateText").html(cardDate);
-//
-//                } else {
-//
-//                    if (cardType == '<?php //echo CardType::VIC_CARD_MANUAL; ?>//' && (dSelected.getDate() < currentDate2.getDate() || dSelected.getMonth() < currentDate2.getMonth() )) {
-//                        updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
-//                    } else {
-//                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
-//                        $("#registerNewVisit").removeAttr("disabled");
-//                    }
-//                    $('#card_no_manual').show();
-//                }
-//            }
-//        });
-
-
-
-//        if(!dateCheckOutPicker.datepicker('option','dateFormat')){
-//            dateCheckOutPicker.datepicker();
-//        }
-        var dateCheckOutPicker = $("#dateoutDiv #Visit_date_check_out_container");
-        $('#CardGenerated_date_expiration').val(dateCheckOutPicker.datepicker( "getDate"));
-
-//        dateCheckOutPicker.datepicker('option', {
-//            dateFormat: "dd/mm/yy",
-//            minDate: minDate,
-//            maxDate: <?php //echo $visitCount['remainingDays'];?>//,
-//            disabled: <?php //echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL]) ? "true" : "false"; ?>//,
-//            onClose: function (selectedDate) {
-//                var day = selectedDate.substring(0, 2);
-//                var month = selectedDate.substring(3, 5);
-//                var year = selectedDate.substring(6, 10);
-//                var newDate = new Date(year, month - 1, day);
-//                var cardDate = $.datepicker.formatDate('dd M y', newDate);
-//                $("#cardDetailsTable span.cardDateText").html(cardDate);
-//                $('#CardGenerated_date_expiration').val(selectedDate);
-//            }
-//        });
-
 
         // Enable Today button to select and auto enter Todays date
         var _gotoToday = jQuery.datepicker._gotoToday;

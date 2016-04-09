@@ -921,9 +921,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     function CheckIfThisWithFutureDate() {
          var checkInDate = $("#Visit_date_check_in_container").datepicker('getDate');
          checkInDate = new Date(checkInDate);
-         var currentDate = new Date();
+         var checkInDateStr = $.datepicker.formatDate('yymmdd',checkInDate);
+         var currentDateStr = $.datepicker.formatDate('yymmdd',new Date());
          var visitStatus = "<?php echo $model->visit_status?>";
-         if((visitStatus == "<?php echo VisitStatus::PREREGISTERED?>" && (checkInDate.getDate() > currentDate.getDate() ||  checkInDate.getMonth() > currentDate.getMonth()) )) {
+         if(visitStatus == "<?php echo VisitStatus::PREREGISTERED?>" && (currentDateStr < checkInDateStr) ) {
              return true;
         } else {
             return false;

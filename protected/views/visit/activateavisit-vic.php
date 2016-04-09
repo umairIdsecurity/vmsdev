@@ -154,7 +154,7 @@ $asicEscort = new AddAsicEscort();
                 var currentDate = new Date();
                 var currentDateStr = $.datepicker.formatDate(dateFormat, currentDate);
 
-                if (currentDate >= selectedDate) {
+                if (currentDate <= selectedDate) {
 
                     if (currentDateStr == selectedDateStr) {
 

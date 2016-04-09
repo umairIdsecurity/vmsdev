@@ -66,10 +66,13 @@ class UserServiceImpl implements UserService {
                 $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
                 $to=$user['email'];
                 $subject = "Invitation to Aviation Visitor Management System";
-                $body = "<html><body>Hi,<br><br>".
-                        $workstationObj->name." has requested a user account to be created for ".$user['email']."<br><br>".
-                        "Please click the following link to create your password:<br>".
-                        "http://vmsdev.identitysecurity.com.au/index.php?r=site/forgot<br>";
+                $airport = Company::model()->findByPk(Yii::app()->user->tenant);
+                $airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+                $body = "<html><body>Hi ".$user->first_name." ".$user->last_name."<br>"
+                    .$airportName." would like you to create a user profile and password for their Aviation Visitor Management System.<br>".
+                    "Please click the following link to create a login<br>".
+                    Yii::app()->request->baseUrl."/index.php?r=site/login<br>";
+
                 $body .="<br>"."Thanks,"."<br>Admin</body></html>";
                 EmailTransport::mail($to, $subject, $body, $headers);
             }

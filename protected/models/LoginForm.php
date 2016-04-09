@@ -22,7 +22,7 @@ class LoginForm extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('username, password, tenant', 'required'),
+            array('username, password, tenant', 'required','message'=>'Please enter {attribute}'),
             // rememberMe needs to be a boolean
             array('rememberMe', 'boolean'),
             // password needs to be authenticated

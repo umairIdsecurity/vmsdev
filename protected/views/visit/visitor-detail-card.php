@@ -105,7 +105,7 @@ $vstr = Visitor::model()->findByPk($model->visitor);
          * EVIC only, ASIC_Pending(during Auto-closed), Show reset option if this is not the first time.
          * The Auto Closed script actually reset it first time.
          */
-      if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit >= 28 &&
+  if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit >= 28 &&
                 $model->card_type == CardType::VIC_CARD_EXTENDED && !is_null($model->parent_id)):   
     ?>
     <span class="glyphicon glyphicons-refresh" style="margin-left:8px" onclick="resetVisitCount('<?php echo $model->id; ?>');"> </span>

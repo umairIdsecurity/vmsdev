@@ -902,7 +902,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     
     // Check if visitor visit count exceeds 28
     function checkForVisitCountLimit() {
-         var totalVisitsCount = '<?php echo Visit::model()->getOldVisitsCountForThisYear($model->id, $model->visitor); ?>';
+         var totalVisitsCount = '<?php echo Visit::model()->getVisitCountDays($model->id); ?>';
          var cardType = '<?php echo $model->card_type ?>';
             if( totalVisitsCount >= 28 && cardType != '<?php echo CardType::VIC_CARD_EXTENDED?>' ) {
                  return 0;

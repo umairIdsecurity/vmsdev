@@ -1139,6 +1139,10 @@ class Visit extends CActiveRecord {
                 'companyName' => ''];
 
     }
+    
+    public function getVisitCountDays($visitId){
+        return $this->getVisitCount($visitId)['allVisitsByVisitor'];
+    }
 
     public function getVisitCountOld($visitId) {
 

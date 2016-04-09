@@ -1126,7 +1126,7 @@ class Visit extends CActiveRecord {
             } else {
                 $visitCount += max(DateUtil::parseDate($visit['date_check_in']),$startDate)
                         ->diff(
-                            min($endDate,DateUtil::parseDate($visit['date_check_in']))
+                            min($endDate,DateUtil::parseDate($visit['date_check_out']))
                         )->days + 1;
             }
         }

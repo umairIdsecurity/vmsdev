@@ -90,7 +90,7 @@
                     'class' => 'btn btn-primary btn-next'
                 ), 'Send to PAPL');*/
             ?>
-            <a id="sendTo" href="javascript:;" class="btn btn-primary btn-next">Send to PAPL <span class="glyphicon glyphicon-chevron-right"></span></a>
+            <a id="sendTo" href="javascript:;" class="btn btn-primary btn-next">Send to Airport <span class="glyphicon glyphicon-chevron-right"></span></a>
                     
         </div>
         <div class="col-sm-5"></div>

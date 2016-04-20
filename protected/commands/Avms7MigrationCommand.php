@@ -208,7 +208,11 @@ class Avms7MigrationCommand extends CConsoleCommand
         for($i=0;$i<sizeof($data['visit']);$i++){
 
             $visitor = $data['visit'][$i];
-            $key = $airportCode.".".$visitor['tenant_agent'];
+            if(!isset($visitor['tenant_agent'])){
+                $key = $airportCode . ".";
+            } else {
+                $key = $airportCode . "." . $visitor['tenant_agent'];
+            }
 
             if(!isset($lookup[$key])) {
 
@@ -233,7 +237,11 @@ class Avms7MigrationCommand extends CConsoleCommand
         for($i=0;$i<sizeof($data['visit']);$i++){
 
             $visitor = $data['visit'][$i];
-            $key = $airportCode.".".$visitor['tenant_agent'];
+            if(isset($visitor['tenant_agent'])) {
+                $key = $airportCode . "." . $visitor['tenant_agent'];
+            } else {
+                $key = $airportCode . "." ;
+            }
 
             if(!isset($lookup[$key])) {
 

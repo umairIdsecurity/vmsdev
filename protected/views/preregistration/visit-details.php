@@ -36,9 +36,9 @@ $timeIn[1] = date("i");
 
 
     <div class="row">
-        <div class="col-sm-4 text-center">
-            <a href="#"><img src="<?=Yii::app()->theme->baseUrl?>/images/vic24h.png" alt="Vic24h"></a>
-        </div>
+<!--        <div class="col-sm-4 text-center">-->
+<!--            <a href="#"><img src="--><?//=Yii::app()->theme->baseUrl?><!--/images/vic24h.png" alt="Vic24h"></a>-->
+<!--        </div>-->
         <div class="col-sm-8">
             <div class="">
                   <div class="row">
@@ -50,8 +50,9 @@ $timeIn[1] = date("i");
                                 'attribute'   => 'date_in',
                             ));
                         ?>
+                        <span style="line-height:30px" class="glyphicon glyphicon-calendar">
                     </div>
-                    <div class="col-sm-3"><span style="line-height:30px" class="glyphicon glyphicon-calendar"></span></div>
+                   
                   </div>
             </div>
 

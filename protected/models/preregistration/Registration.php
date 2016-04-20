@@ -237,7 +237,7 @@ class Registration extends CActiveRecord {
             array('asic_no', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please enter Asic no.'),
             array('asic_expiry', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please select Asic Expiry'),
             array('company', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please select a company'),
-            array('email', 'unique', 'on' => 'preregistrationAsic','message'=>'ASIC is already exists'),
+            array('email', 'unique', 'on' => 'preregistrationAsic','message'=>'ASIC already exists'),
 
 
 			array('is_deleted, identification_country_issued, contact_country, verifiable_signature', 'numerical', 'integerOnly'=>true),

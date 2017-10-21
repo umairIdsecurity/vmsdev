@@ -58,11 +58,21 @@ class PasswordController extends Controller {
 
         if (isset($_POST['Password'])) {
             $model->attributes = $_POST['Password'];
+		
             $user = User::model()->findByPK($id);
             
            // if (User::model()->validatePassword($_POST['Password']['currentpassword'], $user->password)) {
                 if ($model->save()) {
                     Yii::app()->user->setFlash('success', 'Password successfully updated');
+					  $templateParams = array(
+								'email' => $user->email,
+									);
+	
+				//TODO: Change to YiiMail
+						$emailTransport = new EmailTransport();
+						$emailTransport->sendResetPasswordConfirmationEmail(
+						$templateParams, $user->email, $user->first_name . ' ' . $user->last_name
+						);
                     $this->redirect(array('user/profile', 'id' => $model->id));
                 }
 //            } else {

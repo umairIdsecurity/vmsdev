@@ -5749,7 +5749,7 @@ iframe[name="google_conversion_frame"] {
     margin-bottom: 10px;
   }
 }
-.custom-file-button {
+.custom-file-button{
   background: url("../images/btn-upload-file.png") top center no-repeat;
   background-size: 120px auto;
    width: 20%;
@@ -5762,6 +5762,7 @@ iframe[name="google_conversion_frame"] {
   height: 80px;
   width: 106%;
 }
+
 .form-group {
   position: relative;
   overflow: hidden;

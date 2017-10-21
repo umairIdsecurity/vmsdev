@@ -15,6 +15,8 @@ class AddCompanyContactForm extends CFormModel {
     public $password_requirement;
     public $user_repeatpassword;
     public $password_option;
+	public $asiccheck;
+
     /**
      * Declares the validation rules.
      * The rules state that username and password are required,
@@ -41,6 +43,8 @@ class AddCompanyContactForm extends CFormModel {
             'email'         => 'Email',
             'mobile'        => 'Mobile',
             'companyType'   => 'Company Type',
+			'asiccheck' => 'Add Asic Sponsor As Company Contact'
+			
         );
     }
 

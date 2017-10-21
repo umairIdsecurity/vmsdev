@@ -104,14 +104,16 @@ $asicEscort = new AddAsicEscort();
         <td>Check In Date</td>
     </tr>
     <tr>
+	
         <td>
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <?php echo $logform->dateField($model,'date_check_in',[]); ?>
         </td>
     </tr>
 
-    <tr id="dateoutDiv" <?php echo $model->card_type == CardType::VIC_CARD_SAMEDATE ? 'style="display:none;"' : '' ?>>
-        <td>Check Out Date
+    <tr id="dateoutDiv" <?php echo $model->card_type == CardType::VIC_CARD_SAMEDATE ? 'style="display:none;"' : '' ?> <?php echo $model->card_type == CardType::TEMPORARY_ASIC? 'style="display:none;"' : '' ?>>
+		
+	   <td>Check Out Date
             <br>
             <?php echo $logform->dateField($model,'date_check_out',[]); ?>
             <?php echo $logform->dateRangeManager($model,'date_check_in','date_check_out',$model->getDateRangeOptions()); ?>
@@ -245,12 +247,25 @@ $asicEscort = new AddAsicEscort();
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" id="refusedAsicCbx"/></td>
+                <td width="5%">
+				<?php if($model->visit_status == VisitStatus::PREREGISTERED):?>
+				<input type="checkbox" id="refusedAsicCbx" checked />
+				<?php elseif ($model->visit_status != VisitStatus::PREREGISTERED): ?>
+				<input type="checkbox" id="refusedAsicCbx"  />
+				<?php endif;?>
+				</td>
                 <td><label for="refusedAsicCbx">The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" id="issuedVicCbx"/></td>
+                <td width="5%">
+				<?php if($model->visit_status == VisitStatus::PREREGISTERED):?>
+				<input type="checkbox" id="issuedVicCbx" checked />
+				<?php elseif ($model->visit_status != VisitStatus::PREREGISTERED): ?>
+				<input type="checkbox" id="issuedVicCbx"  />
+				<?php endif;?>
+				
+				</td>
                 <td><label for="issuedVicCbx">The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
 <!--                    (from <?php
 //                            if (isset($model->date_check_in)) {
@@ -336,6 +351,27 @@ $asicEscort = new AddAsicEscort();
 
 <button id="btnActivate" style="display: none;"></button>
 <script type="text/javascript">
+ $(document).ready(function () {
+	 if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
+            $('#VicHolderDecalarations').prop('checked', true);
+        } else {
+            $('#VicHolderDecalarations').prop('checked', false);
+        }
+		  $('#refusedAsicCbx').change(function() {
+			  if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
+            $('#VicHolderDecalarations').prop('checked', true);
+        } else {
+            $('#VicHolderDecalarations').prop('checked', false);
+        }
+		  });
+		  $('#issuedVicCbx').change(function() {
+			  if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
+            $('#VicHolderDecalarations').prop('checked', true);
+        } else {
+            $('#VicHolderDecalarations').prop('checked', false);
+        }
+		  });
+ });
     function vicHolderDeclarationChange() {
         if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
             $('#VicHolderDecalarations').prop('checked', true);
@@ -480,6 +516,7 @@ $asicEscort = new AddAsicEscort();
         var yyyy = dt.getFullYear();
         var document_expiry_date = Date.parse("<?php echo $identification_document_expiry; ?>");
         var today = Date.parse(yyyy+'-'+mm+'-'+dd);
+		//alert(document_expiry_date);
         return document_expiry_date <= today;
     }
 
@@ -516,7 +553,8 @@ $asicEscort = new AddAsicEscort();
 
         var status = "<?php echo $model->visit_status; ?>";
         if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
-            checkIfActiveVisitConflictsWithAnotherVisit();
+            //alert('here');
+			checkIfActiveVisitConflictsWithAnotherVisit();
         } else {
             checkIfActiveVisitConflictsWithAnotherVisit('new');
         }

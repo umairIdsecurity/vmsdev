@@ -297,13 +297,20 @@ class VisitorType extends CActiveRecord {
     public function returnVisitorType($visitorTypeId = NULL,$condition= "1>0") {
         
         if( is_null($visitorTypeId) )
-            $condition .=" And tenant = ".Yii::app ()->user->tenant;
-        $visitorType = VisitorType::model()->findAll($condition);
+        $condition .=" And tenant = ".Yii::app ()->user->tenant;
+		$visitorType = VisitorType::model()->findAll($condition);
         $VISITOR_TYPE_LIST = array();
+		//echo "<pre>";
+		//print_r($visitorType);
+		//echo "</pre>";
+		//Yii::app()->end();
         foreach ($visitorType as $key => $value) {
             $VISITOR_TYPE_LIST[$value['id']] =  $value['name'];
+			//echo "<pre>";
+			//print_r($visitorType);
+			//echo "</pre>";
         }
-
+		
         if ($visitorTypeId == NULL) {
             $VISITOR_TYPE_LIST="";
 

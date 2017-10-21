@@ -35,6 +35,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_in',
             'header' => 'Date In',
+			'value'=> 'date("d/m/Y", strtotime("$data->date_check_in"))',
             'htmlOptions' => array('style'=>'width:15px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:15px; min-width: 0px !important;'),
         ),
@@ -54,6 +55,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' =>   'date_check_out',
             'header' => 'Date Out',
+			'value'=>'date("d/m/Y", strtotime("$data->date_check_out"))',
             'htmlOptions' => array('style'=>'width:15px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:15px; min-width: 0px !important;'),
         ),

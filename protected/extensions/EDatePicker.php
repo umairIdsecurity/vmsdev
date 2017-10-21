@@ -85,12 +85,17 @@ class EDatePicker extends CJuiInputWidget
 
         } elseif($this->mode == 'expiry'){
             $now         = new DateTime(date('Y-m-d'));
-            $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +5 year')));
+            $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +10 year')));
             $interval    = $asicMaxDate->diff($now);
             $this->ensureOption('minDate','0');
             $this->ensureOption('maxDate',$interval->days);
         }
+		elseif($this->mode == 'ResidentDates'){
+            $this->ensureOption('yearRange',(Date('Y')-100).':'.(Date('Y')));
+			$this->ensureOption('maxDate', '0');
+            $this->ensureOption('defaultDate','01/01/1990');
 
+        }
         $this->ensureOption('dateFormat','dd/mm/yy');
         $this->ensureOption('changeMonth',true);
         $this->ensureOption('changeYear',true);

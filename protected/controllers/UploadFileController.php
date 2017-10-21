@@ -97,6 +97,7 @@ class UploadFileController extends Controller
         if (isset($_POST['Folder'])) {
             //Check Folder has exist
             if (Folder::model()->checkNameExist($_POST['Folder']['user_id'], $_POST['Folder']['name'])) {
+				
                 echo CJSON::encode(array('success' => 2, 'error' => 'Folder name is already exists.'));
                 exit();
             } elseif (Folder::model()->getNumberFolders($_POST['Folder']['user_id']) > 30) {
@@ -147,7 +148,9 @@ class UploadFileController extends Controller
      */
     public function actionUploadedFile()
     {
+		
         if (isset($_POST['File']) && isset($_FILES)) {
+			
             $folder_id = $_POST['File']['folder_id'];
             $user_id = $_POST['File']['user_id'];
             if (isset($_FILES)) {

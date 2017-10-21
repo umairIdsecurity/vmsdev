@@ -20,7 +20,7 @@
         if(( $module == "AVMS" || $module == "Both") ) 
         {
     ?>
-        <td><input value='edit'  class='edit_card_back corporate <?php echo $btn[5]?> greenBtn' type='button' name='VIC Same Day' id='edit_5'><input value='edit'  class='edit_card_back vc <?php echo $btn[6]?> greenBtn' type='button' name='VIC 24 Hour' id='edit_6'><input value='edit'  class='edit_card_back vc <?php echo $btn[7]?> greenBtn' type='button' name='VIC Extended' id='edit_7'><input value='edit'  class='edit_card_back vc <?php echo $btn[8]?> greenBtn' type='button' name='VIC Multi Day' id='edit_8'></td>\
+        <td><input value='edit'  class='edit_card_back corporate <?php echo $btn[5]?> greenBtn' type='button' name='VIC Same Day' id='edit_5'> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input value='edit'  class='edit_card_back vc <?php echo $btn[7]?> greenBtn' type='button' name='VIC Extended' id='edit_7'><input value='edit'  class='edit_card_back vc <?php echo $btn[8]?> greenBtn' type='button' name='VIC Multi Day' id='edit_8'></td>\
     <?php
         } 
     ?>

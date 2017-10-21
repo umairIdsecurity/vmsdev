@@ -1,5 +1,6 @@
 <!-- Listing and Pie Chart Div -->
 <h1> Total New Visitor Profiles by Months</h1>
+
 <div class="content" style="width:40%; float: left; margin:20px 10px 0px 5px;">
 <table class="table" cellpadding="4" width="100%">
     <thead>
@@ -48,45 +49,38 @@
             }
 
             if(!empty($resultsVIC)){
+				$i=0;
                 foreach($resultsVIC as $key=>$val) {
-                    $flag=false;
                     foreach($val as $k=>$v) {
                         $myKey=$k."-".$key;
                         if($myKey == $dt[1]){
                             $totalVIC +=count($v);
-                            //$grandTotal +=count($v);
-                            $flag=true;
                             $datasetsVIC[] = array($dt[0], count($v));
-                            echo '<td>'.count($v). '</td>';
+						   $i=count($v);
                             break;
                         }
                     }
-                    if(!$flag){
-                            echo '<td>0</td>';
-                    }
+					
                 }
+				 echo '<td>'.$i.'</td>';
             }else{
                 echo '<td>'.'0'.'</td>';
             }
 
             if(!empty($resultsASIC)){
+				$j=0;
                 foreach($resultsASIC as $key=>$val) {
-                    $flag=false;
                     foreach($val as $k=>$v) {
                         $myKey=$k."-".$key;
                         if($myKey == $dt[1]){
                             $totalASIC +=count($v);
-                            //$grandTotal +=count($v);
-                            $flag=true;
                             $datasetsASIC[] = array($dt[0], count($v));
-                            echo '<td>'.count($v). '</td>';
+							$j=count($v);
                            break;
                         }
                     }
-                    if(!$flag){
-                            echo '<td>0</td>';
-                    }
-                }
+				}
+			 echo '<td>'.$j.'</td>';	
             }else{
                 echo '<td>'.'0'.'</td>';
             }

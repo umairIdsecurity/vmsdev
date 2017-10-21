@@ -36,11 +36,25 @@
         <td>
             <input name="Visit[visit_status]" id="Visit_visit_status" type="hidden"
                    value="<?php echo VisitStatus::CLOSED; ?>">
+                   
 
 
-            <?php
+             <?php
+			if(($model->card_type==CardType::VIC_CARD_MULTIDAY ) || ( $model->card_type==CardType::VIC_CARD_EXTENDED ) )
+			{
+				if($model->finish_date!=null)
+				echo $closeVisitForm->dateField($model,'finish_date',[]);
+				else
+				{
+				$model->finish_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
+				echo $closeVisitForm->dateField($model,'finish_date',[]);
+				}
+			}
+			else
+			{
             $model->finish_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
             echo $closeVisitForm->dateField($model,'finish_date',[]);
+			}
             ?>
         </td>
     </tr>

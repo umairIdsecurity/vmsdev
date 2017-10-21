@@ -1,3 +1,4 @@
+
 <?php
 
 $cs = Yii::app()->clientScript;
@@ -20,7 +21,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 // set default country is Australia = 13
 $model->identification_country_issued = 13;
 ?>
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
     #addCompanyLink {width: 124px;height: 23px;padding-right: 0px;margin-right: 0px;padding-bottom: 0px;display: block;}
     .form-label {display: block;width: 200px;float: left;margin-left: 15px;}
@@ -35,9 +37,9 @@ $model->identification_country_issued = 13;
 <br>
 <div role="tabpanel" style="width:882px">
 
-   
+
     <!-- Nav tabs -->
-    <div style="float:left;width:270px;text-align:center">
+    <div style="float:left;width:270px;text-align:center" id="asicVistorLable">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
     <input type="text" id="search-visitor" name="search-visitor" placeholder="Search Visitor Profiles by name, email or drivers licence"
@@ -53,7 +55,8 @@ $model->identification_country_issued = 13;
 
 
     <!-- Tab panes -->
-    <div class="tab-content">
+    <!--    change html for hidding tab on temprory asic page -->
+    <div class="tab-content" id="findAddVistorTabContent">
 
         <div role="tabpanel" class="tab-pane active" id="addvisitor">
             <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv">
@@ -149,7 +152,7 @@ $model->identification_country_issued = 13;
                             <tr id="limit-last-name">
                                 <td>
                                     <?php echo $form->textField($model, 'last_name',
-                                        array('size' => 50, 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
+                                        array('size' => 50, 'maxlength' => 15, 'placeholder' => 'Last Name','class'=>'form-control input-sm')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                                 </td>
@@ -162,7 +165,7 @@ $model->identification_country_issued = 13;
                                         'model'=>$model,
                                         'attribute'=>'date_of_birth',
                                         'mode'=>'date_of_birth',
-                                        'htmlOptions'=>[]
+                                        'htmlOptions'=>['class'=>'year','title'=>'Date of Birth is a unique identifier. Must be correct']
                                     ));
                                     ?>
                                     <span class="required">*</span>
@@ -173,16 +176,16 @@ $model->identification_country_issued = 13;
                             <tr>
                                 <td width="37%">
                                     <?php echo $form->textField($model, 'email',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email Address')); ?>
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email Address','title'=>'Enter the VIC holders unique email address or FirstName.Last Name. Do not enter in another persons email, a false or generic email address.')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'email',
                                             array('style' => 'text-transform:none;')); ?>
                                     <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">
-                                        A User Profile already exists for this email address. <a href='javascript:;' id='searchVisitorsByEmailLink'>Click here</a> to Find this Visitor Profile or enter an alternate email address.
+                                        A User Profile already exists for this email address. <a href='javascript:;' id='searchVisitorsByEmailLink'>Click here</a> to Find this Visitor Profile.
                                     </div>
 
                                     <div style="" id="" class="newErrorMessage newErrorMessageEmail">
-                                        A User Profile already exists for First Name, Last Name and DOB. <a href='javascript:;' id='searchVisitorsByFirstnameLink'>Click here</a> to Find Visitor Profile or enter a middle name to create a new profile if a different person.
+                                        A User Profile already exists for First Name, Last Name and DOB. <a href='javascript:;' id='searchVisitorsByFirstnameLink'>Click here</a> to Find Visitor Profile.
                                     </div>
 
                                 </td>
@@ -476,14 +479,14 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr class="vic-visitor-fields">
                                 <td>
-                                    <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
+                                    <?php echo $form->textField($model, 'identification_document_no', array( 'size'=>50,'maxlength' => 50, 'placeholder' => 'Document No.')); ?>
 
                                     <?php
                                     $this->widget('EDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
-                                        'mode'        =>  'expiry',
-                                    ));
+										'mode'=>  'expiry',
+											));
                                     ?><!-- <span class="required primary-identification-require">*</span> -->
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
@@ -558,7 +561,7 @@ $model->identification_country_issued = 13;
                             </tr>
 
                             <tr class="vic-visitor-fields" id="password-field">
-                                <td id="passwordVicForm">
+                              <td id="passwordVicForm">
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
                                 </td>
                             </tr>
@@ -590,90 +593,114 @@ $model->identification_country_issued = 13;
             </div>
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="searchvisitor" style="width: 99.99%">
-            <div <?php
-            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                echo "style='display:none;'";
-            }
-            ?>>
-                <table>
-                    <tr>
-                        <td style='width:250px;'><label>Tenant <span class="required">*</span></label></td>
-                        <td><label>Tenant Agent </label></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select id="search_visitor_tenant" onchange="populateTenantAgentAndCompanyField('search')">
-                                <option value='' selected>Select a tenant</option>
-                                <?php
-                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
-                                foreach ($allTenantCompanyNames as $key => $value) {
-                                    ?>
-                                    <option value="<?php echo $value['id']; ?>"
-                                        <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id']) {
-                                            echo " selected ";
-                                        }
-                                        ?>><?php echo $value['name']; ?></option>
-                                <?php
-                                }
+    </div>
+    <!-- Search grid out side tab-content -->
+    <div role="tabpanel" class="tab-pane" id="searchvisitor" style="width: 99.99%">
+        <div <?php
+        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+            echo "style='display:none;'";
+        }
+        ?>>
+            <table>
+                <tr>
+                    <td style='width:250px;'><label>Tenant <span class="required">*</span></label></td>
+                    <td><label>Tenant Agent </label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select id="search_visitor_tenant" onchange="populateTenantAgentAndCompanyField('search')">
+                            <option value='' selected>Select a tenant</option>
+                            <?php
+                            $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                            foreach ($allTenantCompanyNames as $key => $value) {
                                 ?>
-                            </select>
-                        </td>
-                        <td>
-                            <select id="search_visitor_tenant_agent"
-                                    onchange="populateAgentAdminWorkstations('search')">
+                                <option value="<?php echo $value['id']; ?>"
+                                    <?php
+                                    if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id']) {
+                                        echo " selected ";
+                                    }
+                                    ?>><?php echo $value['name']; ?></option>
                                 <?php
-                                echo "<option value='' selected>Please select a tenant agent</option>";
-                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                    echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
-                                }
-                                ?>
-                            </select>
-                        </td>
-                </table>
-            </div>
+                            }
+                            ?>
+                        </select>
+                    </td>
+                    <td>
+                        <select id="search_visitor_tenant_agent"
+                                onchange="populateAgentAdminWorkstations('search')">
+                            <?php
+                            echo "<option value='' selected>Please select a tenant agent</option>";
+                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
+                            }
+                            ?>
+                        </select>
+                    </td>
+            </table>
+        </div>
 
 
-            <div id="searchVisitorTableDiv">
-                <h4>Search Results for : <span id='search'></span><?php $this->widget('ext.widgets.loading.LoadingWidget'); ?></h4>
-                <?php
-                $form = $this->beginWidget('CActiveForm', array(
-                    'id' => 'register-reason-form-search',
-                    'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-                    'htmlOptions' => array("name" => "register-reason-form"),
-                    'enableAjaxValidation' => false,
-                    'enableClientValidation' => true,
-                    'clientOptions' => array(
-                        'validateOnSubmit' => true,
-                        'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){                               
+        <div id="searchVisitorTableDiv">
+            <h4>Search Results for : <span id='search'></span><?php $this->widget('ext.widgets.loading.LoadingWidget'); ?></h4>
+            <?php
+            $form = $this->beginWidget('CActiveForm', array(
+                'id' => 'register-reason-form-search',
+                'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
+                'htmlOptions' => array("name" => "register-reason-form"),
+                'enableAjaxValidation' => false,
+                'enableClientValidation' => true,
+                'clientOptions' => array(
+                    'validateOnSubmit' => true,
+                    'afterValidate' => 'js:function(form, data, hasError){
+                                if (!hasError){
                            }
                         }'
-                    ),
-                ));
-                ?>
-                <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea>
+                ),
+            ));
+            ?>
+            <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea>
 
-                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please complete Reason</div>
+            <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please complete Reason</div>
 
-                <?php $this->endWidget(); ?>
+            <?php $this->endWidget(); ?>
 
-                <div id="searchVisitorTable"></div>
+            <div id="searchVisitorTable"></div>
 
-            </div>
             <div class="register-a-visitor-buttons-div" style="padding-right:23px;text-align: right;">
                 <input type="button" class="neutral visitor-backBtn " id="btnBackTab2" value="Back" onclick="javascript:backFillNewVistor();return false;"/>
                 <input type="button" id="clicktabB1" value="Save and Continue" class="actionForward"/>
             </div>
             <input type="text" id="selectedVisitorInSearchTable" value="0"/>
+
         </div>
+
     </div>
 
 </div>
 
 
 <script>
+
+
+  $(document).ready(function () {
+	
+
+		
+		 $("#addCompanyLink").click(function(){
+		//alert("hello");
+        $("#AddCompanyContactForm_asiccheck").hide();
+		$("label[for='AddCompanyContactForm_asiccheck']").hide();
+		//console.log($("#register-host-form input[name='User[first_name]']").val());
+		
+    });
+	 $("#addContactLink").click(function(){
+		//alert("hello");
+        $("#AddCompanyContactForm_asiccheck").hide();
+		$("label[for='AddCompanyContactForm_asiccheck']").hide();
+		//console.log($("#register-host-form input[name='User[first_name]']").val());
+		
+    });
+  });
     var is_error = false;
     function beforeValidate(form, data, hasError) {
         is_error = false;
@@ -838,9 +865,9 @@ $model->identification_country_issued = 13;
 
             } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
 
-                checkReasonIfUnique();
-
-            } else if(
+                //checkReasonIfUnique();
+				 checkAlreadyVisitor(); 
+            } /*else if(
                 $("#Visitor_photo").val() == "" &&
                 $("#cardtype").val() != <?php echo CardType::SAME_DAY_VISITOR; ?>  &&
                 $("#cardtype").val() != <?php echo CardType::MANUAL_VISITOR; ?>  &&
@@ -849,7 +876,7 @@ $model->identification_country_issued = 13;
                 $("#cardtype").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
             ){
                 $("#photoErrorMessage").show();
-            } else {
+            }*/ else {
 
                 $(".visitorReason").hide();
                 $("#photoErrorMessage").hide();
@@ -883,7 +910,8 @@ $model->identification_country_issued = 13;
 
         $('.year').on('change', function () {
             var dt = new Date();
-
+			var birthYear=$(".year").val().split('/');
+			
             if(dt.getFullYear()< $(".year").val()) {
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
@@ -897,7 +925,7 @@ $model->identification_country_issued = 13;
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{//u18_identification
-                if (dt.getFullYear() - $(".year").val() < 18) {
+                if (dt.getFullYear() - birthYear[2] < 18) {
                     $('#u18_identification').show();
                     $('.primary-identification-require').hide();
                 } else {
@@ -1200,34 +1228,51 @@ $model->identification_country_issued = 13;
             data: form,
             success: function(data) 
             {
-
-                if ($("#selectedHostInSearchTable").val() != 0) 
+				if ($("#selectedHostInSearchTable").val() != 0) 
                 { //if host is from search
-                    $("#visitReasonFormField").val($("#Visit_reason").val());
+						if($("#Visit_reason").val()=="Other" && $("#VisitReason_reason").val()!="")
+						{
+							$("#visitReasonFormField").val(data);
+						}
+						else
+						{
+							$("#visitReasonFormField").val($("#Visit_reason").val());
+						}
+                    //$("#visitReasonFormField").val($("#Visit_reason").val());
                     $("#Visit_patient").val($("#hostId").val());
                     $("#Visit_host").val($("#hostId").val());
 
                     // if visitor is not from search;
                     if ($("#selectedVisitorInSearchTable").val() == 0) 
                     {
+						
                         getLastVisitorId(function(data) {
                             populateVisitFormFields(); // Do what you want with the data returned
                         });
                     }
-                } else {
+                }  else {
+						if($("#Visit_reason").val()=="Other" && $("#VisitReason_reason").val()!="")
+						{
+							$("#visitReasonFormField").val(data);
+						}
+						else
+						{
+							$("#visitReasonFormField").val($("#Visit_reason").val());
+						}
                     getLastVisitorId(function(data) {
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
-                            /*alert("sendHostForm from sendVisitorForm in findAddVisitorRecord");
-                            sendHostForm();*/
-                        }
+                           // alert("sendHostForm from sendVisitorForm in findAddVisitorRecord");
+                            //sendHostForm();
+							
+             }
                     });
 
                 }
             },
-            error: function(jqXHR,textStatus,errorThrown){
-                console.log(jqXHR);
+            error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
                 console.log(textStatus);
                 console.log(errorThrown);
             }

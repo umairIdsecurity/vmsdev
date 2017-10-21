@@ -131,7 +131,8 @@ class EActiveForm extends CActiveForm
     }
 
     public function dateRangeManager($model,$startAttribute,$endAttribute,$options=[]){
-        $this->widget('EDateRangeManager',
+       
+		$this->widget('EDateRangeManager',
                 ['model'=>$model,'startAttribute'=>$startAttribute.'_container','endAttribute'=>$endAttribute.'_container','options'=>$options]
             );
         return "";

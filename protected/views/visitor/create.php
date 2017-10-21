@@ -2,13 +2,45 @@
     var SAMEDAY_TYPE = <?php echo CardType::SAME_DAY_VISITOR ?>;
     var MULTIDAY_TYPE = <?php echo CardType::MULTI_DAY_VISITOR ?>;
     var CONTRACTOR_TYPE = <?php echo CardType::CONTRACTOR_VISITOR ?>;
+    var TEMPORARY_ASIC = <?php echo CardType::TEMPORARY_ASIC ?>; // Temporary ASIC
 </script>
 
 <?php
+//$cs = Yii::app()->clientScript;
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $session = new CHttpSession;
 ?>
+
+<style type="text/css">
+
+.ui-tooltip
+{
+	max-width: 10%;
+	 display:none;
+}
+
+
+.ui-tooltip-content{
+	height:10%;
+	font-size:0.65vw;
+}
+ .ui-tooltip-content::after{
+			content: '';
+			position: absolute;
+			border-style: solid;
+			display: block;
+			width: 0;
+            
+         }
+     
+         .left .ui-tooltip-content::after {
+				top: 35%;
+				right: -6%;
+				border-color: transparent #cccccc ;
+				border-width: 10px 0 10px 10px;
+         }
+</style>
 <input type="text" id="getcurrentUrl" value="<?php
 if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     echo "1";
@@ -88,6 +120,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 <input type="text" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">
 <script>
+
 function getCardType() {
     var card_type = $('#VisitCardType').val();
     if (card_type > "<?php echo CardType::CONTRACTOR_VISITOR; ?>") {
@@ -97,7 +130,10 @@ function getCardType() {
     }
 }
     $(document).ready(function () {
-        display_ct();
+       // var e = document.getElementById('#limit-first-name');
+		//alert(e.tooltipText);
+
+		display_ct();
 
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
@@ -185,17 +221,71 @@ function getCardType() {
                 );
             } else {
                 $('#limit-first-name').html(
-                    '<td><input type="text" size="50" maxlength="15" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
+                    '<td><input type="text" size="50" maxlength="15" placeholder="First Name" title="Enter first name as written on identification" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
                 );
                 $('#limit-last-name').html(
-                    '<td><input type="text" size="50" maxlength="15" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
+                    '<td><input type="text" size="50" maxlength="15" placeholder="Last Name" title="Enter last name as written on identification" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
                 );
             }
-
+			
+				   $(document).ready(function () {
+				$('#addvisitor input').tooltip({
+					    disabled: true,
+						close: function( event, ui ) { $(this).tooltip('disable'); },
+					effect: "slide",
+					tooltipClass: "left",
+					position: {
+						my: "right center",
+						at: "left-10 center",
+						collision: "none"
+					},
+					
+				});
+				$('#addvisitor input').on('focus', function () {
+						$(this).tooltip('enable').tooltip('open');
+							});
+				$('#addvisitor input').on('click', function () {
+						$(this).tooltip('enable').tooltip('open');
+							});
+				  
+				
+				/*$('#addvisitor input').each(function(e){
+					var title=$(this).attr("title");
+					
+					$(this).mouseenter (function() {
+					$(this).tooltip('disable');
+					$(this).attr('title','');
+					});
+					
+					$(this).on("click",function() {
+					$(this).attr('title',title);
+					$(this).tooltip('open');
+						});
+						$(this).on("focus",function() {
+					$(this).attr('title',title);
+					$(this).tooltip('open');
+					$(this).tooltip({
+					effect: "slide",
+					tooltipClass: "left",
+					position: {
+						my: "right center",
+						at: "left-10 center",
+						collision: "none"
+					},
+					
+					
+				});
+			});
+			
+				});*/
+				 });
+				
         });
-        
+  
+
         $(document).on("click", "#clicktabB", function (e) {
             e.preventDefault();
+			//alert("yes");
             var cardType = $('#VisitCardType').val();
             if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
                 if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
@@ -242,6 +332,7 @@ function getCardType() {
 
         $("#clicktabB1").click(function (e) {
             e.preventDefault();
+			//alert("yes1");
             $("#register-reason-form").hide();
             var visit_reason = $("#Visit_reason_search").val();
 
@@ -265,7 +356,7 @@ function getCardType() {
         });
 
         $("#clicktabB2").click(function (e) {
-
+			//alert("yes2");
             e.preventDefault();
             var currentURL = $("#getcurrentUrl").val();
             
@@ -309,7 +400,8 @@ function getCardType() {
         });
 
         $("#clicktabC").click(function (e) {
-            e.preventDefault();
+			//alert("yes3");
+		   e.preventDefault();
             if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
                 $("#submitFormUser").click();
                 $("#submitFormUser").show();
@@ -323,6 +415,7 @@ function getCardType() {
 
         $("#dummy-submitFormPatientName").click(function (e) {
             e.preventDefault();
+			//alert("yes4");
             if ($("#selectedVisitorInSearchTable").val() != '0') { //if visitor is from search
                 $("#submitFormPatientName").click();
                 $("#submitFormPatientName").show();
@@ -685,7 +778,7 @@ $('#searchVisitorsByFirstnameLink').click(function(){
 function checkAlreadyVisitorProfile()
 {
     var firstname = $("#Visitor_first_name").val();
-    var middlename = $("#Visitor_middle_name").val();
+    var middlename = "";
     var lastname = $("#Visitor_last_name").val();
     var dateofbirth = $("#Visitor_date_of_birth").val(); 
     $.ajax({
@@ -767,9 +860,9 @@ function checkHostEmailIfUnique() {
             $.each(r.data, function (index, value) {
                 if (value.isTaken == 1 && id == "") {
                     $("#hostEmailIsUnique").val("0");
-                    $(".errorMessageEmail1").show();
+                    $(".errorMessageEmail").show();
                 } else {
-                    $(".errorMessageEmail1").hide();
+                    $(".errorMessageEmail").hide();
                     $("#hostEmailIsUnique").val("1");
                     //var currentURL = location.href.split("=");
                     var currentURL = $("#getcurrentUrl").val();
@@ -783,7 +876,7 @@ function checkHostEmailIfUnique() {
                             sendVisitorForm();*/
                             if($("#User_first_name").val()!="" && $("#User_last_name").val()!="" && email!="" && $("#User_contact_number").val()!="" && $("#User_company").val()!="" && $("#Visitor_visitor_card_status").val()!="" && $("#User_asic_no").val()!="" && $("#User_asic_expiry").val()!="")
                             {
-                                sendHostForm();
+                                //sendHostForm();
                             }
                         } 
                         /*else {
@@ -793,7 +886,7 @@ function checkHostEmailIfUnique() {
                         //because of https://ids-jira.atlassian.net/browse/CAVMS-1262
                         if($("#User_first_name").val()!="" && $("#User_last_name").val()!="" && email!="" && $("#User_contact_number").val()!="" && $("#User_company").val()!="" && $("#Visitor_visitor_card_status").val()!="" && $("#User_asic_no").val()!="" && $("#User_asic_expiry").val()!="")
                         {
-                            sendHostForm();
+                            checkAlreadyHostProfile();
                         }
                     } else {
                         showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
@@ -804,7 +897,45 @@ function checkHostEmailIfUnique() {
         }
     });
 }
+function checkAlreadyHostProfile()
+{
+    var firstname = $("#User_first_name").val();
+    var middlename = "";
+    var lastname = $("#User_last_name").val();
+    var dateofbirth = $("#User_date_of_birth").val(); 
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo Yii::app()->createUrl("visitor/checkAlreadyVisitorProfile&firstname=' + firstname + '&middlename=' + middlename + '&lastname=' +  lastname + '&dateofbirth=' + dateofbirth + '"); ?>',
+        dataType: 'json',
+        //because of https://ids-jira.atlassian.net/browse/CAVMS-1211
+        data: {"firstname":firstname,"middlename":middlename,"lastname":lastname,"dateofbirth":dateofbirth},
+        success: function (r) 
+        {
+            $.each(r.data, function (index, value) {
+                if (value.isTaken == 1) {
+                    $(".newErrorMessageEmail").show();
+                    $(".errorMessageEmail").hide();
+                    $("#emailIsUnique").val("0");
+                } else {
+                    $(".newErrorMessageEmail").hide();
+                    $("#emailIsUnique").val("1");
 
+                    //tenant and tenant agent of visitor and host should be the same
+
+                    //***************************************************
+                   sendHostForm();
+                    //***************************************************
+                   // $("#clicktabB").click();
+                }
+            });
+        },
+        error: function(error){
+            if(error.responseText == "Login Required"){
+                location.reload();
+            }
+        }
+    });
+}
 function populateTenantAgentAndCompanyField(isSearch) {
     isSearch = (typeof isSearch === "undefined") ? "defaultValue" : isSearch;
 

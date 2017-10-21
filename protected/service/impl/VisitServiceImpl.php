@@ -15,6 +15,7 @@ class VisitServiceImpl implements VisitService {
 
     public function save($visit, $sessionId) {
         //Integrity Constraint violation here if removed
+		$session = new CHttpSession;
         if(empty($visit->visitor_type)){
             $visit->visitor_type = NULL;
         }
@@ -39,12 +40,13 @@ class VisitServiceImpl implements VisitService {
 
         $this->returnCardIfVisitIsClosedManually($visit);
         $this->clearAllDatesIfVisitStatusIsSave($visit);
-        
+        $workstation=Workstation::model()->findByPK($session['workstation']);
         Visit::model()->updateByPk($visit->id, array(
             'tenant' => $visitor->tenant,
-            'tenant_agent' => $visitor->tenant_agent,
+            'tenant_agent' => $workstation->tenant_agent ? $workstation->tenant_agent : '',
         ));
-
+		//print_r(Yii::app()->user->tenant_agent);
+		//Yii::app()->end();
         //logs the visit which has been ACTIVATED
         if($visit->visit_status == VisitStatus::ACTIVE){
             $this->audit_logging_visit_statuses("ACTIVATE VISIT",$visit);

@@ -234,24 +234,25 @@ class CardGeneratedController extends Controller {
         } else {
             $type=$_GET['type'];
         }
-            
+         
+		
         
         #data of user of card
         $model = Visit::model()->findByPk($id);
         $a = $model->card;
-
         $visitorModel = Visitor::model()->findByPk($model->visitor);
 
         //needs photo of the visitor as stored in DB to be shown in printing the card
         $userPhotoModel = Photo::model()->findByPk($visitorModel->photo);
+	
 
         //needs photo of the comapny as stored in DB to be shown in the footer while printing the card
         //$tenant = User::model()->findByPk($visitorModel->created_by);
         $company = Company::model()->findByPk($visitorModel->tenant);
         $companyPhotoModel =  Photo::model()->findByPk($company->logo);
-
         
         $data = array('model' => $model, 'visitorModel' => $visitorModel, 'type' => $type, 'userPhotoModel' => $userPhotoModel, 'companyPhotoModel' => $companyPhotoModel);
+
 
         if($type == 1){
             $html2pdf = Yii::app()->ePdf->HTML2PDF('P', 'A4', 'en',TRUE,'UTF-8',array(0,0,0,0));
@@ -261,6 +262,9 @@ class CardGeneratedController extends Controller {
 
         if ($model->card_type > 4) {
             $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
+		//echo $id;
+		//echo "controller here at 4";
+		//Yii::app()->end();
         } else {
             //$html2pdf->WriteHTML($this->renderPartial('_card-corporate', $data, true));
              $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));

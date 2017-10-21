@@ -190,6 +190,13 @@ class DashboardController extends Controller {
         $this->layout = '//layouts/column2';
         $session = new CHttpSession;
         $session['lastPage'] = 'dashboard';
+		$timezoneid= Workstation:: model()->findByPk($session['workstation']);
+		$timezonemodel= Timezone:: model()->findByPk($timezoneid->timezone_id);
+		$session['timezone']=$timezonemodel->timezone_value;
+		//echo "<pre>";
+		//print_r($timezonemodel);
+		//echo "</pre>";
+		//Yii::app()->end();
         //Archive Expired 48 Old SAVED Visits
         Visit::model()->archivePregisteredOldVisits();
         // Closed/Expired Visits that will expire today or already Expired

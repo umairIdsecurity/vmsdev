@@ -1,4 +1,5 @@
 <h1> Total VICs by Workstation </h1>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete'));?>
 <!-- Filter Form -->
 <div class="form">
     <?php $form = $this->beginWidget('CActiveForm', array(
@@ -93,3 +94,25 @@
             'options' => array('title' => ' Total VICs by Workstation')));
         ?>
     </div>
+	<script>
+		
+        $('#export-button').on('click', function() {
+            $.ajax({
+                url: "<?php echo Yii::app()->createUrl('visit/totalVicsByWorkstation'); ?>",
+                type: 'GET',
+               // dataType: 'json',
+                data: 'export=true',
+                success: function () 
+                {
+					 window.location = '<?php echo $this->createUrl('exportFileVicWorkstation');?>';
+                },
+                error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+
+            });
+        });
+       
+	</script>

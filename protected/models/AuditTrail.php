@@ -17,6 +17,8 @@
  */
 class AuditTrail extends CActiveRecord
 {
+	public $firstname;
+	public $lastname;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -52,6 +54,8 @@ class AuditTrail extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+		'user0' => array(self::BELONGS_TO, 'User', 'user_id'),
+		//'tenant0' => array(self::BELONGS_TO, 'User', 'user_id'),
 		);
 	}
 
@@ -86,12 +90,12 @@ class AuditTrail extends CActiveRecord
 	 * @return CActiveDataProvider the data provider that can return the models
 	 * based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($tenant)
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+		//$criteria->with = array('user0');
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('old_value',$this->old_value,true);
@@ -102,6 +106,11 @@ class AuditTrail extends CActiveRecord
 		$criteria->compare('field',$this->field,true);
 		$criteria->compare('creation_date',$this->creation_date,true);
 		$criteria->compare('user_id',$this->user_id,true);
+		$criteria->join='LEFT join [dbo].[user] [ta] ON ta.id=t.user_id
+						LEFT join [dbo].[visitor] [tv] ON tv.id=t.user_id';
+		//$criteria->join='LEFT join [dbo].[visitor] [tv] ON tv.visitor_id=t.user_id';
+		$criteria->condition='tv.tenant='.$tenant;
+		$criteria->addCondition('ta.tenant='.$tenant,'OR');
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

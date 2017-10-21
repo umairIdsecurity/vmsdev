@@ -43,12 +43,17 @@ class HelpDeskController extends Controller {
      */
     public function actionCreate() {
         $model = new HelpDesk;
-
+		$modelgroup= HelpDesk::model()->search();
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['HelpDesk'])) {
-            $model->attributes = $_POST['HelpDesk'];
+             $model->attributes = $_POST['HelpDesk'];
+			$model->videolink=$_POST['HelpDesk']['videolink'];
+			if($model->created_by=='' || $model->created_by==null)
+			{
+				$model->created_by=Yii::app()->user->id;
+			}
             if ($model->save())
                 $this->redirect(array('admin'));
         }
@@ -67,7 +72,13 @@ class HelpDeskController extends Controller {
         $model = $this->loadModel($id);
        
         if (isset($_POST['HelpDesk'])) {
+			
             $model->attributes = $_POST['HelpDesk'];
+			$model->videolink=$_POST['HelpDesk']['videolink'];
+			if($model->created_by=='' || $model->created_by==null)
+			{
+				$model->created_by=Yii::app()->user->id;
+			}
              if ($model->save())
             $this->redirect(array('admin'));
         }

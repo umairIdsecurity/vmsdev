@@ -64,6 +64,7 @@ class PasswordChangeRequest extends CActiveRecord
         $templateParams = array(
             'email' => $user->email,
             'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php?r=site/reset/hash/' . $request->hash,
+			'name'=>  ucfirst($user->first_name) . ' ' . ucfirst($user->last_name),
         );
 
         //TODO: Change to YiiMail
@@ -71,6 +72,79 @@ class PasswordChangeRequest extends CActiveRecord
         $emailTransport->sendResetPasswordEmail(
             $templateParams, $user->email, $user->first_name . ' ' . $user->last_name
         );
+    }
+	public function generateResetLinkCreate(User $user)
+    {
+        $generatedRequestsCount = $this->count($this->getAlreadyGeneratedUnexpiredUnusedCriteria($user));
+
+        if ($generatedRequestsCount >= self::NUMBER_OF_ATTEMPTS) {
+            return "You have exceeded the maximum number of password recovery attempts";
+        }
+
+        $now = new DateTime;
+
+        $request = new self();
+        $request->user_id = $user->id;
+        $request->hash = $this->getHash($user);
+        $request->created_at = $now->format('Y-m-d H:i:s');
+
+        $result = $request->save();
+
+        if (!$result) {
+            return "Service is temporary unavailable, please try again later";
+        }
+		$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+		$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+		$subject='Invitation to create password for'.' '.$airportName.' '.'Aviation Visitor Management System';
+        $templateParams = array(
+            'email' => $user->email,
+			'Airport'=> $airportName,
+            'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php?r=site/reset/hash/' . $request->hash,
+			'name'=>  ucfirst($user->first_name) . ' ' . ucfirst($user->last_name),
+        );
+
+        //TODO: Change to YiiMail
+        $emailTransport = new EmailTransport();
+        $emailTransport->sendSetPasswordEmail(
+            $templateParams, $user->email, $user->first_name . ' ' . $user->last_name,$subject
+        );
+    }
+	 public function generateResetLinkForVisitor(Visitor $visitor, $airportName)
+    {
+		
+		$visitorchange=new PreregPasswordChangeRequest();
+		
+        $generatedRequestsCount = $this->getAlreadyGeneratedUnexpiredUnusedCriteriaVisitor($visitor);
+		
+        if ($generatedRequestsCount >= self::NUMBER_OF_ATTEMPTS) {
+            return "You have exceeded the maximum number of password recovery attempts";
+        }
+
+        $now = new DateTime;
+
+        $request = new PreregPasswordChangeRequest();
+        $request->visitor_id = $visitor->id;
+        $request->hash = $this->getVisitorHash($visitor);
+        $request->created_at = $now->format('Y-m-d H:i:s');
+        $result = $request->save();
+
+        if (!$result) {
+            return "Service is temporary unavailable, please try again later";
+        }
+		 $templateParams = array(
+            'email' => $visitor->email,
+            'resetLink' => Yii::app()->params['vmspr'] . '/index.php/preregistration/reset/hash/' . $request->hash,
+			'Airport'=>$airportName,
+			'name'=>  ucfirst($visitor->first_name) . ' ' . ucfirst($visitor->last_name),
+        );
+	$subject='Invitation to Create Password for'.' '.$airportName.' '. ' Aviation Visitor Management System';
+        //TODO: Change to YiiMail
+        $emailTransport = new EmailTransport();
+        $emailTransport->sendSetPasswordEmail(
+            $templateParams, $visitor->email, $visitor->first_name . ' ' . $visitor->last_name,$subject
+        );
+
+        
     }
 
     /**
@@ -81,7 +155,10 @@ class PasswordChangeRequest extends CActiveRecord
     {
         return md5(time() . $user->id . $user->email . 'Some salt 9ht3ldjnhuy)jnt47thlJ&');
     }
-
+	public function getVisitorHash(Visitor $visitor)
+    {
+        return md5(time() . $visitor->id . $visitor->email . 'Some salt 9ht3ldjnhuy)jnt47thlJ&');
+    }
     /**
      * @param User $user
      * @return CDbCriteria
@@ -108,8 +185,9 @@ class PasswordChangeRequest extends CActiveRecord
      */
     public function checkPasswordRequestByHash()
     {
-        if ($this->isExpired()) {
-            return "Your reset password link is already expired. Please generate it again.";
+		if ($this->isExpired()>60) {
+			
+            return "Your reset password link is expired. Please generate it again.";
         }
 
         if ($this->isUsed()) {
@@ -119,10 +197,11 @@ class PasswordChangeRequest extends CActiveRecord
 
     public function isExpired()
     {
-        $expiredDate = $this->getStartOfExpiredPeriod(false);
-        $requestDate = DateTime::createFromFormat('Y-m-d H:i:s', $this->created_at);
-
-        return $expiredDate > $requestDate;
+		$now=new DateTime();
+        $expiredDate = strtotime($now->format('Y-m-d H:i:s'));
+        $requestDate = strtotime($this->created_at);
+		$diff=round(abs($expiredDate - $requestDate)/60,0);
+		return $diff;
     }
 
     public function isUsed()
@@ -164,6 +243,21 @@ class PasswordChangeRequest extends CActiveRecord
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
         );
+    }
+	public function getAlreadyGeneratedUnexpiredUnusedCriteriaVisitor(Visitor $visitor)
+    {
+		
+        $date = $this->getStartOfExpiredPeriod();
+
+        $criteria = new CDbCriteria();
+        $criteria->condition = "visitor_id = :visitorId and is_used = :isUsed and created_at >= :createdAt";
+        $criteria->params = array(
+            'visitorId' => $visitor->id,
+            'isUsed' => self::IS_USED_NO,
+            'createdAt' => $date,
+        );
+		$count= PreregPasswordChangeRequest:: model()->count($criteria);
+        return $count;
     }
 
 }

@@ -573,6 +573,7 @@ class CWebUser extends CApplicationComponent implements IWebUser
 	{
 		$key=$this->getStateKeyPrefix().$key;
 		return isset($_SESSION[$key]) ? $_SESSION[$key] : $defaultValue;
+	
 	}
 
 	/**

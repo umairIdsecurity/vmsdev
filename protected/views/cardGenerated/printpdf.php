@@ -14,6 +14,7 @@ if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
 }
 
 $tenant = Company::model()->findByPk($visitorModel->tenant);
+
 if ($tenant) {
     //$company = Company::model()->findByPk($tenant->company);
     $company = $tenant;
@@ -47,8 +48,10 @@ $userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model-
 if ($userPhoto  == Photo::model()->defaultAbsoluteImage() ){
     $userPhoto = null;
 }*/
+
 $a = $model->card;
 $card = CardGenerated::model()->findByPk($model->card);
+
 if ($card) {
     $cardCode = $card->card_number;
 } else {
@@ -58,12 +61,14 @@ if ($card) {
 $visitorName = wordwrap($visitorName, 13, "\n", true);
 
 
+
 /*
 According to Savita
 Corporate and Aviation Visitor Management System --- CAVMS-815
 All VIC card should display Finish / check out date on the card printing.
 */
 $dateExpiry = date("dMy", strtotime($model->date_check_out));
+
 
 /*
 $dateExpiry = date('dMy');
@@ -80,6 +85,7 @@ switch ($model->card_type) {
 
 $first_name = $visitorModel->first_name != "" ? $visitorModel->first_name : "N/A";
 $last_name = $visitorModel->last_name != "" ? $visitorModel->last_name : "N/A";
+
 //$cardCode = $cardCode != "" ? $cardCode : "N/A";
 
 //if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
@@ -94,8 +100,11 @@ else
    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
 
 $backText = NULL;
-if ($model->card_type != CardType::VIC_CARD_MANUAL) {
-    $cardtext = CardType::model()->findByPk($model->card_type);
+if ($model->card_type != CardType::VIC_CARD_MANUAL && $model->card_type != CardType::VIC_CARD_24HOURS) {
+	$Criteria = new CDbCriteria();
+	$Criteria->condition = "card_id=".$model->card_type." and tenant_id=".$visitorModel->tenant;
+    //$cardtext = CardType::model()->findByPk($model->card_type);
+	$cardtext= TenantCardType::model()->find($Criteria);
     if ($cardtext) {
         if ($cardtext->back_text != NULL) {
             $backText = $cardtext->back_text;
@@ -106,6 +115,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         $backText = NULL;
     }
 }
+
 $labelWidth   = 54.0;
 $labelHeight  = 85.5;
 $imageWidth   = 31.0;
@@ -115,7 +125,7 @@ $imagePadTop  = 03.5;
 $footerHeight = 08.0;
 
 $labelHeightPx = 415;
-$labelWidthPx = 256;
+$labelWidthPx = 258;
 
 $imageWidthPx   = ($imageWidth/$labelWidth) * $labelWidthPx;
 $imageHeightPx  = ($imageHeight/$labelHeight) * $labelHeightPx;
@@ -124,6 +134,20 @@ $imagePadTopPx  = ($imagePadTop/$labelHeight) * $labelHeightPx;
 $footerHeightPx = ($footerHeight/$labelHeight) * $labelHeightPx;
 
 $fontScale = 2;
+
+
+
+//change card background color & lable
+if($model->card_type == CardType::TEMPORARY_ASIC)
+{
+    $bgcolor = CardGenerated::ASIC_CARD_COLOR;
+    $lable = 'T';
+} elseif ($model->card_type == CardType::CONTRACTOR_VISITOR)
+{
+    $lable = 'C';
+} else {
+    $lable = 'V';
+}
 
 
 //die;
@@ -139,8 +163,11 @@ $fontScale = 2;
     .card-print {
         width:<?php echo $labelWidthPx; ?>px;
         height:<?php echo $labelHeightPx; ?>px;
+		<?php if ($type!=3) { ?>
         border:1px solid #000;
-        border-radius:20px;
+		
+        border-radius:22px;
+		<?php } ?>
         background:<?= $bgcolor; ?>;
         position: relative;
         float: left;
@@ -220,29 +247,21 @@ $fontScale = 2;
         margin:0;
     }
     .card-footer{
-        /*background:#fff;
-        border-bottom-right-radius: 20px;
-        border-bottom-left-radius: 20px;
-        width:258px; height:40px;
-        padding-top: 8px;
-        position: absolute;
-        bottom: 1px; left: 1px;*/
+      
         background:#fff;
-        border-bottom-right-radius: 20px;
-        border-bottom-left-radius: 20px;
+		
+        border-bottom-right-radius: 22px;
+        border-bottom-left-radius: 22px;
         width:<?php echo $labelWidthPx; ?>px;
         height:<?php echo $footerHeightPx; ?>px;
         padding-top: 6px;
         position: absolute;
-        bottom: 1px; left: 1px;
+        bottom:1px; 
+		left: 1px;
     }
     .card-footer .img-logo {
-        /*width:69px;
-        height:30px;
-        margin-left:15px;
-        margin-top:2px;
-        display:inline-block;*/
-        width:<?php echo $labelWidthPx; ?>px;
+       
+        width:<?php echo $labelWidthPx-13; ?>px;
         height:<?php echo $footerHeightPx; ?>px;
         margin-left:15px;
         margin-top:2px;
@@ -274,14 +293,18 @@ $fontScale = 2;
         /*width:256px;*/
         /*width:230px;
         height:<?php echo $labelHeightPx; ?>px;
+		<?php if ($type!=3) { ?>
         border:1px solid #000;
         border-radius:20px;
+		<?php } ?>
         background:#fff;
         float: left;*/
         width:256px;
         height:<?php echo $labelHeightPx; ?>px;
+		<?php if ($type!=3) { ?>
         border:1px solid #000;
         border-radius:20px;
+		<?php } ?>
         background:#fff;
         float: left;
     }
@@ -311,21 +334,31 @@ $fontScale = 2;
                         <div class="card-print">
                             <div class="img-visitor">
                                 <?php  
+                                   
                                     if(isset($userPhotoModel->db_image) && !empty($userPhotoModel->db_image))
                                     {
-                                        $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image; 
-                                        echo '<img src="'.$imageSrc.'"/>';
+                                        $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image;
+										//$imageSrc=$userPhotoModel->relative_path;
+										 
+                                        echo '<div><img src="'.$imageSrc.'"/></div>';
+										//echo $imageSrc;
+										//Yii::app()->end();
                                     }
-                                    else{
-                                        echo '';
+                                    elseif($model->card_type == CardType::VIC_CARD_SAMEDATE ){
+                                        echo '<div><p style=" text-align:center;font-size:26px;">&nbsp;&nbsp;Photo is not Required</p></div>';
                                     }
+									else
+									{
+										echo '';
+									}
                                     //echo $userPhoto ? "<img src=\"{$userPhoto}\">":"";
                                 ?>
                             </div>
                             <div class="card-info">
                                 <p class="text-cmp"><?= $companyCode; ?></p>
                                 <p class="card-date-text">
-                                    <span><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
+                                    <!-- displayed lable -->
+                                    <span><?php echo $lable; ?> </span><?= $dateExpiry ?>
                                 <br><span style="font-size:16px; margin-left:53px; margin-top: 4px"> <?php if($model->card_type == CardType::VIC_CARD_24HOURS && $model->time_check_in != "00:00:00") echo substr($model->time_check_in, 0, 5); ?></span>
                                 </p>
                                 <p class="card-visit-info">
@@ -346,48 +379,57 @@ $fontScale = 2;
                                 ?>
 
 
-                                <?php 
+                                <?php
                                     if(isset($companyPhotoModel->db_image) && !empty($companyPhotoModel->db_image))
                                     {
                                         $CompImageSrc1 = "data:image/png;base64,".$companyPhotoModel->db_image;
                                         echo '<div class="img-logo"><img src="'.$CompImageSrc1.'"/></div> ';
+
                                     }
                                 ?>
                             </div>
                         </div>
                     </td>
                     <td>
+					 <?php if($backText != ''){ ?>
                         <!--Box 2-->
                         <div class="card-text">
                             <div class="card-text-content"><?php echo $backText ?></div>
                         </div>
+						  <?php } ?>
                     </td>
                 </tr>
             </tbody>
 
         </table>
-    <?php
+     <?php
     } else {
         ?>
         <!--Box 1-->
         <div class="card-print">
             <div class="img-visitor">
                 <?php  
+										
                                     if(isset($userPhotoModel->db_image) && !empty($userPhotoModel->db_image))
                                     {
                                         $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image; 
                                         echo '<img src="'.$imageSrc.'"/>';
                                     }
-                                    else{
-                                        echo '';
+									 elseif($model->card_type == CardType::VIC_CARD_SAMEDATE ){
+                                        echo '<div><p style=" text-align:center;font-size:26px;">&nbsp;&nbsp;PHOTO IS NOT REQUIRED</p></div>';
                                     }
+									else
+									{
+										echo '';
+									}
+                                    
                                     //echo $userPhoto ? "<img src=\"{$userPhoto}\">":"";
                                 ?>
             </div>
             <div class="card-info">
                 <p class="text-cmp"><?= $companyCode; ?></p>
                 <p class="card-date-text">
-                    <span><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
+                    <span><?php echo $lable; ?> </span><?= $dateExpiry ?>
                      <br><span style="font-size:16px; margin-left:53px; margin-top: 4px"> <?php if($model->card_type == CardType::VIC_CARD_24HOURS && $model->time_check_in != "00:00:00") echo substr($model->time_check_in, 0, 5); ?></span>
                 </p>
                 <p class="card-visit-info">

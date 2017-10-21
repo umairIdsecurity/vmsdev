@@ -37,20 +37,27 @@ $timeIn[1] = date("i");
 
     <div class="row">
 <!--        <div class="col-sm-4 text-center">-->
-<!--            <a href="#"><img src="--><?//=Yii::app()->theme->baseUrl?><!--/images/vic24h.png" alt="Vic24h"></a>-->
+<!--            <a href="#"><img src="<?php//=Yii::app()->theme->baseUrl?>/images/vic24h.png" alt="Vic24h"></a>-->
 <!--        </div>-->
         <div class="col-sm-8">
             <div class="">
                   <div class="row">
                     <div class="col-sm-3" style="line-height:30px">Date of Visit</div>
-                    <div class="col-sm-6" style="line-height:30px">
-                        <?php
+                    <div class="col-sm-6" style=" position:relative; line-height:30px;">
+                        
+						<?php
+						   
                             $this->widget('EDatePicker', array(
                                 'model'       => $model,
+								'mode'			=>'preregister_date',
                                 'attribute'   => 'date_in',
+								'htmlOptions'=> array('style'=>'width:230px;'),
+								
                             ));
+							//echo '<i class="glyphicon glyphicon-calendar"></i>';
                         ?>
-                        <span style="line-height:30px" class="glyphicon glyphicon-calendar">
+						<?php echo $form->error($model, 'date_in'); ?>
+                        <!--<span style="line-height:30px" class="glyphicon glyphicon-calendar">-->
                     </div>
                    
                   </div>

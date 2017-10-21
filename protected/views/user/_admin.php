@@ -6,7 +6,7 @@ $session = new ChttpSession;
 $session['lastPage'] = 'admin';
 ?>
 
-<h1><?php echo strtoupper(Yii::app()->request->getParam('vms')) ?> Users</h1>
+<h1><?php //echo strtoupper(Yii::app()->request->getParam('vms')) ?> Users</h1>
 
 <?php
 foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -15,7 +15,8 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 ?>
 
 <?php
-$this->widget('zii.widgets.grid.CGridView', array(
+//Yii::app()->end();
+$grid=$this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'user-grid',
     'dataProvider' => $model->search(),
     'enableSorting' => false,
@@ -79,29 +80,90 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',
-            'template' => '{update}{delete}',
+			'htmlOptions'=>array('style'=>'width:15%;'),
+            'template' => '<div>{update}{deactivate}{activate}</div>',
             'buttons' => array(
                 'update' => array(//the name {reply} must be same
+				'visible' => '($data->is_deleted!=1)',
                     'label' => 'Edit', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
                      'url' => 'Yii::app()->controller->createUrl("user/update",array("id"=>$data->id, "role"=>$data->role))',
+					 'options'=>array('style'=>'display: inline-block; font-size: 15px; text-align: center; width: 25%; margin-right: 10%'),
                 ),
-                'delete' => array(//the name {reply} must be same
-                    'label' => 'Delete', // text label of the button
+            'deactivate' => array(//the name {reply} must be same
+				     'visible' => '($data->is_deleted!=1)',
+                    'label' => 'Active', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                    'visible' => '$data->id != 16',
+                    //'visible' => '$data->id != 16',
                     'url' => 'Yii::app()->controller->createUrl("user/delete",array("id"=>$data->id))',
                     'options' => array(// this is the 'html' array but we specify the 'ajax' element
-                        'confirm' => "Are you sure you want to delete this item?",
+					   'style'=>'display: inline-block; font-size: 15px; text-align: center; width: 25%; margin-right: 10%',
+                        'confirm' => "Are you sure you want to deactivate this user",
                         'ajax' => array(
                             'type' => 'POST',
                             'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
                             'success' => 'function(data) {
+								//alert(data);
+                               if (data == "true") {
+									//alert(data);
+                                    $.fn.yiiGridView.update("user-grid");
+                                    return false;
+                                } else {
+									//changed on 03/11/2016
+                                    /*var urlAddress = this.url;
+                                    var urlAddressId = urlAddress.split("=");
+                                    var x;
+                                    if($("#visitExists"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. This profile is currently assigned to a visit.");
+                                        return false;
+                                    } else if($("#isTenant"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. Profile is tenant of a company");
+                                        return false;
+                                    } else if($("#isUserWorkstation"+  urlAddressId["2"]).val() == 1){
+                                        alert("A workstation is linked to this profile. Please unlink workstation first before deleting this user.");
+										//alert(data);
+                                        return false;
+                                    } else if($("#isUserTenantOfVisitor"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. This profile is currently the tenant of a visitor. ");
+                                        return false;
+                                    } else if($("#isUserTenantAgent"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. This profile is currently the tenant agent of a company.");
+                                        return false;
+                                    }*/
+									$.fn.yiiGridView.update("user-grid");
+                                    return false;
+                                }
+                            }',
+							'error'=> 'function (xhr, ajaxOptions, thrownError) {
+									console.log(xhr.status);
+									console.log(xhr.responseText);
+									console.log(thrownError);
+								}',
+                        ),
+                    ),
+				),
+				'activate' => array(//the name {reply} must be same
+				     'visible' => '($data->is_deleted!=0)',
+                    'label' => 'Inactive', // text label of the button
+                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                    //'visible' => '$data->id != 16',
+                    'url' => 'Yii::app()->controller->createUrl("user/activate",array("id"=>$data->id))',
+                    'options' => array(// this is the 'html' array but we specify the 'ajax' element
+					'style'=>'display: inline-block; font-size: 15px; text-align: center; width: 30%; margin-right: 10%; background: red;',
+                        'confirm' => "Are you sure you want to activate this User?",
+                        'ajax' => array(
+                            'type' => 'POST',
+                            'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
+							'data'=>'js:$(this).serialize()',
+                            'success' => 'function(data) 
+							{
+								//alert(data);
                                 if (data == "true") {
                                     $.fn.yiiGridView.update("user-grid");
                                     return false;
                                 } else {
-                                    var urlAddress = this.url;
+									//changed on 03/11/2016
+                                    /*var urlAddress = this.url;
                                     var urlAddressId = urlAddress.split("=");
                                     var x;
                                     if($("#visitExists"+  urlAddressId["2"]).val() == 1){
@@ -119,12 +181,19 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                     } else if($("#isUserTenantAgent"+  urlAddressId["2"]).val() == 1){
                                         alert("This profile cannot be deleted. This profile is currently the tenant agent of a company.");
                                         return false;
-                                    }
+                                    }*/
+									$.fn.yiiGridView.update("user-grid");
+                                    return false;
                                 }
                             }',
+							'error'=> 'function (xhr, ajaxOptions, thrownError) {
+									console.log(xhr.status);
+									console.log(xhr.responseText);
+									console.log(thrownError);
+								}',
                         ),
                     ),
-                ),
+               ),
             ),
         ),
         array(
@@ -170,9 +239,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
     ),
 ));
 
+
 function assignedWorkstation(){
     $Criteria = new CDbCriteria();
-    $Criteria->condition = "is_deleted = 0";
+    $Criteria->condition = "is_deleted=0";
     $workstations = Workstation::model()->findAll($Criteria);
     $data=["" => 'Assigned Workstations'] + CHtml::listData($workstations, 'id', 'name');
     return $data;

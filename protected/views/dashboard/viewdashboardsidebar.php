@@ -25,20 +25,20 @@ $session = new ChttpSession;
                     <span >Preregister Visit</span>
                 </a>
             </li>-->
-            <li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
+            <!--<li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
                     
-                <a href='<?php echo Yii::app()->createUrl('visitor/addvisitor/&profile_type='.$profile); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
+                <a href='<?php echo Yii::app()->createUrl('visitor/addvisitor/&profile_type='.$profile); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>-->
             <?php  $module = CHelper::get_allowed_module(); 
                       if ($module != "CVMS") { ?>
-                <li>
+                <!--<li>
                        <a href="<?php echo Yii::app()->createUrl('company/create'); ?>" role="button" data-toggle="modal" class="addcompanymenu"><span>Add Company</span></a>
              
-                </li>
+                 </li>-->
                       <?php } ?>
                         
             
 
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' id="findrecordSidebar" class="submenu-icon findrecord"><span>Search Visits</span></a></li>
+           <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' id="findrecordSidebar" class="submenu-icon findrecord"><span>Search Visits</span></a></li>
             <?php  if ($module != "AVMS" && $session['role'] != Roles::ROLE_OPERATOR) { ?>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport&p=d'); ?>' id="evacuationreportSidebar" class="sidemenu-icon evacuationreport"><span>Evacuation Report</span></a></li>
             <?php } ?>

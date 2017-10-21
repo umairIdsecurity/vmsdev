@@ -68,7 +68,6 @@ class HTML2PDF_parsingHtml
     public function parse()
     {
         $parents = array();
-
         // flag : are we in a <pre> Tag ?
         $tagPreIn = false;
 
@@ -88,6 +87,7 @@ class HTML2PDF_parsingHtml
             'input', 'link', 'option',
             'circle', 'ellipse', 'path', 'rect', 'line', 'polygon', 'polyline'
         );
+          
 
         // search the HTML tags
         $tmp = array();
@@ -95,7 +95,7 @@ class HTML2PDF_parsingHtml
 
         // all the actions to do
         $actions = array();
-
+        $i=0;
         // foreach part of the HTML code
         foreach ($tmp as $part) {
             // if it is a tag code
@@ -110,7 +110,7 @@ class HTML2PDF_parsingHtml
 
                     // if the tag must be closed
                     if (!in_array($res['name'], $tagsNotClosed)) {
-                        // if it is a closure tag
+					   // if it is a closure tag
                         if ($res['close']) {
                             // HTML validation
                             if (count($parents)<1)
@@ -124,7 +124,6 @@ class HTML2PDF_parsingHtml
                             if ($res['autoclose']) {
                                 // save the opened tag
                                 $actions[] = $res;
-
                                 // prepare the closed tag
                                 $res['params'] = array();
                                 $res['close'] = true;
@@ -132,6 +131,7 @@ class HTML2PDF_parsingHtml
                             // else :add a child for validation
                             else
                                 $parents[count($parents)] = $res['name'];
+
                         }
 
                         // if it is a <pre> tag (or <code> tag) not auclosed => update the flag
@@ -146,21 +146,25 @@ class HTML2PDF_parsingHtml
                     $part[0]='txt';
                 }
             }
+
             // if it is text
             if ($part[0]=='txt') {
+							
                 // if we are not in a <pre> tag
                 if (!$tagPreIn) {
+
                     // save the action
                     $actions[] = array(
                         'name'    => 'write',
                         'close'    => false,
                         'param' => array('txt' => $this->_prepareTxt($part[1])),
                     );
+
                 } else { // else (if we are in a <pre> tag)
                     // prepare the text
                     $part[1] = str_replace("\r", '', $part[1]);
                     $part[1] = explode("\n", $part[1]);
-
+ 
                     // foreach line of the text
                     foreach ($part[1] as $k => $txt) {
                         // transform the line
@@ -178,9 +182,12 @@ class HTML2PDF_parsingHtml
                         );
                     }
                 }
-            }
-        }
 
+            }
+			$i++;
+		 // if($i==23)	//echo "i am here";
+		  //break;		 //die();
+        }
         // for each indentified action, we have to clean up the begin and the end of the texte
         // based on tags that surround it
 

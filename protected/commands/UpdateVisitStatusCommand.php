@@ -19,6 +19,8 @@ class UpdateVisitStatusCommand extends CConsoleCommand {
         $visit = new Visit;
         $visit->updateOneDayVisitsToClose();
         $visit->updateSameDayVisitsToExpired();
+		// For temporary ASIC same day expiry
+        $visit->updateTemporaryAsicVisitsToExpired();
     }
 
     public function closeMultiDayVisits() {

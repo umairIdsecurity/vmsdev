@@ -19,7 +19,7 @@ class EDateRangeManager extends CWidget
 
         $startField = get_class($this->model).'_'.$this->startAttribute;
         $endField = get_class($this->model).'_'.$this->endAttribute;
-
+		 //var_dump($endField);
         $cs = Yii::app()->getClientScript();
         $baseUrl = Yii::app()->controller->assetsBase;
         $cs->registerScriptFile($baseUrl.'/js/daterangemanager.js');

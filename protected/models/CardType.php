@@ -27,6 +27,7 @@ class CardType extends CActiveRecord {
 	const VIC_CARD_EXTENDED = 7; // EVIC card type
 	const VIC_CARD_MULTIDAY = 8;
 	const VIC_CARD_MANUAL   = 9;
+	const TEMPORARY_ASIC   = 10; // ASIC Card Type (Generate New card type and replace card id with existing id)
 
 	public static $CARD_TYPE_LIST = array(
 		'' => 'Card Type',
@@ -49,6 +50,7 @@ class CardType extends CActiveRecord {
 		7  => 'Extended',
 		8  => 'Multi-Day',
 		9  => 'Manual',
+		10  => 'Temporary ASIC',
 	);
 
 
@@ -65,6 +67,7 @@ class CardType extends CActiveRecord {
 		self::VIC_CARD_EXTENDED,
 		self::VIC_CARD_MULTIDAY,
 		self::VIC_CARD_MANUAL,
+		self::TEMPORARY_ASIC,
 	];
 
 	/**

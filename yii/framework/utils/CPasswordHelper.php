@@ -92,10 +92,18 @@ class CPasswordHelper
 		self::checkBlowfish();
 		$salt=self::generateSalt($cost);
 		$hash=crypt($password,$salt);
-
+		
+		//echo "oncreation=".$hash."<br>";
+		//$x=crypt($password,$hash);
+		//echo "after creation=".$x."<br>";
+		//Yii::app()->end();
+		//die();
 		if(!is_string($hash) || (function_exists('mb_strlen') ? mb_strlen($hash, '8bit') : strlen($hash))<32)
 			throw new CException(Yii::t('yii','Internal error while generating hash.'));
-
+		//echo $salt."<br>";
+		//echo $password;
+		//die();
+		//Yii::app()->end();
 		return $hash;
     }
 
@@ -116,11 +124,16 @@ class CPasswordHelper
 		if (!$password || !preg_match('{^\$2[axy]\$(\d\d)\$[\./0-9A-Za-z]{22}}',$hash,$matches) ||
 			$matches[1]<4 || $matches[1]>31)
 			return false;
-
+		$t=crypt($password,$hash);
 		$test=crypt($password,$hash);
 		if(!is_string($test) || strlen($test)<32)
 			return false;
-
+		//echo $test."<br>";
+		//echo $t."<br>";
+		//echo $password."<br>";
+		//echo $hash;
+		//die();
+		//Yii:;app()->end();
 		return self::same($test, $hash);
 	}
 
@@ -157,7 +170,12 @@ class CPasswordHelper
 
 		$check=0;
 		for($i=0;$i<$length;$i+=1)
-			$check|=(ord($a[$i])^ord($b[$i]));
+		$check|=(ord($a[$i])^ord($b[$i]));
+		//echo $check."<br>";
+		//echo $a."<br>";
+		//echo $b;
+		//die();
+		//Yii:;app()->end();
 
 		return $check===0;
 	}

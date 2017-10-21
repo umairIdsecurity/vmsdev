@@ -32,7 +32,7 @@ class VisitorController extends Controller {
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('getAsicEscort','csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
                                     'GetPatientDetails','CheckAlreadyVisitorProfile','CheckAlreadyVisitor', 'CheckEmailIfUnique', 'GetVisitorDetails', 'findVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
-                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails','checkAsicEscort',
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails','checkAsicEscort','printed','collected',
                                 ),
                 'users' => array('@'),
             ),
@@ -58,9 +58,10 @@ class VisitorController extends Controller {
         $visitorService = new VisitorServiceImpl();
 
         $userModel->scenario = "add_sponsor";
+		
         if (isset($_POST['Visitor'])) {
-            
-            $model->attributes = $_POST['Visitor'];
+		
+           $model->attributes = $_POST['Visitor'];
 
             if (isset($_POST['VisitCardType']) && $_POST['VisitCardType'] > CardType::CONTRACTOR_VISITOR) {
                 $model->profile_type = Visitor::PROFILE_TYPE_VIC;
@@ -71,51 +72,71 @@ class VisitorController extends Controller {
             if (isset($_REQUEST['view']) && $_REQUEST['view'] == 1) {
                 $model->scenario = 'vic_log_process';
             }
-
-               if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
-
+					//echo $_POST['Visitor']['reason'];
+					
+					if(isset($_POST['Visitor']['reason']) && $_POST['Visitor']['reason']=="Other" && isset($_POST['VisitReason']['reason']) && $_POST['VisitReason']['reason']!=null)
+					{
+						$saveReason=new VisitReason;
+						$saveReason->reason=$_POST['VisitReason']['reason'];
+						$saveReason->created_by = $session['id'];
+						$saveReason->tenant = Yii::app()->user->tenant;
+						$saveReason->is_deleted=0;
+						$saveReason->module='AVMS';
+						$saveReason->save();
+						echo $saveReason->id;
+					}
+					
+				if(isset($_POST['Visitor']['Visitor[staff_id]']))
+				{
+					$model->staff_id=$_POST['Visitor']['Visitor[staff_id]'];
+				}					
+				//echo "<pre>";
+			//	print_r($model);
+			//	echo "</pre>";
+				//Yii::app()->end();
+              if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) 
+			  {
+				  
                    // nasty hack to transfer visitor id ro visit controller - need to seriously rethink create visit
                    $_SESSION['id_of_last_visitor_created'] = $model->id;
 
                  //email sending
                 if(!empty($model->password_option))
                 {
-
+					
                     $passwordRequire= intval($model->password_option);
-
-                    if($passwordRequire == 1 && empty($model->password)){
-                        $loggedUserEmail = Yii::app()->user->email;
-                        $headers = "MIME-Version: 1.0" . "\r\n";
-                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-                        $to=$model->email;
-                        $subject="Preregistration email notification";
-                        $body = "<html><body>Hi,<br><br>".
-                                "This is preregistration email.<br><br>".
-                                "Please click on the below URL:<br>".
-                                Yii::app()->params['vmsAddress']."/index.php/preregistration/login<br>";
-                        
-                        if(!empty($model->password_option)){
-                            $passwordCreate= intval($model->password_option);
-                            if($passwordCreate == 1){
-                                $body .= "Password: ".$_POST['Visitor']['password']."<br>";
-                            }
-                        }
-                        $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-                        EmailTransport::mail($to, $subject, $body, $headers);
+						
+                    if($passwordRequire == 1 && !empty($model->password)){
+						
+						$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+						$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+						$subject='Registration details for'.' '.$airportName.' '.'Aviation Visitor Management System';
+						$templateParams = array(
+						'email' => $model->email,
+						'Username' =>	$model->email,
+						'Password' =>	$_POST['Visitor']['password'],
+						'Airport'=>$airportName,
+						'Link' => "https://vmspr.identitysecurity.com.au/index.php/preregistration/login",
+						'name'=>  ucfirst($model->first_name) . ' ' . ucfirst($model->last_name),
+										);
+							$emailTransport = new EmailTransport();
+							$emailTransport->sendRegistration($templateParams,$model->email, ucfirst($model->first_name) . ' ' . ucfirst($model->last_name),$subject );
+				
                     }
                     elseif ($passwordRequire == 2) {
-                        User::model()->restorePassword($model->email);
+						$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+						$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+                        Visitor::model()->restorePassword($model->email,$airportName);
+						
                     }
                 }
+				Yii::app()->end();
                 
-
-                Yii::app()->end();
             } else { //todo: for debugging
-                print_r($model->errors);
+               print_r($model->errors);
                 die("--DONE--");
-            }
-            
+           }
+      
         }
         $this->render('create', array(
             'model'        => $model,
@@ -146,11 +167,14 @@ class VisitorController extends Controller {
         $model->scenario = $this->getValidationScenario( $model, $model->profile_type );
         // Uncomment the following line if AJAX validation is needed             
         $this->performAjaxValidation($model);
-        
+        	
+		
         $visitorParams = Yii::app()->request->getPost('Visitor');
 
         if (isset($visitorParams)) {
+				
             $currentCardStatus = $model->visitor_card_status;
+			
             if (isset($visitorParams['visitor_card_status']) && $currentCardStatus != $visitorParams['visitor_card_status'] && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
@@ -188,7 +212,7 @@ class VisitorController extends Controller {
                 $model->profile_type        = Visitor::PROFILE_TYPE_ASIC;
                 // $model->visitor_card_status = Visitor::ASIC_ISSUED;
                 $model->visitor_card_status = $visitorParams['visitor_card_status'];
-
+				
                 if($visitorService->save($model, NULL, $session['id'])) {
                     $logCardstatusConvert               = new CardstatusConvert;
                     $logCardstatusConvert->visitor_id   = $model->id;
@@ -196,8 +220,11 @@ class VisitorController extends Controller {
                     $logCardstatusConvert->save();
                 }
             } else {
+				
                 $model->attributes = $visitorParams;
+				
                 if ($visitorService->save($model, NULL, $session['id'])) {
+					
                     switch ($isViewedFromModal) {
                         case "1":
                             break;
@@ -254,6 +281,10 @@ class VisitorController extends Controller {
             }
             
         } else{
+			//echo "<pre>";
+			//print_r($model);
+			//echo "</pre>";
+			//Yii::app()->end();
             $this->render('update', array(
                 'model' => $model,
             ));
@@ -288,8 +319,8 @@ class VisitorController extends Controller {
          */
         $criteria = new CDbCriteria();
         $criteria->addCondition("visitor = ".$visitor->id);
-        $criteria->addCondition("visit_status = ".VisitStatus::AUTOCLOSED);
-        $criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED);
+        //$criteria->addCondition("visit_status = ".VisitStatus::AUTOCLOSED);
+        //$criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED);
                 
         $visits = Visit::model()->findAll($criteria);
         foreach( $visits as $v ) {
@@ -753,7 +784,7 @@ class VisitorController extends Controller {
                 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 // Add company contact for this visitor if profile is ASIC
-                if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {
+               /* if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {
                     $company = Company::model()->findByPk($model->company);
                     if ($company) {
                         $contact = new User('add_company_contact');
@@ -778,7 +809,7 @@ class VisitorController extends Controller {
                             Yii::app()->end();
                         }
                     }
-                }
+                }*/
                 //email sending
                 if(!empty($model->password_option))
                 {
@@ -845,6 +876,7 @@ class VisitorController extends Controller {
         if(isset($_POST['ImportCsvForm']))
         {
                 $model->attributes=$_POST['ImportCsvForm'];
+				
                 if($model->validate())
                 {   
                     //Delete all previous uploads of this user
@@ -858,86 +890,456 @@ class VisitorController extends Controller {
                     $tempLoc = $csvFile->getTempName();
                     $handle = fopen($tempLoc, "r");
                     $i = 0; $duplicates = false;
-                    
+					//$line=fgetcsv($handle,2000);
+                   set_time_limit (0);
+					
                     while( $line = fgetcsv($handle, 2000) )
                     {  
-                        if( !isset($line[12]))
+						
+						
+                       if( !isset($line[12]))
                            $this->redirect(array("visitor/importVisitHistory"));
                         //Dont insert first row as it will be title
                         $i = $i + 1;
                         if($i == 1) {
+							//$i=0;
                            continue;
                         }
-
-                        // Find Duplicate Visitor if any
-                        $visitor = Visitor::model()->find(" ( first_name = '{$line[0]}' AND last_name = '{$line[1]}' ) OR email  = '{$line[2]}'");
-                        
-                        // Duplicate Visitor Found and store it now
-                        if( $visitor )  {                   
-                            $importVisits = new ImportVisitor; 
-                            $duplicates = $importVisits->saveVisitors($line);
-                    
-                        } else {
+						// echo "<pre>";
+						//print_r($line);
+						//echo "</pre>";
+						$check=date("Y-m-d", strtotime(str_replace('/', '-',$line[6])));
+						
+                        // Find Duplicate Visitor if any or asic sponsor
+                        $visitor = Visitor::model()->find(" ( first_name = '{$line[3]}' AND last_name = '{$line[5]}' AND date_of_birth = '{$check}' )"); //AND email= '{$line[7]}'
+						$asicVisitor=Visitor::model()->find("first_name = '{$line[29]}' AND last_name = '{$line[30]}' AND profile_type='ASIC'");
+                      // echo "<pre>";
+					//print_r($line);
+						//echo "</pre>";
+						//echo $check;
+                        // Duplicate Visitor Found 
+						if( $visitor )  { 
+						//echo "here";
+								if($line[1]!="")
+								{
+									$card = new CardGenerated;
+                                    $card->card_number = $line[1];
+                                    $card->date_printed = date("Y-m-d", strtotime(str_replace('/', '-',$line[37])));
+                                    $card->date_expiration = date("Y-m-d", strtotime(str_replace('/', '-',$line[38])));
+                                    $card->visitor_id = $visitor->id;
+                                    $card->card_status  = 1;
+                                    $card->created_by = Yii::app()->user->id;
+                                    $card->tenant = Yii::app()->user->tenant;
+                                    $card->save();     
+								}
+								$visitInfo = new Visit;
+                                $visitInfo->visitor = $visitor->id;
+                                $visitInfo->visitor_status = 1;
+                                $visitInfo->card = isset($card) ? $card->id:"";
+								$visitInfo->card_type='5';
+								if($asicVisitor)
+								{
+									//echo "here";
+									$visitInfo->host = $asicVisitor->id;
+									if($asicVisitor->asic_no!=$line[33] && $line[33]!="")
+									{
+										
+										$asicVisitor->asic_no=$line[33];
+										$todayDate = date("Y-m-d");
+										if($asicVisitor->asic_expiry<=$todayDate)
+										{
+											$asicVisitor->visitor_card_status='8';
+										}
+										else
+											$asicVisitor->visitor_card_status='6';
+										$asicVisitor->update();
+									}
+									if($asicVisitor->asic_expiry!=date("Y-m-d",strtotime(str_replace('/', '-',$line[34])))&& $line[34]!="")
+									{
+										$asicVisitor->asic_expiry=date("Y-m-d",strtotime(str_replace('/', '-',$line[34])));
+										$todayDate = date("Y-m-d");
+										if($asicVisitor->asic_expiry<=$todayDate)
+										{
+											$asicVisitor->visitor_card_status='8';
+										}
+										else
+											$asicVisitor->visitor_card_status='6';
+										$asicVisitor->update();
+									}
+									
+									
+								}
+								else 
+								{
+									$asicVisitor=new Visitor('importVisitor');
+									$asicVisitor->first_name = $line[29];
+									$asicVisitor->last_name  = $line[30];
+									$asicVisitor->email= $line[32];
+									$asicVisitor->date_of_birth=date("Y-m-d",strtotime(str_replace('/', '-',$line[31])));
+									$asicVisitor->profile_type='ASIC';
+									$asicVisitor->asic_no=$line[33];
+									$asicVisitor->asic_expiry=date("Y-m-d",strtotime(str_replace('/', '-',$line[34])));
+									$asicVisitor->created_by = Yii::app()->user->id;
+									$asicVisitor->visitor_workstation=$session['workstation'];
+									$asicVisitor->tenant = Yii::app()->user->tenant;
+									$todayDate = date("Y-m-d");
+										if($asicVisitor->asic_expiry<=$todayDate)
+										{
+											$asicVisitor->visitor_card_status='8';
+										}
+										else
+											$asicVisitor->visitor_card_status='6';
+									$asicVisitor->save(false);
+									/*$errrossss=$asicVisitor->getErrors();
+									echo "<pre>";
+									var_dump($errrossss);
+									echo "</pre>";
+									$visitInfo->host = $asicVisitor->id;*/
+								}
+								// $company = Company::model()->find(" name LIKE '%{$line[18]}%' OR trading_name LIKE '%{$line[18]}%' ");
+                            //if( $company )
+							//{
+							  //$visitorInfo->company = $company->id;
+							  $PreviouUser=User::model()->find("first_name='{$line[19]}' AND last_name='{$line[20]}' AND company='{$visitor->company}'");
+							  if(!$PreviouUser)
+							  {
+								 $companyUser= new User();
+								$companyUser->first_name=$line[19];
+								$companyUser->last_name=$line[20];
+								$companyUser->email=$line[21];
+								$companyUser->contact_number=$line[22];
+								
+								$companyUser->company=$visitor->company;
+							
+								$companyUser->created_by = Yii::app()->user->id;
+								
+								$companyUser->tenant = Yii::app()->user->tenant;
+								$companyUser->role='9';
+								$companyUser->is_deleted='0';
+								$companyUser->user_type='1';
+								$companyUser->save(false);
+							  }
+							 
+							//}
+                                //$visitInfo->host = Yii::app()->user->id;
+                                $visitInfo->created_by = Yii::app()->user->id;
+                                $visitInfo->date_check_in = date("Y-m-d", strtotime(str_replace('/', '-',$line[26])));
+                                $visitInfo->time_check_in = date("H:i:s", strtotime($line[35]));
+                                $visitInfo->time_check_out = date("H:i:s", strtotime($line[36]));
+                                $visitInfo->date_check_out = date("Y-m-d", strtotime(str_replace('/', '-',$line[27])));
+                                $visitInfo->visit_status = 3; //Closed visit History
+                                $visitInfo->workstation = $session['workstation'];                               
+                                $visitInfo->tenant = Yii::app()->user->tenant;
+								$visitInfo->visitor_type=$visitor->visitor_type;
+								if($line[17]!=NULL)
+								{
+									$visitReason=VisitReason::model()->find("reason='{$line[17]}'");
+									if($visitReason)
+									{
+										$visitInfo->reason=$visitReason->id;
+									}
+									else 
+									{
+										$visitReason= new VisitReason;
+										$visitReason->reason=$line[17];
+										$visitReason->is_deleted='0';
+										$visitReason->module='AVMS';
+										$visitReason->created_by = Yii::app()->user->id;
+										$visitReason->tenant = Yii::app()->user->tenant;
+										$visitReason->save();
+										$visitInfo->reason=$visitReason->id;
+									}
+									
+								}
+								else
+								{
+								$visitInfo->reason = NULL;	
+								}
+								$visitInfo->save();
+								//$errrosssss=$visitInfo->getErrors();
+								//echo "<pre>";
+								//var_dump($errrosssss);
+								//echo "</pre>";
+                        } 
+						
+						
+					else {
+							
+							
                             // If not a duplicate Visitor then Add it to Visitor and Visits tables
-                            $visitorInfo = new Visitor;
-                            $visitorInfo->first_name = $line[0];
-                            $visitorInfo->last_name  = $line[1];
-                            $visitorInfo->email      = $line[2];
-                            $visitorInfo->contact_number = $line[12];
+							$visitorInfo = new Visitor('importVisitor');
+                            $visitorInfo->first_name = $line[3];
+						
+						
+							if($line[4]!=null)
+							{
+								$visitorInfo->middle_name =$line[4];
+							}
+                            $visitorInfo->last_name  = $line[5];
+							$visitorInfo->date_of_birth=date("Y-m-d",strtotime(str_replace('/', '-',$line[6])));
+                            $visitorInfo->email= $line[7];
+                            $visitorInfo->contact_number = $line[8];
+							
+						
+							if($line[9]!=null)
+							{
+								$visitorInfo->contact_unit =$line[9];
+							}
+							$visitorInfo->contact_street_no=$line[10];
+							$visitorInfo->contact_street_name=$line[11];
+							$visitorInfo->contact_street_type=$line[12];
+							$visitorInfo->contact_suburb=$line[13];
+							$visitorInfo->contact_state=$line[14];
+							$visitorInfo->contact_postcode=$line[15];
+					
+							if($line[16]!='Australia' || $line[16]!='australia' || $line[16]!='AUSTRALIA')
+							{
+								
+								$country= Country::model()->find("name='{$line[16]}'");
+								$visitorInfo->contact_country=$country->id;
+						    
+								
+							}
+							else
+							{
+							$visitorInfo->contact_country='13';
+							}
+							if($line[39]!='Australia' || $line[39]!='australia' || $line[39]!='AUSTRALIA')
+							{
+								
+								$country= Country::model()->find("name='{$line[16]}'");
+								$visitorInfo->identification_country_issued=$country->id;
+						    
+								
+							}
+							else
+							{
+							$visitorInfo->identification_country_issued='13';
+							}
+							$userid=Yii::app()->user->id;
+							$tenantid=Yii::app()->user->tenant;
+							$visitorType=VisitorType::model()->find("name='{$line[2]}' AND created_by='{$userid}' AND tenant='{$tenantid}'");
+							if($visitorType)
+							{
+								$visitorInfo->visitor_type=$visitorType->id;
+							}
+							else
+							{
+								$visitorType=new VisitorType;
+								$visitorType->name=$line[2];
+								$visitorType->created_by=Yii::app()->user->id;
+								$visitorType->tenant=Yii::app()->user->tenant;
+								$visitorType->tenant_agent=0;
+								$visitorType->is_deleted=0;
+								$visitorType->is_default_value=0;
+								$visitorType->module='AVMS';
+								$visitorType->save(false);
+								$visitorInfo->visitor_type=$visitorType->id;
+							}
+							
+							$visitorInfo->profile_type='VIC';
+							$visitorInfo->identification_type=strtoupper($line[23]);
+							$visitorInfo->identification_document_no=$line[24];
+							$visitorInfo->identification_document_expiry=date("Y-m-d",strtotime(str_replace('/', '-',$line[25])));
+							
+							
+								
+							
+							
                             $visitorInfo->position = $line[8];
-                            $company = Company::model()->find(" name LIKE '%{$line[7]}%' OR trading_name LIKE '%{$line[7]}%' ");
+                            $company = Company::model()->find(" name LIKE '%{$line[18]}%' OR trading_name LIKE '%{$line[18]}%' ");
                             if( $company )
-                               $visitorInfo->company = $company->id;
+							{
+							
+							  $visitorInfo->company = $company->id;
+							}
                             else
-                               $visitorInfo->company = $session['company'];
+							{
+								$company= new Company();
+								$company->name=$line[18];
+								$company->code = strtoupper(substr($company->name, 0, 3));
+								$company->contact=$line[19]." ".$line[20];
+								$company->email_address=$line[21];
+								$company->mobile_number=$line[22];
+								$company->company_type='3';
+								$company->is_deleted='0';
+								$company->tenant= Yii::app()->user->tenant;
+								$company->save();
+								
+								$companyUser= new User();
+								$companyUser->first_name=$line[19];
+								$companyUser->last_name=$line[20];
+								$companyUser->email=$line[21];
+								$companyUser->contact_number=$line[22];
+								
+								$companyUser->company=$company->id;
+							
+								$companyUser->created_by = Yii::app()->user->id;
+								
+								$companyUser->tenant = Yii::app()->user->tenant;
+								$companyUser->role='9';
+								$companyUser->is_deleted='0';
+								$companyUser->user_type='1';
+								$companyUser->save(false);
+								//$errros=$company->getErrors();
+								//echo "<pre>";
+								//var_dump($errros);
+								//echo "</pre>";
+								//$errross=$companyUser->getErrors();
+								//echo "<pre>";
+								//var_dump($errross);
+								//echo "</pre>";
+							}
+                            $visitorInfo->company = $company->id;
                             $visitorInfo->role = Roles::ROLE_VISITOR;
                             $visitorInfo->visitor_status = '1'; // Active
                             //$visitorInfo->visitor_type= '2';
                             //$visitorInfo->vehicle= $line[12]; 
+							$visitorInfo->visitor_workstation=$session['workstation'];
                             $visitorInfo->created_by = Yii::app()->user->id;
                             $visitorInfo->tenant = Yii::app()->user->tenant;
-                            
-                            if( $visitorInfo->validate() ) 
-                            {
-                                $visitorInfo->save();
+							
+							
+							   
+								$visitorInfo->save();
+								//$errrosss=$visitorInfo->getErrors();
+								//echo "<pre>";
+								//var_dump($errrosss);
+								//echo "</pre>";
                                 
-                                //insert Card Code
-                                if( !empty($line[9])) {
-                                    $card = new CardGenerated;
-                                    $card->card_number = $line[9];
-                                    $card->date_printed = date("Y-m-d", strtotime($line[10]));
-                                    $card->date_expiration = date("Y-m-d", strtotime($line[11]));
+								
+						if($line[1]!="")
+								{
+									$card = new CardGenerated;
+                                    $card->card_number = $line[1];
+                                    $card->date_printed = date("Y-m-d", strtotime(str_replace('/', '-',$line[37])));
+                                    $card->date_expiration = date("Y-m-d", strtotime(str_replace('/', '-',$line[38])));
                                     $card->visitor_id = $visitorInfo->id;
                                     $card->card_status  = 1;
                                     $card->created_by = Yii::app()->user->id;
                                     $card->tenant = Yii::app()->user->tenant;
-                                    $card->save();                     
-                                }
-                                
-                                // Insert Visit Now
-                                $visitInfo = new Visit;
+                                    $card->save();     
+								}
+								$visitInfo = new Visit;
                                 $visitInfo->visitor = $visitorInfo->id;
                                 $visitInfo->visitor_status = 1;
                                 $visitInfo->card = isset($card) ? $card->id:"";
-                                $visitInfo->host = Yii::app()->user->id;
+								$visitInfo->card_type='5';
+								if($asicVisitor)
+								{
+									//echo "here";
+									$visitInfo->host = $asicVisitor->id;
+									if($asicVisitor->asic_no!=$line[33] && $line[33]!="")
+									{
+										
+										$asicVisitor->asic_no=$line[33];
+										$todayDate = date("Y-m-d");
+										if($asicVisitor->asic_expiry<=$todayDate)
+										{
+											$asicVisitor->visitor_card_status='8';
+										}
+										else
+											$asicVisitor->visitor_card_status='6';
+										$asicVisitor->update();
+									}
+									if($asicVisitor->asic_expiry!=date("Y-m-d",strtotime(str_replace('/', '-',$line[34])))&& $line[34]!="")
+									{
+										$asicVisitor->asic_expiry=date("Y-m-d",strtotime(str_replace('/', '-',$line[34])));
+										$todayDate = date("Y-m-d");
+										if($asicVisitor->asic_expiry<=$todayDate)
+										{
+											$asicVisitor->visitor_card_status='8';
+										}
+										else
+											$asicVisitor->visitor_card_status='6';
+										$asicVisitor->update();
+									}
+									
+									
+								}
+								else 
+								{
+									$asicVisitor=new Visitor('importVisitor');
+									$asicVisitor->first_name = $line[29];
+									$asicVisitor->last_name  = $line[30];
+									$asicVisitor->email= $line[32];
+									$asicVisitor->date_of_birth=date("Y-m-d",strtotime(str_replace('/', '-',$line[31])));
+									$asicVisitor->profile_type='ASIC';
+									$asicVisitor->asic_no=$line[33];
+									$asicVisitor->asic_expiry=date("Y-m-d",strtotime(str_replace('/', '-',$line[34])));
+									$asicVisitor->created_by = Yii::app()->user->id;
+									$asicVisitor->visitor_workstation=$session['workstation'];
+									$asicVisitor->tenant = Yii::app()->user->tenant;
+									$todayDate = date("Y-m-d");
+										if($asicVisitor->asic_expiry<=$todayDate)
+										{
+											$asicVisitor->visitor_card_status='8';
+										}
+										else
+											$asicVisitor->visitor_card_status='6';
+									$asicVisitor->save(false);
+									$visitInfo->host = $asicVisitor->id;
+								}
+								//$errrossss=$asicVisitor->getErrors();
+								//echo "<pre>";
+								//print_r($errrossss);
+								//echo "</pre>";
+                                
+                                //$visitInfo->host = Yii::app()->user->id;
                                 $visitInfo->created_by = Yii::app()->user->id;
-                                $visitInfo->date_check_in = date("Y-m-d", strtotime($line[3]));
-                                $visitInfo->time_check_in = $line[4];
-                                $visitInfo->time_check_out = $line[6];
-                                $visitInfo->date_check_out = date("Y-m-d", strtotime($line[5]));
+                                $visitInfo->date_check_in = date("Y-m-d", strtotime(str_replace('/', '-',$line[26])));
+                                $visitInfo->time_check_in = date("H:i:s", strtotime($line[35]));
+                                $visitInfo->time_check_out = date("H:i:s", strtotime($line[36]));
+                                $visitInfo->date_check_out = date("Y-m-d", strtotime(str_replace('/', '-',$line[27])));
                                 $visitInfo->visit_status = 3; //Closed visit History
                                 $visitInfo->workstation = $session['workstation'];                               
                                 $visitInfo->tenant = Yii::app()->user->tenant;
-                                $visitInfo->reason = NULL;
-                    
-                                $visitInfo->save();
-                            }                 
-                        }
-                    
+								$visitInfo->visitor_type=$visitorType->id;
+								if($line[17]!=NULL)
+								{
+									$visitReason=VisitReason::model()->find("reason='{$line[17]}'");
+									if($visitReason)
+									{
+										$visitInfo->reason=$visitReason->id;
+									}
+									else 
+									{
+										$visitReason= new VisitReason;
+										$visitReason->reason=$line[17];
+										$visitReason->is_deleted='0';
+										$visitReason->module='AVMS';
+										$visitReason->created_by = Yii::app()->user->id;
+										$visitReason->tenant = Yii::app()->user->tenant;
+										$visitReason->save();
+										//$errrosssss=$visitReason->getErrors();
+										//echo "<pre>";
+										//print_r($errrosssss);
+										//echo "</pre>";
+										$visitInfo->reason=$visitReason->id;
+									}
+								}
+								else
+								{
+								$visitInfo->reason = NULL;	
+								}
+								$visitInfo->save();
+						    //$errrosssss=$visitInfo->getErrors();
+								//echo "<pre>";
+								//print_r($errrosssss);
+								//echo "</pre>";
+                       
+						}
+                    //echo "<pre>";
+					//print_r($visitorInfo);
+					//echo "</pre>";
+					$i++;
                    }  
-                    if( $duplicates )
+				  //var_dump(getErrors());
+				  //Yii::app()->end();
+                    /*if( $duplicates )
                         $this->redirect(array("importVisitor/admin"));
-                    else
+                    else*/
+						Yii::app()->user->setFlash('importrecords', "Total $i Records Successfully Added");
                         $this->redirect(array("visitor/admin"));
                  }
              }
@@ -1071,7 +1473,12 @@ class VisitorController extends Controller {
                 echo 0; Yii::app()->end();
             }
         }
-        echo 1; Yii::app()->end();
+        echo 1;
+		//echo 1;
+		//echo "<pre>";
+		//print_r(Yii::app()->request->getPost('Visitor'));
+		//echo "</pre>";
+		Yii::app()->end();
         
     }
 
@@ -1125,4 +1532,45 @@ class VisitorController extends Controller {
              $this->redirect( array("visitor/admin&".$queryString) );
         }
     }
+	public function actionPrinted(){
+	if(isset($_POST))
+	{
+		$model=new Visitor();
+		$update = array();
+        $update["asic_printed"] = 1;
+		if($model->updateByPk($_POST['id'], $update))
+		{
+				$model=$model->findByPk($_POST['id']);
+			
+									$airportName=new Company();
+									$airport=$airportName->findByPk($model->tenant)->name;
+									$contact=$airportName->findByPk($model->tenant)->office_number;
+									 $templateParams = array(
+										'email' => $model->email,
+										'Airport'=>$airport,
+										'contact'=>$contact,
+										'name'=>  ucfirst($model->first_name) . ' ' . ucfirst($model->last_name),
+										);
+										$subject='ASIC Ready to Collect For '.ucfirst($model->first_name) . ' ' . ucfirst($model->last_name);
+									$emailTransport = new EmailTransport();
+									$emailTransport->sendReady($templateParams, $model->email, $model->first_name . ' ' . $model->last_name,$subject);
+		}	
+		 
+		
+	}
+	}
+	public function actionCollected(){
+	if(isset($_POST))
+	{
+		$model=new Visitor();
+		$update = array();
+        $update["asic_collected"] = 1;
+		if($model->updateByPk($_POST['id'], $update))
+		{
+			echo "collected";
+		}	
+		 
+		
+	}
+	}
 }

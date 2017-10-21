@@ -120,7 +120,7 @@ class Roles extends CActiveRecord {
 	public function getNameFuncForNotifiLabels() {
 		$identity = "Identity Security";
 		if ($this->id == 5) {
-			return $identity;
+			return null;
 		} else {
 			$identity = $this->name;
 			return $identity;
@@ -139,7 +139,7 @@ class Roles extends CActiveRecord {
 
 	public static function get_avms_roles() {
 		return array(
-			self::ROLE_SUPERADMIN,
+			//self::ROLE_SUPERADMIN,
 			self::ROLE_ISSUING_BODY_ADMIN,
 			self::ROLE_AIRPORT_OPERATOR,
 			self::ROLE_AGENT_AIRPORT_ADMIN,
@@ -149,7 +149,7 @@ class Roles extends CActiveRecord {
 
 	public static function get_cvms_roles() {
 		return array(
-			self::ROLE_SUPERADMIN,
+			//self::ROLE_SUPERADMIN,
 			self::ROLE_ADMIN,
 			self::ROLE_AGENT_ADMIN,
 			self::ROLE_AGENT_OPERATOR,

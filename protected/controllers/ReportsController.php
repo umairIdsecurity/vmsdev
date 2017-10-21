@@ -29,7 +29,7 @@ class ReportsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('evicDepositsReport', 'evicDepositsRecord', 'notReturnedVic', 'visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType','conversionVicToAsic'),
+				'actions'=>array('evicDepositsReport', 'evicDepositsRecord', 'notReturnedVic', 'visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType','visitorsVicByCardStatus','exportFileVicByCardStatus','conversionVicToAsic','exportFileVicByType','exportFileVicByCardType','exportFileNewVisitors','exportFileVicToAsic','exportFileNotReturned','exportDepositsRecord'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
 			array('deny',  // deny all users
@@ -335,6 +335,11 @@ class ReportsController extends Controller
        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
        
         $date1YearBack = $this->getTodayAnd1YearBack();
+		
+		if (Yii::app()->request->getParam('export')) {
+            $this->actionExportNewVisitors();
+            Yii::app()->end();
+        }
         $this->avmsNewVisitors($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1]);
         
     }
@@ -436,7 +441,7 @@ class ReportsController extends Controller
         $dateCondition='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
+            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
         $dateCondition .= "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
@@ -464,7 +469,7 @@ class ReportsController extends Controller
         $dateCondition='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
+            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
         $dateCondition .= "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
@@ -525,27 +530,88 @@ class ReportsController extends Controller
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
+            $dateCondition = "( v.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
         }
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
-        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
+        $dateCondition .= " (v.is_deleted = 0) AND (v.profile_type='VIC') AND t.module='AVMS'";
         
         $config = Yii::app()->getComponents(false);
         $visitsCount = Yii::app()->db->createCommand()
                 ->select("t.id,t.name,count(visitors.id) as visitors") 
                 ->from('visitor_type t')
-                ->join("visitor visitors",'t.id = visitors.visitor_type')
+                 ->join('visit visitors' , 't.id = visitors.visitor_type AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
+				->join('visitor v' , 'v.id = visitors.visitor AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
                 ->where($dateCondition)
                 ->group('t.id, t.name')
                 ->queryAll();
+			if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVicByType();
+            Yii::app()->end();
+        }
         
         $this->render("visitorvictypecount", array("visit_count"=>$visitsCount));
     }
-    
+     public function actionExportFileVicByType()
+    {
+        Yii::app()->request->sendFile('VisitorByTypeVIC_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	public function actionExportVicByType() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+           'Visitor Type'=>'Visitor Type',
+			'Total Vics'=>'Vics Total Count',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = $header;
+        }
+        fputcsv($fp, $row);
+		
+		 $dateCondition='';
+		 if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+        $dateCondition .= " (v.is_deleted = 0) AND (v.profile_type='VIC') AND t.module='AVMS'";
+        
+        $config = Yii::app()->getComponents(false);
+        $visitsCount = Yii::app()->db->createCommand()
+                ->select("t.id,t.name,count(visitors.id) as visitors") 
+                ->from('visitor_type t')
+                 ->join('visit visitors' , 't.id = visitors.visitor_type AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
+				->join('visitor v' , 'v.id = visitors.visitor AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
+                ->where($dateCondition)
+                ->group('t.id, t.name')
+                ->queryAll();
+		
+        
+			
+			//$i=0;
+            foreach($visitsCount as $visit) {
+			$row=array();
+			$row[]=$visit['name'];
+			$row[]=$visit['visitors'];
+			
+			 fputcsv($fp, $row);
+            }
+		
+			
+        
+		
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
     //**************************************************************************
     /* 
     * Report: VIC Reporting: Total VIC Visitors' VISITS by VISIT CARD TYPE 
@@ -553,7 +619,7 @@ class ReportsController extends Controller
     * 
     * @return view
     */
-    public function actionVisitorsVicByCardType() {
+    public function actionVisitorsVicByCardStatus() {
         // Post Date
         $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
         $dateToFilter = Yii::app()->request->getParam("date_to_filter");
@@ -568,13 +634,129 @@ class ReportsController extends Controller
         
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+        $dateCondition .= "(visitors.is_deleted = 0)";
+
+        $visitorCount = Yii::app()->db->createCommand()
+                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors")
+                ->from('visitor visitors')
+                ->join("visitor_card_status cards",'cards.id = visitors.visitor_card_status')
+                ->where($dateCondition)
+                ->group('cards.id,cards.name')
+                ->queryAll();
+
+        $allCards = Yii::app()->db->createCommand()
+                ->select("cards.id,cards.name")
+                ->from('visitor_card_status cards')
+                ->queryAll();
+        $otherCards = array();
+        
+        foreach ($allCards as $card) {
+            $hasVisitor = false;
+            foreach($visitorCount as $visitor) {
+                if($visitor['cardId'] ==  $card['id']) {
+                    $hasVisitor =  true;
+                }
+            }
+            if ($hasVisitor == false) {
+                array_push($otherCards, $card);
+            }
+        }
+		if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVicByCardStatus();
+            Yii::app()->end();
+        }
+        
+        $this->render("visitorviccardstatuscount", array("visitor_count"=>$visitorCount,"otherCards" => $otherCards));
+    }
+ public function actionExportFileVicByCardStatus()
+    {
+        Yii::app()->request->sendFile('VisitorByCardStatus_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	public function actionExportVicByCardStatus() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+           'Card Name'=>'Card Status',
+			'Total Vics'=>'Visitor Count',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = $header;
+        }
+        fputcsv($fp, $row);
+		
+		 $dateCondition='';
+		if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+         $dateCondition .= "(visitors.is_deleted = 0)";
+
+        $visitorCount = Yii::app()->db->createCommand()
+                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors")
+                ->from('visitor visitors')
+                ->join("visitor_card_status cards",'cards.id = visitors.visitor_card_status')
+                ->where($dateCondition)
+                ->group('cards.id,cards.name')
+                ->queryAll();
+
+        $allCards = Yii::app()->db->createCommand()
+                ->select("cards.id,cards.name")
+                ->from('visitor_card_status cards')
+                ->queryAll();
+        $otherCards = array();
+        
+        foreach ($allCards as $card) {
+            $row=array();
+			$row[0]=$card['name'];
+			$i=0;
+            foreach($visitorCount as $visitor) {
+                if($visitor['cardId'] ==  $card['id']) {
+                    $row[1]=$visitor['visitors'];
+					$i=1;
+				}
+				if($i!=1)
+				{
+				  $row[1]='0';
+				}
+              }
+			  fputcsv($fp, $row);
+            }
+
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
+	    public function actionVisitorsVicByCardType() {
+        // Post Date
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+        
+        $dateCondition='';
+        
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
+        }
+        
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
         $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (cards.module=2)";
 
         $visitorCount = Yii::app()->db->createCommand()
-                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors")
+                ->select("cards.id as cardId,cards.name,count(distinct(visits.id)) as visitors")
                 ->from('visitor visitors')
                 ->join("visit visits",'visitors.id = visits.visitor')
                 ->join("card_type cards",'cards.id = visits.card_type')
@@ -596,11 +778,168 @@ class ReportsController extends Controller
                 array_push($otherCards, $card);
             }
         }
-
+		if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVicByCardType();
+            Yii::app()->end();
+        }
         
         $this->render("visitorviccardtypecount", array("visitor_count"=>$visitorCount,"otherCards" => $otherCards));
     }
+ public function actionExportFileVicByCardType()
+    {
+        Yii::app()->request->sendFile('VisitorByCardTypeVIC_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	public function actionExportVicByCardType() {
+        $fp = fopen('php://temp', 'w');
 
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+           'Card Name'=>'Card Type',
+			'Total Vics'=>'Vics Total Count',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = $header;
+        }
+        fputcsv($fp, $row);
+		
+		 $dateCondition='';
+		if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+        $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (cards.module=2)";
+
+        $visitorCount = Yii::app()->db->createCommand()
+                ->select("cards.id as cardId,cards.name,count(distinct(visits.id)) as visitors")
+                ->from('visitor visitors')
+                ->join("visit visits",'visitors.id = visits.visitor')
+                ->join("card_type cards",'cards.id = visits.card_type')
+                ->where($dateCondition)
+                ->group('cards.id,cards.name')
+                ->queryAll();
+
+        $allCards = CardType::model()->findAll("module=2");
+        $otherCards = array();
+        
+        foreach ($allCards as $card) {
+            $row=array();
+			$row[0]=$card['name'];
+			$i=0;
+            foreach($visitorCount as $visitor) {
+                if($visitor['cardId'] ==  $card['id']) {
+                    $row[1]=$visitor['visitors'];
+					$i=1;
+				}
+				if($i!=1)
+				{
+				  $row[1]='0';
+				}
+              }
+			  fputcsv($fp, $row);
+            }
+
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
+	 public function actionExportFileNewVisitors()
+    {
+        Yii::app()->request->sendFile('NewVisitors_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	public function actionExportNewVisitors() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+           'Month-Year'=>'Month-Year',
+			'Vics'=>'Total Vics',
+			'Asics'=>'Total Asics',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = $header;
+        }
+        fputcsv($fp, $row);
+		
+		$reversed = $this->get1YearInterval(); 
+		$date1YearBack = $this->getTodayAnd1YearBack();
+		$from=$date1YearBack[0];
+		$to=$date1YearBack[1];
+        $countArrayVIC=array();
+        $countArrayASIC=array();
+
+        
+        $visitorsVIC = $this->getNewVICVisitorsData ($from,$to);
+        $visitorsASIC = $this->getNewASICVisitorsData ($from,$to);
+
+        
+        foreach($visitorsVIC as $visitorVIC){
+            $date_check_in = $visitorVIC['date_check_in'];
+            $time=strtotime($date_check_in);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
+            $countArrayVIC[$y][$m][]=1;
+        }
+        
+        foreach($visitorsASIC as $visitorASIC){
+            $date_check_in = $visitorASIC['date_check_in'];
+            $time=strtotime($date_check_in);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
+            $countArrayASIC[$y][$m][]=1;
+        }
+		
+		 foreach ($reversed as $key=>$dt) {
+            $row=array();
+            $row[0]=$dt[0];
+			
+            if(!empty($countArrayVIC)){
+				$i=0;
+                foreach($countArrayVIC as $key=>$val) {
+                    foreach($val as $k=>$v) {
+                        $myKey=$k."-".$key;
+                        if($myKey == $dt[1]){
+						   $i=count($v);
+                            break;
+                        }
+                    }
+                }
+				 $row[1]=$i;
+            }
+
+            if(!empty($countArrayASIC)){
+				$j=0;
+                foreach($countArrayASIC as $key=>$val) {
+                    foreach($val as $k=>$v) {
+                        $myKey=$k."-".$key;
+                        if($myKey == $dt[1]){
+							$j=count($v);
+                           break;
+                        }
+                    }
+				}
+			$row[2]=$j;	
+            }
+			fputcsv($fp, $row);
+        }
+
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
     //**************************************************************************
     /*
     * Report: Visitor Reporting: Conversion of Total VICs to ASIC
@@ -613,6 +952,10 @@ class ReportsController extends Controller
         $dateToFilter = Yii::app()->request->getParam("date_to_filter");
 
         $date1YearBack = $this->getTodayAnd1YearBack();
+			if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVicToAsic();
+            Yii::app()->end();
+        }
         $this->avmsConversionCardType($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1]);
     }
 
@@ -644,18 +987,80 @@ class ReportsController extends Controller
     }
 
     function getConversionData($from, $to) {
-        $dateCondition='';
+        $dateCondition="(v.tenant=".Yii::app()->user->tenant.") AND ";
 
         $dateCondition .= "(t.convert_time BETWEEN '".$from->format("Y-m-d")."' AND '".$to->format("Y-m-d")."' )";
 
         $data = Yii::app()->db->createCommand()
             ->select("t.convert_time AS convert_time, t.visitor_id, t.id")
             ->from("cardstatus_convert t")
+			->join("visitor v" ,"v.id=t.visitor_id")
             ->where($dateCondition)
             ->queryAll();
         return $data;
     }
-    
+    public function actionExportFileVicToAsic()
+    {
+        Yii::app()->request->sendFile('VicToAsic_Conversion_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	public function actionExportVicToAsic() {
+        $fp = fopen('php://temp', 'w');
+
+
+        $headers = array(
+           'Month-Year'=>'Month-Year',
+			'Conversions'=>'Total Conversions',        
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = $header;
+        }
+        fputcsv($fp, $row);
+		
+		$reversed = $this->get1YearInterval(); 
+		$date1YearBack = $this->getTodayAnd1YearBack();
+		$from=$date1YearBack[0];
+		$to=$date1YearBack[1];
+        $countArrayConversion=array();
+
+        $Conversions = $this->getConversionData($from,$to);
+
+        foreach($Conversions as $Conversion){
+            $Conversion = $Conversion['convert_time'];
+            $time=strtotime($Conversion);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
+            $countArrayConversion[$y][$m][]=1;
+        }
+		
+		  foreach ($reversed as $key=>$dt) 
+		  {
+			$row=array();
+            $row[0]=$dt[0];
+            if (!empty($countArrayConversion)) {
+				$i=0;
+                foreach ($countArrayConversion as $key => $val) {
+                    foreach ($val as $k => $v) {
+                        $myKey = $k . "-" . $key;
+                        if ($myKey == $dt[1]) {
+                             $i=count($v);
+                            break;
+                        }
+                    }
+
+                }
+			$row[1]=$i;
+            } 
+			 fputcsv($fp, $row);
+        }
+
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
     /**
      * Not Returned and Lost/stolen VICs Reports
      * Depends upons the Expired Visits having Card Option Not Returned or Lost/Stolen Report
@@ -671,10 +1076,68 @@ class ReportsController extends Controller
         if (isset($_GET['Visit'])) {
                 $model->attributes = $_GET['Visit'];
             }
+	if (Yii::app()->request->getParam('export')) {
+            $this->actionExportNotReturned();
+            Yii::app()->end();
+        }
         
         $this->render("notReturnedVic", array("model"=>$model, "criteria"=>$criteria));
     }
-    
+     public function actionExportFileNotReturned()
+    {
+        Yii::app()->request->sendFile('LostVICs_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	 public function actionExportNotReturned() {
+        $fp = fopen('php://temp', 'w');
+
+        $headers = array(
+			'card0.card_number' => 'Card Number',
+            'visitor0.first_name' => 'First Name',
+            'visitor0.last_name' => 'Last Name',
+            'date_check_in'=>'Check IN',
+			'date_check_out'=>'Check OUT',
+			'police_report_number'=>'Report Number',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = Visit::model()->getAttributeLabel($header);
+        }
+        fputcsv($fp, $row);
+
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("(visit_status = ".VisitStatus::EXPIRED ." OR visit_status = ".VisitStatus::CLOSED." ) AND card_type > 4 AND card_type != ".CardType::VIC_CARD_24HOURS 
+                ." AND card_option != 'Returned'");
+        
+
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+        $dp = $model->search($criteria);
+
+
+        $dp->setPagination(false);
+
+       
+
+        $models = $dp->getData();
+        foreach ($models as $model) {
+            $row = array();
+            foreach ($headers as $head => $title) {
+				
+				$row[] = CHtml::value($model, $head);
+			}
+            fputcsv($fp, $row);
+        }
+
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
     /**
      *  CAVMS- 803: 'EVIC Deposits Record'
      */
@@ -687,8 +1150,81 @@ class ReportsController extends Controller
         if (isset($_GET['Visit'])) {
                 $model->attributes = $_GET['Visit'];
             }
+		if (Yii::app()->request->getParam('export')) {
+            $this->actionExportDepositsRec();
+            Yii::app()->end();
+        }
         $this->render("depositsRecord", array("criteria"=>$criteria, "model"=>$model) );    
         
+    }
+	 public function actionExportDepositsRecord()
+    {
+        Yii::app()->request->sendFile('EVICDeposits_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	 public function actionExportDepositsRec() {
+        $fp = fopen('php://temp', 'w');
+
+        $headers = array(
+			'card0.card_number' => 'Card Number',
+            'visitor0.first_name' => 'First Name',
+            'visitor0.last_name' => 'Last Name',
+			'visitor0.email' => 'Email',
+			'company0.name' => 'Company',
+            'date_check_in'=>'Check IN',
+			'date_check_out'=>'Check OUT',
+			'deposit_paid'=>'Deposit',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = Visit::model()->getAttributeLabel($header);
+        }
+        fputcsv($fp, $row);
+
+      $criteria = new CDbCriteria;
+        $criteria->addCondition("visit_status IN (".VisitStatus::ACTIVE.", ".VisitStatus::CLOSED.", ".VisitStatus::EXPIRED.")");
+        $criteria->addCondition("card_type = ".CardType::VIC_CARD_EXTENDED);
+
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+        $dp = $model->search($criteria);
+
+
+        $dp->setPagination(false);
+
+       
+
+        $models = $dp->getData();
+        foreach ($models as $model) {
+            $row = array();
+            foreach ($headers as $head => $title) {
+				
+				
+				if($title=='Deposit')
+				{
+				if((CHtml::value($model, $head))==null)
+				{
+					$row[] = 'PAID';
+				}
+				else
+				{
+					$row[] = CHtml::value($model, $head);
+				}
+				}
+				else
+					$row[] = CHtml::value($model, $head);
+			}
+            fputcsv($fp, $row);
+        }
+
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
     }
     /**
      *  CAVMS- 802: 'EVIC Deposits Report'

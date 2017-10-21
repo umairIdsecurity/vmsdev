@@ -1,5 +1,6 @@
 
 <h1> New Visitor Profiles (VIC and ASIC) </h1>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete'));?>
 <!-- Filter Form -->
 <div class="form-inline">
 <?php 
@@ -42,7 +43,28 @@ $form=$this->beginWidget('CActiveForm', array(
             
         <?php $this->endWidget();?>    
     </div>
+<script>
+		
+        $('#export-button').on('click', function() {
+            $.ajax({
+                url: "<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>",
+                type: 'GET',
+               // dataType: 'json',
+                data: 'export=true',
+                success: function () 
+                {
+					 window.location = '<?php echo $this->createUrl('exportFileNewVisitors');?>';
+                },
+                error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
 
+            });
+        });
+       
+	</script>
 
 <?php
 

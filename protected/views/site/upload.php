@@ -18,7 +18,7 @@ switch ($controllerId) {
         $folderKey = '/visitor/';
         break;
     default:
-        $folderKey = '';
+        $folderKey = '/visitor/';
         break;
 }
 $output_dir = Yii::getPathOfAlias('webroot') . "/uploads" . $folderKey;
@@ -42,20 +42,20 @@ if (isset($_FILES["myfile"])) {
         //save image in db as diretced by Geoff
         $uploadedFile = $output_dir.$uniqueFileName;
         $file=file_get_contents($uploadedFile);
-        $image = base64_encode($file);
-
+        $image= base64_encode($file);
+		
         $connection = Yii::app()->db;
         $command = $connection->createCommand('INSERT INTO photo '
                 . "(filename, unique_filename, relative_path, db_image) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "','" . $image . "')");
         $command->query();
         //update company
-        if ($action == 'update' && ($controllerId == 'visitor' || $controllerId == 'user') ) {
+        if ($action == 'update' && ($controllerId == 'visitor' || $controllerId == 'user') || ($controllerId=='induction') ) {
             $ret = Yii::app()->db->lastInsertID;
         } elseif ($action == 'update') {
             $update = $connection->createCommand("update company set logo=" . Yii::app()->db->lastInsertID . " where id=" . $_GET['companyId'] . "");
             $update->query();
             $ret = $path;
-        } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail' || $action == 'customisation') {
+        } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail' || $action == 'customisation' || $action=='asicUpdate' || $action=='addInductee') {
             $ret = Yii::app()->db->lastInsertID;
         }
 

@@ -132,6 +132,7 @@ class WorkstationController extends Controller {
 
         if (isset($_POST['Workstation'])) {
             $model->attributes = $_POST['Workstation'];
+
             if ($model->save()) {
 
                 WorkstationCardType::model()->deleteAll(

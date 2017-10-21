@@ -89,7 +89,10 @@ class AuditTrailController extends Controller {
 		if (isset($_GET['AuditTrail'])) {
 			$model->attributes = $_GET['AuditTrail'];
 		}
-
+		//$userModel=new User();
+		/*$merge=new CDbCriteria;
+		 $merge->join = 'User ta ON ta.user_id=t.user_id';
+		 $merge->condition='ta.tenant';*/
 		$this->render('_avms', array(
 			'model' => $model,
 		));

@@ -28,7 +28,7 @@ class PhotoController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','GetPathOfCompanyLogo','admin','delete'),
+				'actions'=>array('create','update','GetPathOfCompanyLogo','GetAsicPhoto','admin','delete'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -169,5 +169,12 @@ class PhotoController extends Controller
 		Yii::app()->end();
     }
 
-
+	public function actionGetAsicPhoto() {
+		
+		if (isset($_POST['id']) && $_POST['id']!='');
+		$db_image=Photo::model()->findByPk($_POST['id'])->db_image;
+		//echo CJavaScript::jsonEncode($resultMessage);
+		echo $db_image;
+		Yii::app()->end();
+    }
 }

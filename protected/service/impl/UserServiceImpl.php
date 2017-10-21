@@ -57,7 +57,7 @@ class UserServiceImpl implements UserService {
             /*if ($user->password_option==2)
                 User::model()->restorePassword($user['email']);*/
             #Send mail
-            if ($user->password_option == PasswordRequirement::PASSWORD_IS_REQUIRED) 
+           /*if ($user->password_option == PasswordRequirement::PASSWORD_IS_REQUIRED) 
             {
                 $workstationObj = Workstation::model()->findByPk($workstation);
                 $loggedUserEmail = "admin@identitysecurity.com.au";
@@ -75,7 +75,7 @@ class UserServiceImpl implements UserService {
 
                 $body .="<br>"."Thanks,"."<br>Admin</body></html>";
                 EmailTransport::mail($to, $subject, $body, $headers);
-            }
+            }*/
 
             //because of https://ids-jira.atlassian.net/browse/CAVMS-1204
             if($user->role == Roles::ROLE_AIRPORT_OPERATOR)

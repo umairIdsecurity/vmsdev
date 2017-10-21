@@ -4,7 +4,8 @@
 ?>
 
 <h1>Lost VICs Report</h1>
-
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete'));?>
+</br>
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'vic-total-visit-count',
@@ -98,3 +99,26 @@ function formatTime($time) {
 }
 
 ?>
+<script>
+	 $(document).ready(function() {
+        if ($("#totalRecordsCount").val() == 0) {
+            $('#export-button').removeClass('greenBtn');
+            $('#export-button').addClass('btn DeleteBtn actionForward');
+            $("#export-button").attr('disabled', true);
+        }
+
+        $('#export-button').on('click', function() {
+            $.fn.yiiGridView.export();
+        });
+        $.fn.yiiGridView.export = function() {
+            $.fn.yiiGridView.update('vic-total-visit-count', {
+                success: function() {
+                    $('vic-total-visit-count').removeClass('grid-view-loading');
+                    window.location = '<?php echo $this->createUrl('exportFileNotReturned');?>';
+                },
+                data: $('vic-total-visit-count').serialize() + '&export=true'
+            });
+        }
+
+    });
+</script>

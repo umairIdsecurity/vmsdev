@@ -54,36 +54,31 @@ class PreregPasswordChangeRequest extends CActiveRecord
         $request->visitor_id = $visitor->id;
         $request->hash = $this->getHash($visitor);
         $request->created_at = $now->format('Y-m-d H:i:s');
-
+		if(isset(Yii::app()->user->tenant))
+		{
+		$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+		$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+		}
+		else
+		{
+			$airportName="Airport";
+		}
         $result = $request->save();
-
+	
         if (!$result) {
-            return "Service is temporary unavailable, please try again later";
-        }
-
-        $to = $visitor->email;
-        $loggedUserEmail = "admin@identitysecurity.com";
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-        $subject="Request for reset password";
-        $body = "<html><body>Hi,<br><br>".
-                "Please click on below link to reset you password.<br><br>".
-                "<a href='" .Yii::app()->getBaseUrl(true)."/index.php/preregistration/reset/hash/".$request->hash."'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/reset/hash/".$request->hash."</a><br>";
-        $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-        
-        //EmailTransport::mail($to, $subject, $body, $headers);
-        mail($to, $subject, $body, $headers);
-
-        /*$templateParams = array(
+        return "Service is temporary unavailable, please try again later";
+		 }
+		
+        $templateParams = array(
             'email' => $visitor->email,
-            'resetLink' => Yii::app()->getBaseUrl(true) . '/index.php/preregistration/reset/hash/' . $request->hash,
+            'resetLink' => 'vmsprdev-win.identitysecurity.info/index.php/preregistration/reset/hash/' . $request->hash,
+			'Airport'=>$airportName,
+			'name'=>  ucfirst($visitor->first_name) . ' ' . ucfirst($visitor->last_name),
         );
-
+		$subject='Invitation to Create Password for'.' '.$airportName.' '.'Aviation Visitor Management System';
+        //TODO: Change to YiiMail
         $emailTransport = new EmailTransport();
-        $emailTransport->sendResetPasswordEmail(
-            $templateParams, $visitor->email, $visitor->first_name . ' ' . $visitor->last_name
-        );*/
+        $emailTransport->sendSetPasswordEmail($templateParams, $visitor->email, $visitor->first_name . ' ' . $visitor->last_name,$subject);
     }
 
     /**
@@ -121,7 +116,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
      */
     public function checkPasswordRequestByHash()
     {
-        if ($this->isExpired()) {
+        if ($this->isExpired()>60) {
             return "Your reset password link is already expired. Please generate it again.";
         }
 
@@ -132,11 +127,13 @@ class PreregPasswordChangeRequest extends CActiveRecord
 
     public function isExpired()
     {
-        $expiredDate = $this->getStartOfExpiredPeriod(false);
-        $requestDate = DateTime::createFromFormat('Y-m-d H:i:s', $this->created_at);
-
-        return $expiredDate > $requestDate;
-    }
+      
+		$now=new DateTime();
+        $expiredDate = strtotime($now->format('Y-m-d H:i:s'));
+        $requestDate = strtotime($this->created_at);
+		$diff=round(abs($expiredDate - $requestDate)/60,0);
+		return $diff;	  
+	}
 
     public function isUsed()
     {
@@ -159,7 +156,7 @@ class PreregPasswordChangeRequest extends CActiveRecord
         $this->is_used = self::IS_USED_YES;
         $this->save(false, 'is_used');
 
-        $to = $visitor->email;
+        /*$to = $visitor->email;
         $loggedUserEmail = "admin@identitysecurity.com";
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
@@ -170,16 +167,19 @@ class PreregPasswordChangeRequest extends CActiveRecord
                 "If you did this, you can safely disregard this email.";
                 "If you didn't do this, please contact our technical support.";
         $body .="<br><br>"."Thanks,"."<br>Admin</body></html>";
-        EmailTransport::mail($to, $subject, $body, $headers);
+        EmailTransport::mail($to, $subject, $body, $headers);*/
+		
 
-        /*$templateParams = array(
+        $templateParams = array(
             'email' => $visitor->email,
         );
+		
+
 
         $emailTransport = new EmailTransport();
         $emailTransport->sendResetPasswordConfirmationEmail(
             $templateParams, $visitor->email, $visitor->first_name . ' ' . $visitor->last_name
-        );*/
+        );
     }
 
     public function behaviors()

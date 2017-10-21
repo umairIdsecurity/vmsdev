@@ -275,6 +275,22 @@ if ($this->action->id == 'update') {
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
                                     </tr>
+									 <tr>
+                                        <td>
+                                            <?php  echo $form->checkBox($model,'asic_printed'); ?>
+											<span style="position:absolute;" >Printed & Applicant notified</span>
+                                            
+                                            <?php //echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td>
+                                            <?php  echo $form->checkBox($model,'asic_collected'); ?>
+											<span style="position:absolute;" >ASIC Collected</span>
+                                            
+                                            <?php //echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td id="visitorTenantRow" <?php
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -449,30 +465,30 @@ if ($this->action->id == 'update') {
                         <table style="float:left;width:300px;">
                             <tr>
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type'));
+                                    <?php //echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type'));
                                     ?>
-                                    <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
+                                    <?php //echo "<br>" . $form->error($model, 'identification_type'); ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
+                                    <?php //echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => '')); ?>
 
                                     <?php
 
-                                    $this->widget('EDatePicker', array(
-                                        'model'       => $model,
-                                        'attribute'   => 'identification_document_expiry',
-                                        'mode'        => 'expiry',
-                                    ));
+//                                    $this->widget('EDatePicker', array(
+//                                        'model'       => $model,
+//                                        'attribute'   => 'identification_document_expiry',
+//                                        'mode'        => 'expiry',
+//                                    ));
                                     ?>
-                                    <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
-                                    <?php echo $form->error($model, 'identification_document_expiry'); ?>
+                                    <?php // echo "<br>" . $form->error($model, 'identification_document_no'); ?>
+                                    <?php // echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC No.', 'style' => 'width: 110px;')); ?>
+                                    <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC No.', 'style' => '')); ?>
 
                                     <?php
                                     $this->widget('EDatePicker', array(
@@ -507,6 +523,51 @@ if ($this->action->id == 'update') {
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {echo $_GET['id'];} ?>">
 
 <script>
+$(document).ready(function(){
+	if('<?php echo $model->asic_printed; ?>'==1)
+		$('#Visitor_asic_printed').prop('checked',true);
+	if('<?php echo $model->asic_collected; ?>'==1)
+		$('#Visitor_asic_collected').prop('checked',true);
+	
+	$('#Visitor_asic_printed').on('click', function(){
+		
+		if($(this).is(':checked'))
+		{
+			if(confirm("Are you sure you want to notify the Applicant?"))
+			{
+				$.ajax({
+                type: 'POST',
+                url: "<?php echo Yii::app()->createUrl('visitor/printed');?>",
+                data: 'id='+'<?php echo $model->id; ?>',
+                success: function (data) {
+                   //alert(data);
+                }
+				});
+			}
+			
+		}
+		
+	});
+	$('#Visitor_asic_collected').on('click', function(){
+		
+		if($(this).is(':checked'))
+		{
+			if(confirm("Are you sure that the Applicant has collected the ASIC?"))
+			{
+				$.ajax({
+                type: 'POST',
+                url: "<?php echo Yii::app()->createUrl('visitor/collected');?>",
+                data: 'id='+'<?php echo $model->id; ?>',
+                success: function (data) {
+                   //alert(data);
+                }
+				});
+			}
+			
+		}
+		
+	});
+});
 
     function afterValidate(form, data, hasError) {  
 

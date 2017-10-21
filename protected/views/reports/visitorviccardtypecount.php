@@ -1,4 +1,5 @@
 <h1> Total VICs by Card Type </h1>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete'));?>
 <!-- Filter Form -->
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -95,3 +96,25 @@
             'options' => array('title' => 'Total VICs by Card Type')));
         ?>
     </div>
+	<script>
+		
+        $('#export-button').on('click', function() {
+            $.ajax({
+                url: "<?php echo Yii::app()->createUrl('reports/visitorsVicByCardType'); ?>",
+                type: 'GET',
+               // dataType: 'json',
+                data: 'export=true',
+                success: function () 
+                {
+					 window.location = '<?php echo $this->createUrl('exportFileVicByCardType');?>';
+                },
+                error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+
+            });
+        });
+       
+	</script>

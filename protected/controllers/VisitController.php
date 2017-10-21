@@ -6,6 +6,7 @@ class VisitController extends Controller {
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
+   
     public $layout = '//layouts/column2';
 
     /**
@@ -29,7 +30,7 @@ class VisitController extends Controller {
                 'actions' => array('create',
                     'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
                     'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
-                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId', 'closeVisit', 'visitResetById'),
+                    'update', 'detail', 'admin', 'view', 'exportFile','evacuationReport', 'evacuationReportAjax', 'exportVicRegister','DeleteAllVisitWithSameVisitorId', 'closeVisit', 'visitResetById'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -43,7 +44,7 @@ class VisitController extends Controller {
                     'exportFileVisitorRecords',
                     'exportFileVicRegister',
                     'importVisitData',
-                    'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
+                    'exportVisitorRecords', 'delete','resetVisitCount', 'negate','exportFileVicTotalCount','exportFileVicWorkstation',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
@@ -97,6 +98,7 @@ class VisitController extends Controller {
                         $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));
                         break;
                     case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
+					case CardType::TEMPORARY_ASIC: // Temporary asic
                     case CardType::VIC_CARD_MANUAL: // VIC Manual
                     case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                         $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 1 day'));
@@ -199,16 +201,44 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) 
         {
+			
             $oldhost = $model->host;
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
-
+			if($model->card_type==CardType::VIC_CARD_SAMEDATE || $model->card_type==CardType::TEMPORARY_ASIC) //change 12/10/2017
+			{
+				$model->date_check_out=$model->date_check_in;
+				$model->finish_date=null;
+				$model->finish_time=null;
+				//$model->card_returned_date=null;
+				//$model->card_option='Not Returned';
+				//$model->visit_status='1';
+				//$model->time_check_out='23:59:59.0000000';
+			}
+			//echo '<pre>';
+			//print_r($visitParams);
+			//echo '</pre>';
+			//Yii:: app()->end();
+			
             if ($model->visitor_type == null) {
                 $model->visitor_type = $oldVisitorType;
             }
             if ($model->reason == null) {
                 $model->reason = $oldReason;
             }
+			if(isset($_POST['reason']))
+			{
+				$model->reason=$_POST['reason'];
+			}
+			if(isset($_POST['asic_expiry']) && isset($_POST['asic_no']))
+			{
+				$asic=Visitor::model()->findByPk($_POST['asic_sponsor_id']);
+				$asic->asic_expiry=$_POST['asic_expiry'];
+				$asic->asic_no=$_POST['asic_no'];
+				$asic->visitor_card_status='6';
+				$asic->save(false);
+			}
+
 
             if (isset($_POST['User']['photo']) && $model->host > 0) {
                 User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
@@ -216,6 +246,7 @@ class VisitController extends Controller {
 			
             if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
                 $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
+				
                 if ($visitStatus) {
                     $model->visit_status = $visitStatus->id;
                 }
@@ -252,8 +283,15 @@ class VisitController extends Controller {
             if(isset($_POST['selectedAsicEscort'])){
                 $model->asic_escort = Yii::app()->request->getPost('selectedAsicEscort');
             }
-
+            if($visitParams['visit_status']!=null)
+			{
+				$model->visit_status=$visitParams['visit_status'];
+			}
             if ($visitService->save($model, $session['id'])) {
+				//echo '<pre>';
+				//print_r($visitParams['visit_status']);
+				//echo '</pre>';
+				//Yii:: app()->end();
                 if ($model->card_lost_declaration_file != null) {
                     $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
                 }
@@ -361,15 +399,15 @@ class VisitController extends Controller {
     public function actionDetail($id, $new_created=NULL) {
         // set Close visit that are Auto Closed and will expire today.
         Visit::model()->setClosedAutoClosedVisits($id);  
-        
         $session = new CHttpSession;
-
+		//echo $session['workstation'];
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
-
+		
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
             return $this->redirect(Yii::app()->createUrl('visit/view'));
+			
         }
         $oldStatus = $model->visit_status;
 
@@ -407,7 +445,10 @@ class VisitController extends Controller {
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
 
         $visitCount    = Visit::model()->getVisitCount($model->id);
-
+      // echo '<pre>';
+	  // print_r($visitCount);
+	  // echo '</pre>';
+	  //Yii:: app()->end();
         $newPatient    = new Patient;
         $newHost       = new User;
 
@@ -420,18 +461,25 @@ class VisitController extends Controller {
         $hostModel = User::model()->findByPk($host);
         $errorMsg="";
 
+
         // Update visitor detail form (left column on visitor detail page )
         //this chunk of deals with: update card type, workstation, reason and visitor type as well
         if(isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visit'])) 
         {
+		   
             if((isset($model->visit_status)) && ($model->visit_status != "") && ($model->visit_status == VisitStatus::ACTIVE))
             {
+				
                 $errorMsg="Card type can not be updated whilst visit is active.";
                 //card type cannot be updated for Active Visit whereas other fields on left column can be updated
                 if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != "") {$visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];}
-
+					
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
-                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {$model->reason = $_POST['Visit']['reason'];}
+                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") {
+					
+					$model->reason = $_POST['Visit']['reason'];
+					
+					}
                 if (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != "") {$model->visitor_type = $_POST['Visit']['visitor_type'];}
                 if(!isset($model->visit_status) || $model->visit_status == ""){$model->visit_status = $oldStatus;}
                 
@@ -452,13 +500,27 @@ class VisitController extends Controller {
             
                 if (isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") {$model->card_type = $_POST['Visit']['card_type'];}
                 if (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") {$model->workstation = $_POST['Visit']['workstation'];}
-                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != ""){if($_POST['Visit']['reason'] == "Other"){$model->reason = NULL;}else{$model->reason = $_POST['Visit']['reason'];}}
+                if (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != ""){
+					if($_POST['Visit']['reason'] == "Other"){
+						//echo "<pre>";
+						//print_r($_POST);
+						//echo "</pre>";
+						//Yii::app()->end();
+						$model->reason = NULL;
+						}
+						else{
+							
+							$model->reason =$_POST['Visit']['reason'] ;
+						
+							}
+							}
                 if (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != "") {$model->visitor_type = $_POST['Visit']['visitor_type'];}
                 if(!isset($model->visit_status) || $model->visit_status == ""){$model->visit_status = $oldStatus;}
                 
                 if ((isset($_POST['Visit']['card_type']) && $_POST['Visit']['card_type'] != "") || (isset($_POST['Visit']['workstation']) && $_POST['Visit']['workstation'] != "") || (isset($_POST['Visit']['reason']) && $_POST['Visit']['reason'] != "") || (isset($_POST['Visit']['visitor_type']) && $_POST['Visit']['visitor_type'] != ""))
-                {
+                {	
                     $model->save();
+					
                 } 
 
                 if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != "") 
@@ -471,18 +533,74 @@ class VisitController extends Controller {
         //this chunk of code deals with visitor card status on the left column on visit detail page
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) 
         {
+			
+			
             $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
+			
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
             if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
                 $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
             }
+			
+			if(isset($_POST['ASIC'])&& $_POST['ASIC']['asic_exp']!=$_POST['ASIC']['asic_expiry'])
+			{
+				//echo '<pre>';
+				//print_r($_POST);
+				//echo '</pre>';
+				//Yii:: app()->end();
+				$ifCheck=0;
+				$asic = $model->getAsicSponsor();
+				if($asic->asic_no!=$_POST['ASIC']['asic_no'])
+				{
+					$asic->asic_no=$_POST['ASIC']['asic_no'];
+					$ifCheck=1;
+				}
+				if($asic->asic_expiry!=date("Y-m-d", strtotime(str_replace('/', '-',$_POST['ASIC']['asic_expiry']))))
+				{
+					$asic->asic_expiry=date("Y-m-d", strtotime(str_replace('/', '-',$_POST['ASIC']['asic_expiry'])));
+					$ifCheck=1;
+				}
+				if($ifCheck==1)
+				{
+					$asic->visitor_card_status=Visitor::ASIC_ISSUED;
+					$asic->profile_type='ASIC';
+					$asic->save(false);
+				}
+				
+				
+			//echo "<pre>";
+			//print_r($asic);
+			//echo "</pre>";
+			//Yii::app()->end();
+			}
+				
+				if(isset($_POST['ASIC']))
+				{
+				if($_POST['ASIC']['date_of_birth']!=null && isset($_POST['ASIC']['date_of_birth']))
+				{
+					$asic = $model->getAsicSponsor();
+					$asic->date_of_birth=$_POST['ASIC']['date_of_birth'];
+					$asic->visitor_card_status=Visitor::ASIC_ISSUED;
+					$asic->profile_type='ASIC';
+					$asic->save(false);
+				}
+				}
             /**
              * If Visit status = Auto Closed and Operator Manually Set cardStatus to ASIC PENDING 
              * Then Imemdialty Closed this visit
              */
             $this->closedAsicPending($model, $visitorModel);
-            $visitorModel->scenario = 'updateVic';
-
+            if($visitorModel->profile_type=='ASIC')
+			{
+				$visitorModel->scenario = 'updateAsic';
+			}
+			else
+			$visitorModel->scenario = 'updateVic';
+			//$visitorModel->save();
+			/* echo "<pre>";
+			 print_r($visitorModel);
+			 echo "</pre>";
+			Yii::app()->end();*/
             if ($visitorModel->save()) 
             {
                 // If visitor card status is VIC ASIC Issued then add new card status convert
@@ -505,6 +623,7 @@ class VisitController extends Controller {
         #update Visitor and Host form ( middle column on visitor detail page )
         if (isset($_POST['updateVisitorInfo'])) 
         {
+			
             // Change date formate from d-m-Y to Y-m-d
             if (!empty($this->date_of_birth)) 
                 $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
@@ -530,6 +649,7 @@ class VisitController extends Controller {
             }
 
             if (isset($_POST['Escort'])) {
+
                 $escortParams = Yii::app()->request->getPost('Escort');
                 $escortModel  = Visitor::model()->findByPk($escortParams['id']);
 
@@ -544,6 +664,7 @@ class VisitController extends Controller {
 
             if (isset($_POST['Company'])) 
             {
+
                 $companyParams = Yii::app()->request->getPost('Company');
                 // If visitor has company id then save / continue
                 if (!empty($visitorModel->company)) 
@@ -613,6 +734,8 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit']) && !isset($_POST['updateVisitorDetailForm'])) 
         {
+			
+			
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
 
@@ -626,22 +749,25 @@ class VisitController extends Controller {
 
             // If operator select other reason then save new one
             if (isset($_POST['VisitReason'])) {
+				$oldReason=$model->reason;
                 $visitReasonModel             = new VisitReason;
                 $visitReasonService           = new VisitReasonServiceImpl;
                 $visitReasonParams            = Yii::app()->request->getPost('VisitReason');
                 $visitReasonModel->attributes = $visitReasonParams;
                 $newReasonID = $visitReasonService->save($visitReasonModel, $session['id']);
                 if (!$newReasonID) {
-                    $model->reason = NULL;
+                    $model->reason = $oldReason;
                 }  else {
                     $model->reason = $newReasonID;
                 }
             }else{
-                $model->reason = (isset($_POST['Visit']['reason']) && ($_POST['Visit']['reason'] != "")) ? $_POST['Visit']['reason'] : NULL;
+                //$model->reason = (isset($_POST['Visit']['reason']) && ($_POST['Visit']['reason'] != "")) ? $_POST['Visit']['reason'] : NULL;
             }
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
                 // Date  visit CLOSED by operator
+				//echo "umair";
+				//Yii:: app()->end();
                 $model->visit_closed_date = date("Y-m-d");
                 $model->closed_by = Yii::app()->user->id;
                 $model->visit_status = VisitStatus::CLOSED;
@@ -663,7 +789,8 @@ class VisitController extends Controller {
                 }
 
             }
-                    
+             
+       
             // save visit model
             if ($model->save())
             {
@@ -675,11 +802,12 @@ class VisitController extends Controller {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
             } else {
-              
-                $model->visit_status = $oldStatus;
+         
+              $model->visit_status = $oldStatus;
+				
             }
         }
-
+		
         //introduced because of https://ids-jira.atlassian.net/browse/CAVMS-1241, 1242 and 1243
         $totalVisit = 0;
         $remainingDays = 0;
@@ -690,22 +818,25 @@ class VisitController extends Controller {
             'is_deleted' => 0,
             'visit_status' => VisitStatus::CLOSED
         ]);
-        foreach($closedVisits as $visit) {
+	 foreach($closedVisits as $visit) {
             $totalVisit += $visit->visitCounts;
-        }
+        } 
+
         if($totalVisit > 28 ) {
             $totalVisit = 28;
         } 
         $remainingDays = 28 - $totalVisit;
-        
+ 
         // Get visit count and remaining days
-        //$visitCount['totalVisits'] = $model->visitCounts;
+       // $visitCount['totalVisits'] = $model->visitCounts;
         //$visitCount['remainingDays'] = $model->remainingDays;
 
-        $visitCount['totalVisits'] = $totalVisit;
+       $visitCount['totalVisits'] = $totalVisit;
         $visitCount['remainingDays'] = $remainingDays;
+	
 
         $model->beforeShowDetail($visitCount);
+		
 
         $this->render('visitordetail', array(
             'model'         => $model,
@@ -875,7 +1006,55 @@ class VisitController extends Controller {
     public function actionVicTotalVisitCount() 
     {
         $merge = new CDbCriteria;
+        $merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_VIC ."' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."' "); //12/10/2017
+
+        $model = new Visitor('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor'])) {
+            $model->attributes = $_GET['Visitor'];
+        }
+		 if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVicVisitCount();
+            Yii::app()->end();
+        }
+		//echo "<pre>";
+		//var_dump($model->attributes);
+		//echo "</pre>";
+		//Yii::app()->end();
+        $this->render('vicTotalVisitCount', array(
+            'model' => $model, 'merge' => $merge, false, true
+        ));
+    }
+	 public function actionExportFileVicTotalCount()
+    {
+        Yii::app()->request->sendFile('VisitCount_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	    public function actionExportVicVisitCount() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'company0.name' => 'Company Name',
+			'totalVisit'=>'Total Visits',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = Visitor::model()->getAttributeLabel($header);
+        }
+        fputcsv($fp, $row);
+        /*
+         * Init dataProvider for first page
+         */
+        $merge = new CDbCriteria;
         $merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
+		//$merge->addCondition("company0.code = '".Yii::app()->user->tenant."'");
+		
 
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -883,11 +1062,49 @@ class VisitController extends Controller {
             $model->attributes = $_GET['Visitor'];
         }
 
-        $this->render('vicTotalVisitCount', array(
-            'model' => $model, 'merge' => $merge, false, true
-        ));
-    }
+        $dp = $model->search($merge);
 
+        /*
+         * Get models, write to a file, then change page and re-init DataProvider
+         * with next page and repeat writing again
+         */
+        $dp->setPagination(false);
+
+        /*
+         * Get models, write to a file
+         */
+
+        $models = $dp->getData();
+        foreach ($models as $model) {
+            $row = array();
+            foreach ($headers as $head => $title) {
+				
+				if($title=='Total Visits')
+				{
+				if((CHtml::value($model, $head))==null)
+				{
+					$row[] = '0';
+				}
+				else
+				{
+					$row[] = CHtml::value($model, $head);
+				}
+				}
+				else
+				{
+				$row[] = CHtml::value($model, $head);
+				}
+			}
+            fputcsv($fp, $row);
+        }
+
+        /*
+         * save csv content to a Session
+         */
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
     public function actionVicRegister() 
     {
         $merge = new CDbCriteria;
@@ -1070,7 +1287,7 @@ class VisitController extends Controller {
         ));
     }
 
-    public function actionExportVisitorRecordsCSV() {
+        public function actionExportVisitorRecordsCSV() {
         $fp = fopen('php://temp', 'w');
 
         /*
@@ -1085,7 +1302,8 @@ class VisitController extends Controller {
             'date_check_out',
             'time_check_out', 
             'company0.name',  
-            'visitor0.position',  
+            //'visitor0.position',  
+			'reason0.reason',
             'card0.card_number',
             'card0.date_printed',
             'card0.date_expiration',  
@@ -1096,6 +1314,10 @@ class VisitController extends Controller {
         foreach ($headers as $header) {
             $row[] = Visit::model()->getAttributeLabel($header);
         }
+			//echo "<pre>";
+			//var_dump($row);
+			//echo "</pre>";
+			//Yii::app()->end();
         fputcsv($fp, $row);
 
         /*
@@ -1124,11 +1346,18 @@ class VisitController extends Controller {
         foreach ($models as $model) {
             $row = array();
             foreach ($headers as $head) {
+				$model['time_check_in']=date("g:i a", strtotime($model['time_check_in']));
+				$model['time_check_out']=date("g:i a", strtotime($model['time_check_out']));
                 $row[] = CHtml::value($model, $head);
             }
             fputcsv($fp, $row);
+		  // echo "<pre>";
+			//print_r($model['time_check_out']);
+			//echo "</pre>";
+			
+		   
         }
-
+	//Yii::app()->end();
         /*
          * save csv content to a Session
          */
@@ -1136,7 +1365,6 @@ class VisitController extends Controller {
         Yii::app()->user->setState('export', stream_get_contents($fp));
         fclose($fp);
     }
-
     public function actionExportFileVisitorRecords() {
         Yii::app()->request->sendFile('Visit History_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
@@ -1210,7 +1438,8 @@ class VisitController extends Controller {
         //update date checkout in case card 24h
         if (!empty($model) && empty($model->date_check_out)) {
             switch ($model->card_type) {
-                case CardType::VIC_CARD_SAMEDATE:
+                 case CardType::VIC_CARD_SAMEDATE:
+                case CardType::TEMPORARY_ASIC: //12/10/2017
                     $model->date_check_out = date('Y-m-d');
                     $model->time_check_out = $model->time_check_in;
                     break;
@@ -1338,7 +1567,7 @@ class VisitController extends Controller {
                 $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
                 $resetHistory->reset_time = date("Y-m-d H:i:s");
                 $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
-                $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
+                $resetHistory->lodgement_date = date('Y-m-d',strtotime(Yii::app()->getRequest()->getQuery('lodgementDate')));
                 $visitorModel->visitor_card_status = 3;
                 $visitorModel->save();
 
@@ -1371,7 +1600,7 @@ class VisitController extends Controller {
         Yii::app()->request->sendFile('VicRegister_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
-
+	
     public function actionExportVicRegister() {
         $fp = fopen('php://temp', 'w');
 
@@ -1381,7 +1610,7 @@ class VisitController extends Controller {
         $headers = array(
             'id' => 'ID',
             'card0.card_number' => 'Card Number',
-            'company0.code' => 'Airport Code',
+            'company1.code' => 'Airport Code',
             'visitor0.first_name' => 'First Name',
             'visitor0.last_name' => 'Last Name',
             'visitor0.date_of_birth' => 'Date of Birthday',
@@ -1397,14 +1626,15 @@ class VisitController extends Controller {
             'company0.name' => 'Company Name',
             'company0.email_address' => 'Contact Email',
             'company0.mobile_number' => 'Contact Phone',
-            'finish_date' => 'Date of Issue',
-            'card_returned_date' => 'Date of Return',
+            'date_check_in' => 'Date of Issue',
+            'date_check_out' => 'Date of Return',
             'visitor0.identification_type' => 'Document Type',
             'visitor0.identification_document_no' => 'Number',
             'visitor0.identification_document_expiry' => 'Expiry',
-            'visitor0.asic_no' => 'ASIC ID Number',
-            'visitor0.asic_expiry' => 'ASIC Expiry',
-            'workstation0.name' => 'Workstation'
+            'visitor1.asic_no' => 'ASIC ID Number',
+            'visitor1.asic_expiry' => 'ASIC Expiry',
+            'workstation0.name' => 'Workstation',
+			'user0.email'=>'Issuer Email'
         );
         $row = array();
         foreach ($headers as $header) {
@@ -1416,6 +1646,8 @@ class VisitController extends Controller {
          */
         $merge = new CDbCriteria;
         $merge->addCondition("visitor0.profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
+		//$merge->addCondition("company0.code = '".Yii::app()->user->tenant."'");
+		
 
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -1439,16 +1671,49 @@ class VisitController extends Controller {
         foreach ($models as $model) {
             $row = array();
             foreach ($headers as $head => $title) {
+				if($head=='company0.contact' && $model->visitor0->staff_id!='' && $model->visitor0->staff_id!=null)
+				{
+				$contact=User::model()->findByPk($model->visitor0->staff_id);
+				$fullname=$contact->first_name.' '.$contact->last_name;
+				$model->company0->contact=$fullname;
+				$model->company0->email_address=$contact->email;
+				$model->company0->mobile_number=$contact->contact_number;
+				}
+				if($head=='reason0.reason'  && $model->reason==null && $model->visit_reason!=null)
+				{
+					$reason=new VisitReason();
+					$exist=$reason->exists("( reason = '{$model->visit_reason}' AND tenant='{$model->tenant}')");
+					if($exist)
+					{
+						
+						$model->reason=$reason->find("( reason = '{$model->visit_reason}' AND tenant='{$model->tenant}')")->id;
+						$model->save(false);
+					}
+					else
+					{
+						$reason->reason=$model->visit_reason;
+						$reason->tenant=$model->tenant;
+						$reason->created_by=$model->created_by;
+						$reason->is_deleted=0;
+						$reason->module='AVMS';
+						$reason->save(false);
+						$model->reason=$reason->id;
+						$model->save(false);
+						//Yii::app()->end();
+					}
+					
+				}
                 $row[] = CHtml::value($model, $head);
             }
             fputcsv($fp, $row);
         }
-
+				//print_r($row);
+				//Yii::app()->end();
         /*
          * save csv content to a Session
          */
         rewind($fp);
-        Yii::app()->user->setState('export', stream_get_contents($fp));
+       Yii::app()->user->setState('export', stream_get_contents($fp));
         fclose($fp);
     }
 
@@ -1464,7 +1729,7 @@ class VisitController extends Controller {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
             
-            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d  H:i:s")."' ) AND ";
+            $dateCondition = "( v.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d  H:i:s")."' ) AND ";
             
             //OTHER PERSON CODE FIXED---THE CODE SHOULD BE LIKE THAT AS JULIE WANTS TOTAL VICs VISITORS BY WORKSTATIONS OF CURRENT USER
             //COMMENETED CODE IS OF THAT PERSON CODE
@@ -1478,24 +1743,25 @@ class VisitController extends Controller {
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
 
-            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
+            $dateCondition .="(visitors.tenant=".Yii::app()->user->tenant.") AND ";
             //show curren logged in user Workstations
-            $allWorkstations = Workstation::model()->findAll("created_by = " . Yii::app()->user->id . " AND is_deleted = 0");
+            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
         }else{
             //show all work stations to SUPERADMIN
             $allWorkstations = Workstation::model()->findAll();
         }
         
-        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
+        $dateCondition .= "(t.is_deleted = 0) AND (v.is_deleted = 0) AND (v.profile_type='VIC')";
         
         //$dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->tenant.')';
-        
+        //$wherecondition=$dateCondition.$allWorkstations;
         //count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId
         $visitsCount = Yii::app()->db->createCommand()
             ->select('count(visitors.id) as visitors, t.id, t.name, t.id as workstationId')
             //->select('count(visitors.id) as visitors, convert(varchar(10), visitors.date_created, 120) AS date_check_in, t.id, t.name, t.id as workstationId')
             ->from('workstation t')
-            ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
+            ->join('visit visitors' , 't.id = visitors.workstation AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
+			->join('visitor v' , 'v.id = visitors.visitor AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
             ->where($dateCondition)
             ->group('t.id, t.name')
             ->queryAll();
@@ -1517,10 +1783,82 @@ class VisitController extends Controller {
                 array_push($otherWorkstations, $workstation);
             }
         }
+		 if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVicWorkstations();
+            Yii::app()->end();
+        }
 
         $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount, "otherWorkstations" => $otherWorkstations));
     }
+	 public function actionExportFileVicWorkstation()
+    {
+        Yii::app()->request->sendFile('WorkstationsVIC_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+	  public function actionExportVicWorkstations() {
+        $fp = fopen('php://temp', 'w');
 
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+           'Workstation Name'=>'Workstations',
+			'Total Vics'=>'Vics Total Count',
+            
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = $header;
+        }
+        fputcsv($fp, $row);
+		
+		 $dateCondition='';
+		 $allWorkstations='';
+		  if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+        $dateCondition .="(v.tenant=".Yii::app()->user->tenant.") AND ";
+            //show curren logged in user Workstations
+            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+        }else{
+            //show all work stations to SUPERADMIN
+            $allWorkstations = Workstation::model()->findAll();
+        }
+        
+         $dateCondition .= "(t.is_deleted = 0) AND (v.is_deleted = 0) AND (v.profile_type='VIC')";
+        
+        $visitsCount = Yii::app()->db->createCommand()
+            ->select('count(visitors.id) as visitors, t.id, t.name, t.id as workstationId')
+            ->from('workstation t')
+           ->join('visit visitors' , 't.id = visitors.workstation AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
+			->join('visitor v' , 'v.id = visitors.visitor AND (visitors.is_deleted = 0 AND visitors.tenant ='.Yii::app()->user->tenant .')')
+            ->where($dateCondition)
+            ->group('t.id, t.name')
+			->queryAll();
+        $otherWorkstations = array();
+		
+        foreach ($allWorkstations as $workstation) {
+			$row=array();
+			$row[0]=$workstation['name'];
+			$i=0;
+            foreach($visitsCount as $visit) {
+				
+			if($visit['workstationId'] ==  $workstation['id']) {
+					$row[1]=$visit['visitors'];
+					$i=1;
+				}
+              if($i!=1)
+			  {
+				  $row[1]='0';
+			  }
+			 
+            }
+		
+			fputcsv($fp, $row);
+        }
+		
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
     public function actionImportVisitData()
     {
         set_time_limit(0);

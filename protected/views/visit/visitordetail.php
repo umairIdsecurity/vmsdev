@@ -44,7 +44,7 @@ if(!$hostModel) $hostModel = Visitor::model();
 
     <tr>
         <td style="padding:5px;text-align: center;">
-            <?php
+           <?php
             $this->renderPartial('visitor-detail-card', array(
                 'model'         => $model,
                 'visitorModel'  => $visitorModel,
@@ -454,7 +454,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             $('#update-visitor-detail-form').submit();
         }
 
-        visitForm = visitForm + '&asic_sponsor_id=' + $("#asic_sponsor_id").val() + '&asic_no=' + $("#ASIC_asic_no").val() + '&asic_expiry=' + $("#ASIC_asic_expiry").val();
+       visitForm = visitForm + '&asic_sponsor_id=' + $("#asic_sponsor_id").val() + '&asic_no=' + $("#ASIC_asic_no").val() + '&asic_expiry=' + $("#ASIC_asic_expiry").val()+'&reason='+$('#Visit_reason').val();
 
         $.ajax({
             type: "POST",
@@ -462,6 +462,7 @@ $this->renderPartial('visithistory', array('model' => $model,
 
             data: visitForm,
             success: function(data) {
+				
                 $("#preregisterLi").hide();
                 $("#activateLi").hide();
                 $("#closevisitLi").show();
@@ -472,8 +473,9 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $(".visitStatusLi li a span").css('color', '#9BD62C !important');
 
                 sendCardForm();
+				//alert('umair');
 
-                //alert("Visit is now activated. You can now print the visitor badge.");
+                //alert(data);
                 //window.location = "<?php //echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
             }
         });
@@ -509,9 +511,11 @@ $this->renderPartial('visithistory', array('model' => $model,
                 window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
             }
         });
+		//alert("here");
     }
 
     function sendCancelVisit() {
+		//alert("Yuppiii");
         var visitForm = $("#cancel-visit-form").serialize();
         $.ajax({
             type: "POST",

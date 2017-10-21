@@ -57,13 +57,15 @@ class Mandrill {
     );
 
     public function __construct($apikey=null) {
-        if(!$apikey) $apikey = getenv('xGhIkU4ARFsL3ODfELw7XA');
+        if(!$apikey) $apikey = getenv('qFr4QNc7JIypUf3ty8qqMw');
         if(!$apikey) $apikey = $this->readConfigs();
         if(!$apikey) throw new Mandrill_Error('You must provide a Mandrill API key');
         $this->apikey = $apikey;
 
         $this->ch = curl_init();
-        curl_setopt($this->ch, CURLOPT_USERAGENT, 'Mandrill-PHP/1.0.54');
+		curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($this->ch, CURLOPT_USERAGENT, 'Mandrill-PHP/1.0.55');
         curl_setopt($this->ch, CURLOPT_POST, true);
         @curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($this->ch, CURLOPT_HEADER, false);

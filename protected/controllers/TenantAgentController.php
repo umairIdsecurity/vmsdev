@@ -58,9 +58,18 @@ class TenantAgentController extends Controller
 
         $model = new TenantAgent('search');
         $model->unsetAttributes();  // clear any default values
+			//$errors=$model->getErrors();
+			//echo "<pre>";
+			//print_r($errors);
+			//echo "</pre>";
+			//Yii::app()->end();
 
         if (isset($_GET['TenantAgent'])) {
             $model->attributes = $_GET['TenantAgent'];
+			//echo "<pre>";
+			//print_r($model->attributes);
+			//echo "</pre>";
+
         }
 
         $this->render('avmsadmin', array(
@@ -112,6 +121,7 @@ class TenantAgentController extends Controller
 
             // create some models
             $companyModel = new Company;
+			$companyModel->scenario="tenant_agent";
             $userModel = new User;
             $tenantAgent = new TenantAgent;
             $agentContact = new TenantAgentContact;
@@ -154,6 +164,7 @@ class TenantAgentController extends Controller
 
     function createCompany(&$companyModel)
     {
+		$companyModel->scenario="tenant_agent";	
         $companyModel->company_type = 2; // tenant Agent company type
         $companyModel->name = $_POST['TenantForm']['tenant_agent_name'];
         $companyModel->tenant = $_POST['TenantForm']['tenant_name']; // Its an ID actually
@@ -279,6 +290,7 @@ class TenantAgentController extends Controller
         if (isset($_POST['TenantForm'])) {
             // Save Updated Data
             $company = Company::model()->findByPk($model->id);
+			$company->scenario="update_tenant_agent";
             $company->tenant = $_POST['TenantForm']['tenant_name'];
             $company->name = $_POST['TenantForm']['tenant_agent_name'];
             $company->save(false); // Dont validate as we have already Validated it.

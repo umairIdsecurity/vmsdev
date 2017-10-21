@@ -1,5 +1,6 @@
 
 <h1> Conversion of Total VICs to ASIC </h1>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete'));?>
 <!-- Filter Form -->
 <div class="form-inline">
     <?php
@@ -42,7 +43,28 @@
 
     <?php $this->endWidget();?>
 </div>
+<script>
+		
+        $('#export-button').on('click', function() {
+            $.ajax({
+                url: "<?php echo Yii::app()->createUrl('reports/conversionVicToAsic'); ?>",
+                type: 'GET',
+               // dataType: 'json',
+                data: 'export=true',
+                success: function () 
+                {
+					 window.location = '<?php echo $this->createUrl('exportFileVicToAsic');?>';
+                },
+                error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
 
+            });
+        });
+       
+	</script>
 
 <?php
 

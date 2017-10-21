@@ -108,7 +108,109 @@ class User extends VmsActiveRecord {
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules() {
+	  public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+
+        if (Yii::app()->controller->action->id == 'delete'){
+            return array();
+        }
+
+        if($this->scenario == 'add_company_contact') {
+            return array(
+
+                array('first_name, last_name, email, contact_number, company', 'required', 'message'=>'Please complete {attribute}'),
+
+                    array('email','unique',
+                        'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1',
+                            'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant']))),
+
+                    array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+
+                    array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration', 'message'=>'Please complete {attribute}'),
+                
+            );
+			
+        }
+
+
+        if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
+			/*if ($this->scenario=='add_contact_log')
+			{
+				return();
+			}*/
+			
+            return array(
+                array('first_name, last_name, email, contact_number, user_type, tenant', 'required', 'message'=>'Please complete {attribute}'),
+                array('tenant_agent','UserRoleTenantAgentValidator'),
+                array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
+                array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,password,birthdayDay', 'safe'),
+                array('email', 'filter', 'filter' => 'trim'),
+                array('email', 'EmailCustom'),
+                array('email','unique',
+                                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1 AND company=:companyid',
+                                    'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant'],':companyid'=>$this->company)),'except'=>array("company_contact_update","addCompany_log","company_contact","company_contact_update1")),
+                array('role,company', 'required', 'message' => 'Please complete {attribute}'),
+                array('tenant, tenant_agent, photo', 'default', 'setOnEmpty' => true, 'value' => null),
+                array('asic_no, asic_expiry', 'AvmsFields'),
+
+
+                // The following rule is used by search().
+                // @todo Please remove those attributes that should not be searched.
+                array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, '
+                        .'company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by'
+                        , 'safe', 'on' => 'search'),
+				
+		        array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
+
+                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration', 'message'=>'Please complete {attribute}'),
+                
+            );
+			
+        } else {
+			/*if ($this->scenario=='add_contact_log')
+			{
+				return();
+			}*/
+			
+            return array(
+                array("first_name, last_name, email, contact_number, user_type,is_deleted, tenant", 'required', 'message'=>'Please complete {attribute}'),
+                array('password', 'PasswordCustom'),
+                array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
+                array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+                array(' notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
+
+                array('role', 'required', 'message' => 'Please complete {attribute}'),
+                array('tenant, tenant_agent, photo','default', 'setOnEmpty' => true, 'value' => null),
+                array('asic_no, asic_expiry', 'AvmsFields'),
+                array('tenant_agent','UserRoleTenantAgentValidator'),
+
+                array('asic_no, asic_expiry, first_name, last_name,  date_of_birth, email, contact_number, user_type,is_deleted', 'required', 'on'=>'add_sponsor', 'message'=>'Please complete {attribute}'),
+
+                array('email', 'filter', 'filter' => 'trim'),
+                array('email', 'EmailCustom'),
+                 array('email','unique',
+                                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1 AND company=:companyid',
+                                    'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant'],':companyid'=> $this->company)),'except'=>array("company_contact_update","addCompany_log","company_contact","company_contact_update1")),
+
+                // The following rule is used by search().
+                // @todo Please remove those attributes that should not be searched.
+                array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, '
+                        .'date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, '
+                        .'user_status_id, created_by', 'safe', 'on' => 'search'),
+				
+		        array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
+
+                array('asic_no, asic_expiry, company', 'required', 'on'=>'preregistration', 'message'=>'Please complete {attribute}'),
+               
+            );
+			
+        }
+    }
+
+	 //old function changed on 19/10/2016
+   /* public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
 
@@ -195,7 +297,7 @@ class User extends VmsActiveRecord {
                
             );
         }
-    }
+    }*/
 
 
     /**
@@ -204,7 +306,10 @@ class User extends VmsActiveRecord {
 
     public function avms_user()
     {
-        $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .") ";
+		//$Criteria = new CDbCriteria();
+		//$Criteria->condition = "role.id in (".implode(",",Roles::get_avms_roles()) .")";
+		
+        $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .")";
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
             'with' => 'role',
@@ -286,7 +391,7 @@ class User extends VmsActiveRecord {
             'last_name' => 'Last Name',
             'email' => 'Email Address',
             'contact_number' => 'Contact No.',
-            'date_of_birth' => 'Date Of Birth',
+            'date_of_birth' => 'Date of Birth',
             'company' => 'Company Name',
             'department' => 'Department',
             'position' => 'Position',
@@ -302,6 +407,8 @@ class User extends VmsActiveRecord {
             'tenant_agent' => 'Tenant Agent',
             'repeatpassword' => 'Repeat Password',
 			 'photo' => 'Photo',
+			 'asic_expiry'=>'ASIC Expiry',
+			 'fullname'=>$this->fullName($this->id),
         );
     }
 
@@ -501,10 +608,10 @@ class User extends VmsActiveRecord {
     public function beforeDelete() {
         $visitExists = Visit::model()->exists("is_deleted = 0 and host =" . $this->id . "");
         $isTenant = Company::model()->exists("is_deleted = 0 and tenant =" . $this->id . "");
-        $userWorkstation = UserWorkstations::model()->exists("user_id = " . $this->id . "");
+        //$userWorkstation = UserWorkstations::model()->exists("user_id = " . $this->id . "");
         $visitorExists = Visitor::model()->exists("tenant = " . $this->id . " and is_deleted=0");
         $isTenantAgent = Company::model()->exists("tenant_agent = " . $this->id . " and is_deleted=0");
-        if ($visitExists || $isTenant || $userWorkstation || $visitorExists || $isTenantAgent) {
+        if ($visitExists || $isTenant || $visitorExists || $isTenantAgent) {
             return false;
         } else {
             $this->is_deleted = 1;
@@ -515,10 +622,24 @@ class User extends VmsActiveRecord {
     }
 
     public function beforeFind() {
+		if(Yii::app()->controller->action->id == 'admin')
+		{
         $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0";
-
-        $this->dbCriteria->mergeWith($criteria);
+        $criteria->condition = "";
+		$this->dbCriteria->mergeWith($criteria);
+		}
+		else if(Yii::app()->controller->action->id == 'activate')
+		{
+		$criteria = new CDbCriteria;
+        $criteria->condition = "";
+		$this->dbCriteria->mergeWith($criteria);
+		}
+		else
+		{
+		$criteria = new CDbCriteria;
+        $criteria->condition = "t.is_deleted=0";
+		$this->dbCriteria->mergeWith($criteria);
+		}
     }
 
     protected function afterValidate() {
@@ -562,6 +683,8 @@ class User extends VmsActiveRecord {
 
     public function getUserRole($user_role) {
 
+		//echo $user_role;
+		//Yii::app()->end();
         $search_array = User::$USER_ROLE_LIST;
         if (isset(User::$USER_ROLE_LIST[$user_role])) {
             return User::$USER_ROLE_LIST[$user_role];
@@ -742,14 +865,18 @@ class User extends VmsActiveRecord {
         return parent::afterFind();
     }
 
-    public function isEmailAddressUnique($email, $tenantId) {
+    public function isEmailAddressUnique($email, $tenantId,$tenantAgent) {
         $Criteria = new CDbCriteria();
         $session = new CHttpSession;
         if ($session['role'] == Roles::ROLE_SUPERADMIN) {
             $Criteria->condition = "email = '" . $email . "' and  is_deleted!=1";
-        }else if($tenantId!=''){
+        }else if($tenantId!='' && $tenantAgent==''){
             $Criteria->condition = "email = '" . $email . "' and tenant = " . $tenantId . " and is_deleted!=1";
-        } else {
+        } 
+		else if($tenantId!='' && $tenantAgent!=''){
+            $Criteria->condition = "email = '" . $email . "' and tenant = " . $tenantId . " and company=".$tenantAgent;
+        }
+		else {
             $Criteria->condition = "email = '" . $email . "' and tenant = " . $session["tenant"] . " and is_deleted!=1 and tenant!=1";
         }
 
@@ -779,6 +906,20 @@ class User extends VmsActiveRecord {
             );
         }
         return $aArray;
+    }
+	 public function fullName($createid) {
+        if ($createid != '') {
+            $model = $this->findByPk($createid);
+			//return 'debug';
+            if (!empty($model) && !empty($model->first_name)) {
+                return $model->first_name.$model->last_name;
+            } 
+			else {
+                return '-';
+            }
+        } else {
+            return '-';
+        }
     }
 
     public function findCompanyOfTenant($tenantId, $tenantAgentId) {
@@ -811,7 +952,13 @@ class User extends VmsActiveRecord {
 
     public function restorePassword($email)
     {
+	
         if($user = $this->findByAttributes(array('email' => $email))){
+			if (Yii::app()->controller->action->id == 'create' || Yii::app()->controller->action->id=='update')
+			{
+				return PasswordChangeRequest::model()->generateResetLinkCreate($user);
+			}
+			else
             return PasswordChangeRequest::model()->generateResetLink($user);
         } else {
             return "Email address does not exist in system.";

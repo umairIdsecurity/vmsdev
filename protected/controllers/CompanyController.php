@@ -22,7 +22,7 @@ class CompanyController extends Controller
     {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('ajaxTenantDefaultCardtype','GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact','getContacts', 'addContact', 'getContact','checkNameUnique'),
+                'actions' => array('ajaxTenantDefaultCardtype','GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact','getContacts','getCompanyId', 'addContact', 'getContact','checkNameUnique','mergeCompanyContacts','downloadFile'),
                 'users' => array('@'),
                 //'expression' => 'CHelper::check_module_authorization("CVMS")'
             ),
@@ -94,7 +94,7 @@ class CompanyController extends Controller
         //$this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = new Company;
-        
+        $userModel = new User();
         $model->scenario = 'company_contact';
 
         if (yii::app()->request->isAjaxRequest) {
@@ -120,15 +120,17 @@ class CompanyController extends Controller
         if (isset($_POST['Company'])) {
 
             $model->attributes = $_POST['Company'];
+			
             $model->contact = $model->user_first_name .' '.$model->user_last_name;
             $model->email_address = $model->user_email;
             $model->office_number = $model->user_contact_number;
             $model->mobile_number = $model->user_contact_number; 
             $model->trading_name = $model->name;  
             $model->company_type = 3; // visitor company type -- directed by savita
-
+			//echo "here";
+			//Yii::app()->end();
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
-
+					
                 if (isset($_POST['Company']['code'])) {
                     if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
                         if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
@@ -150,7 +152,7 @@ class CompanyController extends Controller
                         Yii::app()->user->setFlash('error', 'Company code has already been taken');
                     }
                 } else {
-
+						
                     if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) 
                     {
                         $lastId = $model->id;
@@ -173,10 +175,27 @@ class CompanyController extends Controller
                         $userModel->role = 9;
                         $userModel->company = $lastId;
                         $userModel->asic_no = 10;
-                        $userModel->asic_expiry_day = 10;
-                        $userModel->asic_expiry_month = 10;
-                        $userModel->asic_expiry_year = 15;
-                        $userModel->save(false);
+						   $fileName = CUploadedFile::getInstance($model, 'user_authorised_file');
+							if(!empty($fileName))  // check if uploaded file is set or not
+							{
+								if($userModel->authorised_file!='')
+							{
+								@unlink(Yii::app()->basePath . '/../uploads/files/asic_uploads/' . $userModel->authorised_file);
+							}
+							$newFileName = time() . '-' . Yii::app()->user->tenant . '_' . $fileName;
+							$userModel->authorised_file = $newFileName;
+							}
+                       // $userModel->asic_expiry_day = 10;
+                       // $userModel->asic_expiry_month = 10;
+                        //$userModel->asic_expiry_year = 15;
+                        if($userModel->save(false))
+						{
+							 if(!empty($fileName))  // check if uploaded file is set or not
+							{
+                            $path = Yii::app()->basePath . '/../uploads/files/asic_uploads/' . $userModel->authorised_file;
+                            $fileName->saveAs($path);
+							}
+						}
                         unset($_SESSION['is_field']);
 
                         $cs = Yii::app()->clientScript;
@@ -204,18 +223,21 @@ class CompanyController extends Controller
 
 
         $this->render('create', array(
-            'model' => $model
+            'model' => $model,
+			'userModel'=>$userModel
         ));
     }
 
     private function isCompanyUnique($sessionTenant, $sessionRole, $companyName, $selectedTenant)
     {
+		
         if ($sessionRole == Roles::ROLE_ADMIN) {
             $countCompany = Company::model()->isCompanyUniqueWithinTheTenant($companyName, $sessionTenant);
+			
         } else {
             $countCompany = Company::model()->isCompanyUniqueWithinTheTenant($companyName, $selectedTenant);
         }
-
+		
         return $countCompany;
     }
 
@@ -229,18 +251,25 @@ class CompanyController extends Controller
 
         return $countCompany;
     }
-
-    public function actionUpdate($id)
+	public function actionUpdate($id)
     {
         //$this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = $this->loadModel($id);
-        
+
+        if(isset($_GET['cid']))
+        {
+            $userModel = User::model()->findByPk($_GET['cid']);
+        }else{
+            $userModel = new User();
+        }
+
         if (isset($_POST['is_user_field']) && $_POST['is_user_field'] == 1) {
             $session['is_field'] = 1;
             $model->scenario = 'company_contact_update';
         } else {
             unset($_SESSION['is_field']);
+			$model->scenario='company_contact_update1';
         }
            if (yii::app()->request->isAjaxRequest) {
             $this->performAjaxValidation($model);
@@ -283,7 +312,6 @@ class CompanyController extends Controller
 
                 $model->attributes = $_POST['Company'];
                 if ($model->save()) {
-                    $userModel = new User;
 
                     $userModel->first_name = $_POST['Company']['user_first_name'];
                     $userModel->last_name = $_POST['Company']['user_last_name'];
@@ -294,13 +322,142 @@ class CompanyController extends Controller
                     $userModel->password = 12345;
                     $userModel->role = 10;
                     $userModel->company = $model->id;
-                    $userModel->asic_no = 10;
-                    $userModel->asic_expiry_day = 10;
-                    $userModel->asic_expiry_month = 10;
-                    $userModel->asic_expiry_year = 15;
-                    $userModel->save();
+                   // $userModel->asic_no = 10;
+					$userModel->tenant= Yii::app()->user->tenant;
+                   // $userModel->asic_expiry_day = 10;
+                    //$userModel->asic_expiry_month = 10;
+                    //$userModel->asic_expiry_year = 15;
 
+                    $fileName = CUploadedFile::getInstance($model, 'user_authorised_file');
+                    if(!empty($fileName))  // check if uploaded file is set or not
+                    {
+                        if($userModel->authorised_file!='')
+                        {
+                            @unlink(Yii::app()->basePath . '/../uploads/files/asic_uploads/' . $userModel->authorised_file);
+                        }
+                        $newFileName = time() . '-' . Yii::app()->user->tenant . '_' . $fileName;
+                        $userModel->authorised_file = $newFileName;
+                    }
+                    if ($userModel->save()) {
+                        if(!empty($fileName))  // check if uploaded file is set or not
+                        {
+                            $path = Yii::app()->basePath . '/../uploads/files/asic_uploads/' . $userModel->authorised_file;
+                            $fileName->saveAs($path);
+                        }
+                        // redirect to success page
+                        Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                    }
+
+					/*echo "<pre>";
+					print_r($userModel->getErrors());
+					echo "</pre>";
+					Yii::app()->end();*/
                     switch ($session['role']) {
+                        case Roles::ROLE_SUPERADMIN:
+                            $this->redirect(array('company/admin'));
+                            break;
+
+                        default:
+                            $rs = '';
+                    }
+                }
+
+
+            } else {
+                // Because of flash is a stack return back encountered error in order it can be displayed in the view
+                Yii::app()->user->setFlash('error', $errorFlashMessage);
+            }
+
+        }
+
+        $contacts = User::model()->findAll('company=:c', ['c' => $model->id]);
+
+
+        $this->render('update', array(
+            'model' => $model,
+            'contacts' => $contacts,
+			'userModel'=>$userModel
+        ));
+    }
+
+// old action changed by Muhammad Mudassar on 27/09/2017 AIS 299
+    /*public function actionUpdate($id)
+    {
+        //$this->layout = '//layouts/contentIframeLayout';
+        $session = new CHttpSession;
+        $model = $this->loadModel($id);
+		$userModel = new User;
+        
+        if (isset($_POST['is_user_field']) && $_POST['is_user_field'] == 1) {
+            $session['is_field'] = 1;
+            $model->scenario = 'company_contact_update';
+        } else {
+            unset($_SESSION['is_field']);
+			$model->scenario='company_contact_update1';
+        }
+           if (yii::app()->request->isAjaxRequest) {
+            $this->performAjaxValidation($model);
+        }*/
+
+        /*$userModel = User::model()->findByAttributes(
+            array('company' => $model->id)
+        );*/
+        /*if(!empty($userModel)){
+            $session['is_field']=1;
+            $model->user_first_name = $userModel->first_name;
+            $model->user_last_name = $userModel->last_name;
+            $model->user_email = $userModel->email;
+            $model->user_contact_number = $userModel->contact_number;
+        }*/
+
+        /*if (isset($_POST['user_role'])) {
+            $model->userRole = $_POST['user_role'];
+        }
+        $session = new CHttpSession;
+
+        if (isset($_POST['Company'])) {
+
+            if ($model->name != $_POST['Company']['name']) {
+
+                if (0 != $this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant_'])) {
+                    Yii::app()->user->setFlash('error', 'Company name has already been taken');
+                }
+            }
+
+            if (isset($_POST['Company']['code']) && $model->code != $_POST['Company']['code']) {
+
+                if (0 != $this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_'])) {
+                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
+                }
+            }
+            //$model->company_type = $_POST['Company']['company_type'];
+
+            if (is_null($errorFlashMessage = Yii::app()->user->getFlash('error'))) {
+
+                $model->attributes = $_POST['Company'];
+                if ($model->save()) {
+                    
+
+                    $userModel->first_name = $_POST['Company']['user_first_name'];
+                    $userModel->last_name = $_POST['Company']['user_last_name'];
+                    $userModel->email = $_POST['Company']['user_email'];
+                    $userModel->contact_number = $_POST['Company']['user_contact_number'];
+
+                    $userModel->user_type = 2;
+                    $userModel->password = 12345;
+                    $userModel->role = 10;
+                    $userModel->company = $model->id;
+                   // $userModel->asic_no = 10;
+					$userModel->tenant= Yii::app()->user->tenant;
+                   // $userModel->asic_expiry_day = 10;
+                    //$userModel->asic_expiry_month = 10;
+                    //$userModel->asic_expiry_year = 15;
+                    $userModel->save();*/
+					/*echo "<pre>";
+					print_r($userModel->getErrors());
+					echo "</pre>";
+					Yii::app()->end();*/
+                    /*switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:
                             $this->redirect(array('company/admin'));
                             break;
@@ -321,9 +478,10 @@ class CompanyController extends Controller
 
         $this->render('update', array(
             'model' => $model,
-            'contacts' => $contacts
+            'contacts' => $contacts,
+			'userModel'=>$userModel
         ));
-    }
+    }*/
 
     /**
      * Deletes a particular model.
@@ -439,6 +597,32 @@ class CompanyController extends Controller
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
+	public function actionMergeCompanyContacts() //Mudasar
+    {
+        //fetch company by unique name
+        $company = Company::model()->findByAttributes(array('name'=>$_POST['name']));
+
+        //fetch all company contacts
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "company = " . $_POST['cid'] . "";
+        $users = User::model()->findAll($Criteria);
+        foreach($users as $user):
+            User::model()->updateByPK($user['id'],
+                array(
+                    'company' => $company->id
+                )
+            );
+        endforeach;
+        //company set to delete
+        Company::model()->updateByPK($_POST['cid'],
+            array(
+                'is_deleted' => 1
+            )
+        );
+
+        echo $company->id;
+
+    }
 
     public function actionGetCompanyWithSameTenant($id)
     {
@@ -450,7 +634,177 @@ class CompanyController extends Controller
     /**
      * Add company contact from Visitor
      */
-    public function actionAddCompanyContact()
+  public function actionAddCompanyContact()
+    {
+        if (Yii::app()->request->isAjaxRequest) 
+        {
+			
+            $session = new CHttpSession;
+            $formInfo = $_POST['AddCompanyContactForm'];
+			
+			
+            //because of https://ids-jira.atlassian.net/browse/CAVMS-1221
+            /*if ($_POST['typePostForm'] === 'contact')
+            {
+                if(isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0){
+                    $company = Company::model()->findByPk($_POST['CompanySelectedId']);
+                } 
+                else {
+                    $companyId = $this->findIdByName($formInfo['companyName']);
+                    $company = Company::model()->findByPk($companyId);
+                }
+            } 
+            else 
+            {*/
+		   
+                $company = new Company('addCompany_log');
+				$company->name = $formInfo['companyName'];
+                $company->contact = $formInfo['firstName'] . ' ' . $formInfo['lastName'];
+                $company->email_address = $formInfo['email'];
+                $company->mobile_number = $formInfo['mobile'];
+                $company->tenant = $session['tenant'];
+                $company->company_type = substr($formInfo['companyType'],0,2);
+                //todo: update Company Code later
+                $company->code = strtoupper(substr($company->name, 0, 3));
+                $companyService = new CompanyServiceImpl();
+				if($company->validate())
+				{
+					//echo "validated";
+				$companyReturn=$companyService->save($company, $session['tenant'], $session['role'], 'addCompany');
+				$contact = new User('add_company_contact');
+                $contact->company = $company->id;
+			
+                $contact->first_name = $formInfo['firstName'];
+                $contact->last_name = $formInfo['lastName'];
+                $contact->email = $formInfo['email'];
+                $contact->contact_number = $formInfo['mobile'];
+                $contact->created_by = Yii::app()->user->id;
+
+                // Todo: temporary value for saving contact, will be update later
+                $contact->timezone_id = 1;
+                $contact->photo = 0;
+
+                // foreign keys // todo: need to check and change for HARD-CODE
+                $contact->tenant = $session['tenant'];
+                $contact->user_type = 1;
+                $contact->user_status = 1;
+                $contact->role = 9;
+				//$abc=json_encode($company);
+				//print_r($company);
+				//Yii::app()->end();
+				
+                if ($contact->save(false)) 
+                {
+					
+                    $options = [$contact->id, $contact->getFullName()];
+                    $contactDropDown = '<option value="' . $contact->id . '" >' . $contact->getFullName() . '</option>'; // seriously why is this here?
+                    if (isset($_POST['typePostForm']) && $_POST['typePostForm'] == 'company') {
+                        $id = $company->id;
+                    } 
+					else {
+                        $id = $contact->id;
+                    }
+                   $ret = array("id" => $id, "name" => $company->name, "contactDropDown" => $contactDropDown, 'type' => $_POST['typePostForm']);
+                   echo json_encode($ret);
+                    Yii::app()->end();
+                } 
+                else 
+                {
+                    $ret = array("errors" => $contact->errors);
+                    echo json_encode($ret);
+                    die("--DONE--");
+                    //Yii::app()->end();
+                    //print_r($contact->errors);
+                    //die("--DONE--");
+                }
+                }
+					
+					
+			else
+			{
+				//echo "not validated";
+				//echo $company->id;
+				//Yii::app()->end();
+		        //$ret = array("errors" => $company->errors);
+				$company = new Company('addCompany_log');
+				$company->name = $formInfo['companyName'];
+                $company->contact = $formInfo['firstName'] . ' ' . $formInfo['lastName'];
+                $company->email_address = $formInfo['email'];
+                $company->mobile_number = $formInfo['mobile'];
+                $company->tenant = $session['tenant'];
+                $company->company_type = substr($formInfo['companyType'],0,1);
+                //todo: update Company Code later
+                $company->code = strtoupper(substr($company->name, 0, 3));
+				$contact = new User('add_company_contact');
+                $contact->company = substr($formInfo['companyType'],1);
+			
+                $contact->first_name = $formInfo['firstName'];
+                $contact->last_name = $formInfo['lastName'];
+                $contact->email = $formInfo['email'];
+                $contact->contact_number = $formInfo['mobile'];
+                $contact->created_by = Yii::app()->user->id;
+
+                // Todo: temporary value for saving contact, will be update later
+                $contact->timezone_id = 1;
+                $contact->photo = 0;
+
+                // foreign keys // todo: need to check and change for HARD-CODE
+                $contact->tenant = $session['tenant'];
+                $contact->user_type = 2;
+                $contact->user_status = 1;
+                $contact->role = 9;
+				//$abc=json_encode($contact);
+				//print_r($company);
+				//Yii::app()->end();
+                if ($contact->save(false)) 
+                {
+					
+                    $options = [$contact->id, $contact->getFullName()];
+                    $contactDropDown = '<option value="' . $contact->id . '" >' . $contact->getFullName() . '</option>'; // seriously why is this here?
+                    if (isset($_POST['typePostForm']) && $_POST['typePostForm'] == 'company') {
+                        $id = $company->id;
+                    } 
+					else {
+                        $id = $contact->id;
+                    }
+                    $ret = array("id" => $id, "name" => $company->name, "contactDropDown" => $contactDropDown, 'type' => $_POST['typePostForm']);
+                    echo json_encode($ret);
+                    Yii::app()->end();
+                } 
+                else 
+                {
+                    $ret = array("errors" => $contact->errors);
+                    echo json_encode($ret);
+                    die("--DONE--");
+                    //Yii::app()->end();
+                    //print_r($contact->errors);
+                    //die("--DONE--");
+                }
+			}
+					
+				
+			    
+            // save contact into company
+            /*if (isset($company->id) && $company->id > 0) 
+            {*/
+          
+				//echo $company->id;
+				//Yii::app()->end();
+		        //$ret = array("errors" => $company->errors);
+				
+            
+			
+			
+			
+            //echo "0";
+            $ret = array("errors" => $company->errors);
+            echo json_encode($ret);
+            die("--DONE--");
+        }
+        Yii::app()->end();
+    }
+	//old version chnaged on 19/10/2016
+   /* public function actionAddCompanyContact()
     {
         if (Yii::app()->request->isAjaxRequest) 
         {
@@ -468,8 +822,8 @@ class CompanyController extends Controller
                     $company = Company::model()->findByPk($companyId);
                 }
             } 
-            else 
-            {*/
+            //else 
+            //{
                 $company = new Company();
 
                 $company->name = $formInfo['companyName'];
@@ -485,8 +839,8 @@ class CompanyController extends Controller
             //}
 
             // save contact into company
-            /*if (isset($company->id) && $company->id > 0) 
-            {*/
+            //if (isset($company->id) && $company->id > 0) 
+            {//
             if ($companyService->save($company, $session['tenant'], $session['role'], 'addCompany')) 
             {
                 $contact = new User('add_company_contact');
@@ -536,7 +890,7 @@ class CompanyController extends Controller
             die("--DONE--");
         }
         Yii::app()->end();
-    }
+    }*/
 
     /**
      * Receive ajax POST type request with one variable 
@@ -754,7 +1108,7 @@ class CompanyController extends Controller
             //when $_POST['id'] is not set or is empty
             //then "company=" is throwing error
             //Therefore, to avoid this, make it like "company=''"
-            $cond = "company = ".((isset($_POST['id']) && $_POST['id'] != "") ? $_POST['id'] : "''");
+            $cond = "company = ".((isset($_POST['id']) && $_POST['id'] != "") ? "'".$_POST['id']."'" : "''");
             $contacts = User::model()->findAll($cond);
 
             if ($contacts) {
@@ -768,6 +1122,31 @@ class CompanyController extends Controller
             } else { // company has no any contact
                 echo "0";
             }
+            Yii::app()->end();
+        }
+    }
+	 public function actionGetCompanyId()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            //this is because to avoid error as 
+            //when $_POST['id'] is not set or is empty
+            //then "company=" is throwing error
+            //Therefore, to avoid this, make it like "company=''"
+            $cond = "name = ".((isset($_POST['id']) && $_POST['id'] != "") ? "'".$_POST['id']."'" : "''")."AND tenant=".Yii::app()->user->tenant ;
+            $company = company::model()->findAll($cond);
+
+           /* if ($company) {
+                $staffIds = CHtml::dropDownList('Visitor[staff_id]', '', CHtml::listData($contacts, 'id',
+                    function ($contact) {
+                        return CHtml::encode($contact->getFullName());
+                    })
+                );
+                echo json_encode($staffIds);
+
+            } else { // company has no any contact
+                echo "0";
+            }*/
+			echo json_encode($company[0]->id);
             Yii::app()->end();
         }
     }
@@ -840,5 +1219,25 @@ class CompanyController extends Controller
         return array_search($name, $companyList);
     }
 
+	public function actionDownloadFile($id)
+    {
+        $user = User::model()->findByPk($id);
 
+        //CVarDumper::dump($user['authorised_file'],10,1);die;
+
+        $file = Yii::getPathOfAlias('webroot').'/uploads/files/asic_uploads/'.$user->authorised_file;
+		//echo $file;
+		//Yii::app()->end();
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            readfile($file);
+            exit;
+        }
+    }
 }

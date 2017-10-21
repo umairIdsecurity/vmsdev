@@ -86,6 +86,9 @@ $result = CMap::mergeArray(
 //                          'marges'      => array(0, 0, 0, 0), // margins by default, in order (left, top, right, bottom)
 //                          ),
                         )
+						/*'excel'=>array(
+							'class'=>'application.extensions.PHPExcel',
+						),*/
                     ),
                 ),
                 'foundation' => array("class" => "ext.foundation.components.Foundation"),
@@ -96,6 +99,9 @@ $result = CMap::mergeArray(
                         ),
                     ),
                 ),
+				'excel'=>array(
+							'class'=>'ext.PHPExcel',
+						),
                 'user' => array(
                     // enable cookie-based authentication
                     'allowAutoLogin' => true,
@@ -135,10 +141,11 @@ $result = CMap::mergeArray(
                     'class' => 'CLogRouter',
                     'routes' => array(
                         array(
-                            'class' => 'CFileLogRoute',
-                            'levels' => 'profile,console',
-                            'logFile' => 'console.profile_db.log',
-                            'categories' => 'system.db.CDbCommand.query'
+                            'class' => 'CProfileLogRoute',
+                            'levels' => 'profile',
+							'enabled' => false,
+                            //'logFile' => 'console.profile_db.log',
+                            //'categories' => 'system.db.CDbCommand.query'
                         ),
                         array(
                             'class' => 'CFileLogRoute',
@@ -158,7 +165,8 @@ $result = CMap::mergeArray(
             'params' => array(
                 // this is used in contact page
                 'photo_unique_filename' => 'test',
-                'mandrillApiKey' => '49tRGdzmJDhovnkkygttuQ',
+                'mandrillApiKey' => 'qFr4QNc7JIypUf3ty8qqMw',
+				'vmspr'=> 'vmsprdev-win.identitysecurity.info'
             ),
                 ), require(dirname(__FILE__) . '/environment.php')
 );

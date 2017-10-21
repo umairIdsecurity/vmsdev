@@ -51,15 +51,18 @@ $userRole = $session['role'];
             <?php
 			if($company!=null){
 				$id = @is_null($company->logo)?1:$company->logo;
-
+					
 				$photo = Photo::model()->findByPk($id);
 				if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
 					echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/ids-circle-logo.png', 'logo here', ['style' => 'height: 100px']), array('site/login'));
+					
 				} else {
 					?><img id='photoPreview' style="width: auto !important; height: 100px !important" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
 				}
 			} else {
 				echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/ids-circle-logo.png', 'logo here', ['style' => 'height: 100px']), array('site/login'));
+				echo CHtml::link('GO TO WEB PREREGISTRATION',"http://vmsprdev-win.identitysecurity.info", array('style'=>'top: 36px; right:100px;position: absolute;font-size:12px;text-decoration: underline;
+'));
 			}
 			?>
         </div>

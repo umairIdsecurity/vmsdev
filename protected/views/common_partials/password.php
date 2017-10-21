@@ -108,29 +108,48 @@ if (isset($company) && !empty($company)) {
 
 <!-- password-border -->
 <script>
+$( document ).ready(function() {
+   radiochooseval = $(parentElement() + "#radio2").val();
+    $(parentElement() + '#Visitor_password_option').val(radiochooseval);
+	if(radiochooseval==2)
+	{
+		$('input[value="2"]').prop('checked', true);
+	}
+		if(radiochooseval==1)
+	{
+		$('input[value="1"]').prop('checked', true);
+	}
+});
     function show_hide_password_fields(t) {
+
         if ($(t).val() == 2) {
             //because of CAVMS-1168
-            //$(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').show();
-        } else {
-            //$(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').hide();
-            /*$(parentElement() + ' .pass_option').each(function (i, v) {
+            $(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').show();
+			$(parentElement() + ' .pass_option').each(function (i, v) {
                 if ($(v).val() == 2) {
                     $(v).prop('checked', true);
                 } else {
                     $(v).prop('checked', false);
                 }
-            });*/
+            });
+        } else {
+            $(t).parent('span').parent('td').parent('tr').next('tr.show_password_fields').hide();
+            radiochooseval = "";
+			$(parentElement() + '#Visitor_password_option').val(radiochooseval);
         }
     }
-    var radiochooseval = "";
+    var radiochooseval = "2";
     function call_radio1() {
         radiochooseval = $(parentElement() + '#radio1').val();
         $(parentElement() + '#Visitor_password_option').val(radiochooseval);
+		//$(".radio2").prop("checked", true);
+		//alert(radiochooseval);
     }
     function call_radio2() {
         radiochooseval = $(parentElement() + "#radio2").val();
-        $(parentElement() + '#Visitor_password_option').val(radiochooseval);
+       $(parentElement() + '#Visitor_password_option').val(radiochooseval);
+		//alert(radiochooseval);
+		//$(".radio2").prop("checked", true);
     }
 
 

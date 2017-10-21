@@ -11,6 +11,7 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-sidebar
 $session = new ChttpSession;
 // Only show Allowed modules to tenant
 $module = CHelper::get_allowed_module();
+
 ?>
 <input type="hidden" value="<?php echo $session['role'] ?>" id="sessionRoleForSideBar">
 
@@ -253,7 +254,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php if($module == "AVMS" || $module == "Both") { ?>
             
              <!-- menu for Avms Tenant Agents -->
-            <li class='has-sub'><a  href='<?php echo Yii::app()->createUrl('tenantAgent/avmsagents'); ?>'><span>AVMS Tenant Agents</span></a>
+            <li class='has-sub'><a  href='<?php echo Yii::app()->createUrl('tenantAgent/avmsagents'); ?>'><span>Tenant Agents</span></a>
                 <ul <?php
                 if ($this->action->id == 'avmsagents') {
                     echo "style='display:block ;'";
@@ -261,14 +262,14 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                
                 ?>>
                     <?php  if( Yii::app()->user->role  == Roles::ROLE_SUPERADMIN) { ?>
-                    <li><a href='<?php echo Yii::app()->createUrl('tenantAgent/create&module=avms'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('tenantAgent', 'create');?>>Add AVMS Tenant Agent</span></a>
+                    <li><a href='<?php echo Yii::app()->createUrl('tenantAgent/create&module=avms'); ?>' class="addSubMenu"><span <?php CHelper::is_selected_submenu('tenantAgent', 'create');?>>Add Tenant Agent</span></a>
                     </li>
                 <?php } ?>    
                 </ul>
             </li>
             
             <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',
-                    array('vms' => 'avms')); ?>'><span>AVMS Users</span></a>
+                    array('vms' => 'avms')); ?>'><span>Users</span></a>
                 <ul <?php
                 if ($this->id == 'user' && CHelper::is_accessing_avms_features() && $this->action->id != 'systemaccessrules') {
                     echo "style='display:block ;'";
@@ -343,7 +344,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 <li class='has-sub'>
                     <a class='managevisitorrecords'
                        href='<?php echo Yii::app()->createUrl('user/systemaccessrules', array('vms' => 'avms')); ?>'>
-                        <span>AVMS Access Control</span>
+                        <span>Access Control</span>
                     </a>
                     <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules' && CHelper::is_avms_users_requested()) ? "style='display:block'" : "style='display:none'"; ?>>
                         <li>
@@ -353,19 +354,41 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </li>
             <?php } ?>
             <!-- menu for AVMS Users -->
+			<!--menu for Induction-->
+			<?php 
+                if ($session['role'] == Roles::ROLE_SUPERADMIN || 
+                        $session['role'] == Roles::ROLE_ADMIN || 
+                            $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN ) {
+            ?>
+            <li class='has-sub'>
+                    <?php echo CHtml::link('Induction', array('induction/admin'), array('class' => 'manageinductees')) ?>
+                <ul <?php
+                    if ($this->id == 'induction') {
+                        echo "style='display:block ;'";
+                    }
+                    ?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('induction/addInductee'); ?>'
+                               class="addSubMenu ajaxLinkLi"><span <?php CHelper::is_selected_submenu('induction', 'addinductee');?>>Add Inductee</span></a></li>					
+				</ul>
+            </li>   <!--End of menu for Induction-->
+        <?php } ?>
+			
             
             <!-- menu for AVMS Visitors -->
             <li class='has-sub'><a class='managevisitorrecords'
-                                   href='<?php echo Yii::app()->createUrl('visitor/admin', array('vms' => 'avms')); ?>'><span>AVMS Visitors</span></a>
+                                   href='<?php echo Yii::app()->createUrl('visitor/admin', array('vms' => 'avms')); ?>'><span>Visitors</span></a>
 
                 <ul <?php
                 if ( ( ($this->id == 'visitor' || $this->id == 'visitorType' || $this->id == 'visitReason') && Yii::app()->request->getParam('vms') == 'avms' )  || ($this->action->id == 'exportvisitorrecords' && Yii::app()->request->getParam('vms') == 'avms') || ($this->action->id == 'importVisitHistory' && Yii::app()->request->getParam('vms') == 'avms') ) {
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords', array('vms' => 'avms')); ?>'><span <?php CHelper::is_selected_submenu('visit', 'exportvisitorrecords');?>>Export Visit History</span></a></li>
+                   <!--<li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords', array('vms' => 'avms')); ?>'><span <?php CHelper::is_selected_submenu('visit', 'exportvisitorrecords');?>>Export Visit History</span></a></li>-->
+				   <li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
+                    
+                <a href='<?php echo Yii::app()->createUrl('visitor/addvisitor/&profile_type='.$profile); ?>' class=""><span>Add Visitor Profile</span></a></li>
                     <!-- Hide import Visit History for AVMS - CAVMS_1257 -->
-                    <!-- <li><a href='<?php //echo Yii::app()->createUrl('visitor/importVisitHistory', array('vms' => 'avms')); ?>'><span <?php //CHelper::is_selected_submenu('visitor', 'importVisitHistory');?>>Import Visit History</span></a></li> -->
+                     <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory', array('vms' => 'avms')); ?>'><span <?php CHelper::is_selected_submenu('visitor', 'importVisitHistory');?>>Import Visit History</span></a></li>
                     <?php if($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN){ ?>
                     <li>
                         <a class="managevisitortype addSubMenu" href='<?php echo Yii::app()->createUrl('visitorType/index', array('vms' => 'avms')); ?>'><span <?php CHelper::is_selected_submenu('visitorType', 'index');?>>Visitor Types</span></a>
@@ -391,7 +414,37 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
                 </ul>
             </li>   <!-- end menu for AVMS Visitors -->
+			<!-- Start menu for ASIC APPLICANTS -->
+			 <li class='has-sub'><a class='managevisitorrecords'
+                                   id='asicapplicants' href='<?php  echo Yii::app()->createUrl('asicApplicant/listApplicants');  ?>'><span>ASIC Applicants</span></a>
+
+                <ul id='asicul' <?php if ($this->action->id == 'listApplicants' || $this->action->id == 'lodgedApplicants' || $this->action->id == 'approvedApplicants' || $this->action->id == 'deniedApplicants') {
+                    echo "style='display:block ;'";
+                } ?>>
+                  
+				   <li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
+                    
+                <a target="_blank" href='<?php echo "http://vmsprdev-win.identitysecurity.info/index.php/preregistration/index?tenant=".Yii::app()->user->tenant; ?>' class=""><span>Add ASIC Applicant</span></a></li>
+				<li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
+                    
+                <a href='<?php  echo Yii::app()->createUrl('asicApplicant/listApplicants');  ?>' class=""><span>ASIC Applicants</span></a></li>
+				<li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
+                    
+                <a href='<?php  echo Yii::app()->createUrl('asicApplicant/lodgedApplicants');  ?>' class=""><span>ASIC Lodged Applicants</span></a></li>
+				<li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
+                    
+                <a href='<?php  echo Yii::app()->createUrl('asicApplicant/approvedApplicants');  ?>' class=""><span>ASIC Approved Applicants</span></a></li>
+				<li> <?php $profile = CHelper::get_allowed_module() == "AVMS" ? "VIC" : "CORPORATE";?> 
+                    
+                <a href='<?php  echo Yii::app()->createUrl('asicApplicant/deniedApplicants');  ?>' class=""><span>ASIC Denied Applicants</span></a></li>
+                    <!-- Hide import Visit History for AVMS - CAVMS_1257 -->
+                    
+                    
+
+                </ul>
+            </li>   <!-- end menu for ASIC APPLICANTS -->
         <?php } ?>
+		
 
             <!-- menu for companies -->
             <?php 
@@ -443,7 +496,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- menu for AVMS Reports -->
             <li class='has-sub'>
                 <?php
-                echo CHtml::link("AVMS Reports", array('visit/vicTotalVisitCount'), array(
+                echo CHtml::link("Reports", array('visit/vicTotalVisitCount'), array(
                     'update' => '#content',
                     'complete' => "js:function(html){
                         $('.manageworkstations').next().slideUp('normal');
@@ -472,6 +525,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <li><a href='<?php echo Yii::app()->createUrl('visit/totalVicsByWorkstation'); ?>'><span <?php CHelper::is_selected_submenu('visit', 'totalVicsByWorkstation');?>>Total VICs by Workstation</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByType'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'visitorsVicByType');?>>Total VICs by Visitor Type</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByCardType'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'visitorsVicByCardType');?>>Total VICs by Card Type</span></a></li>
+					<li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByCardStatus'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'visitorsVicByCardStatus');?>>Total Visitors by Card Status</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'profilesAvmsVisitors');?>>New Visitors</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/conversionVicToAsic'); ?>'><span <?php CHelper::is_selected_submenu('reports', 'conversionVicToAsic');?>>Conversion of VIC to ASIC</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('auditTrail/avms'); ?>'><span <?php CHelper::is_selected_submenu('auditTrail', 'avms');?>>Audit Trail</span></a></li>
@@ -503,7 +557,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php } ?>
             
             <!-- menu for Helpdesk -->
-            <li class='has-sub'>
+           <li class='has-sub'>
                 <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('helpDeskGroup/admin'); ?>'><span>Help Desk</span></a>
                 <ul <?php
                 if ($this->id == 'helpDesk' || $this->id == 'helpDeskGroup') {
@@ -569,6 +623,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 <script>
     $(document).ready(function () {
+		$('#asicapplicants').on('click',function(){
+			$('#asicul').toggle();
+		});
         $('#addContactLink').on('click', function(e) {
             $('.errorMessage').hide();
             $('#myModalLabel').html('Add Contact To Company');

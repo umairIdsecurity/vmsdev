@@ -14,6 +14,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'id'=>'importcsv-form',
     'enableAjaxValidation'=>false,
     'method'=>'post',
+	'stateful'=>true,
     'htmlOptions'=>array(
         'enctype'=>'multipart/form-data'
     )
@@ -21,9 +22,10 @@ $form = $this->beginWidget('CActiveForm', array(
  
      
      <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>">
-         <label class="myLabel" for="ImportCsvForm_file" style="width: 70px;">
-             <?php echo $form->fileField($model,'file'); ?>
-              <span>Browse File</span>
+         <label >
+             <?php echo $form->fileField($model,'file', array('class'=>'input-file')); ?>
+             <!--<span>Browse File</span>-->
+			 <?php //echo $data->fileName;?>
          </label>
 
           <div class="row message-no-margin">

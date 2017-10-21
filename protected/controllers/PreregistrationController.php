@@ -18,7 +18,7 @@ class PreregistrationController extends Controller
 		 $session = new CHttpSession;
 		return array(
 			array('allow',
-				'actions' => array('entryPoint','uploadProfilePhoto','forgot','reset','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','compAdminPrivacyPolicy','asicRegistration','companyAdminRegistration','createAsicNotificationRequestedVerifications'),
+				'actions' => array('entryPoint','appType','asicOnlinePrivacyPolicy','asicFee','conditionOfUse','asicType','personalAsicOnline','immiInfo','identificationAsicOnline','asicOperationalNeed','paymentAppointment','uploadPhotoAsicOnline','uploadProfilePhoto','forgot','reset','index','privacyPolicy' , 'declaration' , 'Login' ,'registration','personalDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch','ajaxVICHolderSearch', 'visitDetails' ,'success','checkEmailIfUnique','findAllCompanyContactsByCompany','findAllCompanyFromWorkstation','checkUserProfile','asicPrivacyPolicy','compAdminPrivacyPolicy','asicRegistration','companyAdminRegistration','createAsicNotificationRequestedVerifications','addCompany','addCompanyContact','asicSubmit','saved','asicSuccess','stop','scan'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -28,7 +28,7 @@ class PreregistrationController extends Controller
 			),
 			array(
                 'allow',
-                'actions' => array('assignAsicholder','vicholderDeclined','declineVicholder','verifyVicholder','profile','visitHistory','helpdesk','notifications','verifications','verificationDeclarations','verifyDeclarations'),
+                'actions' => array('assignAsicholder','update','vicholderDeclined','declineVicholder','verifyVicholder','profile','visitHistory','helpdesk','notifications','verifications','verificationDeclarations','verifyDeclarations'),
                 //'expression' => '(Yii::app()->user->id == ($_GET["id"]))',
                 'users' => array('@')
             ),
@@ -54,21 +54,45 @@ class PreregistrationController extends Controller
 
 	public function actionIndex()
 	{
+
 		$session = new CHttpSession;
-		$session['stepTitle'] = 'PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)';
-		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration'>Preregister for a VIC</a>";
+		$session['stepTitle'] = 'AIRPORT VISITOR REGISTRATION';
+		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration'></a>";
 		
 		unset($session['requsetForVerificationEmail']);
 
 
-		if(isset(Yii::app()->params['on_premises_airport_code'])){
-			$session['tenant'] = Company::model()->findTenantIdByCode(Yii::app()->params['on_premises_airport_code']);
-			$this->redirect(array('preregistration/entryPoint'));
-		} else {
+		if((isset(Yii::app()->user->tenant)&& Yii::app()->user->tenant!=NULL)){
+			$session['tenant'] = Yii::app()->user->tenant;
+			$session['AsicprivacyPolicy'] = 'checked';
+			$session['step1Subtitle']='ASIC Application';
+			$this->redirect(array('preregistration/asicOnlinePrivacyPolicy'));
+			
+		} 
+		if(Yii::app()->request->getParam('tenant')!='')
+		{
+			$checkTenant= Company::model()->findByPK(Yii::app()->request->getParam('tenant'));
+			if(Yii::app()->request->getParam('em')!='')
+			{
+				$session['em']=Yii::app()->request->getParam('em');
+				$session['AsicprivacyPolicy'] = 'checked';
+			}
+
+			if($checkTenant)
+			{
+				$session['tenant']=Yii::app()->request->getParam('tenant');
+				$session['step1Subtitle']='ASIC Application';
+				$this->redirect(array('preregistration/asicOnlinePrivacyPolicy'));
+			}
+			//Yii::app()->end();
+		}
+		
+		else {
 			unset($session['tenant']);
 		}
 
 		$model = new TenantSelection();
+		
 
 		if(isset($_POST['TenantSelection']))
 		{
@@ -77,12 +101,2042 @@ class PreregistrationController extends Controller
 			{
 				$session['tenant'] = $model->tenant;
 				$session['pre-page'] = 2;
-				$this->redirect(array('preregistration/entryPoint'));
+				//$this->redirect(array('preregistration/entryPoint'));
+				$this->redirect(array('preregistration/appType'));
 			}
 		}
 		$this->render('index',array('model'=>$model));
 	}
+	public function actionScan()
+	{
+		$this->render('scan');
+		 //$this->redirect('http://192.168.1.6/uploads/UTS/scan.php');
+		//require '192.168.1.6/uploads/UTS/scan.php';
+	}
+	public function actionAppType(){
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'AIRPORT VISITOR REGISTRATION';
+		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration'></a>";
+		if(isset($session['step2Subtitle']))
+		{
+			unset($session['step2Subtitle']);
+		}
+		$model = new AppType();
 
+		if(isset($_POST['AppType']))
+		{
+		 if($_POST['AppType']['apptype']=='2')
+		 {
+			 $this->redirect(array('preregistration/entryPoint'));
+		 }
+		 elseif($_POST['AppType']['apptype']=='1')
+		 {
+			 $this->redirect(array('preregistration/asicOnlinePrivacyPolicy'));
+		 }
+		}
+		$this->render('application-selection',array('model'=>$model));
+	}
+	public function actionAsicOnlinePrivacyPolicy()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'ASIC APPLICATION REQUIREMENTS';
+		$session['step2Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicOnlinePrivacyPolicy'>ASIC Application Requirements</a>";
+
+		$this->render('asic-online-privacy-policy');
+	}
+	public function actionAsicFee()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'ASIC ONLINE APPLICATION FEES';
+		$session['step3Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicFee'>Application Fees & Charges</a>";
+		if(!isset($session['AsicprivacyPolicy']) && $session['AsicprivacyPolicy'] == ""){$session['AsicprivacyPolicy'] = 'checked';}
+		
+		if((isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)) || (isset($session['em']) && $session['em']!=''))  
+		{
+			if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id))
+			$email=Registration::model()->findByPk(Yii::app()->user->id)->email;
+			else if (isset($session['em']) && $session['em']!='')
+			$email=$session['em'];	
+			$check=new RegistrationAsic();
+			$existmode=$check->exists("( email = '{$email}' AND is_saved=1)");
+			if($existmode)
+			{
+				
+			$mode=$check->find("( email = '{$email}' AND is_saved=1)");
+			
+			if($mode->is_saved==1)
+			{
+				$asicinfo=new AsicInfo();
+				if($mode->application_type=='New')
+				{
+					$session['Asictype']=1;
+					
+					$exist=$asicinfo->exists('asic_applicant_id='.$mode->id.'');
+					//Yii::app()->end();
+					if($exist)
+					{
+					 $info=$asicinfo->find('asic_applicant_id='.$mode->id);
+					 if($mode->acc_name!='')
+					 $session['Accname']=$mode->acc_name;
+					 if($mode->acc_bsb!='')
+					 $session['Bsb']=$mode->acc_bsb;
+				     if($mode->acc_number!='')
+					 $session['Accno']=$mode->acc_number;
+					if($info->paid_by!='' && $info->paid_by=='Company')
+					 $session['paidby']=1;
+				    if($info->paid_by!='' && $info->paid_by=='Cardholder')
+					 $session['paidby']=2;
+					}
+					
+					
+				}
+				if($mode->application_type=='Renew')
+				{
+					$session['Asictype']=2;
+					$exist=$asicinfo->exists('asic_applicant_id='.$mode->id.'');
+					if($exist)
+					{
+					 $info=$asicinfo->find('asic_applicant_id='.$mode->id);
+					 if($mode->acc_name!='')
+					 $session['Accname']=$mode->acc_name;
+					 if($mode->acc_bsb!='')
+					 $session['Bsb']=$mode->acc_bsb;
+				     if($mode->acc_number!='')
+					 $session['Accno']=$mode->acc_number;
+					if($info->fee!='' && $info->fee==333)
+					 $session['BondPaid']=2;
+				    if($info->fee!='' && $info->fee==283)
+					 $session['BondPaid']=1;
+				     if($info->paid_by!='' && $info->paid_by=='Company')
+					 $session['paidby']=1;
+				    if($info->paid_by!='' && $info->paid_by=='Cardholder')
+					 $session['paidby']=2;
+					}
+					
+				}
+				if($mode->application_type=='Replacement')
+				{
+					$session['Asictype']=3;
+					$exist=$asicinfo->exists('asic_applicant_id='.$mode->id.'');
+					if($exist)
+					{
+					 $info=$asicinfo->find('asic_applicant_id='.$mode->id);
+					 if($mode->acc_name!='')
+					 $session['Accname']=$mode->acc_name;
+					 if($mode->acc_bsb!='')
+					 $session['Bsb']=$mode->acc_bsb;
+				     if($mode->acc_number!='')
+					 $session['Accno']=$mode->acc_number;
+					if($info->fee!='' && $info->fee==154)
+					 $session['BondPaid']=2;
+				    if($info->fee!='' && $info->fee==104)
+					 $session['BondPaid']=1;
+				     if($info->paid_by!='' && $info->paid_by=='Company')
+					 $session['paidby']=1;
+				    if($info->paid_by!='' && $info->paid_by=='Cardholder')
+					 $session['paidby']=2;
+					}
+				}
+			}
+			
+		}
+			
+	}
+		$model=new AsicType();
+		
+		//Yii::app()->end();
+		if(isset($_POST['AsicType']))
+		{
+			
+			$session['Asictype']=$_POST['AsicType']['radiobutton'];
+			
+			if(isset($_POST['AsicType']['renewal']))
+			{
+			$session['BondPaid']=$_POST['AsicType']['renewal'];
+			}
+			else
+			{
+			$session['BondPaid']='';	
+			}
+			$session['Accname']=$_POST['AsicType']['accname'];
+			$session['Bsb']=$_POST['AsicType']['bsb'];
+			$session['Accno']=$_POST['AsicType']['accno'];
+			$session['paidby']=$_POST['AsicType']['radiobutton2'];
+
+			
+			 $this->redirect(array('preregistration/conditionOfUse'));
+		}
+		$this->render('asic-fee',array('model'=>$model));
+	}
+	public function actionConditionOfUse()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'CONDITIONS OF USE';
+		$session['step4Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/conditionOfUse'>Conditions</a>";
+		if((isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)) || (isset($session['em']) && $session['em']!=''))
+		{
+			
+			if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id))
+			$email=Registration::model()->findByPk(Yii::app()->user->id)->email;
+			else if (isset($session['em']) && $session['em']!='')
+			$email=$session['em'];	
+			$check=new RegistrationAsic();
+			$existmode=$check->exists("( email = '{$email}' AND is_saved=1)");
+			if($existmode)
+			{
+				
+			$mode=$check->find("( email = '{$email}' AND is_saved=1)");
+				if($mode->condition_of_use==1 && $mode->aus_check==1)
+				{
+				$session['Crime1']=2;
+				$session['Crime2']=2;
+				$session['Crime3']=2;
+				$session['Crime4']=2;
+				$session['use1']=1;
+				$session['use2']=1;
+				$session['use3']=1;
+				}
+			}
+		}
+		$model=new CriminalCheck();
+		if(isset($_POST['CriminalCheck']))
+		{
+			
+			$session['Crime1']=$_POST['CriminalCheck']['radiobutton1'];
+			$session['Crime2']=$_POST['CriminalCheck']['radiobutton2'];
+			$session['Crime3']=$_POST['CriminalCheck']['radiobutton3'];
+			$session['Crime4']=$_POST['CriminalCheck']['radiobutton4'];
+			$session['use1']=$_POST['CriminalCheck']['check1'];
+			$session['use2']=$_POST['CriminalCheck']['check2'];
+			$session['use3']=$_POST['CriminalCheck']['check3'];
+			if($session['Crime1']==1||$session['Crime2']==1||$session['Crime3']==1||$session['Crime4']==1)
+			{
+				$this->redirect(array('preregistration/Stop'));
+			}
+			
+			$this->redirect(array('preregistration/asicType'));
+		}
+		$this->render('condition-use',array('model'=>$model));
+	}
+	public function actionAsicType(){
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'ASIC INFORMATION';
+		$session['step5Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicType'>Asic Info </a>";
+		if(!isset($session['conditions']) && $session['conditions'] == ""){$session['conditions'] = 'checked';}
+		$model = new AsicInfo();
+		if((isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)) || (isset($session['em']) && $session['em']!=''))
+		{
+			
+			if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id))
+			$email=Registration::model()->findByPk(Yii::app()->user->id)->email;
+			else if (isset($session['em']) && $session['em']!='')
+			$email=$session['em'];	
+			$check=new RegistrationAsic();
+			$existmode=$check->exists("( email = '{$email}' AND is_saved=1)");
+			if($existmode)
+			{
+				
+			$mode=$check->find("( email = '{$email}' AND is_saved=1)");
+			$exist=$model->exists('asic_applicant_id='.$mode->id.'');
+					if($exist)
+					{
+					 $model=$model->find('asic_applicant_id='.$mode->id);
+					// print_r($model);
+					 //Yii::app()->end();
+					}
+			}
+		}
+		
+		if(isset($session['AsicInfo-details']))
+			{
+				$model=$session['AsicInfo-details'];
+				
+				
+			}
+		//print_r($_POST);
+		if(isset($_POST['AsicInfo']))
+		{
+			
+			$model->attributes=$_POST['AsicInfo'];
+				
+				$session['AsicInfo-details']=$model;
+				
+			$this->redirect(array('preregistration/personalAsicOnline'));
+		}
+		//if(isset($session['Asictype']))
+	    //$this->render('asic-type',array('model'=>$model,'asicType'=>$session['Asictype']));
+		//else
+		$this->render('asic-type',array('model'=>$model));	
+	}
+	public function actionPersonalAsicOnline()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'PERSONAL INFORMATION';
+		$session['step5Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/personalDetails'>Personal Information</a>";
+		unset($session['vic_model']);
+		
+		
+			$model = new RegistrationAsic();	
+			$addHistory= new AsicAddressHistory();
+			
+			$error_message = '';
+			if((isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)) || (isset($session['em']) && $session['em']!=''))
+		{
+			
+			if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id))
+			$email=Registration::model()->findByPk(Yii::app()->user->id)->email;
+			else if (isset($session['em']) && $session['em']!='')
+			$email=$session['em'];	
+			$check=new RegistrationAsic();
+			$existmode=$check->exists("( email = '{$email}' AND is_saved=1)");
+				if($existmode)
+				{
+				
+				$model=$check->find("( email = '{$email}' AND is_saved=1)");
+				}
+				$historycheck=$addHistory->exists('asic_applicant_id='.$model->id.'');
+				if($historycheck)
+				{
+					$history=$addHistory->findAll('asic_applicant_id='.$model->id);
+					
+					foreach($history as $value)
+					{
+						if($value->unit==null)
+						$unit[]='';
+						else
+						$unit[]=$value->unit;
+						$stno[]=$value->street_number;
+						$stnm[]=$value->street_name;
+						$sttype[]=$value->street_type;
+						$sub[]=$value->suburb;
+						$city[]=$value->city;
+						$pstcd[]=$value->postcode;
+						$state[]=$value->state;
+						$cntry[]=$value->country;
+						$frm[]=date('d-m-Y',strtotime($value->from_date));
+						$to[]=date('d-m-Y',strtotime($value->to_date));
+					}
+					if(!isset($session['AddHistory']))
+					{
+					$session['AddHistory']=array(
+						'unit'=>$unit,
+						'stno'=>$stno,
+						'stnm'=>$stnm,
+						'sttype'=>$sttype,
+						'sub'=>$sub,
+						'city'=>$city,
+						'pstcd'=>$pstcd,
+						'state'=>$state,
+						'cntry'=>$cntry,
+						'frm'=>$frm,
+						'to'=>$to,
+						);
+					}
+				}
+				
+			}
+		
+			if(isset($session['asicapplicant-details']))
+			{
+				$model=$session['asicapplicant-details'];
+				
+				
+			}
+			//----------------------------------------------------------------------------Save and Exit-----------------------------------------------------------------------------//
+			if(isset($_POST['save']))
+			{
+				$model->setScenario('save');
+				
+				$model->attributes=$_POST['RegistrationAsic'];
+				
+					if(isset($_FILES['RegistrationAsic']['name']['name_change_file']))
+					{
+				
+						$model->name_change_file=$_FILES['RegistrationAsic']['name']['name_change_file'];
+						$target_dir= Yii::getPathOfAlias('webroot').'/uploads/files/asic_uploads/';
+						if($_FILES['RegistrationAsic']['name']['name_change_file']!='')
+						{
+							$file = $_FILES['RegistrationAsic']['name']['name_change_file'];
+							$path = pathinfo($file);
+							$filename = $path['filename'];
+							$ext = $path['extension'];
+							$temp_name = $_FILES['RegistrationAsic']['tmp_name']['name_change_file'];
+							$path_filename_ext = $target_dir.$filename.".".$ext;
+							if (file_exists($path_filename_ext)) {
+							$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+							move_uploaded_file($temp_name,$path_filename_ext);
+							}
+						else{
+							move_uploaded_file($temp_name,$path_filename_ext); 
+							}
+
+						}
+					}
+					
+					$modelInfo = new AsicInfo();
+					$modelInfo=$session['AsicInfo-details'];
+					if($session['Asictype']==1)
+					{
+						$modelInfo->fee=333;
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$model->acc_name=$session['Accname'];
+							$model->acc_bsb=$session['Bsb'];
+							$model->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$model->condition_of_use=1;
+							$model->aus_check=1;
+							$model->tenant=$session['tenant'];
+							}
+							
+							$model->date_of_birth=date('Y-m-d',strtotime($_POST['RegistrationAsic']['date_of_birth']));
+							$model->application_type='New';
+							/*echo "<pre>";
+							print_r($model->date_of_birth);
+							echo "</pre>";
+							Yii::app()->end();*/
+					}
+					if($session['Asictype']==2)
+					{
+						if($session['BondPaid']==1)
+						{
+							$modelInfo->fee=283;
+						}
+						else
+						$modelInfo->fee=333;
+						
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+					if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$model->acc_name=$session['Accname'];
+							$model->acc_bsb=$session['Bsb'];
+							$model->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$model->condition_of_use=1;
+							$model->aus_check=1;
+							$model->tenant=$session['tenant'];
+							}
+							$model->date_of_birth=date('Y-m-d',strtotime($_POST['RegistrationAsic']['date_of_birth']));
+							$model->application_type='Renew';
+					}
+					if($session['Asictype']==3)
+					{
+						
+						if($session['BondPaid']==1)
+						{
+							$modelInfo->fee=104;
+						}
+						else
+						$modelInfo->fee=154;
+					
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$model->acc_name=$session['Accname'];
+							$model->acc_bsb=$session['Bsb'];
+							$model->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$model->condition_of_use=1;
+							$model->aus_check=1;
+							$model->tenant=$session['tenant'];
+							}
+						$model->date_of_birth=date('Y-m-d',strtotime($_POST['RegistrationAsic']['date_of_birth']));
+						$model->application_type='Replacement';
+						
+					}
+					
+					if(isset($_POST['unit']) && isset($_POST['stno']) && isset($_POST['stnm']) && isset($_POST['sttype']) && isset($_POST['sub']) && isset($_POST['pstcd']) && isset($_POST['state']) && isset($_POST['cntry']) && isset($_POST['frm']) && isset($_POST['to']) )
+					{
+						$session['AddHistory']=array(
+						'unit'=>$_POST['unit'],
+						'stno'=>$_POST['stno'],
+						'stnm'=>$_POST['stnm'],
+						'sttype'=>$_POST['sttype'],
+						'sub'=>$_POST['sub'],
+						'city'=>$_POST['city'],
+						'pstcd'=>$_POST['pstcd'],
+						'state'=>$_POST['state'],
+						'cntry'=>$_POST['cntry'],
+						'frm'=>$_POST['frm'],
+						'to'=>$_POST['to'],
+						);
+						
+						
+					}
+					$model->is_saved=1;
+					if(isset($_POST['RegistrationAsic']['from_date']))
+					$model->from_date=date('Y-m-d',strtotime($_POST['RegistrationAsic']['from_date']));
+					if($model->save())
+					{
+						if(isset($session['AddHistory']))
+						{
+						$asic_address=new AsicAddressHistory();
+							$x=count($session['AddHistory']['unit']);
+								for($i=0;$i<$x;$i++)
+								{
+									if(!$asic_address->exists("( asic_applicant_id = '{$model->id}' AND street_name='{$session['AddHistory']['stnm'][$i]}' AND street_number='{$session['AddHistory']['stno'][$i]}')"))
+										{
+									$asic_address->asic_applicant_id=$model->id;
+									$asic_address->unit=$session['AddHistory']['unit'][$i];
+									$asic_address->street_number=$session['AddHistory']['stno'][$i];
+									$asic_address->street_name=$session['AddHistory']['stnm'][$i];
+									$asic_address->street_type=$session['AddHistory']['sttype'][$i];
+									$asic_address->suburb=$session['AddHistory']['sub'][$i];
+									$asic_address->city=$session['AddHistory']['city'][$i];
+									$asic_address->postcode=$session['AddHistory']['pstcd'][$i];
+									$asic_address->state=$session['AddHistory']['state'][$i];
+									$asic_address->country=$session['AddHistory']['cntry'][$i];
+									$asic_address->from_date=date('Y-m-d',strtotime($session['AddHistory']['frm'][$i]));
+									$asic_address->to_date=date('Y-m-d',strtotime($session['AddHistory']['to'][$i]));
+									$asic_address->created_at=date('Y-m-d');
+									$asic_address->isNewRecord = true;
+									$asic_address->setPrimaryKey(NULL);
+									$asic_address->save();	
+										}
+									
+									
+								}
+						}
+						$modelInfo->asic_applicant_id=$model->id;
+						if($modelInfo->save(false))
+						{
+							Yii::app()->session->clear();
+							$this->redirect(array('preregistration/saved'));
+						}
+					}
+					
+					
+				
+			}
+			
+		//-----------------------------------------------------------------------------------End Save and Exit--------------------------------------------------------------//		
+			
+			if(isset($_POST['RegistrationAsic']) && !isset($_POST['save']))
+			{
+				$model->setScenario('');
+				$model->attributes=$_POST['RegistrationAsic'];
+				
+				if(isset($_FILES['RegistrationAsic']['name']['name_change_file']))
+				{
+				
+				$model->name_change_file=$_FILES['RegistrationAsic']['name']['name_change_file'];
+				$target_dir= Yii::getPathOfAlias('webroot').'/uploads/files/asic_uploads/';
+				if($_FILES['RegistrationAsic']['name']['name_change_file']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['name_change_file'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['name_change_file'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				}
+				$session['asicapplicant-details']=$model;
+				if(!$model->validate())
+				{
+					print_r($model->getErrors());
+					
+					Yii::app()->end();
+				}
+				else
+				{ 
+					
+					if(isset($_POST['unit']) && isset($_POST['stno']) && isset($_POST['stnm']) && isset($_POST['sttype']) && isset($_POST['sub']) && isset($_POST['pstcd']) && isset($_POST['state']) && isset($_POST['cntry']) && isset($_POST['frm']) && isset($_POST['to']) )
+					$session['AddHistory']=array(
+					'unit'=>$_POST['unit'],
+					'stno'=>$_POST['stno'],
+					'stnm'=>$_POST['stnm'],
+					'sttype'=>$_POST['sttype'],
+					'sub'=>$_POST['sub'],
+					'city'=>$_POST['city'],
+					'pstcd'=>$_POST['pstcd'],
+					'state'=>$_POST['state'],
+					'cntry'=>$_POST['cntry'],
+					'frm'=>$_POST['frm'],
+					'to'=>$_POST['to'],
+					);
+					
+					
+					$this->redirect(array('preregistration/immiInfo'));
+				}
+			}
+		
+		//print_r($model->getErrors());
+					//Yii::app()->end();
+		//if(!isset($_POST['save']))
+		$this->render('asic-personal-info' , array('model' => $model,'addHistory'=>$addHistory,'error_message' => $error_message));
+	}
+	
+	
+	public function actionImmiInfo()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'IMMIGRATION INFORMATION';
+		$session['step7Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/immiInfo'>Immigration Information</a>";
+		
+			$model = new Immigration();	
+			//$model->scenario = 'preregistration';
+			$error_message = '';
+		//echo "here";
+		if((isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)) || (isset($session['em']) && $session['em']!=''))
+		{
+			
+			if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id))
+			$email=Registration::model()->findByPk(Yii::app()->user->id)->email;
+			else if (isset($session['em']) && $session['em']!='')
+			$email=$session['em'];	
+			$check=new RegistrationAsic();
+			$existmode=$check->exists("( email = '{$email}' AND is_saved=1)");
+			if($existmode)
+			{
+				
+			$mode=$check->find("( email = '{$email}' AND is_saved=1)");
+			$exist=$model->exists('asic_applicant_id='.$mode->id.'');
+					if($exist)
+					{
+					 $model=$model->find('asic_applicant_id='.$mode->id);
+					}
+			}
+		}
+		if(isset($session['asicapplicant-details']))
+			{
+				//$modelAsic=new RegistrationAsic();
+				$modelAsic=$session['asicapplicant-details'];
+				
+				
+			}
+			if(isset($session['immi-details']))
+			{
+				//$modelAsic=new RegistrationAsic();
+				$model=$session['immi-details'];
+				
+				
+			}
+			
+			//----------------------------------------------------------------------------Save and Exit-----------------------------------------------------------------------------//
+			if(isset($_POST['save']))
+			{
+				$model->setScenario('save');
+				$modelAsic=$session['asicapplicant-details'];
+				$model->attributes=$_POST['Immigration'];
+					
+					$modelInfo = new AsicInfo();
+					$modelInfo=$session['AsicInfo-details'];
+					if($session['Asictype']==1)
+					{
+						$modelInfo->fee=333;
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$modelAsic->acc_name=$session['Accname'];
+							$modelAsic->acc_bsb=$session['Bsb'];
+							$modelAsic->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$modelAsic->condition_of_use=1;
+							$modelAsic->aus_check=1;
+							$modelAsic->tenant=$session['tenant'];
+							}
+							
+							$modelAsic->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+							$modelAsic->application_type='New';
+							/*echo "<pre>";
+							print_r($model->date_of_birth);
+							echo "</pre>";
+							Yii::app()->end();*/
+					}
+					if($session['Asictype']==2)
+					{
+						if($session['BondPaid']==1)
+						{
+							$modelInfo->fee=283;
+						}
+						else
+						$modelInfo->fee=333;
+						
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+					if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$modelAsic->acc_name=$session['Accname'];
+							$modelAsic->acc_bsb=$session['Bsb'];
+							$modelAsic->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$modelAsic->condition_of_use=1;
+							$modelAsic->aus_check=1;
+							$modelAsic->tenant=$session['tenant'];
+							}
+							$modelAsic->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+							$modelAsic->application_type='Renew';
+					}
+					if($session['Asictype']==3)
+					{
+						
+						if($session['BondPaid']==1)
+						{
+							$modelInfo->fee=104;
+						}
+						else
+						$modelInfo->fee=154;
+					
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$modelAsic->acc_name=$session['Accname'];
+							$modelAsic->acc_bsb=$session['Bsb'];
+							$modelAsic->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$modelAsic->condition_of_use=1;
+							$modelAsic->aus_check=1;
+							$modelAsic->tenant=$session['tenant'];
+							}
+						$modelAsic->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+						$modelAsic->application_type='Replacement';
+						
+					}
+					
+					
+					$modelAsic->is_saved=1;
+					if($session['asicapplicant-details']->from_date!='')
+					$modelAsic->from_date=date('Y-m-d',strtotime($session['asicapplicant-details']->from_date));
+					if($modelAsic->save(false))
+					{
+						if(isset($session['AddHistory']))
+						{
+						$asic_address=new AsicAddressHistory();
+							$x=count($session['AddHistory']['unit']);
+								for($i=0;$i<$x;$i++)
+								{
+									if(!$asic_address->exists("( asic_applicant_id = '{$modelAsic->id}' AND street_name='{$session['AddHistory']['stnm'][$i]}' AND street_number='{$session['AddHistory']['stno'][$i]}')"))
+										{
+									$asic_address->asic_applicant_id=$modelAsic->id;
+									$asic_address->unit=$session['AddHistory']['unit'][$i];
+									$asic_address->street_number=$session['AddHistory']['stno'][$i];
+									$asic_address->street_name=$session['AddHistory']['stnm'][$i];
+									$asic_address->street_type=$session['AddHistory']['sttype'][$i];
+									$asic_address->suburb=$session['AddHistory']['sub'][$i];
+									$asic_address->city=$session['AddHistory']['city'][$i];
+									$asic_address->postcode=$session['AddHistory']['pstcd'][$i];
+									$asic_address->state=$session['AddHistory']['state'][$i];
+									$asic_address->country=$session['AddHistory']['cntry'][$i];
+									$asic_address->from_date=date('Y-m-d',strtotime($session['AddHistory']['frm'][$i]));
+									$asic_address->to_date=date('Y-m-d',strtotime($session['AddHistory']['to'][$i]));
+									$asic_address->created_at=date('Y-m-d');
+									$asic_address->isNewRecord = true;
+									$asic_address->setPrimaryKey(NULL);
+									$asic_address->save();	
+										}
+									
+									
+								}
+						}
+						if(isset($_POST['Immigration']['arrival_date']))
+						$model->arrival_date=date('Y-m-d',strtotime($_POST['Immigration']['arrival_date']));
+						$modelInfo->asic_applicant_id=$modelAsic->id;
+						$model->asic_applicant_id=$modelAsic->id;
+						if($modelInfo->save(false) && $model->save())
+						{
+							Yii::app()->session->clear();
+							$this->redirect(array('preregistration/saved'));
+						}
+					}
+					
+					
+				
+			}
+			//-----------------------------------------------------------------------------------------Save & Exit End----------------------------------------------
+		if(isset($_POST['Immigration']) && !isset($_POST['save']))
+		{
+			$model->attributes=$_POST['Immigration'];
+			$session['immi-details']=$model;
+			
+			$this->redirect(array('preregistration/identificationAsicOnline'));
+		}
+		//$preModel = new PreregLogin();
+		$this->render('immigration-info' , array('model' => $model,'modelAsic' => $modelAsic,'error_message' => $error_message));
+	}
+	public function actionIdentificationAsicOnline()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'IDENTIFICATION VERIFICATION';
+		$session['step8Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/identificationAsicOnline'>Identification Verification</a>";
+		unset($session['vic_model']);
+		//echo "here";
+		//Yii::app()->end();
+			$model = new RegistrationAsic();	
+			//$model->scenario = 'preregistration';
+		if((isset(Yii::app()->user->id) && !empty(Yii::app()->user->id)) || (isset($session['em']) && $session['em']!=''))
+		{
+			
+			if(isset(Yii::app()->user->id) && !empty(Yii::app()->user->id))
+			$email=Registration::model()->findByPk(Yii::app()->user->id)->email;
+			else if (isset($session['em']) && $session['em']!='')
+			$email=$session['em'];	
+			$check=new RegistrationAsic();
+			$existmode=$check->exists("( email = '{$email}' AND is_saved=1)");
+			if($existmode)
+			{
+				
+			$model=$check->find("( email = '{$email}' AND is_saved=1)");
+			
+			}
+		}
+			
+			$error_message = '';
+		//----------------------------------------------------------------------------Save and Exit-----------------------------------------------------------------------------//
+			if(isset($_POST['save']))
+			{
+				$model->setScenario('save');
+				$model=$session['asicapplicant-details'];
+				$modelImmi=$session['immi-details'];
+				if( $model->upload_1!='')
+				$up1=$model->upload_1;
+				if( $model->upload_2!='')
+				$up2=$model->upload_2;
+				if( $model->upload_3!='')
+				$up3=$model->upload_3;
+				if( $model->upload_4!='')
+				$up4=$model->upload_4;
+				$model->attributes=$_POST['RegistrationAsic'];
+				
+				if($_FILES['RegistrationAsic']['name']['upload_1']!='')
+				$model->upload_1=$_FILES['RegistrationAsic']['name']['upload_1'];
+				elseif(isset($up1) && $up1!='')
+				{
+					$model->upload_1=$up1;
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_2']!='')
+				$model->upload_2=$_FILES['RegistrationAsic']['name']['upload_2'];
+				elseif(isset($up2) && $up2!='')
+				{
+					$model->upload_2=$up2;
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_3']!='')
+				$model->upload_3=$_FILES['RegistrationAsic']['name']['upload_3'];
+				elseif(isset($up3) && $up3!='')
+				{
+					$model->upload_3=$up3;
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_4']!='')
+				$model->upload_4=$_FILES['RegistrationAsic']['name']['upload_4'];
+				elseif(isset($up4) && $up4!='')
+				{
+					$model->upload_4=$up4;
+				}
+				$target_dir= Yii::getPathOfAlias('webroot').'/uploads/files/asic_uploads/';
+				if($_FILES['RegistrationAsic']['name']['upload_1']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_1'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_1'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_2']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_2'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_2'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_3']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_3'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_3'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_4']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_4'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_4'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_POST['RegistrationAsic']['check2']==1)
+				{
+					$session['checked']=1;
+				}
+				else
+				{
+					$session['checked']=0;
+				}
+				
+					
+					$modelInfo = new AsicInfo();
+					$modelInfo=$session['AsicInfo-details'];
+					if($session['Asictype']==1)
+					{
+						$modelInfo->fee=333;
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$model->acc_name=$session['Accname'];
+							$model->acc_bsb=$session['Bsb'];
+							$model->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$model->condition_of_use=1;
+							$model->aus_check=1;
+							$model->tenant=$session['tenant'];
+							}
+							
+							$model->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+							$model->application_type='New';
+							/*echo "<pre>";
+							print_r($model->date_of_birth);
+							echo "</pre>";
+							Yii::app()->end();*/
+					}
+					if($session['Asictype']==2)
+					{
+						if($session['BondPaid']==1)
+						{
+							$modelInfo->fee=283;
+						}
+						else
+						$modelInfo->fee=333;
+						
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+					if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$model->acc_name=$session['Accname'];
+							$model->acc_bsb=$session['Bsb'];
+							$model->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$model->condition_of_use=1;
+							$model->aus_check=1;
+							$model->tenant=$session['tenant'];
+							}
+							$model->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+							$model->application_type='Renew';
+					}
+					if($session['Asictype']==3)
+					{
+						
+						if($session['BondPaid']==1)
+						{
+							$modelInfo->fee=104;
+						}
+						else
+						$modelInfo->fee=154;
+					
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$modelInfo->paid_by='Company';
+						else
+						$modelInfo->paid_by='Cardholder';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$model->acc_name=$session['Accname'];
+							$model->acc_bsb=$session['Bsb'];
+							$model->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$model->condition_of_use=1;
+							$model->aus_check=1;
+							$model->tenant=$session['tenant'];
+							}
+						$model->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+						$model->application_type='Replacement';
+						
+					}
+					
+					
+							$model->is_saved=1;
+							if($session['asicapplicant-details']->from_date!='')
+							$model->from_date=date('Y-m-d',strtotime($session['asicapplicant-details']->from_date));
+							if(isset($_POST['RegistrationAsic']['primary_id_expiry']) && $_POST['RegistrationAsic']['primary_id_expiry']!='')
+							$model->primary_id_expiry=date('Y-m-d',strtotime($_POST['RegistrationAsic']['primary_id_expiry']));
+							if(isset($_POST['RegistrationAsic']['secondary_id_expiry']) && $_POST['RegistrationAsic']['secondary_id_expiry']!='')
+							$model->secondary_id_expiry=date('Y-m-d',strtotime($_POST['RegistrationAsic']['secondary_id_expiry']));
+							if(isset($_POST['RegistrationAsic']['tertiary_id1_expiry']) && $_POST['RegistrationAsic']['tertiary_id1_expiry']!='')
+							$model->tertiary_id1_expiry=date('Y-m-d',strtotime($_POST['RegistrationAsic']['tertiary_id1_expiry']));
+							if(isset($_POST['RegistrationAsic']['tertiary_id2_expiry']) && $_POST['RegistrationAsic']['tertiary_id2_expiry']!='')
+							$model->tertiary_id2_expiry=date('Y-m-d',strtotime($_POST['RegistrationAsic']['tertiary_id2_expiry']));
+						
+					if($model->save())
+					{
+						if(isset($session['AddHistory']))
+						{
+						$asic_address=new AsicAddressHistory();
+							$x=count($session['AddHistory']['unit']);
+								for($i=0;$i<$x;$i++)
+								{
+									if(!$asic_address->exists("( asic_applicant_id = '{$model->id}' AND street_name='{$session['AddHistory']['stnm'][$i]}' AND street_number='{$session['AddHistory']['stno'][$i]}')"))
+										{
+									$asic_address->asic_applicant_id=$model->id;
+									$asic_address->unit=$session['AddHistory']['unit'][$i];
+									$asic_address->street_number=$session['AddHistory']['stno'][$i];
+									$asic_address->street_name=$session['AddHistory']['stnm'][$i];
+									$asic_address->street_type=$session['AddHistory']['sttype'][$i];
+									$asic_address->suburb=$session['AddHistory']['sub'][$i];
+									$asic_address->city=$session['AddHistory']['city'][$i];
+									$asic_address->postcode=$session['AddHistory']['pstcd'][$i];
+									$asic_address->state=$session['AddHistory']['state'][$i];
+									$asic_address->country=$session['AddHistory']['cntry'][$i];
+									$asic_address->from_date=date('Y-m-d',strtotime($session['AddHistory']['frm'][$i]));
+									$asic_address->to_date=date('Y-m-d',strtotime($session['AddHistory']['to'][$i]));
+									$asic_address->created_at=date('Y-m-d');
+									$asic_address->isNewRecord = true;
+									$asic_address->setPrimaryKey(NULL);
+									$asic_address->save();	
+										}
+									
+									
+								}
+						}
+						$modelInfo->asic_applicant_id=$model->id;
+						$modelImmi->asic_applicant_id=$model->id;
+						if($modelInfo->save(false) && $modelImmi->save(false))
+						{
+							Yii::app()->session->clear();
+							$this->redirect(array('preregistration/saved'));
+						}
+					}
+					
+					
+				
+			}
+		if(isset($_POST['RegistrationAsic']) && !isset($_POST['save']))
+			{
+				
+				$model->attributes=$_POST['RegistrationAsic'];
+				$model->upload_1=$_FILES['RegistrationAsic']['name']['upload_1'];
+				$model->upload_2=$_FILES['RegistrationAsic']['name']['upload_2'];
+				$model->upload_3=$_FILES['RegistrationAsic']['name']['upload_3'];
+				$model->upload_4=$_FILES['RegistrationAsic']['name']['upload_4'];
+				$target_dir= Yii::getPathOfAlias('webroot').'/uploads/files/asic_uploads/';
+				if($_FILES['RegistrationAsic']['name']['upload_1']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_1'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_1'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_2']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_2'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_2'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_3']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_3'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_3'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_FILES['RegistrationAsic']['name']['upload_4']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['upload_4'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['upload_4'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				if($_POST['RegistrationAsic']['check2']==1)
+				{
+					$session['checked']=1;
+				}
+				else
+				{
+					$session['checked']=0;
+				}
+				$session['identification_Details']=$model;
+				
+				$this->redirect(array('preregistration/asicOperationalNeed'));
+			}
+		if(isset($session['identification_Details']))
+			{
+				//$modelAsic=new RegistrationAsic();
+				$model=$session['identification_Details'];
+				
+				
+			}	
+		//echo "here";
+		$preModel = new PreregLogin();
+		$this->render('identificationAsic' , array('model' => $model,'preModel' => $preModel,'error_message' => $error_message));
+	}
+	public function actionAsicOperationalNeed()
+	{
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'OPERATIONAL NEED';
+		$session['step9Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicOperationalNeed'>Operational Need</a>";
+		unset($session['vic_model']);
+		//echo "here";
+		//Yii::app()->end();
+		
+			$model = new AsicOnCompany();	
+			$fileModel = new RegistrationAsic();
+			//$model->scenario = 'preregistration';
+			$error_message = '';
+		//echo "here";
+		
+		if(isset($_POST['AsicOnCompany']))
+		{
+				
+			if(isset($_FILES['AsicOnCompany']['name']['authorised_file']))
+				{
+				
+				$session['authFile']=$_FILES['AsicOnCompany']['name']['authorised_file'];
+				$target_dir= Yii::getPathOfAlias('webroot').'/uploads/files/asic_uploads/';
+				if($_FILES['AsicOnCompany']['name']['authorised_file']!='')
+				{
+					$file = $_FILES['AsicOnCompany']['name']['authorised_file'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['AsicOnCompany']['tmp_name']['authorised_file'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						
+						}
+
+				}
+				}
+				if(isset($_FILES['RegistrationAsic']['name']['op_need_document']))
+				{
+				
+				$session['opFile']=$_FILES['RegistrationAsic']['name']['op_need_document'];
+				$target_dir= Yii::getPathOfAlias('webroot').'/uploads/files/asic_uploads/';
+				if($_FILES['RegistrationAsic']['name']['op_need_document']!='')
+				{
+					$file = $_FILES['RegistrationAsic']['name']['op_need_document'];
+					$path = pathinfo($file);
+					$filename = $path['filename'];
+					$ext = $path['extension'];
+					$temp_name = $_FILES['RegistrationAsic']['tmp_name']['op_need_document'];
+					$path_filename_ext = $target_dir.$filename.".".$ext;
+					if (file_exists($path_filename_ext)) {
+						$path_filename_ext = $target_dir.$filename."_copy".".".$ext;
+						move_uploaded_file($temp_name,$path_filename_ext);
+						}
+					else{
+						move_uploaded_file($temp_name,$path_filename_ext); 
+						}
+
+				}
+				}
+			$model->attributes=$_POST['AsicOnCompany'];
+			unset($session['Company_Details']);
+			$session['Company_Details']=$model;
+				
+			$this->redirect(array('preregistration/paymentAppointment'));
+		}
+		if(isset($session['Company_Details']))
+			{
+				//$modelAsic=new RegistrationAsic();
+				$model=$session['Company_Details'];
+				
+				
+			}	
+		$preModel = new PreregLogin();
+		$this->render('op-need' , array('model' => $model,'preModel' => $preModel,'fileModel'=>$fileModel,'error_message' => $error_message));
+		
+		
+	}
+	 public function actionAddCompany()
+    {
+            $session = new CHttpSession;
+            $company = new AsicOnCompany();
+            //$company->scenario = 'preregistration';
+       
+            if (isset($_POST['AsicOnCompany'])) 
+            {
+                
+                    $formInfo = $_POST['AsicOnCompany'];
+                    $company->tenant = empty($session['tenant']) ? NULL : $session['tenant'];
+
+
+                    $company->attributes=$formInfo;
+
+                    $company->name = $formInfo['name'];
+                    $company->trading_name = $formInfo['name'];
+                    $company->contact = $formInfo['user_first_name'] . ' ' . $formInfo['user_last_name'];
+                    $company->email_address = $formInfo['user_email'];
+                    $company->mobile_number = $formInfo['user_contact_number'];
+                    $company->office_number = $formInfo['office_number'];
+					if($formInfo['website']!='')
+					{
+						$company->website=$formInfo['website'];
+					}
+                    $company->company_type = 3;
+
+                    if ($company->tenant_agent == '') {$company->tenant_agent = NULL;}
+                    if ($company->code == '') {$company->code = strtoupper(substr($company->name, 0, 3));}
+
+                    if($company->validate())
+                    {
+                        if ($company->save()) 
+                        {
+                            //integrity constraint violation fix.
+                            //From preregisteration set attribute from session as it was set in session 
+                            //for USER because Yii:app()->user->id in preregistration has Visitor Id and not USER id.
+                            //If wrong handled then it will throws Integrity Constraint Violation as foreign key 
+                            //of created_by in user refers to User table and not visitor table 
+                            $command = Yii::app()->db->createCommand();
+                            $result=$command->insert('user',array(
+                                                        //'id'=>it is autoincrement,
+                                                        'company'=>$company->id,
+                                                        'first_name'=>$formInfo['user_first_name'],
+                                                        'last_name'=>$formInfo['user_last_name'],
+                                                        'email'=>$formInfo['user_email'],
+                                                        'contact_number'=>$formInfo['user_contact_number'],
+                                                        'timezone_id'=>1,
+                                                        'photo'=>NULL,
+                                                        'tenant'=> (isset($company->tenant) && $company->tenant != "") ? $company->tenant : NULL,
+                                                        'user_type'=>2,
+                                                        'user_status'=>1,
+                                                        'role'=>10,
+                                                        'created_by'=> $company->created_by_user,//empty($session['created_by']) ? NULL : $session['created_by'],
+                                                    ));
+                            if ($result)
+                            {
+                                $Criteria = new CDbCriteria();
+                                $Criteria->condition = "company = ".$company->id." and is_deleted = 0";
+                                $contacts = User::model()->findAll($Criteria);
+
+                                $dropDown = "<option selected='selected' value='" . $company->id . "' >" . $company->name . "</option>"; // seriously why is this here?
+                                $ret = array("compId" =>  $company->id, "compName" => $company->name, "contacts"=>$contacts, "dropDown" => $dropDown);
+                                echo CJSON::encode($ret);
+                                Yii::app()->end();
+                            }
+                            else
+                            {
+                                $data = array('decision'=>0);
+                                echo CJSON::encode($data);
+                                Yii::app()->end();
+                            }
+                        }
+                        else
+                        {
+                            //$msg = print_r($company->getErrors(),1);
+                            //throw new CHttpException(400,'Not saved because: '.$msg );
+                            //echo "0";
+                            $errors = $company->errors;
+                            $data = array('errors'=>$errors,'decision'=>0 );
+                            echo CJSON::encode($data);
+                            Yii::app()->end();
+                        }    
+                    }
+                    else
+                    {
+                        $errors = $company->errors;
+                        $data = array('errors'=>$errors,'decision'=>0 );
+                        echo CJSON::encode($data);
+                        Yii::app()->end();
+                       
+            }
+            }
+    }
+	public function actionAddCompanyContact()
+    {
+        $session = new CHttpSession;
+        $company = new AsicOnCompany();
+    
+
+       
+
+        if (isset($_POST['AsicOnCompany'])) 
+        {
+            $formInfo = $_POST['AsicOnCompany'];
+
+            $company->attributes=$formInfo;
+			
+            if($company->validate())
+            {
+                $command = Yii::app()->db->createCommand();
+                $result=$command->insert('user',array(
+                                    //'id'=>it is autoincrement,
+                                    'company'=>$formInfo['name'],
+                                    'first_name'=>$formInfo['user_first_name'],
+                                    'last_name'=>$formInfo['user_last_name'],
+                                    'email'=>$formInfo['user_email'],
+                                    'contact_number'=>$formInfo['user_contact_number'],
+                                    'timezone_id'=>1,
+                                    'photo'=>NULL,
+                                    'tenant'=> empty($session['tenant']) ? NULL : $session['tenant'],
+                                    'user_type'=>2,
+                                    'user_status'=>1,
+                                    'role'=>10,
+                                    'created_by'=> empty($session['created_by']) ? NULL : $session['created_by'],
+                                ));
+                if ($result)
+                {
+                    $last_id = Yii::app()->db->getLastInsertID();
+                    $user = User::model()->findByPk($last_id);
+                     $Criteria = new CDbCriteria();
+					//$Criteria->select="*,CONCAT(first_name,' ',last_name) as name";
+					$Criteria->condition = "company = ".$formInfo['name']." and is_deleted = 0";
+					$Userlist = User::model()->findAll($Criteria);
+                    $contactCompany = Company::model()->findByPk($formInfo['name'],"is_deleted = 0");
+
+                    $dropDown = "<option selected='selected' value='" . $user->id . "'>" .$user->first_name." ".$user->last_name."</option>"; // seriously why is this here?
+                    $ret = array("contactCompany"=>$contactCompany, "dropDown" => $dropDown);
+					$session['contactData']=CHtml::listData($Userlist, 'id', function($Userlist){return "{$Userlist->first_name} {$Userlist->last_name}";});
+                    echo CJSON::encode($ret);
+                    Yii::app()->end();
+                }
+                else
+                {
+                    $data = array('decision'=>0);
+                    echo CJSON::encode($data);
+                    Yii::app()->end();
+                }
+            }
+            else
+            {
+                $errors = $company->errors;
+                $data = array('errors'=>$errors,'decision'=>0 );
+                echo CJSON::encode($data);
+                Yii::app()->end();
+            }
+        }
+    }
+	public function actionPaymentAppointment()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'Appointment';
+		$session['step10Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/paymentAppointment'>Appointment</a>";
+		$sessionVisit = $session['visit_model'];
+		$model = new RegistrationAsic();
+		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
+		if(isset($_POST['RegistrationAsic']))
+		{
+			$session['appt1']=$_POST['RegistrationAsic']['appointment_1'];
+			$session['appt2']=$_POST['RegistrationAsic']['appointment_2'];
+			$this->redirect(array('preregistration/asicSubmit'));
+		}
+		//echo "here";
+		$preModel = new PreregLogin();
+		$this->render('payment-appointment' , array('model' => $model));
+		
+		
+	}
+	//Asic Submit Part Starts Here ------------------------------------------------------------------------------------------------------------------
+	public function actionAsicSubmit()
+	{
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'SUBMIT APPLICATION';
+		$session['step10Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/paymentAppointment'>Submit Application</a>";
+		$model = new AsicSubmit();
+		//print_r($_POST);
+		if(isset($_POST['AsicSubmit']))
+		{
+			
+			$asic_application=new AsicInfo();
+			$asic_applicant= new RegistrationAsic();
+			$asic_address=new AsicAddressHistory();
+			$asic_immi = new Immigration();	
+			$asic_company= new AsicOnCompany();
+			if(isset($session['AsicprivacyPolicy']))
+			{
+				
+				
+				if(isset($session['Asictype']))
+				{
+					//New--------------------------------------------------------------------------------------------------------------------------
+					if($session['Asictype']==1)
+					{
+						
+						
+						$asic_application->fee=333;
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$asic_application->paid_by='Company';
+						else
+						$asic_application->paid_by='Cardholder';
+						if(isset($session['AsicInfo-details']))
+						{
+							$asic_application->previous_card=$session['AsicInfo-details']->previous_card;
+							$asic_application->previous_issuing_body=$session['AsicInfo-details']->previous_issuing_body;
+							if($session['AsicInfo-details']->previous_expiry!='')
+							$asic_application->previous_expiry=date('Y-m-d',strtotime($session['AsicInfo-details']->previous_expiry));
+							$asic_application->created_at=date('Y-m-d');
+							$asic_application->asic_type=$session['AsicInfo-details']->asic_type;
+							$asic_application->access=$session['AsicInfo-details']->access;
+							$asic_application->other_info=$session['AsicInfo-details']->other_info;
+							$asic_application->frequency_red=$session['AsicInfo-details']->frequency_red;
+							$asic_application->frequency_grey=$session['AsicInfo-details']->frequency_grey;
+							$asic_application->security_detail=$session['AsicInfo-details']->security_detail;
+							$asic_application->door_detail=$session['AsicInfo-details']->door_detail;
+						}
+						if(isset($session['asicapplicant-details']))
+						{
+							$asic_applicant=$session['asicapplicant-details'];
+							
+							$asic_applicant->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+							
+							$asic_applicant->from_date=date('Y-m-d',strtotime($session['asicapplicant-details']->from_date));
+							
+							$asic_applicant->created_on=date('Y-m-d');
+							$asic_applicant->application_type='New';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$asic_applicant->acc_name=$session['Accname'];
+							$asic_applicant->acc_bsb=$session['Bsb'];
+							$asic_applicant->acc_number=$session['Accno'];
+							
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$asic_applicant->condition_of_use=1;
+							$asic_applicant->aus_check=1;
+							$asic_applicant->tenant=$session['tenant'];
+							}
+						}
+						if(isset($session['immi-details']))
+						{
+							$asic_immi=$session['immi-details'];
+							if($session['immi-details']->arrival_date!='')
+							$asic_immi->arrival_date=date('Y-m-d',strtotime($session['immi-details']->arrival_date));
+						}
+						if(isset($session['identification_Details']))
+						{
+							$asic_applicant->primary_id=$session['identification_Details']->primary_id;
+							$asic_applicant->secondary_id=$session['identification_Details']->secondary_id;
+							$asic_applicant->tertiary_id1=$session['identification_Details']->tertiary_id1;
+							$asic_applicant->tertiary_id2=$session['identification_Details']->tertiary_id2;
+							$asic_applicant->secondary_id_no=$session['identification_Details']->secondary_id_no;
+							$asic_applicant->tertiary_id1_no=$session['identification_Details']->tertiary_id1_no;
+							$asic_applicant->tertiary_id2_no=$session['identification_Details']->tertiary_id2_no;
+							$asic_applicant->primary_id_no=$session['identification_Details']->primary_id_no;
+							$asic_applicant->country_id1=$session['identification_Details']->country_id1;
+							$asic_applicant->country_id2=$session['identification_Details']->country_id2;
+							$asic_applicant->country_id3=$session['identification_Details']->country_id3;
+							$asic_applicant->country_id4=$session['identification_Details']->country_id4;
+							$asic_applicant->upload_1=$session['identification_Details']->upload_1;
+							$asic_applicant->upload_2=$session['identification_Details']->upload_2;
+							$asic_applicant->upload_4=$session['identification_Details']->upload_4;
+							$asic_applicant->upload_3=$session['identification_Details']->upload_3;
+							//$asic_applicant->name_change_file=$session['asicapplicant-details'];
+							if($session['identification_Details']->primary_id_expiry!='')
+							$asic_applicant->primary_id_expiry=date('Y-m-d',strtotime($session['identification_Details']->primary_id_expiry));
+							if($session['identification_Details']->secondary_id_expiry!='')
+							$asic_applicant->secondary_id_expiry=date('Y-m-d',strtotime($session['identification_Details']->secondary_id_expiry));
+							if($session['identification_Details']->tertiary_id1_expiry!='')
+							$asic_applicant->tertiary_id1_expiry=date('Y-m-d',strtotime($session['identification_Details']->tertiary_id1_expiry));
+							if($session['identification_Details']->tertiary_id2_expiry!='')
+							$asic_applicant->tertiary_id2_expiry=date('Y-m-d',strtotime($session['identification_Details']->tertiary_id2_expiry));
+						}
+						if(isset($session['Company_Details']))
+						{
+							$asic_company=$session['Company_Details'];
+							
+							//$asic_company->save(false);
+							if(isset($session['opFile']) && $session['opFile']!='')
+							$asic_applicant->op_need_document=$session['opFile'];
+							if(isset($session['authFile']) && $session['authFile']!='')
+							User::model()->updateByPk($asic_company->contact, array('authorised_file' => $session['authFile']));
+							$asic_applicant->company_contact=$asic_company->contact;
+							$asic_applicant->company_id=$asic_company->name;
+							$asic_applicant->employment_status=$asic_company->company_radio;
+							$company_asic_update = Company::model()->findByPk($asic_company->name);
+							$company_asic_update->office_number=$asic_company->office_number;
+							$company_asic_update->unit=$asic_company->unit;
+							$company_asic_update->street_name=$asic_company->street_name;
+							$company_asic_update->street_number=$asic_company->street_number;
+							$company_asic_update->street_type=$asic_company->street_type;
+							$company_asic_update->post_code=$asic_company->post_code;
+							$company_asic_update->suburb=$asic_company->suburb;
+							$company_asic_update->city=$asic_company->city;
+							$company_asic_update->state=$asic_company->state;
+							$company_asic_update->country=$asic_company->country;
+							
+							$company_asic_update->save(false);
+						}
+						if(isset($session['appt1']) && isset($session['appt2']))
+						{
+							$asic_applicant->appointment_1=date('Y-m-d H:i:s',strtotime(str_replace('/', '-', $session['appt1'])));
+							$asic_applicant->appointment_2=date('Y-m-d H:i:s',strtotime(str_replace('/', '-', $session['appt2'])));
+						}
+						$asic_applicant->is_saved=0;
+						if($asic_applicant->save())
+						{
+							if(isset($session['AddHistory']))
+							{
+								$x=count($session['AddHistory']['unit']);
+								for($i=0;$i<$x;$i++)
+								{
+								if(!$asic_address->exists("( asic_applicant_id = '{$asic_applicant->id}' AND street_name='{$session['AddHistory']['stnm'][$i]}' AND street_number='{$session['AddHistory']['stno'][$i]}')"))
+									{
+									$asic_address->asic_applicant_id=$asic_applicant->id;
+									$asic_address->unit=$session['AddHistory']['unit'][$i];
+									$asic_address->street_number=$session['AddHistory']['stno'][$i];
+									$asic_address->street_name=$session['AddHistory']['stnm'][$i];
+									$asic_address->street_type=$session['AddHistory']['sttype'][$i];
+									$asic_address->suburb=$session['AddHistory']['sub'][$i];
+									$asic_address->city=$session['AddHistory']['city'][$i];
+									$asic_address->postcode=$session['AddHistory']['pstcd'][$i];
+									$asic_address->state=$session['AddHistory']['state'][$i];
+									$asic_address->country=$session['AddHistory']['cntry'][$i];
+									$asic_address->from_date=date('Y-m-d',strtotime($session['AddHistory']['frm'][$i]));
+									$asic_address->to_date=date('Y-m-d',strtotime($session['AddHistory']['to'][$i]));
+									$asic_address->created_at=date('Y-m-d');
+									$asic_address->isNewRecord = true;
+									$asic_address->setPrimaryKey(NULL);
+									$asic_address->save();
+									}
+									
+									
+									
+										
+								}
+								$asic_application->asic_applicant_id=$asic_applicant->id;
+										if($asic_application->save())
+										{
+											$asic_immi->asic_applicant_id=$asic_applicant->id;
+											$asic_immi->save();
+										}
+							}
+							else
+							{
+								$asic_application->asic_applicant_id=$asic_applicant->id;
+										if($asic_application->save())
+										{
+											$asic_immi->asic_applicant_id=$asic_applicant->id;
+											$asic_immi->save();
+										}
+							}
+								
+						}
+						
+					}
+					//Renewal--------------------------------------------------------------------------------------------
+					if($session['Asictype']==2)
+					{
+						
+						
+						if($session['BondPaid']==1)
+						{
+							$asic_application->fee=283;
+						}
+						else
+						$asic_application->fee=333;
+						
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$asic_application->paid_by='Company';
+						else
+						$asic_application->paid_by='Cardholder';
+						
+						if(isset($session['AsicInfo-details']))
+						{
+							$asic_application->previous_card=$session['AsicInfo-details']->previous_card;
+							$asic_application->previous_issuing_body=$session['AsicInfo-details']->previous_issuing_body;
+							if($session['AsicInfo-details']->previous_expiry!='')
+							$asic_application->previous_expiry=date('Y-m-d',strtotime($session['AsicInfo-details']->previous_expiry));
+							$asic_application->created_at=date('Y-m-d');
+							$asic_application->asic_type=$session['AsicInfo-details']->asic_type;
+							$asic_application->access=$session['AsicInfo-details']->access;
+							$asic_application->other_info=$session['AsicInfo-details']->other_info;
+							$asic_application->frequency_red=$session['AsicInfo-details']->frequency_red;
+							$asic_application->frequency_grey=$session['AsicInfo-details']->frequency_grey;
+							$asic_application->security_detail=$session['AsicInfo-details']->security_detail;
+							$asic_application->door_detail=$session['AsicInfo-details']->door_detail;
+						}
+						
+						if(isset($session['asicapplicant-details']))
+						{
+							$asic_applicant=$session['asicapplicant-details'];
+							
+							$asic_applicant->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+							
+							$asic_applicant->from_date=date('Y-m-d',strtotime($session['asicapplicant-details']->from_date));
+							
+							$asic_applicant->created_on=date('Y-m-d');
+							$asic_applicant->application_type='Renew';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$asic_applicant->acc_name=$session['Accname'];
+							$asic_applicant->acc_bsb=$session['Bsb'];
+							$asic_applicant->acc_number=$session['Accno'];
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$asic_applicant->condition_of_use=1;
+							$asic_applicant->aus_check=1;
+							$asic_applicant->tenant=$session['tenant'];
+							}
+						}
+						
+						if(isset($session['immi-details']))
+						{
+							$asic_immi=$session['immi-details'];
+							if($session['immi-details']->arrival_date!='')
+							$asic_immi->arrival_date=date('Y-m-d',strtotime($session['immi-details']->arrival_date));
+						}
+						if(isset($session['identification_Details']))
+						{
+							$asic_applicant->primary_id=$session['identification_Details']->primary_id;
+							$asic_applicant->secondary_id=$session['identification_Details']->secondary_id;
+							$asic_applicant->tertiary_id1=$session['identification_Details']->tertiary_id1;
+							$asic_applicant->tertiary_id2=$session['identification_Details']->tertiary_id2;
+							$asic_applicant->secondary_id_no=$session['identification_Details']->secondary_id_no;
+							$asic_applicant->tertiary_id1_no=$session['identification_Details']->tertiary_id1_no;
+							$asic_applicant->tertiary_id2_no=$session['identification_Details']->tertiary_id2_no;
+							$asic_applicant->primary_id_no=$session['identification_Details']->primary_id_no;
+							$asic_applicant->country_id1=$session['identification_Details']->country_id1;
+							$asic_applicant->country_id2=$session['identification_Details']->country_id2;
+							$asic_applicant->country_id3=$session['identification_Details']->country_id3;
+							$asic_applicant->country_id4=$session['identification_Details']->country_id4;
+							$asic_applicant->upload_1=$session['identification_Details']->upload_1;
+							$asic_applicant->upload_2=$session['identification_Details']->upload_2;
+							$asic_applicant->upload_4=$session['identification_Details']->upload_4;
+							$asic_applicant->upload_3=$session['identification_Details']->upload_3;
+							//$asic_applicant->name_change_file=$session['asicapplicant-details'];
+							$asic_applicant->primary_id_expiry=date('Y-m-d',strtotime($session['identification_Details']->primary_id_expiry));
+							if($session['identification_Details']->secondary_id_expiry!='')
+							$asic_applicant->secondary_id_expiry=date('Y-m-d',strtotime($session['identification_Details']->secondary_id_expiry));
+							if($session['identification_Details']->tertiary_id1_expiry!='')
+							$asic_applicant->tertiary_id1_expiry=date('Y-m-d',strtotime($session['identification_Details']->tertiary_id1_expiry));
+							if($session['identification_Details']->tertiary_id2_expiry!='')
+							$asic_applicant->tertiary_id2_expiry=date('Y-m-d',strtotime($session['identification_Details']->tertiary_id2_expiry));
+						}
+						if(isset($session['Company_Details']))
+						{
+							$asic_company=$session['Company_Details'];
+							if(isset($session['opFile']) && $session['opFile']!='')
+							$asic_applicant->op_need_document=$session['opFile'];
+							if(isset($session['authFile']) && $session['authFile']!='')
+							User::model()->updateByPk($asic_company->contact, array('authorised_file' => $session['authFile']));
+							$asic_applicant->company_contact=$asic_company->contact;
+							$asic_applicant->company_id=$asic_company->name;
+							$asic_applicant->employment_status=$asic_company->company_radio;
+							$company_asic_update = Company::model()->findByPk($asic_company->name);
+							$company_asic_update->office_number=$asic_company->office_number;
+							$company_asic_update->unit=$asic_company->unit;
+							$company_asic_update->street_name=$asic_company->street_name;
+							$company_asic_update->street_number=$asic_company->street_number;
+							$company_asic_update->street_type=$asic_company->street_type;
+							$company_asic_update->post_code=$asic_company->post_code;
+							$company_asic_update->suburb=$asic_company->suburb;
+							$company_asic_update->city=$asic_company->city;
+							$company_asic_update->state=$asic_company->state;
+							$company_asic_update->country=$asic_company->country;
+							
+							$company_asic_update->save(false);
+						}
+						if(isset($session['appt1']) && isset($session['appt2']))
+						{
+							$asic_applicant->appointment_1=date('Y-m-d H:i:s',strtotime(str_replace('/', '-', $session['appt1'])));
+							$asic_applicant->appointment_2=date('Y-m-d H:i:s',strtotime(str_replace('/', '-', $session['appt2'])));
+							
+						}
+						$asic_applicant->isNewRecord = true;
+						//$asic_applicant->save();
+						//print_r($asic_applicant->getErrors());
+						$asic_applicant->is_saved=0;
+						if($asic_applicant->save())
+						{
+							if(isset($session['AddHistory']))
+							{
+								$x=count($session['AddHistory']['unit']);
+								
+								for($i=0;$i<$x;$i++)
+								{
+									if(!$asic_address->exists("( asic_applicant_id = '{$asic_applicant->id}' AND street_name='{$session['AddHistory']['stnm'][$i]}' AND street_number='{$session['AddHistory']['stno'][$i]}')"))
+									{
+									$asic_address->asic_applicant_id=$asic_applicant->id;
+									$asic_address->unit=$session['AddHistory']['unit'][$i];
+									$asic_address->street_number=$session['AddHistory']['stno'][$i];
+									$asic_address->street_name=$session['AddHistory']['stnm'][$i];
+									$asic_address->street_type=$session['AddHistory']['sttype'][$i];
+									$asic_address->suburb=$session['AddHistory']['sub'][$i];
+									$asic_address->city=$session['AddHistory']['city'][$i];
+									$asic_address->postcode=$session['AddHistory']['pstcd'][$i];
+									$asic_address->state=$session['AddHistory']['state'][$i];
+									$asic_address->country=$session['AddHistory']['cntry'][$i];
+									$asic_address->from_date=date('Y-m-d',strtotime($session['AddHistory']['frm'][$i]));
+									$asic_address->to_date=date('Y-m-d',strtotime($session['AddHistory']['to'][$i]));
+									$asic_address->created_at=date('Y-m-d');
+									$asic_address->isNewRecord = true;
+									$asic_address->setPrimaryKey(NULL);
+									$asic_address->save();
+									}
+									
+										
+										
+									
+								}
+										$asic_application->asic_applicant_id=$asic_applicant->id;
+										if($asic_application->save())
+										{
+											$asic_immi->asic_applicant_id=$asic_applicant->id;
+											$asic_immi->save();
+										}
+							}
+							else
+							{
+								$asic_application->asic_applicant_id=$asic_applicant->id;
+										if($asic_application->save())
+										{
+											$asic_immi->asic_applicant_id=$asic_applicant->id;
+											$asic_immi->save();
+										}
+							}
+						}
+					}
+					//Replacement-------------------------------------------------------------------------
+					if($session['Asictype']==3)
+					{
+						
+						if($session['BondPaid']==1)
+						{
+							$asic_application->fee=104;
+						}
+						else
+						$asic_application->fee=154;
+					
+						if(isset($session['paidby']) && $session['paidby']==1)
+						$asic_application->paid_by='Company';
+						else
+						$asic_application->paid_by='Cardholder';
+						
+						if(isset($session['AsicInfo-details']))
+						{
+							$asic_application->previous_card=$session['AsicInfo-details']->previous_card;
+							$asic_application->previous_issuing_body=$session['AsicInfo-details']->previous_issuing_body;
+							if($session['AsicInfo-details']->previous_expiry!='')
+							$asic_application->previous_expiry=date('Y-m-d',strtotime($session['AsicInfo-details']->previous_expiry));
+							$asic_application->created_at=date('Y-m-d');
+							$asic_application->asic_type=$session['AsicInfo-details']->asic_type;
+							$asic_application->access=$session['AsicInfo-details']->access;
+							$asic_application->other_info=$session['AsicInfo-details']->other_info;
+							$asic_application->frequency_red=$session['AsicInfo-details']->frequency_red;
+							$asic_application->frequency_grey=$session['AsicInfo-details']->frequency_grey;
+							$asic_application->security_detail=$session['AsicInfo-details']->security_detail;
+							$asic_application->door_detail=$session['AsicInfo-details']->door_detail;
+						}
+						if(isset($session['asicapplicant-details']))
+						{
+							$asic_applicant=$session['asicapplicant-details'];
+							
+							$asic_applicant->date_of_birth=date('Y-m-d',strtotime($session['asicapplicant-details']->date_of_birth));
+							
+							$asic_applicant->from_date=date('Y-m-d',strtotime($session['asicapplicant-details']->from_date));
+							//echo "<pre>";
+							//print_r($_POST);
+							//echo "</pre>";
+							//Yii::app()->end();
+							$asic_applicant->created_on=date('Y-m-d');
+							$asic_applicant->application_type='Replacement';
+							if(isset($session['Accname']) && $session['Accname']!='' && isset($session['Bsb']) && $session['Bsb']!='' && isset($session['Accno']) && $session['Accno']!='')
+							{
+							$asic_applicant->acc_name=$session['Accname'];
+							$asic_applicant->acc_bsb=$session['Bsb'];
+							$asic_applicant->acc_number=$session['Accno'];
+							}
+							if($session['Crime1']==2 && $session['Crime2']==2 && $session['Crime3']==2 && $session['Crime4']==2 && $session['use1']==1 && $session['use2']==1 && $session['use3']==1)
+							{
+							$asic_applicant->condition_of_use=1;
+							$asic_applicant->aus_check=1;
+							$asic_applicant->tenant=$session['tenant'];
+							}
+						}
+						if(isset($session['immi-details']))
+						{
+							$asic_immi=$session['immi-details'];
+							if($session['immi-details']->arrival_date!='')
+							$asic_immi->arrival_date=date('Y-m-d',strtotime($session['immi-details']->arrival_date));
+						}
+						if(isset($session['identification_Details']))
+						{
+							$asic_applicant->primary_id=$session['identification_Details']->primary_id;
+							$asic_applicant->secondary_id=$session['identification_Details']->secondary_id;
+							$asic_applicant->tertiary_id1=$session['identification_Details']->tertiary_id1;
+							$asic_applicant->tertiary_id2=$session['identification_Details']->tertiary_id2;
+							$asic_applicant->secondary_id_no=$session['identification_Details']->secondary_id_no;
+							$asic_applicant->tertiary_id1_no=$session['identification_Details']->tertiary_id1_no;
+							$asic_applicant->tertiary_id2_no=$session['identification_Details']->tertiary_id2_no;
+							$asic_applicant->primary_id_no=$session['identification_Details']->primary_id_no;
+							$asic_applicant->country_id1=$session['identification_Details']->country_id1;
+							$asic_applicant->country_id2=$session['identification_Details']->country_id2;
+							$asic_applicant->country_id3=$session['identification_Details']->country_id3;
+							$asic_applicant->country_id4=$session['identification_Details']->country_id4;
+							$asic_applicant->upload_1=$session['identification_Details']->upload_1;
+							$asic_applicant->upload_2=$session['identification_Details']->upload_2;
+							$asic_applicant->upload_4=$session['identification_Details']->upload_4;
+							$asic_applicant->upload_3=$session['identification_Details']->upload_3;
+							//$asic_applicant->name_change_file=$session['asicapplicant-details'];
+							$asic_applicant->primary_id_expiry=date('Y-m-d',strtotime($session['identification_Details']->primary_id_expiry));
+							if($session['identification_Details']->secondary_id_expiry!='')
+							$asic_applicant->secondary_id_expiry=date('Y-m-d',strtotime($session['identification_Details']->secondary_id_expiry));
+							if($session['identification_Details']->tertiary_id1_expiry!='')
+							$asic_applicant->tertiary_id1_expiry=date('Y-m-d',strtotime($session['identification_Details']->tertiary_id1_expiry));
+							if($session['identification_Details']->tertiary_id2_expiry!='')
+							$asic_applicant->tertiary_id2_expiry=date('Y-m-d',strtotime($session['identification_Details']->tertiary_id2_expiry));
+						}
+						if(isset($session['Company_Details']))
+						{
+							$asic_company=$session['Company_Details'];
+							if(isset($session['opFile']) && $session['opFile']!='')
+							$asic_applicant->op_need_document=$session['opFile'];
+							if(isset($session['authFile']) && $session['authFile']!='')
+							User::model()->updateByPk($asic_company->contact, array('authorised_file' => $session['authFile']));
+							$asic_applicant->company_contact=$asic_company->contact;
+							$asic_applicant->company_id=$asic_company->name;
+							$asic_applicant->employment_status=$asic_company->company_radio;
+							$company_asic_update = Company::model()->findByPk($asic_company->name);
+							$company_asic_update->office_number=$asic_company->office_number;
+							$company_asic_update->unit=$asic_company->unit;
+							$company_asic_update->street_name=$asic_company->street_name;
+							$company_asic_update->street_number=$asic_company->street_number;
+							$company_asic_update->street_type=$asic_company->street_type;
+							$company_asic_update->post_code=$asic_company->post_code;
+							$company_asic_update->suburb=$asic_company->suburb;
+							$company_asic_update->city=$asic_company->city;
+							$company_asic_update->state=$asic_company->state;
+							$company_asic_update->country=$asic_company->country;
+							
+							$company_asic_update->save(false);
+						}
+						if(isset($session['appt1']) && isset($session['appt2']))
+						{
+							$asic_applicant->appointment_1=date('Y-m-d H:i:s',strtotime(str_replace('/', '-', $session['appt1'])));
+							$asic_applicant->appointment_2=date('Y-m-d H:i:s',strtotime(str_replace('/', '-', $session['appt2'])));
+						}
+						$asic_applicant->is_saved=0;
+						if($asic_applicant->save())
+						{
+							if(isset($session['AddHistory']))
+							{
+								$x=count($session['AddHistory']['unit']);
+								for($i=0;$i<$x;$i++)
+								{
+									if(!$asic_address->exists("( asic_applicant_id = '{$asic_applicant->id}' AND street_name='{$session['AddHistory']['stnm'][$i]}' AND street_number='{$session['AddHistory']['stno'][$i]}')"))
+									{
+									$asic_address->asic_applicant_id=$asic_applicant->id;
+									$asic_address->unit=$session['AddHistory']['unit'][$i];
+									$asic_address->street_number=$session['AddHistory']['stno'][$i];
+									$asic_address->street_name=$session['AddHistory']['stnm'][$i];
+									$asic_address->street_type=$session['AddHistory']['sttype'][$i];
+									$asic_address->suburb=$session['AddHistory']['sub'][$i];
+									$asic_address->city=$session['AddHistory']['city'][$i];
+									$asic_address->postcode=$session['AddHistory']['pstcd'][$i];
+									$asic_address->state=$session['AddHistory']['state'][$i];
+									$asic_address->country=$session['AddHistory']['cntry'][$i];
+									$asic_address->from_date=date('Y-m-d',strtotime($session['AddHistory']['frm'][$i]));
+									$asic_address->to_date=date('Y-m-d',strtotime($session['AddHistory']['to'][$i]));
+									$asic_address->created_at=date('Y-m-d');
+									$asic_address->isNewRecord = true;
+									$asic_address->setPrimaryKey(NULL);
+									$asic_address->save();
+									}
+									
+								}
+								$asic_application->asic_applicant_id=$asic_applicant->id;
+										if($asic_application->save())
+										{
+											$asic_immi->asic_applicant_id=$asic_applicant->id;
+											$asic_immi->save();
+										}
+							}
+							else
+							{
+								$asic_application->asic_applicant_id=$asic_applicant->id;
+										if($asic_application->save())
+										{
+											$asic_immi->asic_applicant_id=$asic_applicant->id;
+											$asic_immi->save();
+										}
+							}
+						}
+					}
+				}
+			
+			
+			
+			
+				
+			}
+			Yii::app()->session->clear();
+			$airportName=new Company();
+			$airport=$airportName->findByPk($asic_applicant->tenant)->name;
+			$contact=$airportName->findByPk($asic_applicant->tenant)->office_number;
+			$issuing=new user();
+			$issuing=$issuing->findAll('tenant='.$asic_applicant->tenant.' AND company='.$asic_applicant->tenant.' AND role=11 AND is_deleted=0');
+			$emailTransport = new EmailTransport();
+			foreach($issuing as $data)
+			{
+				$templateParams = array(
+				'email' => $data->email,
+				'issname'=>ucfirst($data->first_name) . ' ' . ucfirst($data->last_name),
+				'datetime'=>$asic_applicant->appointment_1,
+				'datetime1'=>$asic_applicant->appointment_2,
+				'number'=>$asic_applicant->mobile_phone,
+				'emailid'=>$asic_applicant->email,
+				'name'=>  ucfirst($asic_applicant->first_name) . ' ' . ucfirst($asic_applicant->last_name),
+				);
+				$subject=ucfirst($asic_applicant->first_name) . ' ' . ucfirst($asic_applicant->last_name).'has requested an ASIC Induction Appointment';
+				$emailTransport->sendAppointment($templateParams, $data->email, $data->first_name . ' ' . $data->last_name,$subject);
+			}
+			$attachment = file_get_contents(Yii::getPathOfAlias('webroot').'/uploads/Employers_Certification3739.pdf');
+			$attachment_encoded = base64_encode($attachment); 
+			
+			 $templateParams = array(
+            'email' => $asic_applicant->email,
+			'Airport'=>$airport,
+			'contact'=>$contact,
+			'name'=>  ucfirst($asic_applicant->first_name) . ' ' . ucfirst($asic_applicant->last_name),
+			);
+			$attachments =array(
+								'content' => $attachment_encoded,
+								'type' => "application/pdf",
+								'name' => 'file.pdf'
+								);
+			$subject='Application Submitted '.ucfirst($asic_applicant->first_name) . ' ' . ucfirst($asic_applicant->last_name);
+			//TODO: Change to YiiMail
+			
+			$emailTransport->sendSubmitted($templateParams, $asic_applicant->email, $asic_applicant->first_name . ' ' . $asic_applicant->last_name,$subject,$attachments);
+			
+			$this->redirect(array('preregistration/asicSuccess'));
+		}
+		$this->render('asic-submit',array('model'=>$model) );
+	}//Asic Submit Part Ends Here ------------------------------------------------------------------------------------------------------------------
 	public function actionEntryPoint(){
 
 		$session = new CHttpSession;
@@ -160,11 +2214,17 @@ class PreregistrationController extends Controller
 			if(isset($session['visitor_model']) && $session['visitor_model'] != ''){
 				$model = $session['visitor_model'];
 			}else{
+				
 				$model = Registration::model()->findByPk(Yii::app()->user->id);
+				
 			}
 		}
 		elseif(isset($session['visitor_model']) && $session['visitor_model'] != ''){
 			$model = $session['visitor_model'];
+			echo "<pre>";
+			print_r($session['visitor_model']);
+			echo '</pre>';
+			Yii::app()->end();
 		}
 		else{
 			$model = new Registration();	
@@ -190,6 +2250,10 @@ class PreregistrationController extends Controller
 			if (!empty($_POST['Registration']['contact_state']))
 			{
 				$session['visitor_model'] = $model;
+				/*echo '<pre>';
+				print_r($model);
+				echo '</pre>';
+				Yii::app()->end();*/
 				$this->redirect(array('preregistration/visitReason'));
             } 
             else {
@@ -277,6 +2341,16 @@ class PreregistrationController extends Controller
 		unset($session['is_listed']);unset($session['requsetForVerificationEmail']);
 		$model->scenario = 'preregistrationAsic';
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'add-asic-form') {
+			$model->first_name=$_POST['Registration']['first_name'];
+			$model->last_name=$_POST['Registration']['last_name'];
+			$model->date_of_birth=date('Y-m-d',strtotime($_POST['Registration']['date_of_birth']));
+			if($model->date_of_birth=='1970-01-01')
+				unset($model->date_of_birth);
+			else
+			$model->date_of_birth=date('Y-m-d',strtotime($_POST['Registration']['date_of_birth']));	
+			//echo "<pre>";
+			//print_r($model->date_of_birth);
+			//echo "</pre>";
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
@@ -302,9 +2376,15 @@ class PreregistrationController extends Controller
 					$model->key_string = hash('ripemd160', uniqid());
 					$model->tenant = $session['tenant'];
 					$model->visitor_workstation = $session['workstation'];
+					if($session['created_by']!="")
 					$model->created_by = $session['created_by'];
+					else
+					$model->created_by=null;
 					$model->role = 9; //Staff Member/Intranet
 					$model->visitor_card_status = 6; //6: Asic Issued
+					$model->date_created=date('Y-m-d');
+					$model->company=$_POST['Company']['name'];
+					
 					if ($model->save(false)) 
 					{
 						$session['host'] = $model->id;
@@ -344,40 +2424,89 @@ class PreregistrationController extends Controller
 		$session['step7Subtitle'] = "&nbsp;&nbsp;>&nbsp;&nbsp;"."<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/uploadPhoto'>Photo</a>";
 		
 		$model = new UploadForm();
-		if(isset($_POST['UploadForm']))
+	
+		if(Yii::app()->request->isAjaxRequest)
 		{
-			$model->attributes=$_POST['UploadForm'];
-			$name  = $_FILES['UploadForm']['name']['image'];
+			if(isset($_POST['imgBase64']))
+			{
+			$img = $_POST['imgBase64'];
+			$img = str_replace('data:image/png;base64,', '', $img);
+			$img = str_replace(' ', '+', $img);
+			$fileData = base64_decode($img);
+			//saving
+			$ext='jpg';
+			$newNameHash = hash('adler32', time());
+			$newName =$newNameHash.'-' . time().'.'.$ext;
+			$fileName = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
+			$relativeImgSrc = 'uploads/visitor/'.$newName;
+			file_put_contents($fileName, $fileData);
+			$photoModel = new Photo();
+					$photoModel->filename = $newName;
+					$photoModel->unique_filename = $newName;
+					$photoModel->relative_path = $relativeImgSrc;
+			        $file=file_get_contents($fileName);
+			        $image = base64_encode($file);
+			        $photoModel->db_image = $image;
+					if($photoModel->save())
+					{
+						
+						if (file_exists($fileName)) {
+				            unlink($fileName);
+				        }
+				        $session['photo'] = $photoModel->id;
+						$session['imgName'] = $newName;
+						//$this->redirect(array('preregistration/visitDetails'));
+					}
+					else
+					die();
+			}
+			elseif (isset($_FILES))
+			{
+				//print_r($_FILES['name']['name']);
+				//Yii::app()->end();
+			//$model->attributes=$_POST['UploadForm'];
+			$name  = $_FILES['name']['name'];
 			if(!empty($name)){
 				$ext  = pathinfo($name, PATHINFO_EXTENSION);
 				$newNameHash = hash('adler32', time());
 				$newName    = $newNameHash.'-' . time().'.'.$ext;
-				$model->image=CUploadedFile::getInstance($model,'image');
+				//$model->image=CUploadedFile::getInstance($model,'image');
 				$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
 				$relativeImgSrc = 'uploads/visitor/'.$newName;
-				if($model->image->saveAs($fullImgSource)){
+				
+				if(move_uploaded_file($_FILES['name']['tmp_name'],$fullImgSource)){
 					$photoModel = new Photo();
 					$photoModel->filename = $name;
 					$photoModel->unique_filename = $newName;
 					$photoModel->relative_path = $relativeImgSrc;
 			        $file=file_get_contents($fullImgSource);
 			        $image = base64_encode($file);
+					
 			        $photoModel->db_image = $image;
+					
+					//print_r($photoModel->db_image);
+					//Yii::app()->end();
+					//$data = 
 					if($photoModel->save())
 					{
+						//print_r($photoModel->getErrors());
+						//Yii::app()->end();
 						if (file_exists($fullImgSource)) {
 				            unlink($fullImgSource);
 				        }
 				        $session['photo'] = $photoModel->id;
 						$session['imgName'] = $newName;
-						$this->redirect(array('preregistration/visitDetails'));
+						//$this->redirect(array('preregistration/visitDetails'));
 					}
 				}
 			}
 			else{
-				$this->redirect(array('preregistration/visitDetails'));
+				Yii::app()->end();
+			}
 			}
 		}
+		
+		
 		$this->render('upload-photo',array('model'=>$model) );
 	}
 
@@ -442,7 +2571,12 @@ class PreregistrationController extends Controller
 			if($visitor->visitor_type == null || $visitor->visitor_type == ""){
 				$visitor->visitor_type = $sessionVisit->attributes['visitor_type'];
 			}
-
+			$visitor->date_created=date("Y-m-d");
+			$visitor->date_of_birth=$sessionVisitor->attributes['date_of_birth'];
+			//echo "<pre>";
+			//print_r($visitor);
+			//echo '</pre>';
+			//Yii::app()->end();
 			if($visitor->save(false))
 			{
 				$model->visitor =  $visitor->id;
@@ -454,7 +2588,7 @@ class PreregistrationController extends Controller
 				elseif($visitor->profile_type == "ASIC"){
 					$this->createAsicNotificationAsicExpiry();
 				}
-
+				
 				if($model->save())
 				{	
 					unset($session['visitor_model']);unset($session['visit_model']);unset($session['vic_model']);
@@ -497,9 +2631,8 @@ class PreregistrationController extends Controller
 	{
 
 		$session = new CHttpSession;
-		$session['stepTitle'] = 'CREATE AVMS LOGIN';
-		$session['step1Subtitle'] = "<a style='text-decoration: underline;' href='".Yii::app()->getBaseUrl(true)."/index.php/preregistration/registration'>Create Login</a>";
-		unset($session['step2Subtitle']);unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
+		$session['stepTitle'] = 'CREATE AIRPORT VISITOR LOGIN';
+		unset($session['step1Subtitle']);unset($session['step2Subtitle']);unset($session['step3Subtitle']);unset($session['step4Subtitle']);unset($session['step5Subtitle']);
 		unset($session['step6Subtitle']);unset($session['step7Subtitle']);unset($session['step8Subtitle']);
 
 		$model = new CreateLogin();
@@ -512,8 +2645,8 @@ class PreregistrationController extends Controller
 		if (isset($_POST['CreateLogin'])) 
 		{
 			$model->attributes = $_POST['CreateLogin'];
-
-			$session['account_type'] = $model->account_type; $session['username'] = $model->username; $session['password'] = $model->password;
+			$model->account_type='VIC';
+			$session['account_type'] = "VIC"; $session['username'] = $model->username; $session['password'] = $model->password;
 
 			if($model->account_type == "VIC")
 			{	
@@ -528,21 +2661,29 @@ class PreregistrationController extends Controller
 				}
 
 				$userModel->email = $model->username;
-				$userModel->password = User::model()->hashPassword($model->password);
-				
+				$userModel->password = $model->password;
+				$userModel->first_name = $model->fname;
+				$userModel->last_name = $model->lname;
+				$userModel->date_of_birth = $model->dob;
+				$userModel->tenant = $model->tenant;
 				$userModel->profile_type = "VIC";
 				$userModel->role = 10; //role is 10: Visitor/Kiosik
 				$userModel->visitor_card_status = 2; //visitor card status is 2: VIC holder
-
+				$userModel->date_created=date("Y-m-d H:i:s");
 				
 				if ($userModel->save(false)) 
 				{
+					//echo "<pre>";
+					//print_r($userModel);
+					//echo"</pre>";
+					//Yii::app()->end();
 					//**********************************************
 					$loginModel = new PreregLogin();
 
 					$loginModel->username = $userModel->email;
 					$loginModel->password = $model->password;
-
+						//echo $loginModel->password;
+						//Yii::app()->end();
 					if ($loginModel->validate() && $loginModel->login())
 					{
 						$this->redirect(array('preregistration/dashboard'));
@@ -790,10 +2931,12 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAjaxAsicSearch(){
+		//changed on 24/10/2016
 		if(isset($_POST['search_value']) && !empty($_POST['search_value'])){
 			$searchValue = trim($_POST['search_value']);
 			$purifier = new CHtmlPurifier();
 			$searchValue = $purifier->purify($searchValue);
+			$tenantId=$_POST['tenant'];
 
 			if (filter_var($searchValue, FILTER_VALIDATE_EMAIL)) {
 				$model =  Registration::model()->findAllByAttributes(
@@ -834,7 +2977,7 @@ class PreregistrationController extends Controller
 				$connection=Yii::app()->db;
 				$sql="SELECT * FROM visitor WHERE
 					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
-					  AND profile_type = 'ASIC' AND is_deleted=0";
+					  AND profile_type = 'ASIC' AND is_deleted=0 and tenant='$tenantId'";
 
 				$command = $connection->createCommand($sql);
 
@@ -1362,6 +3505,36 @@ class PreregistrationController extends Controller
 		//}
 	}
 
+	public function actionSaved()
+	{	
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'ASIC APPLICATION SAVED';
+		
+	
+		
+			$this->render('saved');
+	
+	}
+	public function actionAsicSuccess()
+	{	
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'ASIC APPLICATION SUBMITTED SUCCESSFULLY';
+		
+	
+		
+			$this->render('asicsuccess');
+	
+	}
+	public function actionStop()
+	{	
+		$session = new CHttpSession;
+		$session['stepTitle'] = 'CANNOT CONTINUE WITH THE APPLICATION';
+		
+	
+		
+			$this->render('Astop');
+	
+	}
 	public function actionAsicPass(){
 		if(
 			isset($_GET['id'], $_GET['email'], $_GET['k_str']) &&
@@ -1469,15 +3642,14 @@ class PreregistrationController extends Controller
         }
 
         $hash = Yii::app()->request->getParam('hash');
-
+		
         /** @var PreregPasswordChangeRequest $passwordRequest */
         $passwordRequest = PreregPasswordChangeRequest::model()->findByAttributes(array('hash' => $hash));
-
+		
         if (!$passwordRequest) {
             Yii::app()->user->setFlash('error', "Reset password hash '$hash' not found. Looks like your reset password link is broken.");
         }
-
-        if ($error = $passwordRequest->checkPasswordRequestByHash()) {
+		 if ($error = $passwordRequest->checkPasswordRequestByHash()) {
             Yii::app()->user->setFlash('error', $error);
             $this->redirect(array('preregistration/forgot'));
         }
@@ -1505,22 +3677,31 @@ class PreregistrationController extends Controller
     	$session = new CHttpSession;
 
     	$model = $this->loadModel($id);
-
+		
         $model->scenario = 'preregistrationPass';
 
     	$new_passwordErr='';$repeat_passwordErr='';$old_passwordErr = '';
 
     	$companyModel = Company::model()->findByPk($model->company);
+		
 
     	$cond="";
-    	if(isset($companyModel)){$cond=isset($_POST['Registration'],$_POST['Company']);}else{$cond=isset($_POST['Registration']);}
+    	/*if(isset($companyModel)){
+			$cond=isset($_POST['Registration'],$_POST['Company']);
+			//print_r($_POST);
+			}*/
+		//else{
+			//print_r($_POST);
+			$cond=isset($_POST['Registration']);
+			//}
 
-        if ($cond) 
+        if (isset($_POST['Registration'])) 
         {	
         	$model->attributes = $_POST['Registration'];
-        	if(isset($companyModel)){$companyModel->attributes = $_POST['Company'];}
-            if( $_POST['Registration']['old_password'] =="" && $_POST['Registration']['new_password'] =="" && $_POST['Registration']['repeat_password']=="")
-            {	
+        	//if(isset($companyModel)){$companyModel->attributes = $_POST['Company'];}
+			print_r('here');
+           // if( $_POST['Registration']['old_password'] =="" && $_POST['Registration']['new_password'] =="" && $_POST['Registration']['repeat_password']=="")
+            //{	print_r('here1');
             	//**********************************************************************************
             	//****************************************************************
 					//this is because to pass the validation rules for visitor
@@ -1543,11 +3724,11 @@ class PreregistrationController extends Controller
 						$model->photo = NULL;               	
 		            }
 
-		            if(isset($companyModel)){
+		            /*if(isset($companyModel)){
 		            	$companyModel->created_by_visitor = $model->id;
 				    	//$companyModel->mobile_number = $_POST['Company']['mobile_number'];
 				    	//$companyModel->tenant = Yii::app()->user->tenant;
-					}
+					}*/
 
 
 		            $model->password_saver = "";
@@ -1556,10 +3737,10 @@ class PreregistrationController extends Controller
 		            {*/
 		            	if($model->save(false))
 				        {
-				        	if(isset($companyModel))
+				        	/*if(isset($companyModel))
 				        	{	
-				        		/*if($companyModel->validate())
-					        	{*/
+				        		//if($companyModel->validate())
+					        	//{
 					        		if ($companyModel->save(false)) 
 						            {
 										Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
@@ -1570,7 +3751,7 @@ class PreregistrationController extends Controller
 										$msg = print_r($companyModel->getErrors(),1);
 										throw new CHttpException(400,'Data not saved in company because: '.$msg );
 									}
-					        	/*}
+					        	//}
 					        	else
 					        	{
 					        		Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
@@ -1578,9 +3759,9 @@ class PreregistrationController extends Controller
 									throw new CHttpException(400,'Data not saved in company because: '.$msg );
 					        	}*/
 
-				        	}else{
+				        	//}else{
 				        		Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
-				        	}
+				        	//}
 				        }
 				        else
 				        {
@@ -1596,9 +3777,10 @@ class PreregistrationController extends Controller
 						throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
 		            }*/
             	//**********************************************************************************
-            }
-            else
+            //}
+            /*else
             {
+				print_r('here2');
             	//**********************************************************************************
             	if( ($model->old_password !="") && ($model->new_password=="" || $model->repeat_password=="") )
 	            {
@@ -1615,9 +3797,9 @@ class PreregistrationController extends Controller
 			        		$model->visitor_card_status = 1; //saved
 			        	}
 
-			        	/*
-						* This removes Integrity Constraint Issue
-			            */
+			        	
+						// This removes Integrity Constraint Issue
+			            
 			            if($model->photo == null){
 							$model->photo = NULL;               	
 			            }
@@ -1635,12 +3817,12 @@ class PreregistrationController extends Controller
 
 			            $model->password_saver = "yes";
 
-				        /*if($model->validate())
-			            {*/
+				        //if($model->validate())
+			            //{
 			            	if($model->save(false))
 					        {
-					        	/*if($companyModel->validate())
-					        	{*/
+					        	//if($companyModel->validate())
+					        	//{
 					        		if ($companyModel->save(false)) 
 						            {
 										Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
@@ -1651,13 +3833,13 @@ class PreregistrationController extends Controller
 										$msg = print_r($companyModel->getErrors(),1);
 										throw new CHttpException(400,'Data not saved in company because: '.$msg );
 									}
-					        	/*}
-					        	else
-					        	{
-					        		Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
-									$msg = print_r($companyModel->getErrors(),1);
-									throw new CHttpException(400,'Data not saved in company because: '.$msg );
-					        	}*/
+					        	//}
+					        	//else
+					        	//{
+					        		//Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+									//$msg = print_r($companyModel->getErrors(),1);
+									//throw new CHttpException(400,'Data not saved in company because: '.$msg );
+					        	//}
 					        }
 					        else
 					        {
@@ -1665,13 +3847,13 @@ class PreregistrationController extends Controller
 					        	$msg = print_r($model->getErrors(),1);
 								throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
 					        }
-			            /*}
-			            else
-			            {
-			            	Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
-					        $msg = print_r($model->getErrors(),1);
-							throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
-			            }*/
+			            //}
+			            //else
+			            //{
+			            	//Yii::app()->user->setFlash('error', "Something went wrong. Please, try again.");
+					        //$msg = print_r($model->getErrors(),1);
+							//throw new CHttpException(400,'Data not saved in visitor because: '.$msg );
+			            //}
 						//****************************************************************
 					} 
 					else
@@ -1680,9 +3862,10 @@ class PreregistrationController extends Controller
 					}
 	            }
             	//**********************************************************************************
-            }
+            }*/
         }
     	$companyModel = Company::model()->findByPk($model->company);
+		
         $this->render('profile', array(
             'model' => $model,
             'companyModel' => $companyModel,
@@ -1691,7 +3874,44 @@ class PreregistrationController extends Controller
             'old_passwordErr' => $old_passwordErr,
         ));	
     }
+	public function actionUpdate($id) {
+        $model = $this->loadModel($id);
 
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        if (isset($_POST['Password'])) {
+			
+            $model->attributes = $_POST['Password'];
+			/*echo "<pre>";
+			print_r($model->attributes);
+			echo "</pre>";
+			Yii::app()->end();*/
+            $user = visitor::model()->findByPK($id);
+            
+           // if (User::model()->validatePassword($_POST['Password']['currentpassword'], $user->password)) {
+                if ($model->save()) {
+                    Yii::app()->user->setFlash('success', 'Password successfully updated');
+					  $templateParams = array(
+								'email' => $user->email,
+									);
+	
+				//TODO: Change to YiiMail
+						$emailTransport = new EmailTransport();
+						$emailTransport->sendResetPasswordConfirmationEmail(
+						$templateParams, $user->email, $user->first_name . ' ' . $user->last_name
+						);
+                    $this->redirect(array('preregistration/profile', 'id' => $model->id));
+                }
+//            } else {
+//                Yii::app()->user->setFlash('error', "Current password does not match password in your account. ");
+//            }
+        }
+
+        $this->render('passwordupdate', array(
+            'model' => $model,
+        ));
+    }
     /* notifications */
     public function actionNotifications()
     {
@@ -1749,7 +3969,7 @@ class PreregistrationController extends Controller
     	$this->unsetVariablesForGui();
     	$per_page = 10;
     	$page = (isset($_GET['page']) ? $_GET['page'] : 1);  // define the variable to “LIMIT” the query
-        $condition = "t.is_listed = 1 AND t.is_deleted = 0 AND v.is_deleted=0 AND t.host != 'NULL' AND t.host !=''"; 
+        $condition = "t.is_listed = 1 AND t.is_deleted = 0 AND v.is_deleted=0 AND t.host is not NULL AND t.host !=''"; 
 
         if(isset(Yii::app()->user->account_type) && Yii::app()->user->account_type == "ASIC"){
         	$condition .= " AND t.host=".Yii::app()->user->id;
@@ -2094,12 +4314,16 @@ class PreregistrationController extends Controller
     }
 
     public function actionFindAllCompanyContactsByCompany() {
+		$session = new CHttpSession;
     	if(isset($_POST['compId'])){$compId = $_POST['compId'];}
         $Criteria = new CDbCriteria();
+		//$Criteria->select="*,CONCAT(first_name,' ',last_name) as name";
         $Criteria->condition = "company = ".$compId." and is_deleted = 0";
         $user = User::model()->findAll($Criteria);
-        
+        $officeno=AsicOnCompany:: model()->findByPk($compId)->office_number;
         $resultMessage['data'] = $user;
+		$resultMessage['officeno']=$officeno;
+		$session['contactData']=CHtml::listData($user, 'id', function($user){return "{$user->first_name} {$user->last_name}";});
 	    echo CJavaScript::jsonEncode($resultMessage);
 	    Yii::app()->end();
     }

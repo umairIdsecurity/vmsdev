@@ -163,9 +163,14 @@ class HelpDeskGroup extends CActiveRecord {
 
             $criteria = new CDbCriteria();
             $criteria->order = 'order_by ASC';
-            if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN) 
+            if($isFrontDisplay==true)
+			{
+			if(Yii::app()->user->role != Roles::ROLE_SUPERADMIN) 
                 $criteria->addInCondition('id', $heldeskGroups);
             else 
+                $criteria->addCondition ('created_by = '.Yii::app()->user->id);
+			}
+			else 
                 $criteria->addCondition ('created_by = '.Yii::app()->user->id);
 //            if(!empty($session['created_by'])){
 //                $criteria->addCondition ('created_by = '.$session['created_by'], "OR");

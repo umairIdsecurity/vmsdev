@@ -117,7 +117,16 @@ class Photo extends CActiveRecord {
     }
 
     public function returnVisitorPhotoRelativePath($visitorId) {
-        $visitor = Registration::model()->findByPK($visitorId);
+        if(Yii::app()->controller->action->id=='asicUpdate' || Yii::app()->controller->action->id=='asicView')
+		{
+			$registration=new RegistrationAsic();
+			$visitor = $registration->findByPK($visitorId);
+		}
+		else
+		{
+		$visitor = Registration::model()->findByPK($visitorId);
+		}
+		
         
         if ($visitor->photo != '') {
             $photo = Photo::model()->findByPK($visitor->photo);

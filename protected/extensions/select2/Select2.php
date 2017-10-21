@@ -8,6 +8,7 @@ class Select2 extends CWidget
     public $placeHolder;
     public $selectedItems;
     public $disabled = 'false';
+	public $options;
     
     public function init()
     {

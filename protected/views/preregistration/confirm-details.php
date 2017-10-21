@@ -14,7 +14,31 @@
                                 )), 'id', 'name'
                     );*/
 ?>
-
+<style type="text/css">
+.ui-tooltip
+{
+	max-width: 10%;
+}
+.ui-tooltip-content{
+	height:10%;
+	font-size:0.65vw;
+}
+ .ui-tooltip-content::after{
+			content: '';
+			position: absolute;
+			border-style: solid;
+			display: block;
+			width: 0;
+            
+         }
+     
+         .left .ui-tooltip-content::after {
+				top: 35%;
+				right: -10%;
+				border-color: transparent #cccccc ;
+				border-width: 10px 0 10px 10px;
+         }
+</style>
 <div class="page-content">
 
     <a href="<?php echo Yii::app()->createUrl('preregistration/personalDetails'); ?>"><h3 class="text-primary subheading-size">Personal Information</h3></a>
@@ -89,18 +113,18 @@
         <div class="row" id="new_asic_area">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->textField($model, 'first_name', array('maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-sm', 'title'=>'Enter first name as written on identification')); ?>
                     <?php echo $form->error($model, 'first_name'); ?>
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Surname' , 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->textField($model, 'last_name', array('maxlength' => 50, 'placeholder' => 'Surname' , 'class'=>'form-control input-sm', 'title'=>'Enter last name as written on identification')); ?>
                     <?php echo $form->error($model, 'last_name'); ?>
                 </div>
 
 
                 <div class="form-group">
-                    <?php echo $form->textField($model,'email',array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm')); ?>
+                    <?php echo $form->textField($model,'email',array('maxlength' => 50, 'placeholder' => 'Email Address', 'class'=>'form-control input-sm','title'=>'Enter the VIC holders unique email address or FirstName.Last Name. Do not enter in another persons email, a false or generic email address.')); ?>
                     <?php echo $form->error($model,'email'); ?>
                 </div>
 
@@ -110,11 +134,16 @@
                         $this->widget('EDatePicker', array(
                             'model'       => $model,
                             'attribute'   => 'date_of_birth',
-                            'mode'        => 'date_of_birth'
+                            'mode'        => 'date_of_birth',
+							'htmlOptions' => array('class'=>'form-control input-sm',
+										'title'=>'Date of Birth is a unique identifier. Must be correct'),
                         ));
                         ?>
                         <?php echo $form->error($model,'date_of_birth',array('style' => 'margin-left:0')); ?>
                     </div>
+                    <div style= "font-size: 10px; color: Red; display:none" id="" class="newErrorMessage newErrorMessageEmail">
+                      &nbsp&nbspA User Profile already exists for this person. Please report to the airport to update your profile.
+					</div>
                 </div>
 
                 <div class="form-group">
@@ -142,6 +171,7 @@
                             'model'       => $model,
                             'attribute'   => 'identification_document_expiry',
                             'mode'        => 'expiry',
+							'htmlOptions' => array('style'=>'width:280px'),
                         ));
                         ?>
                         <?php echo $form->error($model, 'identification_document_expiry'); ?>
@@ -365,7 +395,23 @@
 
 
 <script>
+
+
+
     $(document).ready(function () {
+		 $('.newErrorMessage').hide;
+		 $("#Registration_date_of_birth, #Registration_first_name, #Registration_last_name").on('change', function () {
+			 
+			 $('.newErrorMessage').hide();
+		 });
+				$( document ).tooltip({
+			tooltipClass: "left",
+			position: {
+                  my: "right center",
+                  at: "left-10 center",
+                  collision: "none"
+               }
+		});
         $('#Registration_contact_country').on('change', function () {
             var countryId = parseInt($(this).val());
             //Dropdown: id=13,value=Australia
@@ -412,7 +458,7 @@
         });
 
         //when submit button is clicked check for already registered email
-        $("#confirm-details-form").submit(function(e){
+                $("#confirm-details-form").submit(function(e){
             //If it is already logged in, don't want to check and ask for to be logged in again
             <?php if ( isset(Yii::app()->user->id) ) {?>
                 return;
@@ -448,11 +494,44 @@
                                 $("#login_fail").append('A User Profile already exists for this email address. Please Login or use another email address.');
                                 $("#login_fail").show();
                             }else{
-                                $("#confirm-details-form").submit();
-                                $("#confirm-details-form").unbind("submit");
+                                var fName = $("#Registration_first_name").val();
+								var lName = $("#Registration_last_name").val();
+								var dob = $("#Registration_date_of_birth").val();
+
+								if(fName != "" && lName != "" && dob !="")
+							{
+								if(email != "" && idenType !="" && docNo !="" && idenCountry != "" && docExp != "" && streetNo != "" && streetName != "" && streetType != "" && suburb != "" && conCountry != "" && state != "" && postcode != "" && conNo != "")
+								{
+									var newdob = dob.split("-").reverse().join("-");
+									$.ajax({
+									type: 'POST',
+									url: "<?php echo Yii::app()->createUrl('preregistration/checkUserProfile');?>",
+									dataType: 'json',
+									data: {"firstname": fName, "lastname": lName, "dob": newdob},
+									success: function (r) {
+									if (r.data[0].isTaken == 1) { //if taken
+                                    $("#PreregLogin_username").val(email);
+                                   $('.newErrorMessage').show();
+                                }
+								else{
+                                    $("#confirm-details-form").submit();
+                                    $("#confirm-details-form").unbind("submit");
+								}
+									},
+                            error: function(err){
+                                console.log('get error');
+                                console.log(err);
                             }
-                        }
-                    });
+                        });
+                        //prevent form from submitting as email already registered
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        return false;
+                    }
+                }
+            }
+        }
+     });
                     //prevent form from submitting as email already registered
                     e.preventDefault();
                     e.stopImmediatePropagation();
@@ -505,7 +584,6 @@
                 }
             }
         });
-
         //******************************************************************************************************
         //******************************************************************************************************
         $('#search_asic_box').on('input', function() {

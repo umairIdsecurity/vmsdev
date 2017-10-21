@@ -60,7 +60,7 @@ class UserController extends Controller
             ),
             array(
                 'allow',
-                'actions' => array('admin', 'adminAjax', 'delete', 'systemAccessRules', 'importHost'),
+                'actions' => array('admin', 'adminAjax', 'delete','deleteCompanyContact','systemAccessRules', 'importHost','activate'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array(
@@ -89,8 +89,10 @@ class UserController extends Controller
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
         $workstation = null;
-
+				//print_r($_POST);
+				//Yii::app()->end();
         if (isset($_POST['User'])) {
+			
 
             $model->attributes = $_POST['User'];
 
@@ -125,7 +127,32 @@ class UserController extends Controller
                 
                 //logs the INSERT NEW USER ACCOUNT
                 $this->audit_logging_user("INSERT NEW USER ACCOUNT",$model);
-                
+                if($_POST['User']['password_option']=='1' && $_POST['User']['password']!=NULL)
+				{
+						$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+						$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+						$subject='Registration details for'.' '.$airportName.' '.'Aviation Visitor Management System';
+						$templateParams = array(
+						'email' => $model->email,
+						'Username' =>	$model->email,
+						'Password' =>	$_POST['User']['password'],
+						'Airport'=>$airportName,
+						'Link' => Yii::app()->getBaseUrl(true)."/index.php?r=site/login",
+						'name'=>  ucfirst($model->first_name) . ' ' . ucfirst($model->last_name),
+										);
+						$emailTransport = new EmailTransport();
+						$emailTransport->sendRegistrationUser($templateParams,$model->email, ucfirst($model->first_name) . ' ' . ucfirst($model->last_name),$subject );
+						
+				}			
+				if($_POST['User']['password_option']=='2')
+				{
+						$password = new PasswordForgotForm();
+						 $password->attributes = $_POST['User'];
+						 $password->validate(); 
+						 $password->restore(); 
+						
+				}						
+				
                 if (Yii::app()->request->isAjaxRequest) {
                     Yii::app()->end();
                 }
@@ -162,14 +189,16 @@ class UserController extends Controller
 
         } else if(($model->allowed_module==null && $model->role == Roles::ROLE_ADMIN)       || in_array($model->role,[Roles::ROLE_AGENT_OPERATOR,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_OPERATOR])){
             $model->allowed_module = Module::MODULE_CVMS;
-
+			
         } else {
 
             if($model->role == Roles::ROLE_ADMIN && Yii::app()->user->allowed_module == Module::MODULE_CVMS){
                 $model->role = Module::MODULE_CVMS;
+					
 
-            } else if($model->role == Roles::ROLE_ISSUING_BODY_ADMIN && Yii::app()->user->allowed_module == Module::MODULE_AVMS) {
+            } else if($model->role == Roles::ROLE_ADMIN && Yii::app()->user->allowed_module == Module::MODULE_AVMS) {
                 $model->role = Module::MODULE_AVMS;
+						
             }
         }
     }
@@ -183,9 +212,11 @@ class UserController extends Controller
     {
         $model = $this->loadModel($id);
         $userService = new UserServiceImpl();
-
+		
         if (isset($_POST['User'])) {
-            
+		
+			if($_POST['User']['password_option']=='1')
+            $emailpassword=$_POST['User']['password'];
             if (isset($_POST['User']['password'])) {
                 $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
             } else {
@@ -193,13 +224,38 @@ class UserController extends Controller
             }
 
             $model->attributes = $_POST['User'];
-
+			
             // User Allowed Module
             $this->setUserModuleAccess($model);
-            
+	
             if ($userService->save($model, Yii::app()->user, null)) {
                 //logs the Update  USER ACCOUNT
                 $this->audit_logging_user("UPDATE USER ACCOUNT",$model);
+				  if($_POST['User']['password_option']=='1' && $_POST['User']['password']!=NULL)
+				{
+						$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+						$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+						$subject='Registration details for'.' '.$airportName.' '.'Aviation Visitor Management System';
+						$templateParams = array(
+						'email' => $model->email,
+						'Username' =>	$model->email,
+						'Password' =>	$emailpassword,
+						'Airport'=>$airportName,
+						'Link' => Yii::app()->getBaseUrl(true)."/index.php?r=site/login",
+						'name'=>  ucfirst($model->first_name) . ' ' . ucfirst($model->last_name),
+										);
+						$emailTransport = new EmailTransport();
+						$emailTransport->sendRegistrationUser($templateParams,$model->email, ucfirst($model->first_name) . ' ' . ucfirst($model->last_name),$subject );
+						
+				}			
+				if($_POST['User']['password_option']=='2')
+				{
+						$password = new PasswordForgotForm();
+						 $password->attributes = $_POST['User'];
+						
+						 $password->validate(); 
+						 $password->restore(); 
+				}						
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
             }
         }
@@ -218,29 +274,30 @@ class UserController extends Controller
     {
         //$this->loadModel($id)->delete();
         $model = $this->loadModel($id);
-
+		//$model->is_deleted='1';
         if(!$model->delete())
         {
+			//echo "here";
             //logs the DELETE USER ACCOUNT
             $this->audit_logging_user("DELETE USER ACCOUNT",$model);
 
-            $Criteria = new CDbCriteria();
-            $Criteria->condition = 'user_id ='.$id;
-            $userworkstations = UserWorkstations::model()->findAll($Criteria);
+            //$Criteria = new CDbCriteria();
+            //$Criteria->condition = 'user_id ='.$id;
+            //$userworkstations = UserWorkstations::model()->findAll($Criteria);
 
-            if ($userworkstations) 
-            {
-                foreach ($userworkstations as $userworkstation) {
-                    $userworkstation->delete();
-                }
+           //if ($userworkstations) 
+            //{
+                //foreach ($userworkstations as $userworkstation) {
+                   // $userworkstation->delete();
+               // }
                 
                 if(!$model->delete())
                 {
                     return false;
                 }
-                return true;
-            }
-            return false;
+                //return true;
+            //}
+           //return false;
         }
 
         //if (!$model->delete()) {
@@ -259,6 +316,49 @@ class UserController extends Controller
         if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
         }
+    }
+	public function actionDeleteCompanyContact($id)
+    {
+        $model = $this->loadModel($id);
+
+            if(!$model->delete())
+            {
+                return false;
+
+            }else{
+
+                if($model->authorised_file!='')
+                {
+                    @unlink(Yii::app()->basePath . '/../uploads/files/asic_uploads/' . $model->authorised_file);
+                }
+                echo "true";
+            }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
+    }
+	public function actionActivate($id)
+    {
+		//$model= new User;
+		//$id=1803;
+		$model = $this->loadModel($_GET['id']);
+        //$test=$_GET['id'];
+		//$Criteria = new CDbCriteria();
+	    //$Criteria->condition = "id=1699";
+        //$test = User::model()->find($Criteria);
+		$model->is_deleted='0';
+		if($model->save(false))
+		{
+			echo "true";
+			return false;
+		}
+		//echo "<pre>";
+	   //echo $test;
+	   //print_r($model->findByPk($id));
+	  //echo "</pre>";
+        
     }
 
     /**
@@ -420,9 +520,9 @@ class UserController extends Controller
         }
     }
 
-    public function actionCheckEmailIfUnique($id, $tenant = null)
+    public function actionCheckEmailIfUnique($id, $tenant = null,$tenantagent=null)
     {
-        if (User::model()->isEmailAddressUnique($id, $tenant)) {
+        if (User::model()->isEmailAddressUnique($id, $tenant,$tenantagent)) {
             $aArray[] = array(
                 'isTaken' => 1,
             );

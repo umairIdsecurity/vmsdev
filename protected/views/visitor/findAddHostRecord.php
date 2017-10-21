@@ -1,3 +1,4 @@
+
 <?php
 $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
@@ -15,7 +16,6 @@ $defaultKey = key($asicCardTypes);
 
 //$asicModel->visitor_card_status = $defaultKey;
 ?>
-
 <div role="tabpanel">
 
     <!-- Nav tabs -->
@@ -124,16 +124,16 @@ $defaultKey = key($asicCardTypes);
                         'enableClientValidation' => true,
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){ 
+                            'afterValidate' => 'js:function(form,data,hasError){
                               if ( $(".vic-host-fields").css("display") != "none" ){
                                   var card_status = $(".vic-host-fields #Visitor_visitor_card_status").val();
                                     if (!card_status || card_status == "") {
                                         $(".vic-host-fields #Visitor_visitor_card_status_em_").show();
                                         $(".vic-host-fields #Visitor_visitor_card_status_em_").html("Please enter a visitor card status");
                                         return false;
-                                    } 
-                                }  
-                                
+                                    }
+                                }
+
                                 document.getElementById("User_company").disabled = false;
                                 document.getElementById("User_tenant").disabled = false;
                                 document.getElementById("User_tenant_agent").disabled = false;
@@ -155,15 +155,20 @@ $defaultKey = key($asicCardTypes);
                                     }
                                     else {
                                          $("#register-host-form #pass_error_").hide();
-                                         checkHostEmailIfUnique();
+                                          checkHostEmailIfUnique();
+										 //checkAlreadyHostProfile(); //comment out this function and put after checking unique email
+
                                     }
                                 }
                                 else {
                                     checkHostEmailIfUnique();
+									checkAlreadyHostProfile();
                                 }
                             }'
                         ),
                     ));
+					//print_r($form->textField($userModel, 'first_name'));
+					//Yii::app()->end();
                     ?>
                     <?php /*echo $form->errorSummary($userModel); */?>
                     <input type="text" id="hostEmailIsUnique" value="0"/>
@@ -259,7 +264,7 @@ $defaultKey = key($asicCardTypes);
                                     <input type="hidden" id="User_role" name="User[role]" value="<?php echo Roles::ROLE_STAFFMEMBER; ?>">
                                     <input type="hidden" id="User_user_type" name="User[user_type]" value="<?php echo UserType::USERTYPE_INTERNAL; ?>">
                                        <?php echo $form->textField($userModel, 'first_name',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?> <span
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name', 'title'=>'Enter first name as written on identification')); ?> <span
                                         class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'first_name'); ?>
                             </td>
@@ -267,11 +272,25 @@ $defaultKey = key($asicCardTypes);
                             <tr>
                                 <td>
                                     <?php echo $form->textField($userModel, 'last_name',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?><span
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name','title'=>'Enter last name as written on identification')); ?><span
                                         class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'last_name'); ?>
                                 </td>
                             </tr>
+							 <tr>
+                            <td class="birthdayDropdown">
+                               <span>Date of Birth</span> <br/>
+                                <?php $this->widget('EDatePicker', array(
+                                    'model'=>$userModel,
+                                    'attribute'=>'date_of_birth',
+                                    'mode'=>'date_of_birth',
+                                    'htmlOptions'=>['title'=>'Date of Birth is a unique identifier. Must be correct']
+                                ));
+                                ?>
+                                <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($userModel, 'date_of_birth'); ?>
+                            </td>
+                        </tr>
                             <tr class="vms-visitor-fields">
                                 <td>
                                     <?php echo $form->textField($userModel, 'department',
@@ -290,12 +309,16 @@ $defaultKey = key($asicCardTypes);
                             <tr>
                                 <td width="35%">
                                     <?php echo $form->textField($userModel, 'email',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email Address')); ?>
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email Address','title'=>'Enter the ASIC holders unique email address or FirstName.Last Name. Do not enter in another persons email, a false or generic email address.')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'email',
                                             array('style' => 'text-transform:none;')); ?>
-                                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1">A profile
-                                        already exists for this email address.
+                                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">
+                                        A User Profile already exists for this email address.
+                                    </div>
+
+                                    <div style="" id="" class="newErrorMessage newErrorMessageEmail">
+                                        A User Profile already exists for First Name, Last Name and DOB.
                                     </div>
                                 </td>
                             </tr>
@@ -310,7 +333,7 @@ $defaultKey = key($asicCardTypes);
                             
                        <tr>
                                 <td id="userCompanyRow" style="white-space: nowrap;">
-                                    <div style="margin-bottom: 5px;">
+                                   <div style="margin-bottom: 5px;">
                                         <?php 
                                             $this->widget('application.extensions.select2.Select2', array(
                                             'model' => $userModel,
@@ -348,7 +371,7 @@ $defaultKey = key($asicCardTypes);
                             </tr>
                             <tr class="vic-host-fields">
                                 <td>
-                                    <label><input style="margin-top: 1px;" type="checkbox" id="requestVerifyAsicSponsor" name="requestVerifyAsicSponsor" value="1"/> Request ASIC Sponsor Verification </label>
+                                    <!--<label><input style="margin-top: 1px;" type="checkbox" id="requestVerifyAsicSponsor" name="requestVerifyAsicSponsor" value="1"/> Request ASIC Sponsor Verification </label>
                                     
 <!--                                    <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>-->
                                 </td>
@@ -361,10 +384,10 @@ $defaultKey = key($asicCardTypes);
                             <tr class="vic-host-fields">
                                 <td>
                                     <?php echo $form->textField($userModel, 'asic_no', array(
-                                        'size'        => 10,
+                                        'size'        => 50,
                                         'maxlength'   => 50,
                                         'placeholder' => 'ASIC No.',
-                                        'style'       => 'width: 110px;'
+                                        
                                     )); ?>
 
                                     <?php
@@ -618,7 +641,42 @@ $defaultKey = key($asicCardTypes);
 
 
 <script>
+ $(document).ready(function () {
+				$('#addhostTabContent input').tooltip({
+					    disabled: true,
+						close: function( event, ui ) { $(this).tooltip('disable'); },
+					effect: "slide",
+					tooltipClass: "left",
+					position: {
+						my: "right center",
+						at: "left-10 center",
+						collision: "none"
+					},
+					
+				});
+				$('#addhostTabContent input').on('focus', function () {
+						$(this).tooltip('enable').tooltip('open');
+							});
+				$('#addhostTabContent input').on('click', function () {
+						$(this).tooltip('enable').tooltip('open');
+							});
+							});
     $(document).ready(function () {
+	
+		 $("#addUserCompanyLink").click(function(){
+		
+        $("#AddCompanyContactForm_asiccheck").show();
+		$("label[for='AddCompanyContactForm_asiccheck']").show();
+		//console.log($("#register-host-form input[name='User[first_name]']").val());
+		
+    });
+	 $("#addUserContactLink").click(function(){
+		
+        $("#AddCompanyContactForm_asiccheck").show();
+		$("label[for='AddCompanyContactForm_asiccheck']").show();
+		//console.log($("#register-host-form input[name='User[first_name]']").val());
+		
+    });
 
         $("#subm").hide();
         $(".visitor-title-host").click(function () {
@@ -685,6 +743,7 @@ $defaultKey = key($asicCardTypes);
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+				cache: false,
                 data: {
                     x1: $("#x12").val(),
                     x2: $("#x22").val(),
@@ -701,6 +760,7 @@ $defaultKey = key($asicCardTypes);
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo').val(),
                         dataType: 'json',
+						cache: false,
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
@@ -758,6 +818,7 @@ $defaultKey = key($asicCardTypes);
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+				cache: false,
                 data: {
                     x1: $("#x13").val(),
                     x2: $("#x23").val(),
@@ -774,6 +835,7 @@ $defaultKey = key($asicCardTypes);
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo3').val(),
                         dataType: 'json',
+						cache: false,
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
@@ -818,10 +880,10 @@ $defaultKey = key($asicCardTypes);
         $("#selectedHostInSearchTable").val("");
         $("#searchHostTableDiv h4").html("Search Results for : " + $("#search-host").val());
         $("#searchHostTableDiv").show();
-        $("#step3Tab").find(".tab-content").hide();
+       // $("#step3Tab").find(".tab-content").hide();
         $("#subm").show();
         $(".data-ifr").show();
-        // $("#register-host-form").hide();
+         $("#register-host-form").hide();
         $("#register-host-patient-form").hide();
         //append searched text in modal
         var searchText = $("#search-host").val();
@@ -876,6 +938,7 @@ $defaultKey = key($asicCardTypes);
         $.ajax({
             type: "POST",
             url: url,
+			cache: false,
             data: hostform,
             success: function (data) {
                 getLastHostId(function (data) {
@@ -891,6 +954,7 @@ $defaultKey = key($asicCardTypes);
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("patient/create")); ?>",
+			cache: false,
             data: patientForm,
             success: function (data) {
                 getLastPatientId(function (data) {
@@ -920,6 +984,7 @@ $defaultKey = key($asicCardTypes);
             type: "POST",
             url: "<?php echo $this->createUrl('company/getContacts') ?>",
             dataType: "json",
+			cache: false,
             data: {id:companyId},
             success: function(data) {
                 var companyName = $('#userCompanyRow .select2-selection__rendered').text();
@@ -947,7 +1012,7 @@ $defaultKey = key($asicCardTypes);
     /*because of https://ids-jira.atlassian.net/browse/CAVMS-1156*/
     function backFillResetAsicForm()
     {
-        $('#addhostTabContent').show();
+        $('#register-host-form').show();
         $("#searchHostTableDiv").hide();
         $("#subm").hide();
         $('#searchost').show();

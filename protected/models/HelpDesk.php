@@ -40,10 +40,10 @@ class HelpDesk extends CActiveRecord {
         return array(
             array('question,answer', 'required','message' =>'Please complete {attribute}'),
             array('helpdesk_group_id','required','message' =>'Please complete {attribute}'),
-            array('question, answer,helpdesk_group_id,created_by,order_by', 'length'),
+            array('question, answer,helpdesk_group_id', 'length'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, question, answer, helpdesk_group_id, created_by, is_deleted,order_by', 'safe', 'on' => 'search'),
+            array('id, question, answer, helpdesk_group_id, is_deleted,order_by', 'safe', 'on' => 'search'),
         );
     }
 
@@ -67,6 +67,7 @@ class HelpDesk extends CActiveRecord {
             'id' => 'ID',
             'question' => 'Help Desk Question',
             'answer' => 'Help Desk Answer',
+			'videolink'=>'Video link',
 			'order_by' => 'Sort Order',
             'created_by' => 'Created By',
             'helpdesk_group_id' => 'Help Desk Group',
@@ -97,6 +98,7 @@ class HelpDesk extends CActiveRecord {
         $criteria->compare('created_by', $this->created_by);
 	    $criteria->compare('order_by', $this->order_by, true);
         $criteria->compare('is_deleted', $this->is_deleted);
+		$criteria->compare('videolink', $this->videolink);
         
 //        $module = CHelper::get_allowed_module();
 //        if( $module == "CVMS" )

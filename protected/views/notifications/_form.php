@@ -3,7 +3,8 @@
 /* @var $model Notification */
 /* @var $form CActiveForm */
 ?>
-<?php $module = CHelper::get_allowed_module(); ?>
+<?php $module = CHelper::get_allowed_module();
+ ?>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(

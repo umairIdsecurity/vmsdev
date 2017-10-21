@@ -25,6 +25,7 @@ if ($this->action->id == 'update') {
 }
 
     $companyList = CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name');
+
     $companyList = array_unique($companyList);
     $listsCom = implode('", "', $companyList);
 ?>  
@@ -40,8 +41,8 @@ if ($this->action->id == 'update') {
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'company-form',
-        'htmlOptions' => array("name" => "registerform"),
-        'enableAjaxValidation' => true,
+        'htmlOptions' => array("name" => "registerform","enctype" => "multipart/form-data"),
+        'enableAjaxValidation' => false,
         'enableClientValidation' => true,
         'clientOptions' => array(
             'validateOnSubmit' => true,
@@ -72,6 +73,7 @@ if ($this->action->id == 'update') {
     ));
     ?>
     <?php
+
     foreach (Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }
@@ -151,7 +153,7 @@ if ($this->action->id == 'update') {
 
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
-                            <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+                            <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50, 'value'=> $userModel->first_name,'placeholder'=>'First Name')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_first_name'); ?>
                             </td>
@@ -159,7 +161,7 @@ if ($this->action->id == 'update') {
 
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
-                            <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+                            <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'value'=> $userModel->last_name,'placeholder'=>'Last Name')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_last_name'); ?>
                             </td>
@@ -167,27 +169,60 @@ if ($this->action->id == 'update') {
 
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
-                            <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
+                            <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'value'=> $userModel->email,'placeholder'=>'Email')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'email_address'); ?>
+								
+                                <?php
+								if ($this->action->id == 'update')
+								{
+									echo "<br>" . $form->error($userModel, 'email'); 
+								}
+								else
+								echo "<br>" . $form->error($model, 'email_address'); ?>
                                 <div id="Company_user_email_unique_em_" class="errorMessage" style="display: none">User email has already been taken</div>
                             </td>
                         </tr>
 
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
-                            <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
+                            <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'value'=> $userModel->contact_number,'placeholder'=>'Contact Number')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
                             </td>
                         </tr>
+                        <?php if(isset($_GET['cid']) && $userModel->authorised_file!='') { ?>
+                        <tr class="user_fields">
+                            <td style="width:160px;">&nbsp;</td>
+                            <td>
+                            <?php
+                            $file = Company::downlaodFile($userModel->id,$userModel->authorised_file);
+                            echo '<div style="float: left;color:red;">Previous File: &nbsp;</div>'. $file;
+                            ?>
+                            </td>
+                        </tr>
+                        <?php } ?>
+
+                        <tr class="user_fields">
+                            <td style="width:160px;">&nbsp;</td>
+                            <td><?php echo $form->fileField($model, 'user_authorised_file', array('size' => 50, 'maxlength' => 50)); ?>
+                                <?php echo "<br>" . $form->error($model, 'user_authorised_file'); ?>
+                            </td>
+                        </tr>
+
                         <tr>
-                        <td> &nbsp; </td>
-                        <td colspan="2"><?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?></td>
+                            <td> &nbsp;</td>
+                        <td>
+                            <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
+                            <?php
+                            if(Yii::app()->controller->action->id =="update") { ?>
+                            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#mergeCompanyContactModal">Merge Contacts</button>
+                            <?php } ?>
+                        </td>
+
                         </tr>
                     </table><!--Company Contact field-->
                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -370px; max-width: 275px !important; display: block;">
-                    <table width="100%">
+                   <!-- <table width="100%">
                         <tbody >
                         <tr>
                             <td><strong>Password Options</strong></td>
@@ -275,7 +310,7 @@ if ($this->action->id == 'update') {
                                         <td> <input checked="checked" type="radio" value="2" class="pass_option" id="radio2" name="radiobtn" onclick="call_radio2();" />
                                             &nbsp;Send User Invitation</td>
                                     </tr>
-                                </table>
+                                </table>-->
                             </td>
                         </tr>
                         <tr>
@@ -289,6 +324,32 @@ if ($this->action->id == 'update') {
                 </td>
             </tr>
     </table>
+<!-- Modal -->
+<div class="modal fade" id="mergeCompanyContactModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Merge Company Contacts</h4>
+            </div>
+            <div class="modal-body">
+                <input size="60" maxlength="150" placeholder="Company Name" class="ui-autocomplete-input company-autocomplete-merge" autocomplete="off" name="Company_name_merge" id="Company_name_merge" type="text">
+                <div class="errorMessage" id="mergerCompanyContactForm" style="">Please complete Company Name</div>
+				 <?php
+                            if(Yii::app()->controller->action->id =="update") { ?>
+                <input name="company_id" id="company_id" type="hidden" value="<?php echo $_GET['id']; ?>" >
+							<?php }  ?>
+            </div>
+            <div class="modal-footer">
+                <button class="btn neutral" id="btnCloseModalMergeCompanyContact" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button type="button" id="btnMergeCompanyContact" class="btn complete">Merge</button>
+            </div>
+        </div>
+
+    </div>
+</div>
     <!--Company Contact-->
 
 
@@ -330,6 +391,7 @@ if ($this->action->id == 'update') {
                 $('th > .desc').append('<div></div>');
             }",
             'columns' => array(
+
                 array(
                     'name' => 'User',
                     'value' => '$data->getFullName()',
@@ -341,6 +403,53 @@ if ($this->action->id == 'update') {
                 array(
                     'name' => 'contact_number',
                     'header' => 'Number',
+                ),
+
+//                array(
+//                    'name' => 'Authorised File',
+//                    'value' => 'Company::downlaodFile($data->authorised_file)',
+//                ),
+                array(
+                    'name' => 'Authorised File',
+                    'value' => 'Company::downlaodFile($data->id,$data->authorised_file)',
+                ),
+                array(
+                    'header' => 'Actions',
+                    'class' => 'CButtonColumn',
+                    'template' => '{update}{delete}',
+                    'buttons' => array(
+                        'update' => array(//the name {reply} must be same
+                            'label' => 'Edit', // text label of the button
+                            'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                            'url' => 'Yii::app()->createUrl("company/update", array("id"=>$data->company, "cid"=>$data->id))',
+                        ),
+                        'delete' => array(//the name {reply} must be same
+                            'label' => 'Delete', // text label of the button
+                            'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                            'url' => 'Yii::app()->controller->createUrl("user/delete",array("id"=>$data->id))',
+                            'options' => array(// this is the 'html' array but we specify the 'ajax' element
+                                //'style'=>'display: inline-block; font-size: 15px; text-align: center; width: 25%; margin-right: 10%',
+                                'confirm' => "Are you sure you want to delete this item?",
+                                'ajax' => array(
+                                    'type' => 'POST',
+                                    'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
+                                    'success' => 'function(data){
+											//alert(data);
+											if (data == "truetrue") {
+											 $.fn.yiiGridView.update("contacts-grid");
+												return false;
+											 }
+                                          }',
+                                    'error'=>'function(xhr,textStatus,errorThrown){
+									console.log(xhr.responseText);
+									console.log(textStatus);
+									console.log(errorThrown);
+							}',
+                                ),
+                            ),
+
+                        ),
+                    ),
                 ),
             ),
         ));
@@ -361,17 +470,37 @@ if (isset($_GET['viewFrom'])) {
 ?>"/>
 <script>
 $(document).ready(function() {
-    /*
-    //CAVMS-1168
-    $(".password_requirement").click(function() {
-        if( $(".password_requirement:checked").val() == 2 ) {
-            $(".show_password_fields").show();
-        }
-        else {
-            $(".show_password_fields").hide();
+
+    <?php if(isset($_GET['cid'])) {  ?>
+    $('#is_user_field').val('1');
+    <?php } ?>
+
+    $("#mergerCompanyContactForm").hide();
+
+    $("#btnMergeCompanyContact").click(function(){
+
+        if($("#Company_name_merge").val() == ""){
+            $("#mergerCompanyContactForm").show();
+        } else {
+            $("#mergerCompanyContactForm").hide();
+            var name = $('#Company_name_merge').val();
+            var cid = $('#company_id').val();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $this->createUrl('company/mergeCompanyContacts')?>",
+                data: {name: name, cid: cid},
+                success: function (data) {
+                    //alert(data);
+                    window.location = '<?php echo Yii::app()->baseUrl; ?>'+'/index.php?r=company/update&id='+data;
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log(xhr.responseText);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                }
+            });
         }
     });
-    */
 });
 
     $(function() {
@@ -387,6 +516,19 @@ $(document).ready(function() {
         $(".ui-front").css("z-index", 1051);
     });
 
+$(function() {
+    var availableTagsMerge = ["<?php echo $listsCom; ?>"];
+    $(".company-autocomplete-merge").autocomplete({
+        source: availableTagsMerge,
+        select: function(event, ui) {
+            event.preventDefault();
+            $(".company-autocomplete-merge").val(ui.item.label);
+            //$('#typePostForm').val('contact');
+        }
+    });
+    $(".ui-front").css("z-index", 1051);
+});
+
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();
@@ -400,7 +542,7 @@ $(document).ready(function() {
         return "#company-form ";
     }
     function checkCompanyNameUnique() {
-
+	//alert("test");
         if($("#currentAction").val() == "update"){
             if($('#Company_name').val() == "<?php echo $model->name?>"){
                 var name = "";
@@ -430,7 +572,12 @@ $(document).ready(function() {
                         sendCreateCompanyForm();
                     }
                 }
-            }
+            },
+			error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+			}
         });
     }
 
@@ -449,11 +596,17 @@ $(document).ready(function() {
                     $('#Company_user_email_unique_em_').hide();
                     sendCreateCompanyForm();
                 }
-            }
+            },
+			error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+			}
         });
     }
 
     function sendCreateCompanyForm() {
+		//alert("here");
         var formInfo = $(createCompanyForm()).serialize();
         if($("#currentAction").val() == "create"){
             var url = "<?php echo $this->createUrl('company/create')?>";
@@ -470,7 +623,12 @@ $(document).ready(function() {
                      window.location = 'index.php?r=dashboard';
                  else
                     window.location = 'index.php?r=company/admin';
-            }
+            },
+			error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+			}
         });
     }
 
@@ -671,7 +829,7 @@ $(document).ready(function() {
                     <td colspan="2"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password"/>
+                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly type="text" placeholder="Random Password" value="" id="random_password"/>
                     </td>
                 </tr>
 

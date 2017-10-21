@@ -75,6 +75,7 @@ if ($visitModel->time_in != '') {
     <input type="button" class="visitor-backBtn btnBackTab4" value="Back"/>
     <input type='button' value='Save and Continue' class='greenBtn complete' id='submitAllForms'/>
 </div>
+
 <script>
     $(document).ready(function() {
         $("#proposedDateOut").datepicker({
@@ -96,6 +97,7 @@ if ($visitModel->time_in != '') {
 
         $("#submitAllForms").click(function(e) 
         {
+			console.log("hereitis");
             e.preventDefault();
             if ($("#proposedDateOut").val() == '') {
                 $("#preregisterdateoutError").show();

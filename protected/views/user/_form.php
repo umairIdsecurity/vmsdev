@@ -682,9 +682,9 @@ $(document).ready(function () {
     if (actionId == 'update') {
         var password = $('#passwordUser').val();
         if (password) {
-            $('.pass_option[value=1]').prop('checked', true);
+           // $('.pass_option[value=1]').prop('checked', true);
         } else {
-            $('.pass_option[value=2]').prop('checked', true);
+           // $('.pass_option[value=2]').prop('checked', true);
         }
     }
 
@@ -819,8 +819,14 @@ function sendUserForm() {
         url: url,
         data: userform,
         success: function (data) {
-            window.location = 'index.php?r=user/admin&vms=<?php echo ($model->is_avms_user() || CHelper::is_managing_avms_user() )?'avms':'cvms' ?>';
-        }
+           //alert(data);
+			window.location = 'index.php?r=user/admin&vms=<?php echo ($model->is_avms_user() || CHelper::is_managing_avms_user() )?'avms':'cvms' ?>';
+        },
+		 error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
     });
 }
 
@@ -841,7 +847,7 @@ function checkHostEmailIfUnique() {
         if ($("#User_role").val() == '1') {
             var url = $("#createUrlForEmailUnique").val() + email.trim();
         } else {
-            var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
+            var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant + '&tenantagent='+$('#User_tenant_agent').val();
         }
 
         $.ajax({

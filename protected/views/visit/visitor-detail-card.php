@@ -6,7 +6,7 @@ $session['count'] = 1;
 $photoForm = $this->beginWidget('CActiveForm', [
     'id' => 'update-photo-form',
     'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
-    'htmlOptions' => ["name" => "update-visitor-form"],
+	'htmlOptions' => ["name" => "update-visitor-form"],
     'enableAjaxValidation' => false,
     'enableClientValidation' => true,
     'clientOptions' => [
@@ -35,7 +35,7 @@ $photoForm = $this->beginWidget('CActiveForm', [
  
         <img id="photoPreview2" src="<?php echo $my_image; ?>" class="photo_visitor">
     <?php } else { ?>
-        <img id="photoPreview2" src="" style="display:none;" class="photo_visitor">
+        <img id="photoPreview2" src="" style="display:none; " class="photo_visitor">
     <?php } ?>
         
 </div>
@@ -55,7 +55,7 @@ $vstr = Visitor::model()->findByPk($model->visitor);
     }
 ?>
 
-<div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>
+<div id="Visitor_photo_em"  style="display: none; margin-left: -20%; color:red;"><p>Please upload a profile image.</p></div>
 
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 
@@ -71,13 +71,16 @@ $vstr = Visitor::model()->findByPk($model->visitor);
 <div style="clear: both;"></div>
 
 <div class="dropdown" style="margin-left: 21px; text-align: left;">
-<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, cardType::MANUAL_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
+<!--    added Temporary ASIC card type in array-->
+<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, cardType::MANUAL_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::TEMPORARY_ASIC]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
 
     <button class="btn btn-info printCardBtn dropdown-toggle actionForward" style="width:205px !important; margin-top: 4px; margin-right: 0px; margin-left: 0px !important;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+	<?php if($model->card_type != CardType::VIC_CARD_24HOURS) :?>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 1)) ?>">Print On Standard Printer</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 2)) ?>">Print On Card Printer</a></li>
+		<?php endif;?>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Bleed Through Label</a></li>
     </ul>
 <?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED): ?>
@@ -155,10 +158,12 @@ $vstr = Visitor::model()->findByPk($model->visitor);
             }else{ 
                 $statuses = Visitor::$VISITOR_CARD_TYPE_LIST[$profileType]; 
             }
-
-            if( count(Visitor::$VISITOR_CARD_TYPE_LIST[$profileType]) )
-            echo $detailForm->dropDownList($visitorModel, 'visitor_card_status',$statuses, ['empty' => 'Select Card Status']);
+            // check card is not Temporary ASIC
+            if($model->card_type != CardType::TEMPORARY_ASIC) {
+                if (count(Visitor::$VISITOR_CARD_TYPE_LIST[$profileType]))
+                    echo $detailForm->dropDownList($visitorModel, 'visitor_card_status', $statuses, ['empty' => 'Select Card Status']);
                 echo "<br />";
+            }
         //}
 
         $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
@@ -187,11 +192,12 @@ $vstr = Visitor::model()->findByPk($model->visitor);
             //}
             
             $condition = $model->card_type > 4 ? "module='AVMS'": "module='CVMS'";
+			$re=VisitReason::model()->findAll($condition);
             $reasons = CHtml::listData(VisitReason::model()->findAll($condition), 'id', 'reason');
             if(($model->visit_reason != NULL)&&($model->visit_reason != ""))
             {
-                $reasons['Other'] = 'Other';
-                echo $detailForm->dropDownList($model, 'reason', $reasons, array('options' => array($reasons['Other']=>array('selected'=>true)) ));
+               //have to remember this because have to fix other reason 
+                echo $detailForm->dropDownList($model, 'reason', $reasons, array('options' =>  array($model->reason=>array('selected'=>true)) ));
             }
             else
             {
@@ -251,6 +257,73 @@ $vstr = Visitor::model()->findByPk($model->visitor);
 <?php $this->endWidget(); ?>
 
 <script>
+
+ $(document).ready(function() {
+		var visitStatus="<?php echo $model->visit_status; ?>"
+		//alert("<?php echo VisitStatus::CLOSED; ?>");
+        var cardType = "<?php echo $model->card_type; ?>";
+        var dateIn =  $("#Visit_date_check_in_container");
+        var dateOut =  $("#Visit_date_check_out_container");
+        var boundControl =  dateIn?dateOut:dateIn;
+
+        if((cardType == '<?php echo CardType::VIC_CARD_MULTIDAY; ?>') && (visitStatus!="<?php echo VisitStatus::ACTIVE; ?>" && visitStatus!="<?php echo VisitStatus::EXPIRED; ?>" && visitStatus!="<?php echo VisitStatus::CLOSED; ?>" ))
+		{
+			//alert(visitStatus);
+        if(dateOut){
+			var inn=dateIn.val().split("/");
+			var out=dateOut.val().split("/");
+			var selectedDate=new Date(out[2],out[1]-1, out[0]);
+			var firstDate=new Date(inn[2],inn[1]-1, inn[0]);
+			var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+			var diffDays = Math.round(Math.abs((firstDate.getTime() - selectedDate.getTime())/(oneDay)));
+				if(cardType == '<?php echo CardType::VIC_CARD_MULTIDAY; ?>' && diffDays>3 && $("#Visitor_photo").val()=="" )
+				{
+					
+					$("#registerNewVisit").prop("disabled",true);
+					$("#Visitor_photo_em").show();
+				}
+				else
+				{
+					$("#registerNewVisit").prop("disabled",false);
+					$("#Visitor_photo_em").hide();
+				}
+            dateOut.change(function(){
+                var dateFormat = dateIn.datepicker('option','dateFormat');
+                var dateOut =  $("#dateoutDiv #Visit_date_check_out_container");
+                selectedDate = dateOut.datepicker('getDate');
+                var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
+				firstDate = dateIn.datepicker('getDate');
+				diffDays = Math.round(Math.abs((firstDate.getTime() - selectedDate.getTime())/(oneDay)));
+				if(cardType == '<?php echo CardType::VIC_CARD_MULTIDAY; ?>' && diffDays>2 && $("#Visitor_photo").val()=="" )
+				{
+					//alert(diffDays);
+					$("#registerNewVisit").prop("disabled",true);
+					$("#Visitor_photo_em").show();
+				}
+				else
+				{
+					//alert('here');
+					$("#registerNewVisit").prop("disabled",false);
+					$("#Visitor_photo_em").hide();
+				}
+            });
+
+        }
+		$("#submitBtnPhoto").click(function(){
+			if($("#Visitor_photo").val()!='')
+			{
+				//alert('here');
+					$("#registerNewVisit").prop("disabled",false);
+					$("#Visitor_photo_em").hide();
+			}
+		});
+		}
+
+    });
+
+
+
+
     $(document).ready(function () {
         $('#Visit_workstation').on('change',function(){
             var workstation = $('#Visit_workstation').val();
@@ -435,12 +508,14 @@ $vstr = Visitor::model()->findByPk($model->visitor);
     function sendPhoto() {
 
         var form = $("#update-photo-form").serialize();
+		//alert('<?php echo CHtml::normalizeUrl(array('/visitor/update&id=' . $visitorModel->id . '&view=1')); ?>');
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array('/visitor/update&id=' . $visitorModel->id . '&view=1')); ?>",
             data: form,
             success: function (data) {
-                $("#photoPreview2").show();
+               // alert(data);
+				$("#photoPreview2").show();
             }
         });
 

@@ -35,6 +35,17 @@ if ($card) {
     $cardCode = 'N/A';
     //throw new CHttpException(404, 'Card Number not found for this User.');
 }
+ //change card background color & lable
+ if($model->card_type == CardType::TEMPORARY_ASIC)
+ {
+     $bgcolor = CardGenerated::ASIC_CARD_COLOR;
+     $lable = 'T';
+ } elseif ($model->card_type == CardType::CONTRACTOR_VISITOR)
+ {
+     $lable = 'C';
+ } else {
+     $lable = 'V';
+ }
 ?>
 
 <div style="width:100%; float:left;">
@@ -43,13 +54,21 @@ if ($card) {
         <div class="box-image-style"></div>
         <div style=" text-align:center; line-height:20px; margin:10px 0 0 5px; color:#000;height: 128px; overflow: hidden;">
             <p style="font-size:22px; font-weight:bold; margin:0 0 5px 0;"><?= $companyCode ?></p>
-            <strong style="font-size: 37px; text-align: left; width: 100%; float: left; /*margin-bottom: 3px;*/ margin-left: 10px; /*line-height: 32px;*/ margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 7px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small>
+            <strong style="font-size: 37px; text-align: left; width: 100%; float: left; /*margin-bottom: 3px;*/ margin-left: 10px; /*line-height: 32px;*/ margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 7px; margin-top: -1px;">
+                <!-- displayed lable -->
+                    <?= $lable; ?>
+                </small>
                 <span id="cardDateText">
             <?php
                 if ($model->card_type == CardType::VIC_CARD_24HOURS) {     
                         echo strtoupper(date('d M y', strtotime($model->date_check_in . '+ 1 DAY')));
                   } else {
                         if($model->visit_status != VisitStatus::SAVED ) {
+							/*if(($model->card_type==CardType::VIC_CARD_MULTIDAY && $model->finish_date!=null) || ( $model->card_type==CardType::VIC_CARD_EXTENDED && $model->finish_date!=null))
+							{
+								echo strtoupper(date('d M y', strtotime($model->finish_date)));
+							}
+							else*/
                             echo strtoupper(date('d M y', strtotime($model->date_check_out)));
                         } else {
                             echo strtoupper(date('d M y')); 

@@ -8,4 +8,4 @@
 <h1>Add Company</h1>
 
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'userModel'=>$userModel)); ?>

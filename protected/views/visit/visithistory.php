@@ -19,19 +19,19 @@ $session = new CHttpSession;
         if ($model->host != '') {
             $host = $model->host;
             $GLOBALS['userHost'] = 'host';
+
         } else {
             $host = $model->patient;
             $GLOBALS['userHost'] = 'patient';
-        }
+		}
         $card_type = $model->card_type;
-
 
         $visitor = $model->visitor;
         $model = new Visit;
         $criteria = new CDbCriteria;
         $criteria->order = 'id DESC';
         $criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $visitor);
-        
+
         //because of the comment in https://ids-jira.atlassian.net/browse/CAVMS-1242
         //$criteria->addCondition("reset_id IS NULL AND negate_reason IS NULL");
 
@@ -40,6 +40,7 @@ $session = new CHttpSession;
         $visitData = new CActiveDataProvider($model, array(
             'criteria' => $criteria,
         ));
+		
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-grid',
             'dataProvider' => $visitData,
@@ -55,12 +56,14 @@ $session = new CHttpSession;
                     'header' => 'Card No.',
                     'value' => 'CardGenerated::model()->getCardCode($data->card)',
                 ),
-                array(
+               array(
                     'header' => 'Open by',
                     'name' => 'created_by',
                     'type' => 'html',
-                    'value' => 'User::model()->findByPk($data->created_by)->first_name." ".User::model()->findByPk($data->created_by)->last_name',
-                ),
+                    'value' => 'User::model()->fullName($data->created_by)',
+					//'value'=>'$v->first_name',
+					),
+					
                 array(
                     'name' => 'date_check_in',
                     'type' => 'html',
@@ -81,12 +84,12 @@ $session = new CHttpSession;
                     'type' => 'html',
                     'value' => 'formatTime($data->time_check_out)',
                 ),
-                array(
+               /* array(
                     'header' => 'Closed by',
                     'name' => 'closed_by',
                     'type' => 'html',
                     'value' => '!is_null($data->closed_by) ?  User::model()->findByPk($data->closed_by)->first_name." ".User::model()->findByPk($data->closed_by)->last_name:""',
-                ),
+                ),*/
                  array(
                     'header' => 'Date Closed',
                     'name' => 'visit_closed_date',
@@ -108,6 +111,16 @@ $session = new CHttpSession;
 //                ),
             ),
         ));
+		
+		 //$criteria = new CDbCriteria();
+		 
+		//$check = $data->created_by;
+				//$result=$check->text;
+				//echo $check;
+				//$c = array(User::model()->findByPk($model['created_by'])->first_name);
+				//echo $c->first_name;
+				//die();
+        
         ?>
 
     </div>

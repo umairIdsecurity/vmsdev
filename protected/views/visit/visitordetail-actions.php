@@ -2,6 +2,11 @@
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
+//$result= new DateTime("NOW", new DateTimeZone($session['timezone']));
+//echo "<pre>";
+//print_r($result);
+//echo "</pre>";
+//Yii::app()->end();
 $workstationModel = Workstation::model()->findByPk($model->workstation);
 $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
@@ -29,8 +34,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     ?>
 
                                     <?php
-
-                                    if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
+								    // added Temprorary ASIC card type
+                                    if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL,CardType::VIC_CARD_24HOURS,CardType::TEMPORARY_ASIC])) {
                                         $this->renderPartial('closevisit-vic', array(
                                             'model' => $model,
                                             'visitorModel' => $visitorModel,
@@ -52,7 +57,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     <input type='submit' id="closeVisitSubmit" name="closeVisitForm" style="display: none;" />
                                     <input type="submit" id="closeVisitBtn" class="complete" value="Close Visit" />
                                     
-                                    <?php if($model->visit_status != VisitStatus::ACTIVE ) : //introduced because of CAVMS-1178 ?>
+             <?php  /*changed on 25/10/2016*/ if($model->visit_status != VisitStatus::ACTIVE && $model->visit_status != VisitStatus::CLOSED && $model->card_type != CardType::VIC_CARD_24HOURS  ) : //introduced because of CAVMS-1178 ?>
+                                        <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
+                                        <?php elseif ($model->visit_status != VisitStatus::CLOSED): ?>
                                         <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <?php endif; ?>
 
@@ -72,7 +79,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 <ul>
                     <li>
                         <?php
-                        $logform = $this->beginWidget('EActiveForm', array(
+                       // added Temproary ASIC card in afterValidate
+                       $logform = $this->beginWidget('EActiveForm', array(
                             'id' => 'activate-a-visit-form',
                             'htmlOptions' => array("name" => "activate-a-visit-form"),
                             'enableAjaxValidation' => false,
@@ -87,6 +95,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                             $("#Visit_card_type").val() != ' . CardType::SAME_DAY_VISITOR . '  &&
                                             $("#Visit_card_type").val() != ' . CardType::MANUAL_VISITOR . '  &&
                                             $("#Visit_card_type").val() != ' . CardType::VIC_CARD_SAMEDATE . '  &&
+                                            $("#Visit_card_type").val() != ' . CardType::TEMPORARY_ASIC . '  &&
                                             $("#Visit_card_type").val() != ' . CardType::VIC_CARD_MANUAL . '
                                         ){
                                             alert("Please upload a photo.");
@@ -108,9 +117,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     <div id="logVisitDiv">
                                         <?php
 
-
-                                        if ($model->card_type > CardType::CONTRACTOR_VISITOR){
-                                        //if ($asic) {
+										
+                                       if ($model->card_type > CardType::CONTRACTOR_VISITOR){
+                                        if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
                                                 'model'        => $model,
                                                 'visitorModel' => $visitorModel,
@@ -131,6 +140,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                                 'visitCount'   => $visitCount
                                             ));
                                         }
+									   }
+									   
                                         ?>
                                     </div>
 
@@ -163,7 +174,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 }
                           ?>
                             
-                             <div style="display:none;" id="visit_cannot_be_activate" class="errorMessage">VIC can not be activated in the future</div>
+                             <div style="display:none" id="visit_cannot_be_activate" class="errorMessage">VIC can not be activated in the future</div>
+							 
                             <?php if(in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
                                 <button type="button" id='registerNewVisit' <?php echo $disabled; ?>  class='greenBtn actionForward'>Create New Visit</button>
                             <?php } else { ?>
@@ -179,7 +191,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <?php endif;?>
                             </div>
 
-
+							
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED ) : ?>
                             <?php  
                             $disabled = '';
@@ -192,7 +204,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php else:
                             if ( ( $model->card_type == CardType::MANUAL_VISITOR) && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) : ?>
                                 <input type="submit" value="Back Date Visit" class="complete"/>
+								
                             <?php else: ?>
+							<div id="visit_cannot_be_activate" class="errorMessage"></div>
                                 <button type="button" id="registerNewVisit" class="greenBtn actionForward">Activate Visit</button>
                                 <div style="display:inline;font-size:12px;">
                                 <strong>or </strong>
@@ -214,7 +228,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 </div>
 
 <!-- Identification Modal -->
-<div id="identificationModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div id="identificationModal" class="modal hide fade" tabindex="-5" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>Identification Verification</h3>
@@ -279,11 +293,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     'name'=>'Visitor[identification_document_expiry]',
                                     // additional javascript options for the date picker plugin
                                     'htmlOptions'=>array(
+										'class'=>'date',
+										'name'=>'Visitor[identification_document_expiry]',
+										'id'=>'identification_document_expiry',
                                         'style'       => 'width: 120px;',
                                         'placeHolder' => 'Expiry'
                                     ),
                                 ));
-                                ?> <span class="required primary-identification-require">*</span>
+                                ?> 
+								<span class="required primary-identification-require">*</span>
                                 </td>
                             </tr>
                             <tr>
@@ -338,6 +356,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         'id' => '_identification_document_expiry',
                                         'name'=>'Visitor[identification_document_expiry]',
                                         'htmlOptions'=>array(
+											'class'=>'dateexpired',
                                             'size'        => '0',
                                             'maxlength'   => '10',
                                             'placeholder' => 'Expiry',
@@ -364,6 +383,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 <input type="hidden" value="<?php echo $model->visit_status; ?>" id="visitStatus"/>
 <script>
     $(document).ready(function () {
+	$('.date').not('.hasDatePicker').datepicker({
+	changeMonth:true,
+    changeYear:true,
+	autoSize:true,
+	dateFormat:'dd/mm/yy',
+	});
+	$('.dateexpired').not('.hasDatePicker').datepicker({
+	changeMonth:true,
+    changeYear:true,
+	autoSize:true,
+	dateFormat:'dd/mm/yy',
+	});
+$.fn.modal.Constructor.prototype.enforceFocus = function () {};
 
         if ($("#visitStatus").val() == 5) {
 
@@ -416,13 +448,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
-
+				
             /** Check for ASIC Pending **/
             var asicPending = checkForAsicPending();
-
+			//alert(asicPending);
             /** Check Visit Count if exceed 28 days than don;t activate it */
             var countExceeds = checkForVisitCountLimit();
             if( countExceeds == 0 && asicPending==0) {
+				alert("yes");
                 $("#visit_cannot_be_activate").html("Visitor has reached 28 days limit.");
                 $("#visit_cannot_be_activate").show();
                  return false;
@@ -442,13 +475,20 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                  $("#visit_cannot_be_activate").show();
                  return false;
             }
-            
-            // Check if ASIC has expired = 8 then dont activate the visit 
-            if( $("#ASIC_asic_status").length && $("#ASIC_asic_status").val() == '<?php echo Visitor::ASIC_EXPIRED;?>' ){
+            if($("#ASIC_asic_expiry").val()!=null)
+			{
+           var from = $("#ASIC_asic_expiry").val().split("-");
+		var asicdate = Date.parse(from[1]+"-"+from[0]+"-"+from[2]);
+          if( asicdate < jQuery.now()){
                 $("#visit_cannot_be_activate").html("Visit cannot be activate. ASIC sponsor has expired.").show();
                 return false;
             }
-            
+			}
+            /*if( $("#ASIC_asic_status").length && $("#ASIC_asic_status").val() == '<?php echo Visitor::ASIC_EXPIRED;?>' ){
+                $("#visit_cannot_be_activate").html("Visit cannot be activate. ASIC sponsor has expired.").show();
+                return false;
+            }*/
+         
            // Check Deposit Paid for EVIC only
             if ( $("#deposit_paid_radio_yes").length && !$("#deposit_paid_radio_yes").is(":checked")) {
                    alert("A Deposit is required for an EVIC. Please select Yes to activate the visit.");
@@ -570,6 +610,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
                             $('#identificationModal').modal('show');
                         } else {
+
                             activeVisit();
                             return false;
                         }
@@ -584,6 +625,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     $('#identificationModal').modal('hide');
 
                                     $('input[name="identificationActiveVisit"]').prop('checked', true);
+									//alert('here');
                                     activeVisit();
                                 } else {
                                     updateIdentificationDetails();
@@ -673,19 +715,52 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         function updateIdentificationDetails() 
         {
+			//var summary = [];
+			
+			/*$('#identification_not_expired_form').each(function () {
+			console.log('Form ' + this.id + ' has ' + $(this).find(':input').length + ' child(ren).');
+			console.log('Form ' + this.id + ' has ' + this.elements.length + ' form element(s).');
+			});*/
             //because of https://ids-jira.atlassian.net/browse/CAVMS-1206
-            if($('#identiDocumentNo').val() == ""){$('#identProofError').show();}else{$('#identProofError').hide();}
-            if($('#identification_document_expiry').val() == ""){$('#identExpiryError').show();}else{$('#identExpiryError').hide();}
-            if($('#identiDocumentNo').val() =="" || $('#identification_document_expiry').val() == ""){return false;}
-            
+			if($('#identificationNotExpired').is(':visible'))
+			{
+				//console.log($('#identification_document_no').val());
+            if($('#identiDocumentNo').val() == "")
+			{$('#identProofError').show();}
+			else{$('#identProofError').hide();}
+			if($('.date').val() == ""){$('#identExpiryError').show();}else{$('#identExpiryError').hide();}
+            if($('#identiDocumentNo').val() =="" || $('.date').val() == ""){return false;}
+			}
+			//console.log($('.date').val());
+			//console.log($('#identiDocumentNo').val());
+            if($('#identificationExpired').is(':visible'))
+			{
+            if($('#identification_document_no').val() =="" || $('.dateexpired').val() == ""){return false;}
+			}
+           
             var data;
-            if (isExpired()) 
+			if($('#identificationNotExpired').is(':visible'))
+			{
+			var date=$('.date').val();
+			}
+			 if($('#identificationExpired').is(':visible'))
+			{
+				var date=$('.dateexpired').val();
+			}
+			$('#identification_document_expiry').val(date);
+			$("input[name='Visitor[identification_document_expiry]']").val(date);
+			//console.log($('#identification_document_expiry').val());
+			
+			//alert(document_expiry_date);
+            if ($('#identificationExpired').is(':visible')) 
             {
                 data = $("#identification_expired_form").serialize();
+				//console.log(date);
             } 
             else 
             {
                 data = $("#identification_not_expired_form").serialize();
+				//console.log("hassan");
             }
             
             $.ajax({
@@ -695,6 +770,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 data: data,
                 success: function (r) 
                 {
+					//alert("hello");
                     console.log(r);
                     if (r == 1) {
                         $('#identificationModal').modal('hide');
@@ -705,11 +781,11 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         }
                     }
                 },
-                error: function(error)
-                {
-                    //window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
-                    console.log(error);
-                }
+                error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
 
             });
             return false;
@@ -764,6 +840,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         $('#cancelActiveVisitButton').on('click', function (e) {
             e.preventDefault();
             sendCancelVisit();
+			//alert('hello');
         });
 
         $('#cancelPreregisteredVisitButton').on('click', function (e) {
@@ -781,13 +858,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
             $ctout = explode(':', $model->time_check_out);
             ?>
-        $(".visit_time_in_hours").val(<?= $ctout[0] ?>);
-        $(".visit_time_in_minutes").val(<?= $ctout[1] ?>);
+        $(".visit_time_in_hours").val('<?= $ctout[0] ?>');
+        $(".visit_time_in_minutes").val('<?= $ctout[1] ?>');
         <?php
     } else {
         ?>
         display_ct();
-        <?php } ?>
+        <?php }?>
 
 
         if ('<?php echo $model->card_type; ?>' == 1) {
@@ -808,7 +885,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         $(".visit_time_in_hours").val(x.getHours());
         $(".visit_time_in_minutes").val(x.getMinutes());
         $("#Visit_time_out").val(currenttime);
-        $("#Visit_time_check_out").val(currenttime);
+       $("#Visit_time_check_out").val(currenttime);
         tt = display_c();
     }
 
@@ -868,6 +945,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         }
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
                         sendActivateVisitForm("activate-a-visit-form");
+						//alert("umair");
                     }
                 });
             }
@@ -904,6 +982,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     function checkForVisitCountLimit() {
          var totalVisitsCount = '<?php echo Visit::model()->getVisitCountDays($model->id); ?>';
          var cardType = '<?php echo $model->card_type ?>';
+		 //alert(totalVisitsCount);
             if( totalVisitsCount >= 28 && cardType != '<?php echo CardType::VIC_CARD_EXTENDED?>' ) {
                  return 0;
             } else {
@@ -924,7 +1003,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
          var checkInDateStr = $.datepicker.formatDate('yymmdd',checkInDate);
          var currentDateStr = $.datepicker.formatDate('yymmdd',new Date());
          var visitStatus = "<?php echo $model->visit_status?>";
-         if(visitStatus == "<?php echo VisitStatus::PREREGISTERED?>" && (currentDateStr < checkInDateStr) ) {
+         if(visitStatus == "<?php echo VisitStatus::PREREGISTERED?>" && (currentDateStr < checkInDateStr) && $("#registerNewVisit").text()=='Activate Visit' ) {
              return true;
         } else {
             return false;

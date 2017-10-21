@@ -129,6 +129,7 @@ date_default_timezone_set('Asia/Manila');
     ?>">
 <input type='hidden' id='isPreloaded' />
 <input type='hidden' id='preloadVisitId'/>
+
 <script>
     $(document).ready(function() {
         $('#VisitReason_reason').change(function(){
@@ -147,7 +148,14 @@ date_default_timezone_set('Asia/Manila');
         $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
         
         if($("#selectedVisitorInSearchTable").val() == 0 || $("#selectedVisitorInSearchTable").val() == ''){
-            $("#visitReasonFormField").val($("#Visit_reason").val());
+			/*if($("#Visit_reason").val()=="Other" && $("#VisitReason_reason").val()!="")
+			{
+				$("#visitReasonFormField").val($("#VisitReason_reason").val());
+			}else
+				{
+				$("#visitReasonFormField").val($("#Visit_reason").val());
+				}*/
+            //$("#visitReasonFormField").val($("#Visit_reason").val());
         } else {
             $("#visitReasonFormField").val($("#Visit_reason_search").val());
         }

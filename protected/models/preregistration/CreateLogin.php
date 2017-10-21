@@ -9,6 +9,10 @@
 class CreateLogin extends CFormModel{
 
     public $username;
+	public $fname;
+	public $lname;
+	public $dob;
+	public $tenant;
     public $username_repeat;
     public $password;
     public $password_repeat;
@@ -23,7 +27,7 @@ class CreateLogin extends CFormModel{
         return array(
 
             //array('username', 'unique','className'=>'Registration','attributeName'=>'email','message'=>"Username already exists"),
-            array('username,password,account_type', 'required','message'=>"Please enter {attribute}"),
+            array('username,password,account_type,fname,lname,dob,tenant', 'required','message'=>"Please enter {attribute}"),
             array('password', 'length', 'min' => 5, 'max'=>20, 'message'=>Yii::t("translation", "{attribute} is too short.")),
             array('username_repeat', 'compare', 'compareAttribute'=>'username', 'message'=>"Confirm Username do not match"),
             array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Confirm Password do not match"),
@@ -39,6 +43,14 @@ class CreateLogin extends CFormModel{
         }
 
     }*/
+	public function attributeLabels()
+    {
+        return array(
+            'fname'                                => 'First Name',
+			'lname'                                => 'Last Name',
+			'dob'                                => 'Date of Birth'
+			);
+	}
 
 
 

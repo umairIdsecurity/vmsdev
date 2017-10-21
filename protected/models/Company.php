@@ -36,6 +36,9 @@ class Company extends CActiveRecord {
     public $user_repeatpassword;
     public $password_option;
     public $company_type;
+	public $user_authorised_file; //Edited by Muhammad Mudassar 27/09/2017 AIS-301
+	public $asiccheck;
+	public $company_radio;
     protected $tenantQuery = "SELECT COUNT(c.id) FROM user u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1";
 
     /**
@@ -60,7 +63,138 @@ class Company extends CActiveRecord {
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules() {
+	 
+	 
+	 public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+		
+		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1)
+        {
+			if($this->scenario=='addCompany_log')
+		{
+			return array(array("name", "check_unique_name", 'company_name'=>$this->name));
+		}
+		else
+		{
+		return array(
+	         array('name', 'required','message'=>'Please complete {attribute}'),
+                 array("name", "check_unique_name", 'name'=>$this->name, 'except'=>array("company_contact_update","addCompany_log")),
+                 array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact_update','message'=>'Please complete {attribute}'),      
+                //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'preregistration'),
+                array('user_first_name','required','on' => 'preregistration','message'=>'Please complete First Name'),
+                array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
+                array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
+                array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
+				array('user_authorised_file', 'file',
+                                'allowEmpty' => true,
+                                'types'=>'jpg , Jpeg, png , doc , docx, pdf',
+                                'maxSize'=>1024 * 1024 * 2, // 2MB
+                                'tooLarge'=>'The file was larger than 2MB. Please upload a smaller file.',
+                                'on' => 'company_contact_update',
+                            ),
+                 
+                //array("email_address", "unique", 'except'=>array("company_contact_update"), 'message'=>"Email already exist."),
+                array('email_address','unique',
+                                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1 AND name=:companyname',
+                                    'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant'],':companyname'=>$this->name)),'except'=>array("company_contact_update","addCompany_log","company_contact","company_contact_update1","preregistration","add_tenant_agent","tenant_agent")),
+                    
+                array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
+                array('password_requirement,password_option,user_password','safe'),
+                array('user_password,user_repeatpassword',
+                    'required',
+                    'on'=>['passwordrequire'],
+                    'message' => 'Please enter or autogenerate password'),
+                
+				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant', 'message'=>'Please complete {attribute}'),
+                // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+                array('code', 'match',
+                    'pattern' => '/^[a-zA-Z\s]+$/',
+                    'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
+	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
+	            array('email_address', 'email','except'=>array("company_contact_update","company_contact_update1")),
+                    array('user_email','email'),
+	            array('website', 'url'),
+	            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
+	            array('name, trading_name, billing_address', 'length', 'max' => 150),
+	            array('email_address, website', 'length', 'max' => 50),
+	            array('contact', 'length', 'max' => 100),
+	            array('tenant', 'length', 'max' => 100),
+	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
+
+                    // Senario for Add Tenant
+                    array('code, name, contact, email_address, office_number','required', 'on' => 'add_tenant', 'message'=>'Please complete {attribute}'),
+                    array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent', 'message'=>'Please complete {attribute}'),
+                    
+	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
+	            // The following rule is used by search().
+	            // @todo Please remove those attributes that should not be searched.
+	            array('id,isTenant,card_count, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
+	        );
+		}
+		}
+		else
+        {
+			if($this->scenario=='addCompany_log')
+		{
+			return array(array("name", "check_unique_name", 'company_name'=>$this->name));
+		}
+		else{
+			return array(
+                            array('name', 'required','message'=>'Please complete {attribute}'),
+                            array("name", "check_unique_name", 'name'=>$this->name, 'except'=>array("company_contact_update","addCompany_log")),
+                            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact','message'=>'Please complete {attribute}'),
+                            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact_update','message'=>'Please complete {attribute}'),    
+                            array('user_first_name','required','on' => 'preregistration','message'=>'Please complete First Name'),
+                            array('user_last_name','required','on' => 'preregistration','message'=>'Please complete Last Name'),
+                            array('user_email','required','on' => 'preregistration','message'=>'Please complete Email Address'),
+                            array('user_contact_number','required','on' => 'preregistration','message'=>'Please complete Contact Number'),
+                           array('user_authorised_file', 'file',
+                                'allowEmpty' => true,
+                                'types'=>'jpg , Jpeg, png , doc , docx, pdf',
+                                'maxSize'=>1024 * 1024 * 2, // 2MB
+                                'tooLarge'=>'The file was larger than 2MB. Please upload a smaller file.',
+                                'on' => 'company_contact_update',
+                            ),
+                            //array("email_address", "unique", 'except'=>array("company_contact_update")),
+                            array('email_address','unique',
+                                    'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant=:tenant AND tenant!=1 AND name=:companyname',
+                                    'params'=>array(':is_deleted'=>0,':tenant'=> $_SESSION['tenant'],':companyname'=>$this->name)),'except'=>array("company_contact_update","addCompany_log","company_contact","company_contact_update1","preregistration","add_tenant_agent","tenant_agent")),
+
+                            array('code', 'required', 'except' => 'preregistration', 'message'=>'Please complete {attribute}'),
+                            array('email_address , mobile_number', 'required' , 'on' => 'updatetenant', 'message'=>'Please complete {attribute}'),
+                            // array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+
+                            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
+                            array('code', 'match',
+                                'pattern' => '/^[a-zA-Z\s]+$/',
+                                'message' => 'Code can only contain letters'),
+                            array('email_address', 'email','except'=>array("company_contact_update","company_contact_update1")),
+                            array('website', 'url'),
+                            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
+                            array('name, trading_name, billing_address', 'length', 'max' => 150),
+                            array('email_address, website', 'length', 'max' => 50),
+                            array('contact', 'length', 'max' => 100),
+                            array('tenant', 'length', 'max' => 100),
+                            array('logo,is_deleted,company_laf_preferences', 'safe'),
+                            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
+
+                            // Senario for Add Tenant
+                            array('code, name,  email_address, office_number','required', 'on' => 'add_tenant', 'message'=>'Please complete {attribute}'),
+                            array('name, contact, email_address, office_number','required', 'on' => 'add_tenant_agent', 'message'=>'Please complete {attribute}'),
+
+                            // The following rule is used by search().
+                            // @todo Please remove those attributes that should not be searched.
+                            array('id, isTenant,card_count, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
+
+
+                            );
+		}
+		}
+
+    }
+	 //old function changed on 19/10/2016
+   /* public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
 		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1)
@@ -160,7 +294,7 @@ class Company extends CActiveRecord {
                             );
 		}
 
-    }
+    }*/
 
     /**
      * @return array relational rules.
@@ -207,7 +341,8 @@ class Company extends CActiveRecord {
             'user_last_name' => 'User Last Name',
             'user_email' => 'User Email',
             'user_contact_number' => 'User Contact Number',
-            'company_type' => 'Company Type'
+            'company_type' => 'Company Type',
+			'asiccheck' => 'Add Asic Sponsor As Company Contact'
         );
     }
     
@@ -215,9 +350,11 @@ class Company extends CActiveRecord {
     public function check_unique_name($attribute, $params) {
         $session = new CHttpSession();
         $tenant = (isset($session['tenant']) && $session['tenant'] != "") ? $session['tenant'] : "NULL";
-        $model = Company::model()->find("name = '".$this->name."' AND tenant = ".$tenant);
-        if( $model )
-            $this->addError($attribute, 'Company name '.$this->name.' has already been taken.');
+        $model = Company::model()->find("name = '".$this->name."' AND tenant = ".$tenant." AND company_type=3");
+        if($model['name']==$this->name) {
+            if ($model)
+                $this->addError($attribute, 'Company name ' . $this->name . ' has already been taken.');
+        }
     }
     /**
      * Retrieves a list of models based on the current search/filter conditions.
@@ -299,6 +436,13 @@ class Company extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+	public static function downlaodFile($id,$authorised_file) {
+
+        $rs = explode('_',$authorised_file);
+        if(!empty($rs['1']))
+           echo "<a style='text-align: center;margin-top:15px;background: white;border: 0px solid #fff;color:#333' title='Downlaod File' href='".Yii::app()->createUrl("/company/downloadFile&id=" .$id)."'>".$rs['1']."</a>";
+    }
+
 
     public function getCompanyLogo($companyId) {
 
@@ -387,18 +531,32 @@ class Company extends CActiveRecord {
         }
     }
 
-    public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
+	
+	public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '" . $companyName . "' and tenant=" . $tenant . "";
+        $Criteria->condition = "name = '" . $companyName . "' and tenant=" . $tenant . " AND company_type=3";
+        $company = Company::model()->findAll($Criteria);
+		
+        if(!empty($company) && $company[0]['name']==$companyName)
+        {
+            $company = array_filter($company);
+            return count($company);
+        }
+
+    }
+	//old function changed by  Muhammad Mudassar on 27/09/2017 for AIS-300 
+       /*public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "name = '" . $companyName . "' and tenant=" . $tenant . " AND company_type=3";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
         return count($company);
-    }
+    }*/
 
     public function isCompanyCodeUniqueWithinTheTenant($companyCode, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "code = '" . $companyCode . "' and tenant=" . $tenant . "";
+        $Criteria->condition = "code = '" . $companyCode . "' and tenant=" . $tenant . "  AND company_type=3";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -407,7 +565,7 @@ class Company extends CActiveRecord {
 
 	public function isWithoutCompanyCodeUniqueWithinTheTenant($tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant=" . $tenant . "";
+        $Criteria->condition = "tenant=" . $tenant . "  AND company_type=3";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);

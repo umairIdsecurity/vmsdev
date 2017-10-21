@@ -23,7 +23,8 @@
     <tr>
         <td>
             <?php
-            if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS])) {
+            // added Temporary ASIC card type
+            if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS,CardType::TEMPORARY_ASIC])) {
                 switch ($model->card_type) {
                     case CardType::VIC_CARD_24HOURS:
                         $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));

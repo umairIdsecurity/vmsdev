@@ -48,6 +48,10 @@ $session = new CHttpSession;
             <td style="vertical-align:top"><?php echo $form->textArea($model, 'answer',  array('rows'=>6,'style' => 'width:487px;'));  ?></td>
             <td style="vertical-align:top"><?php echo $form->error($model, 'answer'); ?></td>
         </tr>
+		 <tr>
+            <td style="vertical-align:top"><?php echo $form->labelEx($model, 'videolink'); ?></td>
+            <td style="vertical-align:top"><?php echo $form->textfield($model, 'videolink',array('style'=>'width: 90%;'));  ?></td>
+        </tr>
         <tr>
             <td ><?php echo $form->labelEx($model, 'order_by'); ?></td>
             <td><?php echo $form->textField($model, 'order_by', array('style' => 'width:70px;','size'=>5,'maxlength'=>5)); ?></td>

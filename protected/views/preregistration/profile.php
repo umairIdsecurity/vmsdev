@@ -207,17 +207,17 @@ $session = new CHttpSession;
                 <tr><td>&nbsp;</td></tr>
                 
                 <?php $role = Roles::model()->findByPk($model->role) ?>
-                <tr>
+                <!--<tr>
                     <td>
                         <input type="text" class="form-control input-xs" disabled="true" placeholder="User Role" value="<?= $role->name ?>"
                         <?php //echo $form->textField($model, 'role', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'User Role', 'disabled' => 'true')); ?>
                     </td>
                 </tr>
 
-                <tr><td>&nbsp;</td></tr>
+                <tr><td>&nbsp;</td></tr>-->
 
                 <?php if(isset($companyModel)): ?>
-                    <tr>
+                   <!-- <tr>
                         <td id="">
                             <div style="margin-bottom: 5px;">
                                 <?php echo $form->textField($companyModel, 'name', array('class' => 'form-control input-xs','maxlength' => 50, 'placeholder' => 'Company Name', 'style' => '')); ?>
@@ -225,9 +225,9 @@ $session = new CHttpSession;
                                 <?php echo $form->error($companyModel, 'name', array("style" => "margin-top:0px")); ?>
                             </div>
                         </td>
-                    </tr>
+                    </tr>-->
                 <?php else: ?>
-                    <tr>
+                    <!--<tr>
                         <td id="">
                             <div style="margin-bottom: 5px;">
                                 <?php echo $form->dropDownList($model, 'company', CHtml::listData(Company::model()->findAll('is_deleted=0'),'id', 'name'), array('prompt' => 'Select Company' , 'class'=>'form-control input-sm')); ?>
@@ -235,10 +235,10 @@ $session = new CHttpSession;
                                 <?php echo $form->error($model,'company'); ?>
                             </div>
                         </td>
-                    </tr>
+                    </tr>-->
                 <?php endif; ?>
 
-                <tr><td>&nbsp;</td></tr>
+               <!--<tr><td>&nbsp;</td></tr>-->
                 
                 <tr>
                     <td width="37%">
@@ -260,20 +260,37 @@ $session = new CHttpSession;
                 </tr>
 
                 <?php if($model->profile_type == "VIC"): ?>
-                <tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+				 <tr>
+                                <td>
+                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Select Identification Type','class' => 'form-control input-xs'));
+                                    ?><span class="required primary-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
+                                </td>
+                  </tr>
+                
                 <tr>
                     <td>
-                        <?php echo $form->textField($model, 'identification_document_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width:175px;')); ?>
+                        <?php echo $form->textField($model, 'identification_document_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Document No.',)); ?>
+						<span class="required">*</span>
+						 <?php echo $form->error($model, 'identification_document_no'); ?>
+				   </td>
+				</tr>
+				 <tr><td>&nbsp;</td></tr>
+				<tr>
+					<td>
                         <?php
                             $this->widget('EDatePicker', array(
                                 'model'       => $model,
                                 'attribute'   => 'identification_document_expiry',
-                                'mode'        => 'expiry'
+                                'mode'        => 'expiry',
+								'htmlOptions' => array(
+                                        'style'    => 'width:280px;height: 32px;' ,'class'=>'form-control input-xs')
                             ));
                         ?>
-                        <span class="required primary-identification-require">*</span>
-                        <?php echo $form->error($model, 'identification_document_no',array('style'=>'width:175px;float:left')); ?>
-                        <?php echo $form->error($model, 'identification_document_expiry',array('style' => 'width:145px;float:right')); ?>
+                        <span class="required">*</span>
+                       
+                        <?php echo $form->error($model, 'identification_document_expiry'); ?>
                     </td>
                 </tr>
                 <?php endif; ?>
@@ -283,21 +300,29 @@ $session = new CHttpSession;
                 <tr>
                     <td>
                         <?php echo $form->textField($model, 'asic_no', array('class' => 'form-control input-xs', 'maxlength' => 50, 'placeholder' => 'Asic No.', 'style' => 'width:175px;')); ?>
-
+						<span class="required">*</span>
+						<?php echo $form->error($model, 'asic_no'); ?>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td>
                         <?php
                             $this->widget('EDatePicker', array(
                                 'model'       => $model,
                                 'attribute'   => 'asic_expiry',
                                 'mode'        => 'asic_expiry',
+								'htmlOptions' => array(
+                                        'style'    => 'width:280px;height: 32px;'  ,'class'=>'form-control input-xs')
                             ));
                         ?>
-                        <span class="required primary-identification-require">*</span>
-                        <?php echo $form->error($model, 'asic_no'); ?>
+                        <span class="required">*</span>
+                        
                         <?php echo $form->error($model, 'asic_expiry'); ?>
                     </td>
                 </tr>
                 <?php endif; ?>
-
+				
 
                 <?php if($model->profile_type == "VIC"): ?>
                 <tr><td>&nbsp;</td></tr>
@@ -309,6 +334,8 @@ $session = new CHttpSession;
                                 'model'       => $model,
                                 'attribute'   => 'date_of_birth',
                                 'mode'        => 'date_of_birth',
+								'htmlOptions' => array(
+                                        'style'    => 'width:280px;height: 32px;' ,'class'=>'form-control input-xs')
                             ));
                             ?>
                         <span class="required">*</span>
@@ -322,7 +349,7 @@ $session = new CHttpSession;
                 <tr><td>&nbsp;</td></tr>
 
 
-                <tr>    
+               <!-- <tr>    
                     <td>
                         <span>Reset Password</span>
                     </td>
@@ -365,11 +392,14 @@ $session = new CHttpSession;
                                 <?php echo $form->error($model,'repeat_password', array("style" => "margin-top:0px")); ?>
                             </div>
                         </td>
-                    </tr>  
+                    </tr>  -->
 
                 <tr>
                     <td>
-                        <div><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="btn btn-primary bt-login" style="margin-top: 15px;"/></div>
+                        <div>
+						<input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="btn btn-primary bt-login" style="margin-top: 15px;"/>
+						 <a class="btn btn-primary actionForward " id="resetPasswordBtn" onclick = "goToUpdatePassword(<?php echo $session['id'];?>)" style="margin-top: 15px;">Reset Password</a>
+						</div>
                     </td>
                 </tr> 
 
@@ -444,5 +474,8 @@ $session = new CHttpSession;
             }
         });
     });*/
+	function goToUpdatePassword(id){
+        window.location ='/index.php/preregistration/update?id='+id;
+    }
 
 </script>

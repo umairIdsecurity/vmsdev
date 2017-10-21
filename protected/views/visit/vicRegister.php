@@ -126,21 +126,22 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name'   => 'contactperson',
-            'value'  => 'getContactName($data->company0->id)',
+            'value'  => '$data->visitor0->staff_id ? getContactName($data->visitor0->staff_id): getContactName($data->company0->id)',
             'filter' => CHtml::activeTextField($model, 'contactperson', array('placeholder' => 'Contact Person', 'class' => 'header-form', 'disabled' => 'disabled')),
         ),
         array(
             'name'   => 'contactphone',
-            'value'  => 'isset($data->visitor0->staff_id) ? User::model()->findByPk($data->visitor0->staff_id)->contact_number : ""',
+            'value'  => '$data->visitor0->staff_id ? getUserContact($data->visitor0->staff_id) : getUserContact($data->company0->id)',
             'filter' => CHtml::activeTextField($model, 'contactphone', array('placeholder' => 'Contact Phone', 'class' => 'header-form')),
         ),
         array(
             'name'   => 'contactemail',
-            'value'  => 'getUserEmail($data->company0->id)',
+            'value'  => '$data->visitor0->staff_id ? getUserEmail($data->visitor0->staff_id) : getUserEmail($data->company0->id)',
             'filter' => CHtml::activeTextField($model, 'contactemail', array('placeholder' => 'Contact Email', 'class' => 'header-form', 'disabled' => 'disabled')),
         ),
         array(
             'name'   => 'finish_date',
+			'value'	=> 'isset($data->finish_date) ? date("d-m-Y", strtotime($data->finish_date)) : date("d-m-Y", strtotime($data->date_check_in))',
             'filter' => CHtml::activeTextField($model, 'finish_date', array('placeholder' => 'Date of Issue', 'class' => 'header-form')),
         ),
         array(
@@ -178,8 +179,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value'  => 'isset(Workstation::model()->findByPk($data->workstation)->name) ? Workstation::model()->findByPk($data->workstation)->name : ""',
             'filter' => CHtml::activeTextField($model, 'workstation', array('placeholder' => 'Workstation', 'class' => 'header-form')),
         ),
+		array(
+            'name'   => 'Issuer Email',
+            'value'  => 'isset(User::model()->findByPk($data->created_by)->email) ? User::model()->findByPk($data->created_by)->email : ""',
+            'filter' => CHtml::activeTextField($model, 'email', array('placeholder' => 'Issuer Name', 'class' => 'header-form')),
+        ),
         array(
             'name'   => 'card_returned_date',
+			'value'	=>	'isset($data->card_returned_date) ? date("d-m-Y", strtotime($data->card_returned_date)) : date("d-m-Y", strtotime($data->date_check_out))',
             'filter' => CHtml::activeTextField($model, 'card_returned_date', array('placeholder' => 'Date Card Returned/Lost', 'class' => 'header-form')),
         ),
         array(
@@ -200,29 +207,45 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 function getUserEmail($id)
 {
+     $user=User::model()->findByPk($id);
     $users = User::model()->findAll('company=:company', array(':company'=>$id));
-    if ($users)
+    if ($users && ($users!=''|| $users!=null))
         return $users[0]->email;
+	else if ($user && ($users!=''|| $users!=null))
+	{
+		return $user->email;
+	}
     else
-        return "";
+        return "N/A";
 }
 
 function getUserContact($id)
 {
+   $user=User::model()->findByPk($id);
     $users = User::model()->findAll('company=:company', array(':company'=>$id));
-    if ($users)
+    if ($users && ($users!=''|| $users!=null))
         return $users[0]->contact_number;
+	else if ($user && ($users!=''|| $users!=null))
+	{
+		return $user->contact_number;
+	}
     else
-        return "";
+        return "N/A";
 }
 
 function getContactName($id)
 {
+	$user=User::model()->findByPk($id);
     $users = User::model()->findAll('company=:company', array(':company'=>$id));
-    if ($users)
+	
+    if ($users && ($users!=''|| $users!=null) )
         return $users[0]->getFullName();
-    else
-        return "";
+    else if ($user && ($users!=''|| $users!=null))
+	{
+		return $user->getFullName();
+	}
+	else
+        return "N/A";
 }
 
 function showTenantCode($tenant) {

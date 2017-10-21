@@ -4,12 +4,22 @@
 /* @var $model Visitor */
 ?>
 
-<h1><?php echo strtoupper(Yii::app()->request->getParam('vms')) ?> Visitors</h1>
-<?php    
-foreach (Yii::app()->user->getFlashes() as $key => $message) {
-        echo '<div class="flash-' . $key . '">' . $message . "</div><br>";
- }
-?>
+<h1><?php //echo strtoupper(Yii::app()->request->getParam('vms')) ?> Visitors</h1>
+ 
+<?php if(Yii::app()->user->hasFlash('importrecords')):?>
+        <div class="flash-success">
+                <?php echo Yii::app()->user->getFlash('importrecords'); ?>
+                <?php
+                Yii::app()->clientScript->registerScript(
+                'myHideEffect',
+                '$(".flash-success").animate({opacity: 1.0}, 5000).fadeOut("slow");',
+                CClientScript::POS_READY
+);
+        ?>
+        </div>
+<?php endif; ?>
+
+ 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visitor-grid',
@@ -34,6 +44,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'email',
             'filter'=>CHtml::activeTextField($model, 'email', array('placeholder'=>'Email Address')),
+        ),
+		 array(
+            'name' => 'date_of_birth',
+            'filter'=>CHtml::activeTextField($model, 'date_of_birth', array('placeholder'=>'Date of Birth')),
         ),
         array(
             'name' => 'contact_number',

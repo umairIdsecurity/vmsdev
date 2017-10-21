@@ -137,9 +137,9 @@ jQuery(document).ready(function($){
      });
 	
      $( "#searchFaq" ).click(function(event) {
-			 event.preventDefault();
+			/* event.preventDefault();
 			 var txt_search = $('#txt_search').val();
-			 
+			 alert(txt_search);
 			 if(txt_search == '' && txt_search.length <=2)
 			 {
 			   $( ".help-desk-items ul > li" ).show();
@@ -176,7 +176,7 @@ jQuery(document).ready(function($){
 				  
 				  });
 				  if(isFound == 1)
-					$helpDeskUl.find('li').first().show();
+					$helpDeskUl.find('li').first().show();*/
 			  
     });
 

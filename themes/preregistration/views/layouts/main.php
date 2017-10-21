@@ -233,7 +233,7 @@ $session = new CHttpSession;
                     <aside class="top_nav" style="margin-top:0px !important">
                         <ul id="icons">
                             <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                                <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->params['vmsAddress'].''; ?>">Login</a></li>
+                                <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/login'); ?>">Login</a></li>
                                 <li class="group-2"><a class="make-underline text-size" style="color:#428BCA;font-weight: bold" href="<?php echo Yii::app()->createUrl('preregistration/registration'); ?>">Create Login</a></li>
                             <?php } ?> 
                             <?php if(!is_null(Yii::app()->user->id) && !empty(Yii::app()->user->id)) {?>
@@ -274,7 +274,7 @@ $session = new CHttpSession;
                 <div class="col-sm-2">
                     <div class="standardLogo">
                         <?php if(is_null(Yii::app()->user->id) || empty(Yii::app()->user->id)) {?>
-                            <a href="<?php echo Yii::app()->createUrl('preregistration'); ?>">
+                            <a href="http://www.identitysecurity.com.au">
                         <?php } else{ ?>
                             <a href="<?php echo Yii::app()->createUrl('preregistration/dashboard'); ?>">
                         <?php } ?>
@@ -318,6 +318,9 @@ $session = new CHttpSession;
                                 <?php if(isset($session['step6Subtitle'])&&($session['step6Subtitle']!="")){echo $session['step6Subtitle'];}?>
                                 <?php if(isset($session['step7Subtitle'])&&($session['step7Subtitle']!="")){echo $session['step7Subtitle'];}?>
                                 <?php if(isset($session['step8Subtitle'])&&($session['step8Subtitle']!="")){echo $session['step8Subtitle'];}?>
+								<?php if(isset($session['step9Subtitle'])&&($session['step9Subtitle']!="")){echo $session['step9Subtitle'];}?>
+								<?php if(isset($session['step10Subtitle'])&&($session['step10Subtitle']!="")){echo $session['step10Subtitle'];}?>
+								<?php if(isset($session['step11Subtitle'])&&($session['step11Subtitle']!="")){echo $session['step11Subtitle'];}?>
                             </h6>
                         </div>
 

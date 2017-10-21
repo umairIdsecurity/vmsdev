@@ -137,7 +137,7 @@ class Folder extends CActiveRecord
         if($user_id && $name){
             $criteria = new CDbCriteria;
             $criteria->addCondition("user_id =" . $user_id . "");
-            $criteria->addCondition("name =" . $name . "");
+            $criteria->addCondition("name =" ."'".$name ."'". "");
             $folders = $this->findAll($criteria);
             if($folders){
                 return true;

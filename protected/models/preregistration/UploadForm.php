@@ -9,6 +9,7 @@
 class UploadForm extends CFormModel
 {
     public $image;
+	public $cameraImage;
 
     /**
      * Declares the validation rules.
@@ -16,7 +17,7 @@ class UploadForm extends CFormModel
     public function rules()
     {
         return array(
-            array('image','file',
+            array('cameraImage','image','file',
                 'types'=>'jpg, gif, png, jpeg',
                 'maxSize'=>1024 * 1024 * 2,
                 'tooLarge'=>'File has to be smaller than 50MB'

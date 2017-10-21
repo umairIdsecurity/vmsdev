@@ -32,7 +32,7 @@ class NotificationsController extends Controller
 //				'users'=>array('*'),
 //			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('view','index','delete','indexDelete'),
+				'actions'=>array('view','index','delete','indexDelete','emailNotification'),
 				'users'=>array('@'),
 			),
 //			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -90,6 +90,33 @@ class NotificationsController extends Controller
                         
 			if($model->save()) {
                             
+							$superadminuser= User::model()->findByPk(Yii::app()->user->id);
+							if($superadminuser->role=='5')
+							{
+								 $criteria = new CDbCriteria;
+                            $criteria->join='LEFT JOIN company on company.id=company';
+                            //send notifications to current logged in user tenants
+                            //$criteria->condition = 'tenant ='.Yii::app()->user->tenant;
+                            
+                            //If Role ID is empty then send it to All CVMS and AVMS Users
+                            if( empty($model->role_id) || is_null($model->role_id) )  {
+                                //$criteria->condition = 'is_deleted = 0 AND id != '.Yii::app()->user->id.' AND tenant ='.Yii::app()->user->tenant;
+								$criteria->condition = 'company_type != 3';
+                            } else {                                
+                                 
+                                  // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
+                                  // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
+                                if($model->role_id == Roles::ROLE_SUPERADMIN) {  // Super Admin is renamed as Identity security under Dropdown                               
+                                    $roles = Roles::ROLE_ISSUING_BODY_ADMIN.','.Roles::ROLE_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_ADMIN;
+                                    $criteria->condition = 'role IN ('.$roles.') AND company_type != 3';
+                                }
+                                else {
+                                    $criteria->condition = 'role ='.$model->role_id.' AND company_type != 3';
+                                }
+							}
+							}
+							else
+							{
                             $criteria = new CDbCriteria;
                             
                             //send notifications to current logged in user tenants
@@ -97,7 +124,8 @@ class NotificationsController extends Controller
                             
                             //If Role ID is empty then send it to All CVMS and AVMS Users
                             if( empty($model->role_id) || is_null($model->role_id) )  {
-                                $criteria->condition = 'is_deleted = 0 AND id != '.Yii::app()->user->id.' AND tenant ='.Yii::app()->user->tenant;
+                                //$criteria->condition = 'is_deleted = 0 AND id != '.Yii::app()->user->id.' AND tenant ='.Yii::app()->user->tenant;
+								$criteria->condition = 'is_deleted = 0 AND tenant ='.Yii::app()->user->tenant;
                             } else {                                
                                  
                                   // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
@@ -111,8 +139,23 @@ class NotificationsController extends Controller
                                 }
                                 
                             } 
+							}
                             $users = User::model()->findAll($criteria);                               
                             foreach( $users as $key => $u ) {
+									if($u->email_notification=='1')
+									{
+										$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+										$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+										$subject='Notification from'.' '.$airportName.' '.'Aviation Visitor Management System';
+										$templateParams = array(
+											'sub' => $model->subject,
+											'Airport'=>$airportName,
+											'notification'=>$model->message,
+											'name'=>  ucfirst($u->first_name) . ' ' . ucfirst($u->last_name),
+										);
+											$emailTransport = new EmailTransport();
+											$emailTransport->sendNotification($templateParams,$u->email, ucfirst($u->first_name) . ' ' . ucfirst($u->last_name),$subject );
+									}
                                     $notify = new UserNotification;
                                     $notify->user_id = $u->id;
                                     $notify->notification_id = $model->id;
@@ -228,7 +271,7 @@ class NotificationsController extends Controller
 	{
              // Mark All his/her notifications as READ
             $userNotify = UserNotification::model()->findAll("user_id = ".Yii::app()->user->id);
-            
+            $user=User::model()->findByPk(Yii::app()->user->id);
             foreach ($userNotify as $notification){
                 if($notification) {
                     $notification->has_read = 1;
@@ -245,6 +288,7 @@ class NotificationsController extends Controller
 
             $this->render('index',array(
                     'model'=>$model,
+					'user'=>$user,
             ));
 	}
 
@@ -276,6 +320,24 @@ class NotificationsController extends Controller
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
+	}
+	public function actionEmailNotification()
+	{
+		if(isset($_POST['checkvalue']) && $_POST['checkvalue']!=null)
+		{
+			$user=User::model()->findByPk(Yii::app()->user->id);
+			$user->email_notification=$_POST['checkvalue'];
+			if($user->save(false))
+			echo 1;
+			else
+			echo 0;	
+		}
+		else 
+		{
+			echo 0;
+		}
+		
+		Yii::app()->end();
 	}
 
 	/**

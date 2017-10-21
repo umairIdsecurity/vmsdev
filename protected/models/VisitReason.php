@@ -148,11 +148,11 @@ class VisitReason extends CActiveRecord {
 
         $visitorReason = array_filter($visitorReason);
         $visitorReasonCount = count($visitorReason);
-
+		
         if ($visitorReasonCount == 0) {
-            return true;
+            return $visitorReasonCount;
         } else {
-            return false;
+            return $visitorReasonCount;
         }
     }
     

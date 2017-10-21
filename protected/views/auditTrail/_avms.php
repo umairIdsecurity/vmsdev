@@ -8,7 +8,7 @@
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'audit-trail-grid',
-	'dataProvider'=>$model->search(),
+	'dataProvider'=>$model->search(Yii::app()->user->tenant),
 	'filter'=>$model,
 	'enableSorting' => false,
 	'hideHeader'=>true,
@@ -21,20 +21,24 @@
         }
     }",
     'ajaxUpdateError' => "function(id, data) {window.location.replace('?r=site/login');}",
-	'columns'=>array(
 
+	'columns'=>array(
+	
 		array(
 			'name' => 'user_id',
-			'filter'=>CHtml::activeTextField($model, 'user_id', array('placeholder'=>'User Id')),
+			'filter'=>CHtml::activeTextField($model, 'user_id', array('placeholder'=>'Name')),
+			'value'=>'!empty(User::model()->findByPk($data->user_id)->first_name) ? User::model()->findByPk($data->user_id)->first_name." ".User::model()->findByPk($data->user_id)->last_name : Visitor::model()->findByPk($data->user_id)->first_name." ".Visitor::model()->findByPk($data->user_id)->last_name'
 		),
 		array(
 			'name' => 'old_value',
 			'filter'=>CHtml::activeTextField($model, 'old_value', array('placeholder'=>'Old Value')),
+			'value'=>'!empty($data->old_value) ? $data->old_value : "N/A"'
 		),
 
 		array(
 			'name' => 'new_value',
 			'filter'=>CHtml::activeTextField($model, 'new_value', array('placeholder'=>'New Value')),
+			'value'=>'!empty($data->new_value) ? $data->new_value : "N/A"'
 		),
 		array(
 			'name' => 'action',
@@ -42,12 +46,9 @@
 		),
 		array(
 			'name' => 'model',
-			'filter'=>CHtml::activeTextField($model, 'model', array('placeholder'=>'Model')),
+			'filter'=>CHtml::activeTextField($model, 'model', array('placeholder'=>'Function')),
 		),
-		array(
-			'name' => 'model_id',
-			'filter'=>CHtml::activeTextField($model, 'model_id', array('placeholder'=>'Model Id')),
-		),
+		
 
 		array(
 			'name' => 'field',
@@ -56,6 +57,7 @@
 		array(
 			'name' => 'creation_date',
 			'filter'=>CHtml::activeTextField($model, 'creation_date', array('placeholder'=>'Creation Date')),
+			'value'=>'date("d/m/Y H:i:s",strtotime($data->creation_date))'
 		),
 
 		array(

@@ -87,6 +87,7 @@ class DateUtil
     public static function format($format,$datetime){
         if($datetime==null) return null;
         $formatter = new CDateFormatter(Yii::app()->locale);
+		
         return $formatter->format($format,$datetime->getTimestamp());
     }
 
@@ -96,20 +97,41 @@ class DateUtil
 
         if($session['timezone'] != ""){
             $user_timezone = $session['timezone'];
+			
         } else {
-            $user_timezone = "Australia/Perth";
+			
+        		$user_timezone = "Australia/Perth";
         }
-
+		
         return (new DateTime("NOW", new DateTimeZone($user_timezone)));
 
     }
 
     public static function formatUserLocalDateForDisplay(){
+		$session = new CHttpSession;
+		if($session['timezone'] != ""){
+            $user_timezone = $session['timezone'];
+        } else {
+        		$user_timezone = "Australia/Perth";
+        }
+		date_default_timezone_set($user_timezone);
         return self::format(self::$display_date_format,self::userLocalDateTime());
     }
 
-    public static function formatUserLocalTime($format="hh:mma"){
-        return self::format($format,self::userLocalDateTime());
+    public static function formatUserLocalTime($format="hh:mm a"){
+		$session = new CHttpSession;
+		if($session['timezone'] != ""){
+            $user_timezone = $session['timezone'];
+        } else {
+        		$user_timezone = "Australia/Perth";
+        }
+		date_default_timezone_set($user_timezone);
+		$date_time=self::userLocalDateTime();
+		//$formatter = new CDateFormatter(Yii::app()->locale);
+		//$result= $formatter->format($format,$date_time->getTimestamp());
+		//print_r($result);
+		//Yii::app()->end();
+        return self::format($format,$date_time);
     }
 
 

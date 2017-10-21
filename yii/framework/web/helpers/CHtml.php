@@ -2279,6 +2279,7 @@ EOD;
 				$listData[$value]=$text;
 			}
 		}
+				
 		else
 		{
 			foreach($models as $model)
@@ -2291,7 +2292,9 @@ EOD;
 				else
 					$listData[$group][$value]=$text;
 			}
+			
 		}
+			
 		return $listData;
 	}
 

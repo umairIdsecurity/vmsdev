@@ -90,8 +90,11 @@ class CardTypeController extends Controller {
 
     public function actionEdit() {
         if (yii::app()->request->isPostRequest) {
-            if (isset($_POST['card_id'])) {
-                $card = CardType::model()->findByPk($_POST['card_id']);
+            if (isset($_POST['card_id'])&&isset($_POST['tenantID'])) {
+				$Criteria = new CDbCriteria();
+				$Criteria->condition = "card_id=".$_POST['card_id']." and tenant_id=".$_POST['tenantID'];
+                //$card = CardType::model()->findByPk($_POST['card_id']);
+				$card= TenantCardType::model()->find($Criteria);
                 $card->back_text = $_POST['back-card'];
                 $card->save(false);
                 $this->redirect(array('workstation/admin'));
@@ -103,7 +106,10 @@ class CardTypeController extends Controller {
 
     public function actionBacktext() {
         if (yii::app()->request->isAjaxRequest) {
-            $cardType = CardType::model()->findByPk($_POST['cardid']);
+			$Criteria = new CDbCriteria();
+			$Criteria->condition = "card_id=".$_POST['cardid']." and tenant_id=".$_POST['tenantid'];
+            //$cardType = CardType::model()->findByPk($_POST['cardid']);
+			$cardType = TenantCardType::model()->find($Criteria);
             echo $cardType->back_text;
             die;
         } else {

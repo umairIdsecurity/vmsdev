@@ -26,7 +26,7 @@ class UserIdentity extends CUserIdentity {
 
     public function authenticate() {
         
-        $user = User::model()->find('LOWER(email)=? AND tenant in (1,?)', array(strtolower($this->username),$this->tenant));
+        $user = User::model()->find('LOWER(email)=? AND tenant in (1,?) AND user_type=1', array(strtolower($this->username),$this->tenant));
         
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;
@@ -36,7 +36,7 @@ class UserIdentity extends CUserIdentity {
             $this->_id = $user->id;
             $this->setState('email', (isset($user->email) && !is_null($user->email)) ? $user->email : '');
             $this->setState('role', (isset($user->role) && !is_null($user->role)) ? $user->role : '');
-            
+           
             $this->setState('tenant', (isset($user->tenant) && !is_null($user->tenant) ) ? $user->tenant : $user->id );
             $this->setState('allowed_module', (isset($user->allowed_module) && !is_null($user->allowed_module)) ? $user->allowed_module : ''  );
              

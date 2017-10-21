@@ -24,7 +24,7 @@
             ));
         ?>
         
-        <div class="row">
+        <!--<div class="row">
             <div class="col-sm-12">
                 <div class="row">
                     <div class="pull-left">
@@ -35,7 +35,7 @@
                     </div>
                 </div>    
             </div>
-        </div>
+        </div>-->
 
         <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 

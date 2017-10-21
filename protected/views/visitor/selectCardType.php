@@ -77,6 +77,15 @@ if (!$cardTypeWorkstationModel) {
         $("#clicktabA").click(function(e) {
             e.preventDefault();
             var card_type_value = $("#selectCardDiv").find("input[name=selectCardType]:checked").val();
+            //Hide findAddVistorTabContent section when selected type is TEMPORARY_ASIC
+            if(card_type_value==TEMPORARY_ASIC)
+            {
+                $('#findAddVistorTabContent').hide();
+                $('#asicVistorLable').css('width','146px');
+                $('#asicVistorLable').css('margin-left','90px');
+                $('.visitor-title').html('Find ASIC Profile');
+                $('.visitor-findBtn').html('Find ASIC Profile');
+            }
 
             if (!card_type_value) {
                 $('#card_type').css('display',"block");
@@ -115,6 +124,7 @@ if (!$cardTypeWorkstationModel) {
                     }
                 }
             });
+
             // For reason
              $.ajax({
                 type: 'POST',

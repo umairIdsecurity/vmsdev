@@ -27,23 +27,20 @@
                 . '</td>';
 
             if (!empty($resultsConversion)) {
+				$i=0;
                 foreach ($resultsConversion as $key => $val) {
-                    $flag = false;
                     foreach ($val as $k => $v) {
                         $myKey = $k . "-" . $key;
                         if ($myKey == $dt[1]) {
                             $totalConversion += count($v);
-                            //$grandTotal +=count($v);
-                            $flag = true;
                             $datasetsConversion[] = array($dt[0], count($v));
-                            echo '<td>' . count($v) . '</td>';
+                             $i=count($v);
                             break;
                         }
                     }
-                    if (!$flag) {
-                        echo '<td>0</td>';
-                    }
+
                 }
+				 echo '<td>'.$i.'</td>';
             } else {
                 echo '<td>' . '0' . '</td>';
             }

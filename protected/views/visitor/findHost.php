@@ -18,6 +18,12 @@ if ($visitorType != VisitorType::PATIENT_VISITOR) {
         $('th > .desc').append('<div></div>');
     }",
         'columns' => array(
+		 array(
+            'header'      => '',
+            'type'        => 'raw',
+            'htmlOptions' => array('style' => 'text-align:center;width:12px;'),
+            'value'       => '$data->getVisitorProfileIcon()',
+        ),
             array(
                 'name' => 'first_name',
                 'filter' => false

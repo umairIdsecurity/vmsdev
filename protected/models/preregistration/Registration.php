@@ -7,6 +7,7 @@ Yii::import('ext.validator.PasswordOption');
 Yii::import('ext.validator.VisitorPrimaryIdentification');
 Yii::import('ext.validator.VisitorAlternateIdentification');
 Yii::import('ext.validator.EmailCustom');
+Yii::import('ext.ECompositeUniqueValidator');
 
 /**
  * This is the model class for table "visitor".
@@ -44,7 +45,7 @@ Yii::import('ext.validator.EmailCustom');
  * @property Roles $role0
  */
 class Registration extends CActiveRecord {
-
+	
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
@@ -56,7 +57,7 @@ class Registration extends CActiveRecord {
     public $companycode;
     public $is_asic_verification;
     public $selected_asic_id;
-
+	
     //Define public variable
     public $old_password;
     public $new_password;
@@ -203,8 +204,10 @@ class Registration extends CActiveRecord {
 
             array('first_name, last_name, email, contact_number', 'required' , 'except'=>'asic', 'message'=>'Please enter {attribute}'),
 
-            array('email', 'unique', 'className' => 'Registration','attributeName' => 'email','except'=>'preregistrationAsic','message'=>'This Email is already in use'),
-
+            array('email', 'unique','criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant_id', 'params'=>array(
+                ':is_deleted'=>0, ':tenant_id'=>Yii::app()->session['tenant']
+                )), 'className' => 'Registration','attributeName' => 'email','except'=>'preregistrationAsic','message'=>'This Email is already in use'),
+			
 
 			array('identification_document_no,contact_suburb', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
             //array('visitor_type', 'required' ,'on' => 'preregistration', 'message'=>'Please enter {attribute}'),
@@ -218,7 +221,7 @@ class Registration extends CActiveRecord {
             array('contact_postcode', 'required' ,'on' => 'preregistration', 'message'=>'Please enter Postcode'),
 
             array('old_password,new_password,repeat_password','length','min'=>5,'on' => 'preregistrationPass'),
-            array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistrationPass'),
+            //array('repeat_password', 'compare', 'compareAttribute'=>'new_password', 'on'=>'preregistrationPass'),
             array('date_of_birth,identification_document_no,identification_document_expiry,company', 'required' ,'on' => 'preregistrationPass', 'message'=>'Please enter {attribute}'),
             
             array('date_of_birth,identification_document_no,identification_document_expiry,old_password,new_password,repeat_password','safe','on' => 'preregistrationPass'),
@@ -230,15 +233,23 @@ class Registration extends CActiveRecord {
 
             //array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),
             array('password', 'required' , 'on' => 'asic-pass'),
-            array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match"),
+			array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match"),
 
             //array('is_asic_verification', 'required' ,'message'=>'Please check to request for ASIC Sponsor verification.' ,'on' => 'asic'),
 
             array('asic_no', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please enter Asic no.'),
             array('asic_expiry', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please select Asic Expiry'),
             array('company', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please select a company'),
-            array('email', 'unique', 'on' => 'preregistrationAsic','message'=>'ASIC already exists'),
-
+            array('email', 'unique', 'on' => 'preregistrationAsic','criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant_id', 'params'=>array(
+                ':is_deleted'=>0, ':tenant_id'=>Yii::app()->session['tenant']
+                )),'message'=>'ASIC already exists'),
+			
+			 
+			array('date_of_birth', 'required' ,'on' => 'preregistrationAsic', 'message'=>'Please update your {attribute}'),
+			
+			array('first_name,last_name','ECompositeUniqueValidator','on' => 'preregistrationAsic','criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant_id AND date_of_birth=:date_of_birth', 'params'=>array(
+                ':is_deleted'=>0, ':tenant_id'=>Yii::app()->session['tenant'],':date_of_birth'=>$this->date_of_birth
+                )),'attributesToAddError'=>'last_name','message'=>'A User Profile already exists for this person. Please report to the airport to update your profile.'),
 
 			array('is_deleted, identification_country_issued, contact_country, verifiable_signature', 'numerical', 'integerOnly'=>true),
 			array('first_name, middle_name, last_name, email, department, position, staff_id, identification_document_no, identification_alternate_document_name1, identification_alternate_document_no1, identification_alternate_document_name2, identification_alternate_document_no2, contact_unit, contact_street_no, contact_street_name, contact_suburb, asic_no', 'length', 'max'=>50),
@@ -253,7 +264,7 @@ class Registration extends CActiveRecord {
 			array('contact_street_type', 'length', 'max'=>8),
 			array('contact_state', 'length', 'max'=>50),
 			array('contact_postcode', 'length', 'max'=>10),
-			array('date_of_birth, notes, identification_document_expiry, identification_alternate_document_expiry1, identification_alternate_document_expiry2, asic_expiry,key_string , selected_asic_id', 'safe'),
+			array('notes, identification_document_expiry, identification_alternate_document_expiry1, identification_alternate_document_expiry2, asic_expiry,key_string , selected_asic_id', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, first_name, middle_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, password, role, visitor_type, visitor_status, vehicle, photo, created_by, is_deleted, tenant, tenant_agent, visitor_card_status, visitor_workstation, profile_type, identification_type, identification_country_issued, identification_document_no, identification_document_expiry, identification_alternate_document_name1, identification_alternate_document_no1, identification_alternate_document_expiry1, identification_alternate_document_name2, identification_alternate_document_no2, identification_alternate_document_expiry2, contact_unit, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_state, contact_country, asic_no, asic_expiry, verifiable_signature, contact_postcode, date_created', 'safe', 'on'=>'search'),
@@ -429,6 +440,10 @@ class Registration extends CActiveRecord {
     }
 
     public function beforeSave() {
+		/*echo "<pre>";
+				print_r($this);
+				echo "</pre>";
+				Yii::app()->end();*/
         $this->email = trim($this->email);
         if(!is_null($this->password)) 
         {
@@ -443,9 +458,33 @@ class Registration extends CActiveRecord {
                 }
             }
         }
-        if(!empty($this->date_of_birth)){$this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));}else{$this->date_of_birth = NULL;}
-        if(!empty($this->identification_document_expiry)){$this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));}else{$this->identification_document_expiry = NULL;}
-        if(!empty($this->asic_expiry)){$this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));}else{$this->asic_expiry = NULL;}
+        if(!empty($this->date_of_birth))
+		{	
+			$this->date_of_birth = date("Y-m-d",strtotime($this->date_of_birth));
+			
+			}
+		else{
+			$this->date_of_birth = NULL;
+			}
+        if(!empty($this->identification_document_expiry)){
+			$this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
+			}
+			else{
+				$this->identification_document_expiry = NULL;
+				}
+        if(!empty($this->asic_expiry)){
+			$this->asic_expiry = date("Y-m-d",strtotime($this->asic_expiry));
+		
+			}
+			else{
+				$this->asic_expiry = NULL;
+			//echo $this->asic_expiry;
+			//Yii::app()->end();
+				}
+		if(!empty($this->password))
+		{
+			$this->password = User::model()->hashPassword($this->password);
+		}
         return parent::beforeSave();
     }
 
@@ -534,7 +573,7 @@ class Registration extends CActiveRecord {
     public function findAllCompanyByTenant($tenantId) {
         //$tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and is_deleted = 0";//." and (id!=1 and id !=".$tenant->company.")";
+        $Criteria->condition = "tenant = '".$tenantId."' and is_deleted = 0 and company_type='3'";//." and (id!=1 and id !=".$tenant->company.")";
         return Company::model()->findAll($Criteria);
     }
 
@@ -639,9 +678,7 @@ class Registration extends CActiveRecord {
     }
 
     public function validatePassword($password, $hash) {
-        //return $this->hashPassword($password)===$this->password;
-        //hash saved in database
-        if (CPasswordHelper::verifyPassword($password, $hash)) {
+         if (CPasswordHelper::verifyPassword($password, $hash)) {
             return true;
         } else {
             return false;
@@ -660,7 +697,7 @@ class Registration extends CActiveRecord {
 
     public function changePassword($newPassword)
     {
-        $this->password = User::model()->hashPassword($newPassword);
+        $this->password = $newPassword;
         $this->save(false,'password');
     }
 

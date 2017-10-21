@@ -1,3 +1,8 @@
+<style>
+    .header-form {
+        min-width: 70px !important;
+    }
+</style>
 <?php
 
 /* @var $this VisitController */
@@ -5,6 +10,9 @@
 ?>
 
 <h1>VIC Total Visit Count</h1>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete'));?>
+</br>
+
 
 <?php
 
@@ -139,6 +147,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
             document.getElementById('negate_reason').style.display="none";
             var container = $('.listActive').empty();
             var linkGetActiveVisit = $(this).data('link');
+			//alert(linkGetActiveVisit);
+			
             var id = $(this).data('id');
             $('#activeVisitModal #linkGetActiveVisit').val(linkGetActiveVisit);
             $('#activeVisitModal #visitorId').val(id);
@@ -154,8 +164,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     container.append(response);
                     $('#activeVisitModal').removeClass('hidden');
                     $('#activeVisitModal').modal('show');
-                }
+                },
+				error: function(xhr,textStatus,errorThrown){
+                alert(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
             });
+			
         });
 
         //click on Negate button in negate modal
@@ -191,7 +207,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         success: function(response) {
                             container.append(response);
                             // $('#activeVisitModal').modal('hide');
-                        }
+                        },
+				error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
                     });
 
                 }
@@ -212,6 +233,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         //reset total count of visitor
         $('#btnReset').on('click', function(e){
             e.preventDefault();
+			//alert($('#linkReset').val());
+			
             $('#resetModal').modal('hide');
             var reason = $('#reasonForReset').val();
             var lodgementDate = $('#lodgementDatePicker').val();
@@ -231,10 +254,37 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         //Why such statement was written, previously?
                         //window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
                     }
-                }
+                },
+				error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
             });
             return false;
+			
         });
+
+    });
+	 $(document).ready(function() {
+        if ($("#totalRecordsCount").val() == 0) {
+            $('#export-button').removeClass('greenBtn');
+            $('#export-button').addClass('btn DeleteBtn actionForward');
+            $("#export-button").attr('disabled', true);
+        }
+
+        $('#export-button').on('click', function() {
+            $.fn.yiiGridView.export();
+        });
+        $.fn.yiiGridView.export = function() {
+            $.fn.yiiGridView.update('vic-total-visit-count', {
+                success: function() {
+                    $('vic-total-visit-count').removeClass('grid-view-loading');
+                    window.location = '<?php echo $this->createUrl('exportFileVicTotalCount');?>';
+                },
+                data: $('vic-total-visit-count').serialize() + '&export=true'
+            });
+        }
 
     });
 </script>

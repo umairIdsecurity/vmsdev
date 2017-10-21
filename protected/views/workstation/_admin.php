@@ -165,20 +165,20 @@ $tenant = Company::model()->findByPK(Yii::app()->user->tenant);
 
 <table>
     <tr>
-        <td style="width:658px;">Select Preregistration Default Card Type</td>
-        <td style="">
+        <td style="width:21.5%;">Select Preregistration Default Card Type</td>
+        <td width="3%">
             <input type="radio" id="pre_Same_Day" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_SAMEDATE; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_SAMEDATE) ? "checked": "";  ?> />
         </td>
-        <td style="">
+        <td width="3%">
             <input type="radio" id="pre_24_Hour" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_24HOURS; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_24HOURS) ? "checked": "";  ?> />
         </td>
-        <td style="">    
+        <td width="3%">    
             <input type="radio" id="pre_Extended" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_EXTENDED; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_EXTENDED) ? "checked": "";  ?> />
         </td>
-        <td style="">   
+        <td width="3%">   
             <input type="radio" id="pre_Multi_Day" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_MULTIDAY; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_MULTIDAY) ? "checked": "";  ?> />
         </td>
-        <td style="">  
+        <td width="13.5%">  
             <input type="radio" id="pre_Manual" name="pre_card_type" class="pre_card_type_vic" value="<?php echo CardType::VIC_CARD_MANUAL; ?>" <?php echo ($tenant->tenant_default_card_type == CardType::VIC_CARD_MANUAL) ? "checked": "";  ?> />
         </td>
     </tr>
@@ -196,6 +196,7 @@ $tenant = Company::model()->findByPK(Yii::app()->user->tenant);
                 <div class="form-group">
                     <?php echo CHtml::textArea('back-card', '', array('rows' => "9", 'cols' => "500", 'style' => "width:500px;")); ?>
                     <?php echo CHtml::hiddenField('card_id'); ?>
+					<?php echo CHtml::hiddenField('tenantID'); ?>
                 </div>
                 <div style="  width: 100%;text-align: right;;color: #446FB6;" id="counter"></div>
             </div>
@@ -213,15 +214,17 @@ $tenant = Company::model()->findByPK(Yii::app()->user->tenant);
 <script type="text/javascript">
 
     $(document).ready(function () {
-        generateRow();
+		generateRow();
         $(".edit_card_back").click(function () {
             var button_id = ($(this).attr('id'));
             var modal_name = $('#' + button_id).attr('name');
             var card_id = button_id.split('_');
-            getEditText(card_id[1]);
+			var tenant_id=<?php echo Yii::app()->user->tenant; ?> 
+            getEditText(card_id[1], tenant_id);
             modal_name = modal_name + "-Back of Card";
             $("#mdlttl").html(modal_name);
             $("#card_id").val(card_id[1]);
+			$("#tenantID").val(tenant_id);
             $('#form_modal_edit').modal('show');
         });
 
@@ -266,11 +269,11 @@ $tenant = Company::model()->findByPK(Yii::app()->user->tenant);
         var row = "<?php echo $this->renderPartial('_extra_row', array(), true); ?>";
         $(".items tr:first").after(row);
     }
-    function getEditText(cardid) {
+    function getEditText(cardid, tenantId) {
 
         $.ajax({
             url: '<?php echo CController::createAbsoluteUrl('cardType/backtext') ?>',
-            data: "cardid=" + cardid,
+            data: "cardid=" + cardid + "&tenantid=" + tenantId,
             success: function (data) {
                 $('#back-card').val(data);
             },

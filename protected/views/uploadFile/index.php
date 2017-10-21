@@ -46,11 +46,12 @@
             <button class="btn btn-default btn-delete neutral" id="btn_delete_file" disabled>Delete</button>
             <div class="preview-files" style="display: block">
                 <input multiple type="file" name="file[]" id="upload_multi" style="width: 0px;height: 0px;overflow: hidden" />
+				
                 <!--<table class="table preview-files-list"></table>-->
 
             </div>
             <div class="btn-submit" style="margin-top: 10px; margin-bottom: 5px; display: none">
-                <input name="File[folder_id]" value="<?php echo $folder->id; ?>" type="hidden"/>
+               <input name="File[folder_id]" value="<?php echo $folder->id; ?>" type="hidden"/>
                 <input name="File[user_id]" value="<?php echo Yii::app()->user->id;  ?>" type="hidden"/>
                 <input id="btn-submit-files" type="button" value="Upload" class="actionForward">
             </div>
@@ -172,6 +173,7 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
+		$('#btn-submit-files').hide();
         $('#btn-newfolder').click(function(){
             if(validateNameFolder($('#nameFolder').val())){
                 $.ajax({
@@ -187,7 +189,12 @@
                         }else{
                             location.reload();
                         }
-                    }
+                    },
+					error: function(xhr,textStatus,errorThrown){
+					console.log(xhr.responseText);
+					console.log(textStatus);
+					console.log(errorThrown);
+				}
                 });
             }
         });
@@ -217,7 +224,7 @@
             return true;
         }
 
-        $('#check_file_all').live('click', function (event) {
+        $('#check_file_all').on('click', function (event) {
 
             var
                 ref = this,
@@ -251,7 +258,7 @@
         //     }
         // });
 
-        $('#list_file input[type="checkbox"]').live('change', function (i, el) {
+        $('#list_file input[type="checkbox"]').on('change', function (i, el) {
             if ($(this).attr('id') != 'check_file_all') {
                 $('#check_file_all').prop('checked', false);
                 var canDisable = true;
@@ -282,7 +289,12 @@
                     } else {
                         window.location.reload();
                     }
-                }
+                },
+					error: function(xhr,textStatus,errorThrown){
+					console.log(xhr.responseText);
+					console.log(textStatus);
+					console.log(errorThrown);
+				}
             });
             e.preventDefault();
         });
@@ -317,7 +329,8 @@
             /* ADD FILE TO PARAM AJAX */
             var formData = new FormData();
             var count = 0;
-            $.each($(obj).find("input[type='file']"), function(i, tag) {
+			//alert(obj);
+           $.each($(obj).find("input[type='file']"), function(i, tag) {
                 $.each($(tag)[0].files, function(i, file) {
                     formData.append(tag.name, file);
                 });
@@ -326,7 +339,7 @@
             $.each(params, function (i, val) {
                 formData.append(val.name, val.value);
             });
-
+			//alert(params);
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('uploadFile/uploadedFile'); ?>',
@@ -347,7 +360,12 @@
                      $('#file_grid_error').fadeOut();
                      $.fn.yiiGridView.update("file-grid");
                      }*/
-                }
+                },
+            error: function(xhr,textStatus,errorThrown){
+                console.log(xhr.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+			}
             });
         });
 
@@ -361,39 +379,48 @@
                     $('.btn-submit').fadeOut();
                 }
             },
-            afterFileAppend: function (element, value, master_element) {
+            onFileAppend: function (element, value, master_element) {
                 $('#file_grid_error').html('');
                     $('#file_grid_error').fadeOut();
                 $('.btn-submit').fadeIn();
+				$('#btn-submit-files').show();
             }
+			
         });
 
         $("#upload_multi_label").click(function () {
             var countInput = 0,
                 obj = $('#form-submit-files'),
                 lasNumberOfInputFile = [],max = 0;
-
-
-            $.each($(obj).find("input[type='file']"), function(i, tag) {
-                if ($(this).attr('id') != 'upload_multi'){
-                    lasNumberOfInputFile.push(parseInt(reverse($(this).attr('id')).substring(0,1)));
-                }
+				//alert("umair");
+				
+            $.each(obj, function(i, tag) {
+				var ob=$(obj).find("input[type='file']")
+                if ($(ob).attr('id') != 'upload_multi'){
+                    lasNumberOfInputFile.push(parseInt(reverse($(ob).attr('id')).substring(0,1)));
+               // alert("here");
+				}
+				
             });
             for (var i = 0; i < lasNumberOfInputFile.length; i++) {
                 if (max < lasNumberOfInputFile[i]) max = lasNumberOfInputFile[i];
             }
-            $.each($(obj).find("input[type='file']"), function(i, tag) {
-
-                if ($(this).attr('id') == 'upload_multi' && max == 0){
-                    $(this).click();
+			
+            $.each(obj, function(i, tag) {
+				var ob=$(obj).find("input[type='file']");
+                if ($(ob).attr('id') == 'upload_multi' && max == 0){
+                    $(ob).click();
+					//alert("here2");
                 }else {
-                    if ($(this).attr('id') == ('upload_multi_F' + (max))) {
-                        if($(this).length) {
-                            $(this).click();
-                        }else{
-
-                        }
+                    if ($(ob).attr('id') == ('upload_multi_F' + (max))) {
+                        //if($(this).length) {
+                            $(ob).click();
+							//alert("rabia");
+                        //}
+						
+						
                     }
+					//alert("abs");
                 }
 
             });

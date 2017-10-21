@@ -2,12 +2,12 @@
 $session = new CHttpSession;
 ?>
 
-<div class="page-content">
+<div class="page-content" style="width:285px; margin:auto;">
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
     <div class="row"><div class="col-sm-12">&nbsp;</div></div>
 
-    <h5 class="text-size text-sizeWhere">Please select your User Preference</h5>
+    <h5 class="text-size text-sizeWhere">Please fill in all the fields</h5>
     
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'preregistration-form',
@@ -23,42 +23,73 @@ $session = new CHttpSession;
             <div class="form-create-login">
                 <div class="">
                     <div class="radio">
-                        <label class="text-size">
+                        <!--<label class="text-size">
                             <?php echo $form->radioButton($model,'account_type',array('value'=>'VIC','uncheckValue'=>null, 'checked'=>true)); ?>
                             <span class="radio-style"></span>
-                            VIC Applicant
-                        </label>
+                            Individual
+                        </label>-->
                     </div>
-                    
-                    <div class="radio">
+                    <!-- changed on 24/10/2016 -->
+                    <!--<div class="radio">
                         <label class="text-size">
-                            <?php echo $form->radioButton($model,'account_type',array('value'=>'ASIC','uncheckValue'=>null)); ?>
+                            <?php //echo $form->radioButton($model,'account_type',array('value'=>'ASIC','uncheckValue'=>null)); ?>
                             <span class="radio-style"></span>
                             ASIC Sponsor
                         </label>
                     </div>
 
-                    <div class="radio">
+                   <!-- <div class="radio">
                         <label class="text-size">
-                            <?php echo $form->radioButton($model,'account_type',array('value'=>'CORPORATE','uncheckValue'=>null)); ?>
+                            <?php //echo $form->radioButton($model,'account_type',array('value'=>'CORPORATE','uncheckValue'=>null)); ?>
                             <span class="radio-style"></span>
                             Company Administrator (multiple VIC's or ASIC's)
                         </label>
+                    </div>-->
+                </div>
+				<div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-user" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->textField($model,'fname',array('style'=>'padding-left: 27px','placeholder' => 'First Name','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <?php echo $form->error($model,'fname'); ?>
                     </div>
                 </div>
+				<div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-user" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->textField($model,'lname',array('style'=>'padding-left: 27px','placeholder' => 'Last Name','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <?php echo $form->error($model,'lname'); ?>
+                    </div>
+                </div>
+				<div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-calendar" style="position: absolute; padding: 7px"></span>
+				
+				  <?php
+                            $this->widget('EDatePicker', array(
+                                'model'       => $model,
+                                'attribute'   => 'dob',
+                                'mode'        => 'date_of_birth',
+								'htmlOptions' => array(
+                                'style'=>'padding-left: 27px' ,'class'=>'form-control input-sm')
+                            ));
+                            ?>
+
+                        <?php echo $form->error($model, 'dob'); ?>
+						</div>
+						</div>
 
                 <div class="row">
                     <div class="col-sm-7" style="position: relative;margin-bottom:8px">
-                        <span class="glyphicon glyphicon-user" style="position: absolute; padding: 7px"></span>
-                        <?php   echo $form->textField($model,'username',array('style'=>'padding-left: 27px','placeholder' => 'Username or Email','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <span class="glyphicon glyphicon-envelope" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->textField($model,'username',array('style'=>'padding-left: 27px','placeholder' => 'Email','class'=>'form-control input-sm','data-validate-input')); ?>
                         <?php echo $form->error($model,'username'); ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-7" style="position: relative;margin-bottom:8px">
-                        <span class="glyphicon glyphicon-user" style="position: absolute; padding: 7px"></span>
-                        <?php   echo $form->textField($model,'username_repeat',array('style'=>'padding-left: 27px','placeholder' => 'Repeat Username or Email Address','class'=>'form-control input-sm','data-validate-input')); ?>
+                        <span class="glyphicon glyphicon-envelope" style="position: absolute; padding: 7px"></span>
+                        <?php   echo $form->textField($model,'username_repeat',array('style'=>'padding-left: 27px','placeholder' => 'Repeat Email Address','class'=>'form-control input-sm','data-validate-input')); ?>
                         <?php echo $form->error($model,'username_repeat'); ?>
                     </div>
                 </div>
@@ -79,17 +110,22 @@ $session = new CHttpSession;
                         <?php echo $form->error($model,'password_repeat'); ?>
                     </div>
                 </div>
-
+				<div class="row">
+                    <div class="col-sm-7" style="position: relative;margin-bottom:8px">
+                        <span class="glyphicon glyphicon-home" style="position: absolute; padding: 7px"></span>
+				  <?php
+                                $previousSelectedTenantId = $value = (string)Yii::app()->request->cookies['tenant_selection'];
+                                echo $form->dropDownList($model, 'tenant', CHtml::listData(Company::model()->findAtLeast1Tenant(), 'id', 'name'), array('empty' =>'Select Airport', 'style'=>'padding-left: 27px','options'=>array($previousSelectedTenantId=>array('selected'=>true)),'class'=>'form-control input-sm'));
+                        ?>
+						</div>
+						</div>
             </div>
         </div>
     </div>
 
     <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
     <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
-    <div class="row"><div class="col-sm-12">&nbsp;</div></div><div class="row"><div class="col-sm-12">&nbsp;</div></div>
+
     
     <div class="row">
         <div class="col-sm-12">

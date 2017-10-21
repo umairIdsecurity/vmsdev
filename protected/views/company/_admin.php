@@ -66,7 +66,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',
-            'template' => '{update}{delete}',
+            'template' => '{update}{delete}</div>',
             'buttons' => array(
                 'update' => array(//the name {reply} must be same
                     'label' => 'Edit', // text label of the button

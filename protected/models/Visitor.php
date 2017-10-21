@@ -33,6 +33,7 @@ Yii::import('ext.validator.DropDown');
  * @property string $tenant
  * @property string $tenant_agent
  * @property integer $verifiable_signature
+ * * @property string $card_number
  *
  * The followings are the available model relations:
  * @property CardGenerated[] $cardGenerateds
@@ -55,6 +56,7 @@ class Visitor extends CActiveRecord {
     public $password_requirement;
     public $alternative_identification;
     public $companycode;
+    public $visitCount; 
 
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
@@ -73,7 +75,8 @@ class Visitor extends CActiveRecord {
     const VIC_ASIC_ISSUED  = 4;
     const ASIC_DENIED      = 5;
     const ASIC_ISSUED      = 6;
-    const ASIC_APPLICANT   = 7;
+    const ASIC_APPLICANT   = 10;
+	const ASIC_APPROVED		=7;	
     const ASIC_EXPIRED     = 8;
 
     public static $VISITOR_CARD_TYPE_LIST = array(
@@ -82,12 +85,13 @@ class Visitor extends CActiveRecord {
         self::PROFILE_TYPE_VIC => array(
             self::SAVED            => 'Card Status: Saved',
             self::VIC_HOLDER       => 'Card Status: VIC Holder',
-            self::VIC_ASIC_PENDING => 'Card Status: ASIC Pending'
+            self::VIC_ASIC_PENDING => 'Card Status: ASIC Pending',
+			self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
+			self::ASIC_APPROVED =>'Card Status: ASIC Approved'
         ),
         self::PROFILE_TYPE_ASIC => array(
-            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant',
+           //self::ASIC_APPLICANT => 'Card Status: ASIC Applicant',
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
-            self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
         )
     );
@@ -101,7 +105,7 @@ class Visitor extends CActiveRecord {
             self::VIC_HOLDER       => 'Card Status: VIC Holder'
         ),
         self::PROFILE_TYPE_ASIC => array(
-            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant',
+            //self::ASIC_APPLICANT => 'Card Status: ASIC Applicant',
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
@@ -218,15 +222,21 @@ class Visitor extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-        $rules = array(
-            array('first_name, last_name, email, contact_number', 'required', 'message'=>'Please complete {attribute}'),
-            //array('tenant','required','message' =>'Please select a {attribute}'),
-            array('visitor_type', 'required', 'except' => ['updateAsic','asic', 'asicIssued', 'asicApplicant', 'corporateVisitor'], 'message'=>'Please complete {attribute}'),
+        $rules = array( 
+            array('first_name, last_name, email, contact_number, date_of_birth', 'required', 'message'=>'Please complete {attribute}'),
+			array('date_of_birth','checkDate'),
+            
+			array('contact_street_no, contact_street_name, contact_street_type, contact_postcode, contact_suburb, contact_state, contact_country', 'required', 'except' => ['updateAsic','asic',  'delete','asicIssued', 'asicApplicant', 'corporateVisitor','importVisitor'],'message'=>'Please complete {attribute}'),
+            array('identification_type, identification_document_no, identification_document_expiry', 'required', 'except' => ['updateAsic','asic',  'delete','asicIssued', 'asicApplicant', 'corporateVisitor','importVisitor'],'message'=>'Please complete {attribute}'),
+			array('visitor_type', 'required', 'except' => ['updateAsic','asic',  'delete','asicIssued', 'asicApplicant', 'corporateVisitor','importVisitor'], 'message'=>'Please complete {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by', 'length', 'max' => 20),
-            array(
-                'date_of_birth,
+			//array('email', 'match', 'pattern' => '/^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,3}$/', 'message' => 'Incorrect email.'),         
+            array('card_number', 'required', 'on' => ['adding_new_inductee', 'visitor_induction_update']),
+			array(
+                'card_number,
+                date_of_birth,
                 notes,
                 birthdayYear,
                 birthdayMonth,
@@ -282,9 +292,7 @@ class Visitor extends CActiveRecord {
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'EmailCustom'),
-            array('email', 'unique', 'criteria'=>array('condition'=>'is_deleted =:is_deleted AND tenant =:tenant_id', 'params'=>array(
-                ':is_deleted'=>0, ':tenant_id'=>Yii::app()->user->tenant
-                ))),
+            
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
                 'message' => 'Vehicle accepts alphanumeric characters only'
@@ -292,7 +300,7 @@ class Visitor extends CActiveRecord {
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, photo, last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
+            array('id, first_name, first_name, photo, last_name, email,companycode, vehicle,contact_number, date_of_birth, card_number ,company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
             );
         
         $rules[] = array(
@@ -328,6 +336,7 @@ class Visitor extends CActiveRecord {
                 );
                 break;
             case self::PROFILE_TYPE_VIC:
+			//12/10/2017
                 $rules[] = array(
                     'company,
                     visitor_card_status,
@@ -337,17 +346,20 @@ class Visitor extends CActiveRecord {
                     contact_street_type,
                     contact_suburb,
                     contact_state,
-                    contact_postcode,
+                    contact_postcode, 
+					identification_type,   
+                    identification_document_no,
+                    identification_document_expiry,
                     contact_country',
                     'required',
-                    'on' => 'VicScenario',
+                    'on' => ['VicScenario','vic_log_process'],
                     'except'=> ['updateAsic','updateVic', 'updateIdentification', 'delete', 'asicIssued'],
                     'message'=>'Please complete {attribute}'
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
                 $rules[] = [
-                    'identification_type, identification_document_no, identification_document_expiry', 'required',
+                    'identification_document_expiry', 'required',
                     'on' => 'asicApplicant',
                     'except' => ['delete'],
                     'message'=>'Please complete {attribute}'
@@ -362,7 +374,19 @@ class Visitor extends CActiveRecord {
         
         return $rules;
     }
-
+public function checkDate($attribute)
+	{
+		if(Yii::app()->controller->id ==='induction')
+		{
+		if($this->date_of_birth!=null && $this->date_of_birth!='' )
+		$dob=date('Y-m-d',strtotime($this->date_of_birth));
+		$check= $this->find("first_name='{$this->first_name}' AND last_name='{$this->last_name}' AND date_of_birth='{$dob}'");
+		if($check)
+		{
+			 $this->addError($attribute, 'profile already exists!');
+		}
+		}
+	}
     /**
      * @return array relational rules.
      */
@@ -379,6 +403,7 @@ class Visitor extends CActiveRecord {
             'role0'          => array(self::BELONGS_TO, 'Roles', 'role'),
             'vehicle0'       => array(self::BELONGS_TO, 'Vehicle', 'vehicle'),
             'photo0'         => array(self::BELONGS_TO, 'Photo', 'photo'),
+			'visit'			 => array(self::HAS_MANY, 'Visit' , 'visitor')
         );
     }
 
@@ -432,7 +457,8 @@ class Visitor extends CActiveRecord {
             'contact_suburb'                            => 'Suburb',
             'contact_state'                             => 'State',
             'contact_country'                           => 'Country',
-            'verifiable_signature'                      => 'Verifiable Signature'
+            'verifiable_signature'                      => 'Verifiable Signature',
+            'card_number'                               => 'Card Number'
         );
     }
 
@@ -452,7 +478,9 @@ class Visitor extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+		$criteria->with= array('visit');
         $criteria->with = array( 'company0' );
+		
 
         $criteria->compare('t.id', $this->id, true);
         //$criteria->compare('first_name', $this->first_name, true);
@@ -460,8 +488,10 @@ class Visitor extends CActiveRecord {
         $criteria->compare('email', $this->email, true);
         $criteria->compare('contact_number', $this->contact_number, true);
         $criteria->compare('date_of_birth', $this->date_of_birth, true);
+        $criteria->compare('card_number', $this->card_number, true);
         $criteria->compare('company0.name', $this->company, true);
         $criteria->compare('company0.code', $this->companycode, true);
+		$criteria->compare('visit.visitor',$this->visit);
         $criteria->compare('department', $this->department, true);
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
@@ -487,6 +517,11 @@ class Visitor extends CActiveRecord {
         $criteria->compare('asic_expiry', $this->asic_expiry, true);
         $criteria->compare('t.is_deleted', self::NOT_DELETED);
 
+        if(Yii::app()->controller->id === 'induction')
+		{
+			$criteria->addCondition("t.induction_flag is NULL OR t.induction_flag=0 OR t.induction_flag='' ");
+        }
+        
         if (Yii::app()->controller->id === 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
         } else {
@@ -564,7 +599,10 @@ class Visitor extends CActiveRecord {
         }
 
         if($this->identification_document_expiry != ""){
-            $this->identification_document_expiry = date("Y-m-d",strtotime($this->identification_document_expiry));
+			
+            $this->identification_document_expiry = date("Y-m-d",strtotime(str_replace('/', '-',$this->identification_document_expiry)));
+			//echo $this->identification_document_expiry;
+			//Yii::app()->end();
         }else{
             $this->identification_document_expiry = NULL;
         }
@@ -600,6 +638,11 @@ class Visitor extends CActiveRecord {
         } elseif ($visitorExistsClosed) {
             return false;
         } elseif($visitorHasSavedVisitOnly){
+
+            if(Yii::app()->controller->id === 'induction')
+			{
+				$this->induction_flag = 1;
+			}
 
             $this->is_deleted = 1;
             if($this->save()){
@@ -801,7 +844,8 @@ class Visitor extends CActiveRecord {
 
     public function getIdOfUser($email) {
         $aArray = array();
-
+		if($email!='')
+		{
         $Criteria = new CDbCriteria();
         $Criteria->condition = "email = '$email'";
         $visitorId = Visitor::model()->findAll($Criteria);
@@ -811,6 +855,7 @@ class Visitor extends CActiveRecord {
                 'id' => $value['id'],
             );
         }
+		}
         return $aArray;
     }
 
@@ -829,13 +874,19 @@ class Visitor extends CActiveRecord {
         //because of https://ids-jira.atlassian.net/browse/CAVMS-1241
         /*if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) 
         {*/
-            $totalVisit = 0;
+           /* $totalVisit = 0;
             $closedVisits = $this->closedVisits;
+				echo "<pre>";
+				var_dump($closedVisits);
+				echo "</pre>";
+			
             foreach($closedVisits as $visit) {
                 //$totalVisit += 1;
                 $totalVisit += $visit->visitCounts;
+				
                 //echo $totalVisit." ";
             }
+			//Yii::app()->end();
             if($totalVisit > 0 ) {
                 if( $totalVisit <= 28 ) {
                     return $totalVisit;
@@ -843,8 +894,91 @@ class Visitor extends CActiveRecord {
                     return 28;
                 }
                 return $totalVisit;
-            } 
-            return "";
+            } */
+			if($this->id!=null)
+			{
+			$visit=Visit::model()->find("visitor='{$this->id}'");
+			if(!empty($visit))
+			{	
+				$startDate = (new DateTime("NOW"))->sub(new DateInterval("P1Y"));
+				$startDateString = $startDate->format('Y-m-d');
+				$endDate = (new DateTime("NOW"));
+				$endDateString = $endDate->format('Y-m-d');
+
+
+
+		$sql = "SELECT a.card_type, a.visit_status, a.date_check_in, a.date_check_out
+                FROM visit AS a
+                  JOIN visit AS b
+                    ON a.visitor = b.visitor and b.id=$visit->id
+                WHERE a.date_check_out >= '$startDateString'
+                AND   a.date_check_in <= '$endDateString'
+                AND   a.visit_status NOT IN (".implode(',',[VisitStatus::SAVED,VisitStatus::PREREGISTERED]).")
+				AND   a.negate_reason IS NULL
+                AND   a.is_deleted = 0
+                AND NOT EXISTS( SELECT * FROM visit c WHERE c.visitor = b.visitor and c.reset_id > 0 and a.id <= c.id )
+            ";
+
+		$allVisitorVisits = Yii::app()->db->createCommand($sql)->queryAll();
+        
+	   
+		$visitCount = 0;
+		$remainingDays = 28;
+		foreach($allVisitorVisits as $visit){
+			if ($visit['card_type']==CardType::VIC_CARD_24HOURS){
+				$visitCount++;
+			} else {
+				if($visit['visit_status']=='3' && isset($visit['visit_closed_date']) && $visit['visit_closed_date']!=null && $visit['visit_closed_date']!="" && $visit['date_check_out']>$visit['visit_closed_date'])
+				{
+				$visitCount += max(DateUtil::parseDate($visit['date_check_in']),$startDate)
+						->diff(
+							min($endDate,DateUtil::parseDate($visit['visit_closed_date']))
+						)->days + 1;
+				}
+				else if ($visit['visit_status']=='3' && isset($visit['visit_closed_date']) && $visit['visit_closed_date']!=null && $visit['visit_closed_date']!="" && $visit['date_check_out']<$visit['visit_closed_date'])
+				{
+				$visitCount += max(DateUtil::parseDate($visit['date_check_in']),$startDate)
+						->diff(
+							min($endDate,DateUtil::parseDate($visit['date_check_out']))
+						)->days + 1;	
+				}
+				else
+				{
+					$visitCount += max(DateUtil::parseDate($visit['date_check_in']),$startDate)
+						->diff(
+							min($endDate,DateUtil::parseDate($visit['date_check_out']))
+						)->days + 1;	
+				}
+			//$totalVisit=$visitCount;
+			//return $totalVisit;
+			
+			
+			}
+			
+		}
+		//print_r($visitCount);
+		//Yii::app()->end();
+			$totalVisit=$visitCount;
+			if($totalVisit<=28)
+			{
+				return $totalVisit;
+			}
+			else if ($totalVisit>28)
+			{
+				return 28;
+			}
+			
+		}
+	
+			//Yii::app()->end();
+			}
+			
+		if(!isset($totalVisit))
+		{
+			return "";
+		}
+			
+		
         /*} 
         else 
         {
@@ -913,6 +1047,15 @@ class Visitor extends CActiveRecord {
 
     public function getCompanyForLogVisit() {
         return Company::model()->findByPk($this->company);
+    }
+	public function restorePassword($email,$airportName)
+    {
+        if($visitor = $this->findByAttributes(array('email' => $email))){
+			
+            return PasswordChangeRequest::model()->generateResetLinkForVisitor($visitor,$airportName);
+        } else {
+            return "Email address does not exist in system.";
+        }
     }
 
 }

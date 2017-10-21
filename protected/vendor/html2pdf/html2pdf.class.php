@@ -405,6 +405,8 @@ if (!defined('__CLASS_HTML2PDF__')) {
             $this->parsingCss->readStyle($html);
             $this->parsingHtml->setHTML($html);
             $this->parsingHtml->parse();
+			//echo "umair";
+			//die();
             $this->_makeHTMLcode();
         }
 

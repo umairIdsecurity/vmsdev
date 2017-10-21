@@ -10,4 +10,4 @@
     }
     
 ?>
-<?php $this->renderPartial('_form', array('model' => $model, 'contacts' => $contacts)); ?>
+<?php $this->renderPartial('_form', array('model' => $model, 'contacts' => $contacts, 'userModel'=>$userModel)); ?>

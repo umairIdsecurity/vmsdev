@@ -200,6 +200,7 @@ class SiteController extends Controller {
             // validate user input and redirect to the previous page if valid
             if ($model->validate() && $model->login()) {
                 $session = new CHttpSession;
+				$this->trail_log_in();
                 /***************************************************************
                  * 
                  * GETTING TIMEZONES:
@@ -282,7 +283,8 @@ class SiteController extends Controller {
     public function actionLogout() 
     {
         //commented below statement because of https://ids-jira.atlassian.net/browse/CAVMS-1200
-        //$this->audit_log_logout(); //logs the logout of the user
+        $this->audit_log_logout();		//logs the logout of the user
+		$this->trail_log_out();
         Yii::app()->user->logout();
         $this->redirect('index.php?r=site/login');
 
@@ -291,12 +293,38 @@ class SiteController extends Controller {
     public function audit_log_logout(){
         $log = new AuditLog();
         $log->action_datetime_new = date('Y-m-d H:i:s');
-        $log->action = "LOGOUT";
+        $log->action = "LOGOUT FROM SYSTEM";
         $log->detail = 'ID: ' . Yii::app()->user->id;
         $log->user_email_address = (isset(Yii::app()->user->email) && Yii::app()->user->email != "") ? Yii::app()->user->email : $session['email'];
         $log->ip_address = (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") ? $_SERVER['REMOTE_ADDR'] : "UNKNOWN";
         $log->tenant = Yii::app()->user->tenant;
         $log->tenant_agent = Yii::app()->user->tenant_agent;
+        $log->save();
+    }
+	  public function trail_log_in(){
+       $log=new AuditTrail();
+        $log->description = 'User ' . Yii::app()->user->Name . ' Logged in ';
+        $log->old_value = '';
+        $log->new_value = '';
+        $log->action='Logged in';
+        $log->model='Login';
+        $log->model_id=	'';
+        $log->field='N/A';
+        $log->creation_date= date('Y-m-d H:i:s');
+        $log->user_id=Yii::app()->user->id;
+        $log->save();
+    }
+	  public function trail_log_out(){
+       $log=new AuditTrail();
+        $log->description = 'User ' . Yii::app()->user->Name . ' Logged Out ';
+        $log->old_value = '';
+        $log->new_value = '';
+        $log->action='Logged Out';
+        $log->model='Logout';
+        $log->model_id=	'';
+        $log->field='N/A';
+        $log->creation_date= date('Y-m-d H:i:s');
+        $log->user_id=Yii::app()->user->id;
         $log->save();
     }
 
@@ -452,11 +480,30 @@ class SiteController extends Controller {
     {
         $allAsics = Visitor::model()->findAll("profile_type='ASIC' AND tenant='".Yii::app()->user->tenant."' AND is_deleted=0");
         $today = date("Y-m-d");
+		//echo $days;
         foreach ($allAsics as $key => $asic) {
+			$asicDate=date("Y-m-d",strtotime($asic->asic_expiry));
+			$days=ceil(abs(strtotime($asicDate) - strtotime($today)) / 86400);
             if(($asic->asic_expiry != "") && (date("Y-m-d",strtotime($asic->asic_expiry)) <= $today)){
-                Visitor::model()->updateByPk($asic->id,array("visitor_card_status"=>"7"));   
+                Visitor::model()->updateByPk($asic->id,array("visitor_card_status"=>"8","profile_type"=>'VIC'));   
             }
+			if(($asic->asic_expiry != "") && ($asic->email != "" && filter_var($asic->email,FILTER_VALIDATE_EMAIL)) && (date("Y-m-d",strtotime($asic->asic_expiry)) > $today) && $days==42 && date("Y-m-d",strtotime($asic->email_send_on))!=$today){
+				$airport = Company::model()->findByPk(Yii::app()->user->tenant);
+						$airportName = (isset($airport->name) && ($airport->name!="")) ? $airport->name:"Airport";
+						$subject='Your ASIC is due to expire in 6 weeks';
+						$templateParams = array(
+						'email' => $asic->email,
+						'Airport'=>$airportName,
+						'name'=>  ucfirst($asic->first_name) . ' ' . ucfirst($asic->last_name),
+						'Date'=> $asic->asic_expiry,
+										);
+							$emailTransport = new EmailTransport();
+							Visitor::model()->updateByPk($asic->id,array("email_send_on"=>$today));
+							$emailTransport->sendAsicNotification($templateParams,$asic->email, ucfirst($asic->first_name) . ' ' . ucfirst($asic->last_name),$subject );
+				
+			}
         }
+
     }
 
     public function checkTimezone(){
